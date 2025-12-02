@@ -1,0 +1,19 @@
+{
+  "@@locale": "de",
+
+  "onboardingTitle1": "Verstehe dich selbst besser",
+  "onboardingTitle2": "Bringe Ordnung in deinen Geist",
+  "onboardingTitle3": "Ein Begleiter, der immer für dich da ist",
+
+  "onboardingDescription1": "Mind Coach hilft dir, deine Gedanken zu ordnen, deine innere Welt zu erkunden und dein Leben mit mehr Bewusstsein zu gestalten. Übernimm mit Klarheit und Selbstvertrauen die Führung in deinem eigenen Weg.",
+  "onboardingDescription2": "Stress, Grübeln, Unsicherheit oder verstreute Gedanken … Mind Coach verwandelt sie in klare, auf dich zugeschnittene Einsichten. Entdecke die Kraft eines fokussierten und strukturierten Geistes.",
+  "onboardingDescription3": "Teile deine Gedanken, stelle Fragen und entdecke jederzeit neue Perspektiven. Mind Coach unterstützt dein Wachstum und hilft dir, mit Klarheit und Leichtigkeit voranzukommen.",
+
+  "onboardingTermsPrefix": "Mit der Registrierung stimmen Sie unseren ",
+  "onboardingTermsOfService": "Nutzungsbedingungen",
+  "onboardingTermsMiddle": " zu. Mehr über die Verarbeitung Ihrer Daten erfahren Sie in unserer ",
+  "onboardingPrivacyPolicy": "Datenschutzrichtlinie",
+  "onboardingTermsAnd": " und unserer ",
+  "onboardingCookiesPolicy": "Cookie-Richtlinie",
+  "onboardingTermsSuffix": "."
+}

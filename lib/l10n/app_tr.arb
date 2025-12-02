@@ -1,0 +1,21 @@
+{
+  "@@locale": "tr",
+
+  "onboardingTitle1": "Kendini Daha İyi Anla",
+  "onboardingTitle2": "Zihnini Düzenle",
+  "onboardingTitle3": "Her Zaman Yanında Bir Rehber",
+
+  "onboardingDescription1": "Mind Coach, düşüncelerini netleştirmeni, iç dünyanı keşfetmeni ve yaşamını daha bilinçli bir şekilde yönlendirmeni sağlar. Kendi yolculuğunun kontrolünü güvenle eline al.",
+  "onboardingDescription2": "Stres, yoğun düşünceler, kararsızlık veya dağınık fikirler… Mind Coach bunları sana özel net içgörülere dönüştürür. Odaklanmış bir zihnin gücünü keşfet.",
+  "onboardingDescription3": "Düşüncelerini paylaş, sorular sor ya da yeni bakış açıları keşfet. Mind Coach, gelişimini destekler ve daha net bir şekilde ilerlemene yardımcı olur.",
+
+
+  "onboardingTermsPrefix": "Swipe'a kaydolarak ",
+  "onboardingTermsOfService": "Hizmet Şartları",
+  "onboardingTermsMiddle": "’nı kabul etmiş olursun. Verilerini nasıl işlediğimizi ",
+  "onboardingPrivacyPolicy": "Gizlilik Politikası",
+  "onboardingTermsAnd": " ve ",
+  "onboardingCookiesPolicy": "Çerez Politikası",
+  "onboardingTermsSuffix": "’nda bulabilirsin."
+
+}

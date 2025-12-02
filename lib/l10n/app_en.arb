@@ -1,0 +1,20 @@
+{
+  "@@locale": "en",
+
+  "onboardingTitle1": "Understand Yourself Better",
+  "onboardingTitle2": "Bring Order to Your Mind",
+  "onboardingTitle3": "A Guide Always Within Reach",
+
+  "onboardingDescription1": "Mind Coach helps you clarify your thoughts, explore your inner world, and navigate life with greater awareness. Take charge of your own journey with confidence.",
+  "onboardingDescription2": "Stress, overthinking, hesitation, or scattered ideas… Mind Coach turns them into clear insights tailored to you. Discover the power of a focused and organized mind.",
+  "onboardingDescription3": "Share your thoughts, ask questions, and explore new perspectives anytime. Mind Coach supports your growth and helps you move forward with clarity and ease.",
+
+  "onboardingTermsPrefix": "By signing up for swipe, you agree to our ",
+  "onboardingTermsOfService": "Terms of Service",
+  "onboardingTermsMiddle": ". Learn how we process your data in our ",
+  "onboardingPrivacyPolicy": "Privacy Policy",
+  "onboardingTermsAnd": " and ",
+  "onboardingCookiesPolicy": "Cookies Policy",
+  "onboardingTermsSuffix": "."
+
+}
