@@ -1,7 +1,25 @@
 class PageRoutes {
-  static const profileSetup = '/profile-setup';
-  static const String home = '/home';
+  static const String navbar = '/navbar';   // <-- shell
+  static const profileSetup = '/profile_screen-setup';
   static const String onboarding = '/onboarding';
-  static const String settings = '/settings';
-  static const String profile = '/profile';
+
+  /// SCREENS
+  static const String home = '/home_screen';
+  static const String specialists = '/specialists_screen';
+  static const String calendar = '/calendar_screen';
+  static const String chat = '/chat_screen';
+  static const String profile = '/profile_screen';
+
+  /// PAGES
+  static const String profileSettings = '/profile_settings';
+  static const String goodbye = '/goodbye_screen';
+  static const String invite = '/invite_screen';
+  static const String faq = '/faq_screen';
+  static const String appointments = '/appointments_screen';
+  static const String premimum = '/premium_screen';
+  static const String conversationScreen = '/conversation_page';
+  static const String videoCall = '/video_call_screen';
+  static const String testIntroScreen = '/test_intro_screen';
+  static const String testQuestionScreen = '/test_question_screen';
+  static const String testResultScreen = '/test_result_screen';
 }

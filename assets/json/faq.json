@@ -1,0 +1,134 @@
+{
+  "faq": [
+    {
+      "id": 1,
+      "question": {
+        "en": "How does this app work?",
+        "tr": "Bu uygulama nasıl çalışıyor?",
+        "de": "Wie funktioniert diese App?"
+      },
+      "answer": {
+        "en": "Our app uses artificial intelligence to analyze your emotional state through your written or spoken inputs. It provides personalized insights, mood tracking, and mental-wellness exercises designed to help you better understand and manage your emotions.",
+        "tr": "Uygulama, yazılı veya sesli girdilerinize göre duygusal durumunuzu analiz etmek için yapay zekâ kullanır. Daha iyi anlamanıza ve duygularınızı yönetmenize yardımcı olacak kişiselleştirilmiş içgörüler, duygu takibi ve mental iyi oluş egzersizleri sunar.",
+        "de": "Unsere App nutzt künstliche Intelligenz, um Ihren emotionalen Zustand anhand Ihrer schriftlichen oder gesprochenen Eingaben zu analysieren. Sie bietet personalisierte Einblicke, Stimmungstracking und mentale Wellness-Übungen, die Ihnen helfen, Ihre Emotionen besser zu verstehen und zu bewältigen."
+      }
+    },
+    {
+      "id": 2,
+      "question": {
+        "en": "Can this app replace a real psychologist?",
+        "tr": "Bu uygulama gerçek bir psikoloğun yerini alabilir mi?",
+        "de": "Kann diese App einen echten Psychologen ersetzen?"
+      },
+      "answer": {
+        "en": "No. This app is not a substitute for professional therapy. Its purpose is to offer emotional support, increase self-awareness, and guide you toward healthier mental habits.",
+        "tr": "Hayır. Bu uygulama profesyonel terapinin yerini tutmaz. Amacı duygusal destek sunmak, farkındalığınızı artırmak ve daha sağlıklı zihinsel alışkanlıklara yönlendirmektir.",
+        "de": "Nein. Diese App ist kein Ersatz für professionelle Therapie. Ihr Zweck ist es, emotionale Unterstützung zu bieten, das Selbstbewusstsein zu stärken und zu gesünderen mentalen Gewohnheiten zu führen."
+      }
+    },
+    {
+      "id": 3,
+      "question": {
+        "en": "Are my conversations and data private?",
+        "tr": "Konuşmalarım ve verilerim gizli mi?",
+        "de": "Sind meine Gespräche und Daten privat?"
+      },
+      "answer": {
+        "en": "Absolutely. All conversations and personal data are encrypted and securely stored. We comply with international privacy standards including GDPR. Your information is never shared with third parties.",
+        "tr": "Kesinlikle. Tüm konuşmalarınız ve kişisel verileriniz şifrelenir ve güvenli şekilde saklanır. GDPR dahil uluslararası gizlilik standartlarına uyuyoruz. Bilgileriniz üçüncü kişilerle asla paylaşılmaz.",
+        "de": "Absolut. Alle Gespräche und persönlichen Daten werden verschlüsselt und sicher gespeichert. Wir entsprechen internationalen Datenschutzstandards wie der DSGVO. Ihre Informationen werden niemals an Dritte weitergegeben."
+      }
+    },
+    {
+      "id": 4,
+      "question": {
+        "en": "Who can use this app?",
+        "tr": "Bu uygulamayı kimler kullanabilir?",
+        "de": "Wer kann diese App nutzen?"
+      },
+      "answer": {
+        "en": "The app is suitable for individuals aged 16 and older who are experiencing stress, anxiety, low motivation, or emotional imbalance.",
+        "tr": "Uygulama, 16 yaş ve üzeri; stres, kaygı, düşük motivasyon veya duygusal dengesizlik yaşayan bireyler için uygundur.",
+        "de": "Die App ist für Personen ab 16 Jahren geeignet, die Stress, Angst, geringe Motivation oder emotionale Unausgeglichenheit erleben."
+      }
+    },
+    {
+      "id": 5,
+      "question": {
+        "en": "How does the AI generate its suggestions?",
+        "tr": "Yapay zeka önerilerini nasıl oluşturuyor?",
+        "de": "Wie erstellt die KI ihre Vorschläge?"
+      },
+      "answer": {
+        "en": "The AI is trained on emotional language patterns and psychological research. It learns from your interactions and mood trends to provide personalized recommendations.",
+        "tr": "Yapay zekâ, duygusal dil kalıpları ve psikolojik araştırmalarla eğitilmiştir. Etkileşimlerinizden ve duygu trendlerinizden öğrenerek kişiselleştirilmiş öneriler sunar.",
+        "de": "Die KI ist auf emotionale Sprachmuster und psychologische Forschung trainiert. Sie lernt aus Ihren Interaktionen und Stimmungsmustern, um personalisierte Empfehlungen zu geben."
+      }
+    },
+    {
+      "id": 6,
+      "question": {
+        "en": "Is the app free to use?",
+        "tr": "Uygulama ücretsiz mi?",
+        "de": "Ist die App kostenlos?"
+      },
+      "answer": {
+        "en": "The app offers free basic features. Premium plans unlock advanced analytics and personalized mental-wellness tools.",
+        "tr": "Uygulama temel özellikleri ücretsiz sunar. Premium plan ise gelişmiş analizler ve kişisel mental destek araçları sunar.",
+        "de": "Die App bietet grundlegende Funktionen kostenlos an. Premium-Pläne schalten erweiterte Analysen und personalisierte mentale Wellness-Tools frei."
+      }
+    },
+    {
+      "id": 7,
+      "question": {
+        "en": "Can I use this app in an emergency?",
+        "tr": "Acil durumlarda bu uygulamayı kullanabilir miyim?",
+        "de": "Kann ich diese App in einem Notfall nutzen?"
+      },
+      "answer": {
+        "en": "No. The app is not intended for crisis situations. In emergencies, please contact local emergency services or a mental-health hotline.",
+        "tr": "Hayır. Bu uygulama kriz durumları için tasarlanmamıştır. Acil bir durumda lütfen yerel acil hatlarıyla iletişime geçin.",
+        "de": "Nein. Diese App ist nicht für Krisensituationen gedacht. Bitte kontaktieren Sie im Notfall die örtlichen Notdienste oder eine psychologische Hotline."
+      }
+    },
+    {
+      "id": 8,
+      "question": {
+        "en": "On which platforms is the app available?",
+        "tr": "Uygulama hangi platformlarda mevcut?",
+        "de": "Auf welchen Plattformen ist die App verfügbar?"
+      },
+      "answer": {
+        "en": "The app is available on iOS and Android. A web version is currently under development.",
+        "tr": "Uygulama iOS ve Android’de mevcuttur. Web sürümü geliştirme aşamasındadır.",
+        "de": "Die App ist auf iOS und Android verfügbar. Eine Webversion befindet sich in der Entwicklung."
+      }
+    },
+    {
+      "id": 9,
+      "question": {
+        "en": "Does the AI really understand my emotions?",
+        "tr": "Yapay zekâ duygularımı gerçekten anlıyor mu?",
+        "de": "Versteht die KI wirklich meine Emotionen?"
+      },
+      "answer": {
+        "en": "The AI recognizes emotional tones and patterns, but it is still an artificial system and cannot fully replicate human empathy.",
+        "tr": "Yapay zekâ duygusal tonları ve kalıpları tanır, ancak hâlâ yapay bir sistemdir ve insan empatisini tamamen taklit edemez.",
+        "de": "Die KI erkennt emotionale Töne und Muster, ist jedoch ein künstliches System und kann menschliche Empathie nicht vollständig ersetzen."
+      }
+    },
+    {
+      "id": 10,
+      "question": {
+        "en": "How can I get the most out of the app?",
+        "tr": "Uygulamadan en iyi şekilde nasıl yararlanabilirim?",
+        "de": "Wie kann ich das Beste aus der App herausholen?"
+      },
+      "answer": {
+        "en": "Use the app consistently: log your mood daily, chat with the AI, and complete recommended exercises to improve self-awareness.",
+        "tr": "Uygulamayı düzenli kullanın: her gün duygu durumunuzu kaydedin, yapay zekâ ile sohbet edin ve önerilen egzersizleri tamamlayın.",
+        "de": "Nutzen Sie die App regelmäßig: protokollieren Sie täglich Ihre Stimmung, chatten Sie mit der KI und machen Sie die empfohlenen Übungen."
+      }
+    }
+  ]
+}

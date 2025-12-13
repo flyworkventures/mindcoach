@@ -15,5 +15,339 @@
   "onboardingPrivacyPolicy": "Datenschutzrichtlinie",
   "onboardingTermsAnd": " und unserer ",
   "onboardingCookiesPolicy": "Cookie-Richtlinie",
-  "onboardingTermsSuffix": "."
+  "onboardingTermsSuffix": ".",
+
+  "nameGenderStepTitle": "Erzähl uns ein wenig über dich",
+  "nameGenderStepSubtitle": "Eine kurze Beschreibung hilft uns, dich besser kennenzulernen. Locker und ehrlich reicht völlig.",
+  "fullName": "Vollständiger Name",
+  "enterYourFullName": "Gib deinen vollständigen Namen ein",
+  "gender": "Geschlecht",
+  "male": "Männlich",
+  "female": "Weiblich",
+
+  "next": "Weiter",
+  "getStarted": "Loslegen",
+
+  "approachTitle": "Wie soll dein Berater auf dich zugehen?",
+  "approachPatient": "Geduldig",
+  "approachSupportive": "Unterstützend",
+  "approachConvincing": "Überzeugend",
+  "approachEnergetic": "Energiegeladen",
+  "approachHumorous": "Humorvoll",
+
+  "dobTitle": "Wann bist du geboren?",
+  "dobSubtitle": "Wir personalisieren den Erlebnisprozess basierend auf deinem Alter.",
+  "dobDayLabel": "Tag",
+  "dobMonthLabel": "Monat",
+  "dobYearLabel": "Jahr",
+  "dobErrorInvalid": "Bitte wähle ein gültiges Geburtsdatum.",
+
+  "january": "Januar",
+  "february": "Februar",
+  "march": "März",
+  "april": "April",
+  "may": "Mai",
+  "june": "Juni",
+  "july": "Juli",
+  "august": "August",
+  "september": "September",
+  "october": "Oktober",
+  "november": "November",
+  "december": "Dezember",
+
+  "januaryShort": "Jan",
+  "februaryShort": "Feb",
+  "marchShort": "Mrz",
+  "aprilShort": "Apr",
+  "mayShort": "Mai",
+  "juneShort": "Jun",
+  "julyShort": "Jul",
+  "augustShort": "Aug",
+  "septemberShort": "Sep",
+  "octoberShort": "Okt",
+  "novemberShort": "Nov",
+  "decemberShort": "Dez",
+
+  "nameGenderTitle": "Erzähl uns ein wenig über dich",
+  "nameGenderSubtitle": "Eine kurze Beschreibung hilft uns, dich besser kennenzulernen. Locker und ehrlich reicht völlig.",
+  "nameGenderFullNameLabel": "Vollständiger Name",
+  "nameGenderFullNameHint": "Gib deinen vollständigen Namen ein",
+  "nameGenderGenderLabel": "Geschlecht",
+  "nameGenderMale": "Männlich",
+  "nameGenderFemale": "Weiblich",
+
+  "supportAreaTitle": "In welchem Bereich möchtest du Unterstützung erhalten?",
+  "supportAreaIndividual": "Individuell",
+  "supportAreaFamily": "Familie",
+  "supportAreaCareer": "Karriere",
+  "supportAreaEducation": "Bildung",
+  "supportAreaPersonalDevelopment": "Persönliche Entwicklung",
+
+  "availableDaysTitle": "An welchen Tagen bist du verfügbar?",
+  "dayMonday": "Montag",
+  "dayTuesday": "Dienstag",
+  "dayWednesday": "Mittwoch",
+  "dayThursday": "Donnerstag",
+  "dayFriday": "Freitag",
+  "daySaturday": "Samstag",
+  "daySunday": "Sonntag",
+
+  "meetingTimeTitle": "Zu welcher Zeit möchtest du dich treffen?",
+  "meetingTimeMorning": "Morgens",
+  "meetingTimeAfternoon": "Nachmittags",
+  "meetingTimeEvening": "Abends",
+  "meetingTimeFlexible": "Flexibel",
+  "meetingTimeMorningRange": "(08:00–12:00 Uhr)",
+  "meetingTimeAfternoonRange": "(12:00–18:00 Uhr)",
+  "meetingTimeEveningRange": "(18:00–21:00 Uhr)",
+  "meetingTimeFlexibleRange": "",
+
+  "successTitle": "Dein Konto wurde erstellt",
+  "successSubtitle": "Dein Konto wurde erfolgreich erstellt. Viel Spaß mit der App.",
+
+  "topicFeelingGood": "Wohlbefinden",
+  "appointmentDescription": "Du hast ein Gespräch mit {name} zum Thema {topic}.",
+  "@appointmentDescription": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "topic": { "type": "String" }
+    }
+  },
+
+  "quickActions": "Schnellzugriff",
+
+  "hi": "Hallo",
+  "goodMorning": "Guten Morgen",
+  "goodAfternoon": "Guten Tag",
+  "goodEvening": "Guten Abend",
+
+  "welcome": "Willkommen",
+  "howAreYouFeelIngToday": "Wie fühlst du dich heute?",
+  "getStart": "Lass uns beginnen",
+
+  "onboardingQuote1": "Deine einzigen Grenzen sind die, die du dir selbst setzt.",
+  "onboardingQuote2": "Atme tief durch und beginne deine Reise.",
+  "onboardingQuote3": "Je ruhiger du wirst, desto mehr kannst du hören.",
+
+  "someoneWantsToTalkToYou": "Jemand möchte mit dir sprechen.",
+  "startTalking": "Starten",
+
+  "moodTerrible": "Schrecklich",
+  "moodBad": "Schlecht",
+  "moodNeutral": "Neutral",
+  "moodGood": "Gut",
+  "moodGreat": "Großartig",
+
+  "timeToTrackMood": "Es ist Zeit, deine Stimmung zu verfolgen",
+
+  "days": "Tage",
+  "hours": "Stunden",
+  "minutes": "Minuten",
+  "seconds": "Sekunden",
+
+  "timeRemainingTitle": "Verbleibende Zeit bis zum Beginn des nächsten Gesprächs.",
+  "upcomingMeetingTitle": "Bevorstehendes Gespräch",
+  "noUpcomingMeetings": "Du hast keine bevorstehenden Gespräche.",
+
+  "takeTheTestNow": "Mach den Test jetzt",
+  "testDescription": "Bewerte deinen mentalen Zustand und erfahre mehr über dich selbst.",
+
+  "premiumPlan": "Premium-Plan",
+  "premiumDescription": "Schalte deinen KI-Chatbot frei und erhalte alle Premium-Funktionen.",
+
+  "upgradePlan": "Plan upgraden",
+  "areYouStressed": "Bist du gestresst?",
+  "areYouAnxious": "Bist du ängstlich?",
+
+  "questionsForAdults": "{questionNumber} Fragen für Erwachsene",
+  "@questionsForAdults": {
+    "description": "Zeigt die Anzahl der Fragen für den Erwachsenenmodus an.",
+    "placeholders": {
+      "questionNumber": { "type": "int" }
+    }
+  },
+
+  "statusAssessmentTest": "Zustandsbewertungstest",
+  "stressScaleTest": "Stress-Skala Test",
+  "anxietyScaleTest": "Angst-Skala Test",
+
+  "continueButton": "Weiter",
+  "@continueButton": {
+    "description": "Primärer Schaltflächentext, um den Mentaltest zu starten"
+  },
+
+  "testRule1": "Bewerte deine **letzte Woche**.",
+  "@testRule1": {
+    "description": "Erste Regel: Bewerte deine letzte Woche, fetter Teil zwischen **"
+  },
+
+  "testRule2": "Es wird empfohlen, den Test **einmal pro Woche** durchzuführen.",
+  "@testRule2": {
+    "description": "Zweite Regel: Empfohlene Häufigkeit des Tests"
+  },
+
+  "testRule3": "Wenn du den Test mittendrin abbrichst, **kannst du dort weitermachen, wo du aufgehört hast.**",
+  "@testRule3": {
+    "description": "Dritte Regel: Der Benutzer kann später fortfahren"
+  },
+
+  "testDisclaimer": "Die Ergebnisse dieses Tests geben Aufschluss über die individuelle psychische Verfassung, ersetzen jedoch keine Diagnose oder Empfehlung, die mit einem psychologischen Fachpersonal besprochen wurde.",
+  "@testDisclaimer": {
+    "description": "Rechtlicher/medizinischer Haftungsausschluss für psychologische Tests"
+  },
+
+  "never": "Niemals",
+  "sometimes": "Manchmal und gelegentlich",
+  "often": "Ziemlich oft",
+  "always": "Immer",
+
+  "stressQ1": "Es fiel mir schwer, mich zu entspannen und loszulassen.",
+  "stressQ2": "Ich neigte dazu, auf Situationen überzureagieren.",
+  "stressQ3": "Ich fühlte mich angespannt oder ängstlich.",
+  "stressQ4": "Ich hatte Mühe, meine Sachen und Aufgaben zu organisieren.",
+  "stressQ5": "Es fiel mir schwer, meine Gefühle zu kontrollieren, und ich habe sie manchmal ignoriert.",
+  "stressQ6": "Ich hatte Schwierigkeiten ein- oder durchzuschlafen.",
+  "stressQ7": "Ich fühlte mich von Verantwortlichkeiten überwältigt.",
+
+  "backToHome": "Zurück zur Startseite",
+
+  "stressScaleTitle": "Stress-Skala-Test",
+  "yourStressLevelPrefix": "Dein Stress-Level: ",
+
+  "stressLevelLow": "Niedriger Stress",
+  "stressLevelLowDescription": "Dein aktuelles Stress-Level ist niedrig. Du bewältigst alltägliche Herausforderungen gut.",
+  "stressLevelModerate": "Mäßiger Stress",
+  "stressLevelModerateDescription": "Dein Stress-Level ist mäßig. Es ist handhabbar, erfordert aber Aufmerksamkeit.",
+  "stressLevelHigh": "Hoher Stress",
+  "stressLevelHighDescription": "Dein Stress-Level ist hoch. Du musst langsamer machen und auf deinen Körper hören.",
+
+  "stressAnalysisIntro": "Vielen Dank für die Durchführung des Tests. Deine Ergebnisse deuten darauf hin, dass es in deinem Alltag einige Faktoren gibt, die dich herausfordern und Müdigkeit verursachen können.",
+
+  "stressAnalysisP1Part1": "Auch wenn dieses Level kein ",
+  "stressAnalysisP1Bold1": "'Hochalarm' ",
+  "stressAnalysisP1Part2": "ist, so ist es doch die Art und Weise, wie dein Körper und dein Geist sagen: ",
+  "stressAnalysisP1Bold2": "'Ich brauche dich, um langsamer zu machen und mir zuzuhören.'",
+
+  "stressAnalysisP2Part1": "Mäßiger Stress ist in der heutigen schnelllebigen Welt sehr verbreitet und ",
+  "stressAnalysisP2Bold1": "handhabbar. ",
+  "stressAnalysisP2Part2": "Du kannst dieses Ergebnis als Gelegenheit sehen, ",
+  "stressAnalysisP2Bold2": "deinen Stress zu bewältigen, bevor er zum Burnout führt.",
+
+  "stressAnalysisRemember": "Denke daran, dieser Test ist ein Sensibilisierungswerkzeug und keine medizinische Diagnose. Dir Zeit für dich selbst zu nehmen, ist der erste Schritt zu einem besseren Gefühl.",
+
+  "specialistsScreenTitle": "Mentoren",
+
+  "specialistAuraName": "Lina",
+  "specialistAuraTitle": "Individuelles Mentoring",
+  "specialistAuraDescription": "Persönliche Begleitung auf deinem Entwicklungsweg.",
+
+  "specialistZenName": "Jonas",
+  "specialistZenTitle": "Beziehungsberater",
+  "specialistZenDescription": "Unterstützt dich beim Aufbau gesunder und ausgeglichener Beziehungen.",
+
+  "specialistElaraName": "Mira",
+  "specialistElaraTitle": "Entwicklungscoach",
+  "specialistElaraDescription": "Begleitet dich bei deinen Zielen und persönlichem Wachstum.",
+
+  "specialistOrionName": "Felix",
+  "specialistOrionTitle": "Sozialverhaltens-Coach",
+  "specialistOrionDescription": "Stärkt Kommunikation und Selbstvertrauen im sozialen Umfeld.",
+
+  "specialistCyraName": "Sofia",
+  "specialistCyraTitle": "Akademische Mentorin",
+  "specialistCyraDescription": "Hilft dir bei Lernroutinen, Fokus und Studienplanung.",
+
+  "chatScreenGreeting": "Hallo, {name}",
+  "@chatScreenGreeting": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "chatScreenTitle": "Unterhaltungen",
+  "chatLastFromYouPrefix": "Du: ",
+
+  "chatDeleteToast": "Der Chat mit {name} wurde gelöscht.",
+  "@chatDeleteToast": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "askMentor": "Frage {name}",
+  "@askMentor": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "gallery": "Galerie",
+  "camera": "Kamera",
+  "document": "Dokument",
+  "free": "KOSTENLOS",
+  "calendar": "Kalender",
+
+  "profileSettings": "Profileinstellungen",
+  "shareWithFriends": "Mit Freunden teilen",
+  "notifications": "Benachrichtigungen",
+  "appointments": "Gespräche",
+  "faq": "FAQ",
+
+  "phoneNumber": "Telefonnummer",
+  "logout": "Abmelden",
+  "deleteAccount": "Konto löschen",
+  "save": "Speichern",
+  "areYouSureLogout": "Möchtest du dich wirklich abmelden?",
+
+  "deleteProfile": "Profil löschen",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "areYouSureDelete": "Bist du sicher, dass du das Profil löschen möchtest?",
+
+  "invitePeople": "Leute einladen",
+  "copyLinkInviteFriend": "Kopiere den Link, um deine Freunde einzuladen",
+  "share": "Teilen",
+
+  "upcoming": "Bevorstehend",
+  "completed": "Abgeschlossen",
+
+  "relativeToday": "Heute",
+  "relativeTomorrow": "Morgen",
+  "relativeYesterday": "Gestern",
+
+  "relativeDaysAgo": "vor {count} Tagen",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "relativeWeeksAgo": "vor {count} Wochen",
+  "@relativeWeeksAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "english": "Englisch",
+  "turkish": "Türkisch",
+  "german": "Deutsch",
+  "language": "Sprache",
+
+  "back": "Zurück",
+
+  "numberOfQuestions": "Frage {currentQuestion} von {totalQuestion}",
+  "@numberOfQuestions": {
+    "placeholders": {
+      "currentQuestion": { "type": "int" },
+      "totalQuestion": { "type": "int" }
+    }
+  },
+
+  "enterFullNamePrompt": "Bitte gib deinen vollständigen Namen ein.",
+  "meetingStarted": "Gespräch gestartet",
+  "selectedDate": "Ausgewähltes Datum",
+
+  "newChatStarted": "Neuer Chat gestartet",
+  "startNewMeeting": "Starte ein neues Gespräch"
 }

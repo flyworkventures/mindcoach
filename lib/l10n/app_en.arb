@@ -1,20 +1,342 @@
 {
   "@@locale": "en",
-
   "onboardingTitle1": "Understand Yourself Better",
   "onboardingTitle2": "Bring Order to Your Mind",
   "onboardingTitle3": "A Guide Always Within Reach",
-
   "onboardingDescription1": "Mind Coach helps you clarify your thoughts, explore your inner world, and navigate life with greater awareness. Take charge of your own journey with confidence.",
   "onboardingDescription2": "Stress, overthinking, hesitation, or scattered ideas… Mind Coach turns them into clear insights tailored to you. Discover the power of a focused and organized mind.",
   "onboardingDescription3": "Share your thoughts, ask questions, and explore new perspectives anytime. Mind Coach supports your growth and helps you move forward with clarity and ease.",
-
   "onboardingTermsPrefix": "By signing up for swipe, you agree to our ",
   "onboardingTermsOfService": "Terms of Service",
   "onboardingTermsMiddle": ". Learn how we process your data in our ",
   "onboardingPrivacyPolicy": "Privacy Policy",
   "onboardingTermsAnd": " and ",
   "onboardingCookiesPolicy": "Cookies Policy",
-  "onboardingTermsSuffix": "."
+  "onboardingTermsSuffix": ".",
 
+  "nameGenderStepTitle": "Tell us a bit about yourself",
+  "nameGenderStepSubtitle": "A short bio helps others know the real you. Keep it fun and genuine.",
+  "fullName": "Full Name",
+  "enterYourFullName": "Enter your full name",
+  "gender": "Gender",
+  "male": "Male",
+  "female": "Female",
+
+  "next": "Next",
+  "getStarted": "Get Started",
+
+  "approachTitle": "How would you like your counselor to approach you?",
+  "approachPatient": "Patient",
+  "approachSupportive": "Supportive",
+  "approachConvincing": "Convincing",
+  "approachEnergetic": "Energetic",
+  "approachHumorous": "Humorous",
+
+  "dobTitle": "When were you born?",
+  "dobSubtitle": "We personalize the experience based on your age.",
+  "dobDayLabel": "Day",
+  "dobMonthLabel": "Month",
+  "dobYearLabel": "Year",
+  "dobErrorInvalid": "Please select a valid date of birth.",
+
+  "january": "January",
+  "february": "February",
+  "march": "March",
+  "april": "April",
+  "may": "May",
+  "june": "June",
+  "july": "July",
+  "august": "August",
+  "september": "September",
+  "october": "October",
+  "november": "November",
+  "december": "December",
+
+  "januaryShort": "Jan",
+  "februaryShort": "Feb",
+  "marchShort": "Mar",
+  "aprilShort": "Apr",
+  "mayShort": "May",
+  "juneShort": "Jun",
+  "julyShort": "Jul",
+  "augustShort": "Aug",
+  "septemberShort": "Sep",
+  "octoberShort": "Oct",
+  "novemberShort": "Nov",
+  "decemberShort": "Dec",
+
+  "nameGenderTitle": "Tell us a bit about yourself",
+  "nameGenderSubtitle": "A short bio helps others know the real you. Keep it fun and genuine.",
+  "nameGenderFullNameLabel": "Full Name",
+  "nameGenderFullNameHint": "Enter your full name",
+  "nameGenderGenderLabel": "Gender",
+  "nameGenderMale": "Male",
+  "nameGenderFemale": "Female",
+
+  "supportAreaTitle": "In which area would you like to receive support?",
+  "supportAreaIndividual": "Individual",
+  "supportAreaFamily": "Family",
+  "supportAreaCareer": "Career",
+  "supportAreaEducation": "Education",
+  "supportAreaPersonalDevelopment": "Personal Development",
+
+  "availableDaysTitle": "Which days are you available?",
+  "dayMonday": "Monday",
+  "dayTuesday": "Tuesday",
+  "dayWednesday": "Wednesday",
+  "dayThursday": "Thursday",
+  "dayFriday": "Friday",
+  "daySaturday": "Saturday",
+  "daySunday": "Sunday",
+
+  "meetingTimeTitle": "What time would you like to meet?",
+  "meetingTimeMorning": "Morning",
+  "meetingTimeAfternoon": "Afternoon",
+  "meetingTimeEvening": "Evening",
+  "meetingTimeFlexible": "Flexible",
+  "meetingTimeMorningRange": "(8:00 AM–12:00 PM)",
+  "meetingTimeAfternoonRange": "(12:00 PM–6:00 PM)",
+  "meetingTimeEveningRange": "(6:00 PM–9:00 PM)",
+  "meetingTimeFlexibleRange": "",
+
+  "successTitle": "Account has been created",
+  "successSubtitle": "Your account has been successfully created. Enjoy the app.",
+
+  "topicFeelingGood": "Feeling Good",
+  "appointmentDescription": "You have a meeting with {name} about {topic}.",
+  "@appointmentDescription": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "topic": { "type": "String" }
+    }
+  },
+
+  "quickActions": "Quick Actions",
+
+  "hi": "Hi",
+  "goodMorning": "Good Morning",
+  "goodAfternoon": "Good Afternoon",
+  "goodEvening": "Good Evening",
+
+  "welcome": "Welcome",
+  "howAreYouFeelIngToday": "How are you feeling today?",
+  "getStart": "Let's start",
+
+  "onboardingQuote1": "Your only limits are the ones you set yourself.",
+  "onboardingQuote2": "Take a deep breath and start your journey.",
+  "onboardingQuote3": "The quieter you become, the more you are able to hear.",
+
+  "someoneWantsToTalkToYou": "Someone wants to talk to you.",
+  "startTalking": "Start Talking",
+
+  "moodTerrible": "Terrible",
+  "moodBad": "Bad",
+  "moodNeutral": "Neutral",
+  "moodGood": "Good",
+  "moodGreat": "Great",
+
+  "timeToTrackMood": "It's time to track your mood",
+
+  "days": "Days",
+  "hours": "Hours",
+  "minutes": "Minutes",
+  "seconds": "Seconds",
+
+  "timeRemainingTitle": "Time remaining until the next meeting begins.",
+  "upcomingMeetingTitle": "Upcoming Meeting",
+  "noUpcomingMeetings": "You have no upcoming meetings.",
+
+  "takeTheTestNow": "Take the Test Now",
+  "testDescription": "Assess your mental state and learn more about yourself.",
+
+  "premiumPlan": "Premium Plan",
+  "premiumDescription": "Unlock your AI chatbot & get all premium features.",
+
+  "upgradePlan": "Upgrade Plan",
+  "areYouStressed": "Are You Stressed?",
+  "areYouAnxious": "Are You Anxious",
+
+  "questionsForAdults": "{questionNumber} Questions for Adults",
+  "@questionsForAdults": {
+    "description": "Shows the number of questions for adult mode.",
+    "placeholders": {
+      "questionNumber": { "type": "int" }
+    }
+  },
+
+  "statusAssessmentTest": "Status Assessment Test",
+  "stressScaleTest": "Stress Scale Test",
+  "anxietyScaleTest": "Anxiety Scale Test",
+
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Primary button label to start the mental test"
+  },
+
+  "testRule1": "Evaluate your **last week**.",
+  "@testRule1": {
+    "description": "First rule: evaluate your last week, bold part between **"
+  },
+
+  "testRule2": "It is recommended that you take the test **once a week**.",
+  "@testRule2": {
+    "description": "Second rule: recommended frequency of the test"
+  },
+
+  "testRule3": "If you stop the test halfway through, **you can continue from where you left off.**",
+  "@testRule3": {
+    "description": "Third rule: user can continue later"
+  },
+
+  "testDisclaimer": "The results of this test provide insight into individual mental health but do not replace a diagnosis or recommendation as discussed with a mental health professional.",
+  "@testDisclaimer": {
+    "description": "Legal/medical disclaimer for mental health test"
+  },
+
+  "never": "Never",
+  "sometimes": "Sometimes and occasionally",
+  "often": "Quite often",
+  "always": "Always",
+
+  "stressQ1": "I had trouble relaxing and letting go.",
+  "stressQ2": "I tend to overreact to events.",
+  "stressQ3": "I felt nervous or anxious.",
+  "stressQ4": "I had difficulty managing my things and tasks.",
+  "stressQ5": "I had difficulty and occasionally ignored my feelings.",
+  "stressQ6": "I had trouble falling asleep or staying asleep.",
+  "stressQ7": "I felt overwhelmed by responsibilities.",
+
+  "stressScaleTitle": "Stress scale test",
+  "yourStressLevelPrefix": "Your stress level: ",
+
+  "stressLevelLow": "Low stress",
+  "stressLevelLowDescription": "Your current stress level is low. You manage daily challenges well.",
+  "stressLevelModerate": "Moderate stress",
+  "stressLevelModerateDescription": "Your stress level is moderate. It is manageable, but requires attention.",
+  "stressLevelHigh": "High stress",
+  "stressLevelHighDescription": "Your stress level is high. You need to slow down and listen to your body.",
+
+  "stressAnalysisIntro": "Thank you for completing the test. Your results indicate that there are some factors in your daily life that may be challenging you and causing fatigue.",
+  "stressAnalysisP1Part1": "While this level isn't a ",
+  "stressAnalysisP1Bold1": "'high alert', ",
+  "stressAnalysisP1Part2": "it's your body and mind's way of saying, ",
+  "stressAnalysisP1Bold2": "'I need you to slow down and listen to me.'",
+  "stressAnalysisP2Part1": "Moderate stress is very common in today's fast-paced world, and it is ",
+  "stressAnalysisP2Bold1": "manageable. ",
+  "stressAnalysisP2Part2": "You can see this result as an opportunity to ",
+  "stressAnalysisP2Bold2": "manage your stress before it leads to burnout.",
+  "stressAnalysisRemember": "Remember, this test is an awareness tool, not a medical diagnosis. Taking time for yourself is the first step toward feeling better.",
+
+  "backToHome": "Back to Home",
+
+  "specialistsScreenTitle": "Mentors",
+  "specialistAuraName": "Aura",
+  "specialistAuraTitle": "Individual Mentorship",
+  "specialistAuraDescription": "Personalized guidance for your self-growth journey.",
+  "specialistZenName": "Zen",
+  "specialistZenTitle": "Relationship Advisor",
+  "specialistZenDescription": "Helping you build healthy and balanced relationships.",
+  "specialistElaraName": "Elara",
+  "specialistElaraTitle": "Development Coach",
+  "specialistElaraDescription": "Supports your personal growth and long-term goals.",
+  "specialistOrionName": "Orion",
+  "specialistOrionTitle": "Social Behavior Guide",
+  "specialistOrionDescription": "Improving your communication skills and social confidence.",
+  "specialistCyraName": "Cyra",
+  "specialistCyraTitle": "Academic Mentor",
+  "specialistCyraDescription": "Helps with focus, study habits and academic planning.",
+
+  "chatScreenGreeting": "Hello, {name}",
+  "@chatScreenGreeting": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "chatScreenTitle": "Chats",
+  "chatLastFromYouPrefix": "You: ",
+
+  "chatDeleteToast": "Chat with {name} has been deleted.",
+  "@chatDeleteToast": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "askMentor": "Ask, {name}",
+  "@askMentor": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "gallery": "Gallery",
+  "camera": "Camera",
+  "document": "Document",
+  "free": "FREE",
+  "calendar": "Calendar",
+
+  "profileSettings": "Profile Settings",
+  "shareWithFriends": "Share with Friends",
+  "notifications": "Notifications",
+  "appointments": "Meetings",
+  "faq": "FAQ",
+
+  "phoneNumber": "Phone Number",
+  "logout": "Logout",
+  "deleteAccount": "Delete Account",
+  "save": "Save",
+  "areYouSureLogout": "Are you sure you want to logout?",
+
+  "deleteProfile": "Delete Profile",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "areYouSureDelete": "Are you sure you want to delete the profile?",
+
+  "invitePeople": "Invite People",
+  "copyLinkInviteFriend": "Copy the link to invite your friends",
+  "share": "Share",
+
+  "upcoming": "Upcoming",
+  "completed": "Completed",
+
+  "relativeToday": "Today",
+  "relativeTomorrow": "Tomorrow",
+  "relativeYesterday": "Yesterday",
+
+  "relativeDaysAgo": "{count} days ago",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "relativeWeeksAgo": "{count} weeks ago",
+  "@relativeWeeksAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "numberOfQuestions": "Question {currentQuestion} of {totalQuestion}",
+  "@numberOfQuestions": {
+    "placeholders": {
+      "currentQuestion": { "type": "int" },
+      "totalQuestion": { "type": "int" }
+    }
+  },
+
+  "english": "English",
+  "turkish": "Turkish",
+  "german": "German",
+  "language": "Language",
+
+  "back": "Back",
+
+  "enterFullNamePrompt": "Please enter your full name.",
+  "meetingStarted": "Meeting Started",
+  "selectedDate": "Selected Date",
+
+  "newChatStarted" : "New Chat Started",
+  "startNewMeeting": "Start a new meeting"
 }

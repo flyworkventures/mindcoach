@@ -3,14 +3,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../core/utils/screen_size_extensions.dart';
 
-// apple ve facebook için font awesome, google için image asset
+/// SocialButton
+/// ------------------------------------------------------------
+/// Sosyal login butonu UI bileşeni.
+/// - Apple/Facebook: FontAwesome icon
+/// - Google: asset ikon
+///
+/// Not:
+/// - Bu widget auth işlemi yapmaz.
+/// - Sadece onPressed callback tetikler.
 class SocialButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final String label;
-  final Color backgroundColor;
-  final Color textColor;
-  final Widget icon;
-
   const SocialButton._({
     required this.onPressed,
     required this.label,
@@ -19,6 +21,11 @@ class SocialButton extends StatelessWidget {
     required this.icon,
   });
 
+  final VoidCallback onPressed;
+  final String label;
+  final Color backgroundColor;
+  final Color textColor;
+  final Widget icon;
 
   factory SocialButton.google({required VoidCallback onPressed}) {
     return SocialButton._(
@@ -28,57 +35,44 @@ class SocialButton extends StatelessWidget {
       textColor: Colors.black87,
       icon: SizedBox(
         width: 24,
-        height: 24,               // ikon kutusu
-        child: Image.asset(
-          'assets/icons/google_icon.png',
-          width: 24,
-          height: 24,             // Google PNG boyutu
-        ),
+        height: 24,
+        child: Image.asset('assets/icons/google_icon.png'),
       ),
     );
   }
 
-  // FACEBOOK
   factory SocialButton.facebook({required VoidCallback onPressed}) {
     return SocialButton._(
       onPressed: onPressed,
       label: 'Facebook',
       backgroundColor: const Color(0xFF1877F2),
       textColor: Colors.white,
-      icon: SizedBox(
+      icon: const SizedBox(
         width: 24,
         height: 24,
         child: Center(
-          child: FaIcon(
-            FontAwesomeIcons.facebookF,
-            size: 22,
-            color: Colors.white,
-          ),
+          child: FaIcon(FontAwesomeIcons.facebookF, size: 22, color: Colors.white),
         ),
       ),
     );
   }
 
-  // APPLE
   factory SocialButton.apple({required VoidCallback onPressed}) {
     return SocialButton._(
       onPressed: onPressed,
       label: 'Apple',
       backgroundColor: Colors.black,
       textColor: Colors.white,
-      icon: SizedBox(
+      icon: const SizedBox(
         width: 24,
         height: 24,
         child: Center(
-          child: FaIcon(
-            FontAwesomeIcons.apple,
-            size: 24,
-            color: Colors.white,
-          ),
+          child: FaIcon(FontAwesomeIcons.apple, size: 24, color: Colors.white),
         ),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final isLight = backgroundColor == Colors.white;

@@ -1,8 +1,8 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/cupertino.dart';
 
 class SizeConfig {
-  static late double scaleW;
-  static late double scaleH;
+  static double scaleW = 1.0;
+  static double scaleH = 1.0;
 
   static const double designWidth = 394;
   static const double designHeight = 852;

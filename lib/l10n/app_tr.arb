@@ -9,13 +9,339 @@
   "onboardingDescription2": "Stres, yoğun düşünceler, kararsızlık veya dağınık fikirler… Mind Coach bunları sana özel net içgörülere dönüştürür. Odaklanmış bir zihnin gücünü keşfet.",
   "onboardingDescription3": "Düşüncelerini paylaş, sorular sor ya da yeni bakış açıları keşfet. Mind Coach, gelişimini destekler ve daha net bir şekilde ilerlemene yardımcı olur.",
 
-
   "onboardingTermsPrefix": "Swipe'a kaydolarak ",
   "onboardingTermsOfService": "Hizmet Şartları",
   "onboardingTermsMiddle": "’nı kabul etmiş olursun. Verilerini nasıl işlediğimizi ",
   "onboardingPrivacyPolicy": "Gizlilik Politikası",
   "onboardingTermsAnd": " ve ",
   "onboardingCookiesPolicy": "Çerez Politikası",
-  "onboardingTermsSuffix": "’nda bulabilirsin."
+  "onboardingTermsSuffix": "’nda bulabilirsin.",
 
+  "nameGenderStepTitle": "Bize biraz kendinden bahset",
+  "nameGenderStepSubtitle": "Kısa bir tanım, seni daha iyi tanımamıza yardımcı olur.",
+  "enterYourFullName": "Adını ve soyadını gir",
+  "gender": "Cinsiyet",
+  "male": "Erkek",
+  "female": "Kadın",
+
+  "next": "İleri",
+  "getStarted": "Başla",
+
+  "approachTitle": "Danışmanın sana nasıl yaklaşmasını istersin?",
+  "approachPatient": "Sabırlı",
+  "approachSupportive": "Destekleyici",
+  "approachConvincing": "İkna edici",
+  "approachEnergetic": "Enerjik",
+  "approachHumorous": "Esprili",
+
+  "dobTitle": "Doğum tarihin nedir?",
+  "dobSubtitle": "Yaşına göre deneyim sürecini kişiselleştiriyoruz.",
+  "dobDayLabel": "Gün",
+  "dobMonthLabel": "Ay",
+  "dobYearLabel": "Yıl",
+  "dobErrorInvalid": "Lütfen geçerli bir doğum tarihi seç.",
+
+  "january": "Ocak",
+  "february": "Şubat",
+  "march": "Mart",
+  "april": "Nisan",
+  "may": "Mayıs",
+  "june": "Haziran",
+  "july": "Temmuz",
+  "august": "Ağustos",
+  "september": "Eylül",
+  "october": "Ekim",
+  "november": "Kasım",
+  "december": "Aralık",
+
+  "januaryShort": "Oca",
+  "februaryShort": "Şub",
+  "marchShort": "Mar",
+  "aprilShort": "Nis",
+  "mayShort": "May",
+  "juneShort": "Haz",
+  "julyShort": "Tem",
+  "augustShort": "Ağu",
+  "septemberShort": "Eyl",
+  "octoberShort": "Eki",
+  "novemberShort": "Kas",
+  "decemberShort": "Ara",
+
+  "fullName": "Tam Ad",
+  "nameGenderTitle": "Bize biraz kendinden bahset",
+  "nameGenderSubtitle": "Kısa bir tanım, seni daha iyi tanımamıza yardımcı olur.",
+  "nameGenderFullNameLabel": "Ad Soyad",
+  "nameGenderFullNameHint": "Tam adını yaz",
+  "nameGenderGenderLabel": "Cinsiyet",
+  "nameGenderMale": "Erkek",
+  "nameGenderFemale": "Kadın",
+
+  "supportAreaTitle": "Hangi alanda destek almak istersin?",
+  "supportAreaIndividual": "Bireysel",
+  "supportAreaFamily": "Aile",
+  "supportAreaCareer": "Kariyer",
+  "supportAreaEducation": "Eğitim",
+  "supportAreaPersonalDevelopment": "Kişisel gelişim",
+
+  "availableDaysTitle": "Hangi günler müsaitsiniz?",
+  "dayMonday": "Pazartesi",
+  "dayTuesday": "Salı",
+  "dayWednesday": "Çarşamba",
+  "dayThursday": "Perşembe",
+  "dayFriday": "Cuma",
+  "daySaturday": "Cumartesi",
+  "daySunday": "Pazar",
+
+  "meetingTimeTitle": "Görüşmeleri hangi saatlerde yapmak istersin?",
+  "meetingTimeMorning": "Sabah",
+  "meetingTimeAfternoon": "Öğleden sonra",
+  "meetingTimeEvening": "Akşam",
+  "meetingTimeFlexible": "Esnek",
+  "meetingTimeMorningRange": "(08:00–12:00)",
+  "meetingTimeAfternoonRange": "(12:00–18:00)",
+  "meetingTimeEveningRange": "(18:00–21:00)",
+  "meetingTimeFlexibleRange": "",
+
+  "successTitle": "Hesabın oluşturuldu",
+  "successSubtitle": "Hesabın başarıyla oluşturuldu. Uygulamanın keyfini çıkar.",
+
+  "topicFeelingGood": "kendini iyi hissetmek",
+  "appointmentDescription": "{name} ile {topic} üzerine görüşmen var.",
+  "@appointmentDescription": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "topic": { "type": "String" }
+    }
+  },
+
+  "quickActions": "Hızlı Eylemler",
+
+  "hi": "Merhaba",
+  "goodMorning": "Günaydın",
+  "goodAfternoon": "İyi Günler",
+  "goodEvening": "İyi Akşamlar",
+
+  "welcome": "Hoşgeldin",
+  "howAreYouFeelIngToday": "Bugün nasıl hissediyorsun?",
+  "getStart": "Başlayalım",
+
+  "onboardingQuote1": "Kendi kendine koyduğun limitler, sahip olduğun tek limitlerdir.",
+  "onboardingQuote2": "Derin bir nefes al ve yolculuğuna başla.",
+  "onboardingQuote3": "Ne kadar sessiz olursan, o kadar çok şey duyabilirsin.",
+
+  "someoneWantsToTalkToYou": "Biri seninle konuşmak istiyor.",
+  "startTalking": "Konuşmaya Başla",
+
+  "moodTerrible": "Berbat",
+  "moodBad": "Kötü",
+  "moodNeutral": "Normal",
+  "moodGood": "İyi",
+  "moodGreat": "Harika",
+
+  "timeToTrackMood": "Duygu durumunu takip etme zamanı",
+
+  "days": "Gün",
+  "hours": "Saat",
+  "minutes": "Dakika",
+  "seconds": "Saniye",
+
+  "timeRemainingTitle": "Bir sonraki görüşmeye kalan süre.",
+  "upcomingMeetingTitle": "Yaklaşan Görüşme",
+  "noUpcomingMeetings": "Yaklaşan görüşmeniz yok.",
+
+  "premiumPlan": "Premium Plan",
+  "premiumDescription": "Sohbet robotunuzun kilidini açın ve tüm premium özelliklere erişin.",
+
+  "takeTheTestNow": "Şimdi Testi Çöz",
+  "testDescription": "Zihinsel durumunu değerlendir ve kendin hakkında daha fazla bilgi edin.",
+
+  "upgradePlan": "Planı Yükselt",
+  "areYouStressed": "Stresli misin?",
+  "areYouAnxious": "Endişeli misin?",
+
+  "questionsForAdults": "Yetişkinler için {questionNumber} Soru",
+  "@questionsForAdults": {
+    "description": "Yetişkin modu için soru sayısını gösterir.",
+    "placeholders": {
+      "questionNumber": { "type": "int" }
+    }
+  },
+
+  "statusAssessmentTest": "Durum Değerlendirme Testi",
+  "stressScaleTest": "Stres Ölçme Testi",
+  "anxietyScaleTest": "Endişe Ölçme Testi",
+
+  "continueButton": "Devam Et",
+  "@continueButton": {
+    "description": "Testi başlatmak için birincil buton"
+  },
+
+  "testRule1": "Lütfen son **bir haftanı** değerlendir.",
+  "@testRule1": {
+    "description": "İlk kural: son bir haftayı temel al"
+  },
+
+  "testRule2": "Testi **haftada bir kez** uygulaman önerilir.",
+  "@testRule2": {
+    "description": "İkinci kural: önerilen test sıklığı"
+  },
+
+  "testRule3": "Testi yarıda bırakırsan, daha sonra **kaldığın yerden devam edebilirsin.**",
+  "@testRule3": {
+    "description": "Üçüncü kural: teste kaldığı yerden devam edebilme"
+  },
+
+  "testDisclaimer": "Bu testin sonuçları, bireysel ruh sağlığına dair içgörü sağlar ancak bir ruh sağlığı profesyoneliyle görüşerek alınan tanı veya önerilerin yerini tutmaz.",
+  "@testDisclaimer": {
+    "description": "Ruh sağlığı testi için yasal/medikal uyarı"
+  },
+
+  "never": "Hiçbir zaman",
+  "sometimes": "Bazen / Ara sıra",
+  "often": "Oldukça sık",
+  "always": "Her zaman",
+
+  "stressQ1": "Rahatlamakta ve bırakmakta zorlandım.",
+  "stressQ2": "Olaylara aşırı tepki verme eğilimindeyim.",
+  "stressQ3": "Kendimi gergin veya kaygılı hissettim.",
+  "stressQ4": "Eşyalarımı ve görevlerimi yönetmekte zorlandım.",
+  "stressQ5": "Duygularımı yönetmekte zorlandım ve bazen görmezden geldim.",
+  "stressQ6": "Uykuya dalmakta veya uykuda kalmakta zorlandım.",
+  "stressQ7": "Sorumluluklar tarafından bunalmış hissettim.",
+
+  "backToHome": "Ana Sayfaya Dön",
+
+  "stressScaleTitle": "Stres ölçeği testi",
+  "yourStressLevelPrefix": "Stres seviyen: ",
+
+  "stressLevelLow": "Düşük stres",
+  "stressLevelLowDescription": "Mevcut stres seviyen düşük. Günlük yaşamın zorluklarıyla iyi başa çıkıyorsun.",
+  "stressLevelModerate": "Orta düzey stres",
+  "stressLevelModerateDescription": "Stres seviyen orta düzeyde. Yönetilebilir ama dikkat gerektiriyor.",
+  "stressLevelHigh": "Yüksek stres",
+  "stressLevelHighDescription": "Stres seviyen yüksek. Yavaşlaman ve bedenini, zihnini dinlemen gerekiyor.",
+
+  "stressAnalysisIntro": "Testi tamamladığın için teşekkürler. Sonuçların, günlük hayatında seni zorlayan ve yoran bazı faktörler olabileceğini gösteriyor.",
+  "stressAnalysisP1Part1": "Bu seviye bir ",
+  "stressAnalysisP1Bold1": "'alarm durumu' ",
+  "stressAnalysisP1Part2": "olmasa da bedeninin ve zihninin sana şöyle sesleniyor: ",
+  "stressAnalysisP1Bold2": "'Lütfen yavaşla ve beni duy.' ",
+  "stressAnalysisP2Part1": "Günümüzün hızlı temposunda orta düzey stres çok yaygın ve ",
+  "stressAnalysisP2Bold1": "yönetilebilir. ",
+  "stressAnalysisP2Part2": "Bu sonucu, ",
+  "stressAnalysisP2Bold2": "tükenmişliğe dönüşmeden önce stresi yönetmek için bir fırsat ",
+
+  "stressAnalysisRemember": "Unutma, bu test bir farkındalık aracıdır; tıbbi bir tanı değildir. Kendine zaman ayırmak, daha iyi hissetmenin ilk adımıdır.",
+
+  "specialistsScreenTitle": "Mentörler",
+
+  "specialistAuraName": "Zeynep",
+  "specialistAuraTitle": "Bireysel Mentorluk",
+  "specialistAuraDescription": "Kendine özel yolculuğunda sana eşlik eden bireysel rehberlik.",
+  "specialistZenName": "Özgür",
+  "specialistZenTitle": "İlişki Danışmanı",
+  "specialistZenDescription": "Daha sağlıklı ve dengeli ilişkiler kurmana yardımcı olur.",
+  "specialistElaraName": "Merve",
+  "specialistElaraTitle": "Gelişim Koçu",
+  "specialistElaraDescription": "Kişisel gelişimine ve hedeflerine odaklanmanı sağlar.",
+  "specialistOrionName": "Hasan",
+  "specialistOrionTitle": "Sosyal Davranış Rehberi",
+  "specialistOrionDescription": "İletişim becerilerini ve sosyal özgüvenini güçlendirir.",
+  "specialistCyraName": "Ayşe",
+  "specialistCyraTitle": "Akademik Mentor",
+  "specialistCyraDescription": "Odaklanma, çalışma düzeni ve akademik planlamada seni destekler.",
+
+  "chatScreenGreeting": "Merhaba, {name}",
+  "@chatScreenGreeting": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "chatScreenTitle": "Sohbetler",
+  "chatLastFromYouPrefix": "Sen: ",
+
+  "chatDeleteToast": "{name} ile olan sohbet silindi.",
+  "@chatDeleteToast": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "askMentor": "{name} ile konuş",
+  "@askMentor": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "gallery": "Galeri",
+  "camera": "Kamera",
+  "document": "Belge",
+  "free": "ÜCRETSİZ",
+  "calendar": "Takvim",
+
+  "profileSettings": "Profil Ayarları",
+  "shareWithFriends": "Arkadaşlarınla Paylaş",
+  "notifications": "Bildirimler",
+  "appointments": "Görüşmeler",
+  "faq": "SSS",
+
+  "phoneNumber": "Telefon Numarası",
+  "logout": "Çıkış Yap",
+  "deleteAccount": "Hesabı Sil",
+  "save": "Kaydet",
+  "areYouSureLogout": "Profilden çıkış yapmak istediğinizden emin misiniz?",
+
+  "deleteProfile": "Profili Sil",
+  "cancel": "İptal",
+  "delete": "Sil",
+  "areYouSureDelete": "Profili silmek istediğinizden emin misiniz?",
+
+  "invitePeople": "Kişileri Davet Et",
+  "copyLinkInviteFriend": "Arkadaşlarını davet etmek için bağlantıyı kopyala",
+  "share": "paylaş",
+
+  "upcoming": "Yaklaşanlar",
+  "completed": "Tamamlananlar",
+
+  "relativeToday": "Bugün",
+  "relativeTomorrow": "Yarın",
+  "relativeYesterday": "Dün",
+
+  "relativeDaysAgo": "{count} gün önce",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "relativeWeeksAgo": "{count} hafta önce",
+  "@relativeWeeksAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "english": "İngilizce",
+  "turkish": "Türkçe",
+  "german": "Almanca",
+  "language": "Dil",
+
+  "back": "Geri",
+
+  "numberOfQuestions": "{totalQuestion} sorudan {currentQuestion}. soru",
+  "@numberOfQuestions": {
+    "placeholders": {
+      "currentQuestion": { "type": "int" },
+      "totalQuestion": { "type": "int" }
+    }
+  },
+
+  "enterFullNamePrompt": "Lütfen adınızı ve soyadınızı girin.",
+  "meetingStarted": "Görüşme Başladı",
+  "selectedDate": "Seçilen Tarih",
+
+  "newChatStarted": "Yeni Sohbet Başlatıldı",
+  "startNewMeeting": "Yeni Bir Görüşme Başlat"
 }
