@@ -8,22 +8,20 @@ import 'app/my_app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize OneSignal
   try {
     final notificationService = NotificationService();
     await notificationService.initiializeOnesignal();
-    debugPrint('✅ OneSignal initialized successfully');
+
   } catch (e) {
-    debugPrint('❌ OneSignal initialization error: $e');
+
   }
 
-  // Initialize Local Notifications (for periodic notifications)
   try {
     final localNotificationService = LocalNotificationService();
     await localNotificationService.initialize();
-    debugPrint('✅ Local notifications initialized successfully');
+
   } catch (e) {
-    debugPrint('❌ Local notifications initialization error: $e');
+
   }
 
   runApp(const ProviderScope(child: MyApp()));

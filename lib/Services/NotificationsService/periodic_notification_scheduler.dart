@@ -3,25 +3,20 @@ import 'package:mindcoach/Services/NotificationsService/local_notification_servi
 import 'package:mindcoach/Services/NotificationsService/models/notification_content.dart';
 import 'package:mindcoach/Services/NotificationsService/models/notification_preferences.dart';
 
-/// Periodic Notification Scheduler
-/// Manages scheduling of periodic notifications (2h, 4h, 8h, 24h)
 class PeriodicNotificationScheduler {
   final LocalNotificationService _localNotificationService = LocalNotificationService();
   final NotificationPreferences _preferences = NotificationPreferences();
 
-  /// Initialize and schedule all periodic notifications
   Future<void> initializeAndSchedule() async {
     try {
-      debugPrint('[PERIODIC_NOTIF] 🚀 Initializing periodic notifications...');
+      debugPrint('[PERIODIC_NOTIF]  Initializing periodic notifications...');
 
-      // Initialize local notification service
       await _localNotificationService.initialize();
       await _localNotificationService.requestPermissions();
 
-      // Check if notifications are enabled
       final notificationsEnabled = await _preferences.areNotificationsEnabled();
       if (!notificationsEnabled) {
-        debugPrint('[PERIODIC_NOTIF] ⚠️ Notifications are disabled');
+        debugPrint('[PERIODIC_NOTIF]  Notifications are disabled');
         await cancelAllNotifications();
         return;
       }
@@ -39,9 +34,9 @@ class PeriodicNotificationScheduler {
       await _scheduleInterval(8, startTime);
       await _scheduleInterval(24, startTime);
 
-      debugPrint('[PERIODIC_NOTIF] ✅ All periodic notifications scheduled');
+      debugPrint('[PERIODIC_NOTIF]  All periodic notifications scheduled');
     } catch (e) {
-      debugPrint('[PERIODIC_NOTIF] ❌ Error initializing: $e');
+      debugPrint('[PERIODIC_NOTIF]  Error initializing: $e');
       rethrow;
     }
   }
@@ -52,16 +47,14 @@ class PeriodicNotificationScheduler {
       // Check if this interval is enabled
       final isEnabled = await _preferences.isIntervalEnabled(hours);
       if (!isEnabled) {
-        debugPrint('[PERIODIC_NOTIF] ⚠️ ${hours}h interval is disabled');
+        debugPrint('[PERIODIC_NOTIF]  ${hours}h interval is disabled');
         await _cancelInterval(hours);
         return;
       }
 
-      // Get notification content
       final content = NotificationContent.forInterval(hours);
       final notificationId = NotificationPreferences.getIdForInterval(hours);
 
-      // For 24 hours, use daily repeat
       if (hours == 24) {
         await _localNotificationService.schedulePeriodicNotification(
           id: notificationId,
@@ -72,8 +65,7 @@ class PeriodicNotificationScheduler {
           payload: content.payload,
         );
       } else {
-        // For 2h, 4h, 8h - use specific time scheduling
-        // Calculate next notification time based on interval
+
         final nextTime = _calculateNextNotificationTime(startTime, hours);
         
         await _localNotificationService.scheduleSpecificTimeNotification(
@@ -92,20 +84,18 @@ class PeriodicNotificationScheduler {
     }
   }
 
-  /// Calculate next notification time based on interval
   DateTime _calculateNextNotificationTime(DateTime startTime, int hours) {
     final now = DateTime.now();
     final difference = now.difference(startTime);
     final hoursPassed = difference.inHours;
     
-    // Calculate how many intervals have passed
+
     final intervalsPassed = hoursPassed ~/ hours;
-    
-    // Calculate next notification time
+
     final nextInterval = intervalsPassed + 1;
     final nextTime = startTime.add(Duration(hours: nextInterval * hours));
     
-    // If next time is in the past, add one more interval
+
     if (nextTime.isBefore(now)) {
       return nextTime.add(Duration(hours: hours));
     }
@@ -113,7 +103,6 @@ class PeriodicNotificationScheduler {
     return nextTime;
   }
 
-  /// Cancel notification for specific interval
   Future<void> _cancelInterval(int hours) async {
     try {
       final notificationId = NotificationPreferences.getIdForInterval(hours);

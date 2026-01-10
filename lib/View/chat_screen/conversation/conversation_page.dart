@@ -64,16 +64,15 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
    @override
   void initState() {
     super.initState();
-    // RecorderController'ı initialize et (standart kalite ayarları)
+   
     _recorderController = RecorderController()
       ..androidEncoder = AndroidEncoder.aac
       ..androidOutputFormat = AndroidOutputFormat.mpeg4
-      ..sampleRate = 44100 // Standart sample rate
-      ..bitRate = 128000; // 128 kbps (standart kalite)
-      // iOS için encoder otomatik olarak aacLc kullanılır
-    debugPrint("✅ RecorderController initialize edildi");
-    
-    // Sayfa açıldığında eski seçili resmi temizle
+      ..sampleRate = 44100 
+      ..bitRate = 128000;
+
+    debugPrint(" RecorderController initialize edildi");
+
     Future.microtask(() async {
       if (!mounted) return;
       try {
@@ -83,11 +82,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           await ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
         }
       } catch (e) {
-        debugPrint("❌ ConversationPage initState hatası: $e");
+        debugPrint(" ConversationPage initState hatası: $e");
       }
     });
     
-    // Mesajları periyodik olarak çek (0.5 saniyede bir)
+
     _messagesStreamTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
       if (mounted) {
         ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
@@ -104,7 +103,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     _recordingTimer?.cancel();
     _messagesStreamTimer?.cancel();
     _recorderController?.dispose();
-    // Eğer kayıt devam ediyorsa durdur (mounted kontrolü ile)
+
     if (mounted) {
       try {
         final isRecording = ref.read(conversationsProvider).isRecording;
@@ -112,7 +111,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           ref.read(conversationsProvider.notifier).cancelRecording();
         }
       } catch (e) {
-        // Widget unmount olduysa ref kullanılamaz, sessizce devam et
+
         debugPrint("⚠️ dispose sırasında ref kullanılamadı (normal): $e");
       }
     }
@@ -120,7 +119,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   }
   void _toggleMenu() {
     setState(() => _isMenuOpen = !_isMenuOpen);
-    // Menü açıldığında eski seçili resmi temizle
+
     if (_isMenuOpen) {
       ref.read(conversationsProvider.notifier).clearSelectedImage();
       _lastProcessedImagePath = null;
@@ -128,15 +127,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    // Read messages from provider and sort by sentTime.
-    // DB provides ISO strings like "2025-12-29T01:58:44.512Z" — parse them to DateTime.
+
     final List<MessageModel> allMessages = ref.watch(conversationsProvider).messages;
-    
-    // Seçilen resmi dinle (otomatik gönderme yok, buton ile gönderilecek)
+
     final selectedImage = ref.watch(conversationsProvider.select((state) => state.selectedImage));
     final isRecording = ref.watch(conversationsProvider.select((state) => state.isRecording));
     
-    // Kayıt süresini güncelle
+
     if (isRecording && _recordingTimer == null) {
       _recordingTimer = Timer.periodic(const Duration(seconds: 1), (_) {
         if (mounted) {
@@ -151,7 +148,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       _recordingTimer = null;
     }
     
-    // Eğer resim temizlendiyse _lastProcessedImagePath'i de temizle
+
     if (selectedImage == null && _lastProcessedImagePath != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -161,14 +158,12 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         }
       });
     }
-    
-    // Mesajları tarihe göre sırala (yeni -> eski)
-    // reverse: true olduğu için ListView'da ters çevrilir ve en altta en yeni mesaj görünecek
+
     final List<MessageModel> messages = List.from(allMessages)
       ..sort((a, b) {
         final dateA = _parseSentTime(a.sentTime);
         final dateB = _parseSentTime(b.sentTime);
-        return dateB.compareTo(dateA); // Yeni mesajlar önce, eski mesajlar sonra (reverse ile eski->yeni görünecek)
+        return dateB.compareTo(dateA); 
       });
 
 
@@ -345,15 +340,15 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 8.h),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // Overflow'u önlemek için
+        mainAxisSize: MainAxisSize.min, 
         children: [
-          // Kayıt UI'ı - WhatsApp tarzı (overflow düzeltildi)
+        
           if (isRecording)
             Container(
               margin: EdgeInsets.only(bottom: 8.h),
               width: 339.w,
               constraints: BoxConstraints(
-                maxHeight: 100.h, // Overflow'u önlemek için max height
+                maxHeight: 100.h,
               ),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -367,7 +362,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 ],
               ),
               child: Row(
-                mainAxisSize: MainAxisSize.max, // Overflow'u önlemek için
+                mainAxisSize: MainAxisSize.max, 
                 children: [
                   Expanded(
                     child: Padding(
@@ -406,7 +401,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       ),
                     ),
                   ),
-                  // Gerçek zamanlı waveform
+              
                   if (_recorderController != null)
                     Expanded(
                       child: Padding(
@@ -452,7 +447,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 ],
               ),
             ),
-          // Seçili resim preview
+        
           if (hasImage && !isRecording)
             Container(
               margin: EdgeInsets.only(bottom: 8.h),
@@ -500,9 +495,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 
                   IconButton(
                     onPressed: () {
-                      // Resmi state'ten temizle
+                    
                       ref.read(conversationsProvider.notifier).clearSelectedImage();
-                      // UI'ı güncelle
+                    
                       setState(() {
                         _lastProcessedImagePath = null;
                       });
@@ -519,11 +514,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 ],
               ),
             ),
-          // Input container
+         
           Container(
             width: 339.w,
             constraints: BoxConstraints(
-              maxHeight: 80.h, // Overflow'u önlemek için max height
+              maxHeight: 80.h, 
             ),
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
             decoration: BoxDecoration(
@@ -538,7 +533,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               ],
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Overflow'u önlemek için
+              mainAxisSize: MainAxisSize.min, 
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
@@ -559,7 +554,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         contentPadding: EdgeInsets.zero,
                       ),
                       onChanged: (text) {
-                        setState(() {}); // Buton durumunu güncelle
+                        setState(() {});
                       },
                       onSubmitted: (text) {
                         if (canSend) {
@@ -572,9 +567,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max, // Overflow'u önlemek için
+                  mainAxisSize: MainAxisSize.max, 
                   children: [
-                    // Sol tarafta: Artı butonu
+
                     IconButton(
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
@@ -585,7 +580,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
                       ),
                     ),
-                    // Ortada: Gönderme butonu (varsa)
+
                     if (canSend || isRecording)
                       IconButton(
                         padding: EdgeInsets.zero,
@@ -609,28 +604,28 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                               : Icon(Icons.send, color: Colors.white, size: 16.w),
                         ),
                       ),
-                    // Sağ tarafta: Mikrofon ve Sparkles (video call) butonları
+
                     Flexible(
                       child: Row(
-                        mainAxisSize: MainAxisSize.min, // Overflow'u önlemek için
+                        mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          // Ses kaydı butonu - onTap ile başlat, onLongPress ile de çalışır
+                     
                           GestureDetector(
                             onTap: () async {
-                              // onTap ile kayıt başlat
+                            
                               if (!isRecording) {
                                 await _startRecording();
                               }
                             },
                             onLongPressStart: (details) async {
-                              // onLongPress ile de kayıt başlat
+                            
                               if (!isRecording) {
                                 await _startRecording();
                               }
                             },
                             onLongPressEnd: (details) async {
-                              // Basmayı bıraktığında otomatik gönder
+                          
                               debugPrint("🎤 onLongPressEnd tetiklendi, isRecording: $isRecording");
                               if (isRecording && _recorderController != null) {
                                 await _stopAndSendRecording();
@@ -639,7 +634,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               constraints: BoxConstraints(),
-                              onPressed: null, // GestureDetector kullanıyoruz
+                              onPressed: null,
                               icon: SvgPicture.asset(
                                 'assets/svg/microphone.svg',
                                 width: 14.w,
@@ -650,7 +645,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                               ),
                             ),
                           ),
-                          // Sparkles/Video call butonu
+                          
                           IconButton(
                             padding: EdgeInsets.zero,
                             constraints: BoxConstraints(),
@@ -674,7 +669,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     );
   }
 
-  /// Mesaj gönderme işlemi (normal mesaj veya resim)
+
   Future<void> _sendMessage() async {
     final hasText = _messageController.text.trim().isNotEmpty;
     final selectedImage = ref.watch(conversationsProvider.select((state) => state.selectedImage));
@@ -684,17 +679,17 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
     try {
       if (hasImage) {
-        // Resim gönder
+
         final image = ref.watch(conversationsProvider.select((state) => state.selectedImage));
         if (image != null) {
           await _handleImageSelected(image);
         }
       } else if (hasText) {
-        // Normal mesaj gönder
+
         final trimmed = _messageController.text.trim();
         if (trimmed.isEmpty) return;
 
-        // Eğer seçili resim varsa temizle (normal mesaj gönderilirken)
+
         if (hasImage) {
           ref.read(conversationsProvider.notifier).clearSelectedImage();
           setState(() {
@@ -702,12 +697,12 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           });
         }
 
-        // Fire-and-forget: İstek gönderildikten sonra loading bitir
+
         ref.read(conversationsProvider.notifier).sendMessage(
               id: widget.specialistId.id,
               text: trimmed,
             ).then((_) {
-          // Arka planda mesajları yükle
+
           Future.delayed(const Duration(milliseconds: 500), () {
             if (mounted) {
               ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
@@ -718,7 +713,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         });
 
         _messageController.clear();
-        setState(() {}); // Buton durumunu güncelle
+        setState(() {});
       }
     } catch (e) {
       if (!mounted) return;
@@ -823,7 +818,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     );
   }
 
-  /// Sesli mesaj gönder
+
   Future<void> _sendVoiceMessage(String audioPath) async {
     try {
       final file = File(audioPath);
@@ -839,20 +834,20 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         return;
       }
 
-      // Fire-and-forget: İstek gönderildikten sonra loading bitir
+   
       ref.read(conversationsProvider.notifier).sendVoiceMessage(
             consultantId: widget.specialistId.id,
             audioFile: file,
-            message: null, // Mesaj boş bırakılıyor
+            message: null, 
           ).then((_) {
-        // Arka planda mesajları yükle
+
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) {
             ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
           }
         });
       }).catchError((e) {
-        // Hata durumunda kullanıcıya bildir
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -882,26 +877,25 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       _recorderController = RecorderController()
         ..androidEncoder = AndroidEncoder.aac
         ..androidOutputFormat = AndroidOutputFormat.mpeg4
-        ..sampleRate = 44100 // Standart sample rate
-        ..bitRate = 128000; // 128 kbps (standart kalite)
-        // iOS için encoder otomatik olarak aacLc kullanılır
+        ..sampleRate = 44100 
+        ..bitRate = 128000; 
+     
     }
     
     final isRecording = ref.read(conversationsProvider).isRecording;
     if (!isRecording && _recorderController != null) {
       try {
         final path = (await getTemporaryDirectory()).path + '/voice_message_${DateTime.now().millisecondsSinceEpoch}.m4a';
-        debugPrint("🎤 Kayıt başlatılıyor: $path");
+        debugPrint(" Kayıt başlatılıyor: $path");
         
         // State'i önce güncelle
         await ref.read(conversationsProvider.notifier).startRecordingWithPath(path);
         
         // Sonra kaydı başlat
         await _recorderController!.record(path: path);
-        debugPrint("🎤 RecorderController kayıt başladı");
+
       } catch (e, stackTrace) {
-        debugPrint("❌ Kayıt başlatma hatası: $e");
-        debugPrint("❌ Stack trace: $stackTrace");
+
         await ref.read(conversationsProvider.notifier).cancelRecording();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -920,27 +914,26 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     final isRecording = ref.read(conversationsProvider).isRecording;
     if (isRecording && _recorderController != null) {
       try {
-        debugPrint("🎤 RecorderController durduruluyor...");
+        debugPrint("RecorderController durduruluyor...");
         
-        // RecorderController'ı durdur ve path'i al
+
         final path = await _recorderController!.stop();
-        debugPrint("🎤 RecorderController durduruldu, path: $path");
+        debugPrint(" RecorderController durduruldu, path: $path");
         
-        // State'i güncelle (path'i state'e kaydet)
+
         if (path != null && path.isNotEmpty) {
-          // Path'i state'e kaydet
+
           ref.read(conversationsProvider.notifier).updateRecordingPath(path);
-          
-          // State'i güncelle
+
           await ref.read(conversationsProvider.notifier).stopRecording();
           
           // Dosya var mı kontrol et
           final file = File(path);
           if (await file.exists() && mounted) {
-            debugPrint("🎤 Sesli mesaj gönderiliyor: $path");
+            debugPrint(" Sesli mesaj gönderiliyor: $path");
             await _sendVoiceMessage(path);
           } else {
-            debugPrint("❌ Ses dosyası bulunamadı: $path");
+            debugPrint("Ses dosyası bulunamadı: $path");
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -951,7 +944,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             }
           }
         } else {
-          debugPrint("❌ Path null veya boş: $path");
+          debugPrint(" Path null veya boş: $path");
           await ref.read(conversationsProvider.notifier).cancelRecording();
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -963,8 +956,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           }
         }
       } catch (e, stackTrace) {
-        debugPrint("❌ Kayıt durdurma hatası: $e");
-        debugPrint("❌ Stack trace: $stackTrace");
+        debugPrint(" Kayıt durdurma hatası: $e");
+        debugPrint(" Stack trace: $stackTrace");
         await ref.read(conversationsProvider.notifier).cancelRecording();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -978,14 +971,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     }
   }
 
-  /// Sesli mesaj gönder (kayıt varsa)
   Future<void> _sendVoiceMessageFromRecording() async {
     if (ref.read(conversationsProvider).isRecording) {
       await _stopAndSendRecording();
     }
   }
 
-  /// Süreyi formatla (mm:ss)
+
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
@@ -993,10 +985,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     return '$minutes:$seconds';
   }
 
-  /// sentTime'ı DateTime'a çevirir (String veya DateTime olabilir)
   DateTime _parseSentTime(dynamic sentTime) {
     if (sentTime == null) {
-      return DateTime(1970); // Null ise çok eski bir tarih döndür
+      return DateTime(1970); 
     }
     
     if (sentTime is DateTime) {
@@ -1007,23 +998,22 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       try {
         return DateTime.parse(sentTime);
       } catch (e) {
-        // Parse edilemezse çok eski bir tarih döndür
+      
         return DateTime(1970);
       }
     }
     
-    // Diğer durumlar için çok eski bir tarih döndür
+   
     return DateTime(1970);
   }
 
-  /// Seçilen resmi işle ve gönder
+
   Future<void> _handleImageSelected(XFile image) async {
-    // Aynı resmi tekrar işleme
     if (image.path == _lastProcessedImagePath || _isSendingImage) {
       return;
     }
     
-    // İşlenen resmi işaretle ve flag'i set et
+  
     setState(() {
       _lastProcessedImagePath = image.path;
       _isSendingImage = true;
@@ -1032,27 +1022,26 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     if (!mounted) return;
     
     try {
-      // XFile'ı File'a çevir
+
       final file = File(image.path);
       
-      // Mesaj metnini al (varsa)
+
       final messageText = _messageController.text.trim();
       
-      // Resmi gönder (API otomatik olarak CDN'e yükler)
-      // Fire-and-forget: İstek gönderildikten sonra loading bitir, yanıt bekleme
+     
       ref.read(conversationsProvider.notifier).sendImageMessage(
         consultantId: widget.specialistId.id,
         imageFile: file,
         message: messageText.isNotEmpty ? messageText : null,
       ).then((_) {
-        // Arka planda mesajları yükle
+
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) {
             ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
           }
         });
       }).catchError((e) {
-        // Hata durumunda kullanıcıya bildir
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -1064,15 +1053,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         }
       });
       
-      // Resmi ve mesajı hemen temizle (fire-and-forget yaklaşımı)
-      // İstek gönderildi, kullanıcı yanıt beklemiyor
+
       _messageController.clear();
       
-      // State'i temizle ve UI'ı güncelle
+
       ref.read(conversationsProvider.notifier).clearSelectedImage();
       
-      // UI'ı güncelle - setState ile resim preview'ı kaldırılacak
-      // ref.watch ile dinlenen selectedImage null olacak ve widget rebuild olacak
+
       if (mounted) {
         setState(() {
           _lastProcessedImagePath = null;
@@ -1080,12 +1067,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         });
       }
       
-      // Loading direkt bitir, yanıt beklenmiyor
-      // Başarı mesajı gösterilmiyor (fire-and-forget)
+    
     } catch (e) {
-      // Hata durumunda resmi temizleme (kullanıcı tekrar deneyebilir)
-      
-      // Hata mesajı
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1095,7 +1079,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         ),
       );
     } finally {
-      // Flag'i temizle
+
       if (mounted) {
         setState(() {
           _isSendingImage = false;
@@ -1121,10 +1105,10 @@ class _MessageBubbleState extends State<_MessageBubble> {
   @override
   void initState() {
     super.initState();
-    // Ses dosyasının süresini önceden oku
+   
     _loadAudioDuration();
     
-    // Global AudioPlayer'ı dinle
+
     _globalAudioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
         final isThisPlaying = _currentlyPlayingMessageId == widget.message.messageId.toString();
@@ -1135,7 +1119,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
     });
     _globalAudioPlayer.onDurationChanged.listen((duration) {
       if (mounted && duration != Duration.zero) {
-        // Tüm mesajlar için duration'ı güncelle (aynı URL'ye sahipse)
+    
         setState(() {
           _duration = duration;
         });
@@ -1150,19 +1134,18 @@ class _MessageBubbleState extends State<_MessageBubble> {
       }
     });
     
-    // PlayerController'ı ses URL'si ile başlat (sadece gerektiğinde)
-    // preparePlayer çağrısını kaldırdık - oynatma sırasında hazırlanacak
+
   }
 
   Future<void> _loadAudioDuration() async {
     if (widget.message.voiceURL != null && widget.message.voiceURL!.isNotEmpty) {
       try {
-        // Ses dosyasının süresini oku - geçici bir player ile
+       
         final tempPlayer = audio_players.AudioPlayer();
         Duration? loadedDuration;
         bool durationLoaded = false;
         
-        // Duration'ı dinle
+
         final subscription = tempPlayer.onDurationChanged.listen((duration) {
           if (duration != Duration.zero && !durationLoaded) {
             loadedDuration = duration;
@@ -1172,7 +1155,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
         
         await tempPlayer.setSource(audio_players.UrlSource(widget.message.voiceURL!));
         
-        // Duration'ın yüklenmesini bekle (max 2 saniye)
+
         int attempts = 0;
         while (!durationLoaded && attempts < 20 && mounted) {
           await Future.delayed(Duration(milliseconds: 100));
@@ -1186,18 +1169,18 @@ class _MessageBubbleState extends State<_MessageBubble> {
           setState(() {
             _duration = loadedDuration!;
           });
-          debugPrint("✅ Ses süresi yüklendi: ${_duration.inSeconds}s");
+          debugPrint(" Ses süresi yüklendi: ${_duration.inSeconds}s");
         }
       } catch (e) {
-        debugPrint("❌ Ses süresi okunamadı: $e");
-        // Hata durumunda süreyi 0 olarak bırak
+        debugPrint(" Ses süresi okunamadı: $e");
+      
       }
     }
   }
 
   @override
   void dispose() {
-    // Eğer bu mesaj oynatılıyorsa durdur
+
     if (_currentlyPlayingMessageId == widget.message.messageId.toString()) {
       _globalAudioPlayer.stop();
       _currentlyPlayingMessageId = null;
@@ -1208,7 +1191,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
 
   Future<void> _togglePlayPause() async {
     try {
-      // Eğer başka bir mesaj oynatılıyorsa durdur
+
       if (_currentlyPlayingMessageId != null && _currentlyPlayingMessageId != widget.message.messageId.toString()) {
         await _globalAudioPlayer.stop();
       }
@@ -1224,15 +1207,15 @@ class _MessageBubbleState extends State<_MessageBubble> {
           _currentlyPlayingMessageId = widget.message.messageId.toString();
           
           try {
-            // Önce source'u set et
+
             await _globalAudioPlayer.setSource(audio_players.UrlSource(widget.message.voiceURL!));
-            // Sonra play
+          
             await _globalAudioPlayer.resume();
             setState(() {
               _isPlaying = true;
             });
           } catch (e) {
-            debugPrint("❌ Ses oynatma hatası: $e");
+            debugPrint("Ses oynatma hatası: $e");
             _currentlyPlayingMessageId = null;
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -1246,7 +1229,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
         }
       }
     } catch (e) {
-      debugPrint("❌ Sesli mesaj oynatma hatası: $e");
+      debugPrint(" Sesli mesaj oynatma hatası: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -1287,7 +1270,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Resim varsa göster
+
                 if (hasImage)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12.w),
@@ -1318,11 +1301,11 @@ class _MessageBubbleState extends State<_MessageBubble> {
                       },
                     ),
                   ),
-                // Sesli mesaj varsa göster
+
                 if (hasVoice) ...[
                   if (hasImage) SizedBox(height: 8.h),
                   Row(
-                    mainAxisSize: MainAxisSize.min, // Overflow'u önlemek için
+                    mainAxisSize: MainAxisSize.min, 
                     children: [
                       IconButton(
                         padding: EdgeInsets.zero,
@@ -1337,29 +1320,29 @@ class _MessageBubbleState extends State<_MessageBubble> {
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Column(
-                          mainAxisSize: MainAxisSize.min, // Overflow'u önlemek için
+                          mainAxisSize: MainAxisSize.min, 
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Gerçek zamanlı waveform - oynatma sırasında animasyonlu
+                          
                             StreamBuilder<Duration>(
                               stream: _isPlaying 
                                   ? Stream.periodic(Duration(milliseconds: 100), (_) {
-                                      // Position'ı stream'den al
-                                      return Duration.zero; // Placeholder, gerçek position için listener kullanılacak
+                                     
+                                      return Duration.zero; 
                                     })
                                   : Stream.value(Duration.zero),
                               builder: (context, snapshot) {
                                 return SizedBox(
                                   height: 30.h,
-                                  width: double.infinity, // Expanded içinde genişliği sınırla
+                                  width: double.infinity, 
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min, // Overflow'u önlemek için
+                                    mainAxisSize: MainAxisSize.min, 
                                     children: List.generate(
-                                      15, // 20'den 15'e düşürüldü overflow'u önlemek için
+                                      15, 
                                       (index) {
-                                        // Oynatma sırasında rastgele animasyon (gerçek ses verisi için API'den waveform data gerekli)
+                                       
                                         final random = (index * 7 + DateTime.now().millisecondsSinceEpoch) % 10;
                                         return Flexible(
                                           child: AnimatedContainer(
@@ -1381,7 +1364,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
                               },
                             ),
                             SizedBox(height: 4.h),
-                            // Süre - sadece mesaj uzunluğu
+                          
                             Text(
                               _duration != Duration.zero
                                   ? _formatDuration(_duration)
@@ -1399,7 +1382,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
                     ],
                   ),
                 ],
-                // Mesaj metni
+            
                 if (widget.message.message.isNotEmpty && !hasVoice) ...[
                   if (hasImage) SizedBox(height: 8.h),
                   Text(
@@ -1412,7 +1395,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
                     ),
                   ),
                 ],
-                // Tarih/Saat gösterimi
+              
                 SizedBox(height: 4.h),
                 Text(
                   _formatMessageTime(widget.message.sentTime),

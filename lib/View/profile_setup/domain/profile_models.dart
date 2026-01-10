@@ -10,9 +10,7 @@ enum MeetingTime { morning, afternoon, evening, flexible }
 
 enum Weekday { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
 
-// --- Enum <-> String helpers ---
-// Simple helpers to convert enums to string and back. Useful when serializing
-// to/from backend or local storage.
+
 
 String genderToString(Gender g) => g.name;
 Gender genderFromString(String s) => Gender.values.firstWhere((e) => e.name == s, orElse: () => Gender.male);

@@ -6,25 +6,22 @@ class NotificationService {
   Future initiializeOnesignal() async {
     try {
       OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-      
-      // Initialize OneSignal
+
       OneSignal.initialize(AppConstants.onesignalId);
       debugPrint('[ONESIGNAL] ✅ OneSignal initialized with App ID: ${AppConstants.onesignalId}');
-      
-      // Request notification permission
+
       final permissionGranted = await OneSignal.Notifications.requestPermission(false);
       debugPrint('[ONESIGNAL] Permission granted: $permissionGranted');
 
-      // Set up notification click listener
       OneSignal.Notifications.addClickListener((event) {
         debugPrint('[ONESIGNAL] 📱 Notification clicked: ${event.notification.notificationId}');
         debugPrint('[ONESIGNAL] Notification title: ${event.notification.title}');
         debugPrint('[ONESIGNAL] Notification body: ${event.notification.body}');
       });
 
-      debugPrint('[ONESIGNAL] ✅ OneSignal setup completed');
+      debugPrint('[ONESIGNAL]  OneSignal setup completed');
     } catch (e) {
-      debugPrint('[ONESIGNAL] ❌ Initialization error: $e');
+      debugPrint('[ONESIGNAL]  Initialization error: $e');
       rethrow;
     }
   }
@@ -32,9 +29,8 @@ class NotificationService {
   Future registerUser(String userId) async {
     try {
       await OneSignal.login(userId);
-      debugPrint('[ONESIGNAL] ✅ User registered with External User ID: $userId');
-      
-      // Get OneSignal push subscription ID for debugging
+      debugPrint('[ONESIGNAL] User registered with External User ID: $userId');
+
       try {
         final pushSubscriptionId = OneSignal.User.pushSubscription.id;
         debugPrint('[ONESIGNAL] OneSignal Push Subscription ID: $pushSubscriptionId');
@@ -42,7 +38,7 @@ class NotificationService {
         debugPrint('[ONESIGNAL] Could not get push subscription ID: $e');
       }
     } catch (e) {
-      debugPrint("[ONESIGNAL] ❌ Error registering user: $e");
+      debugPrint("[ONESIGNAL]  Error registering user: $e");
       rethrow;
     }
   }

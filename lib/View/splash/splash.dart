@@ -21,7 +21,7 @@ class _SplashState extends ConsumerState<Splash> {
   @override
   void initState() {
     super.initState();
-    // Splash'de tüm veri çekme işlemlerini yap
+
     _initializeApp();
   }
 
@@ -29,7 +29,7 @@ class _SplashState extends ConsumerState<Splash> {
     if (_initialized) return;
     _initialized = true;
 
-    debugPrint('🚀 [SPLASH] App başlatılıyor...');
+
 
     try {
       // 1. Session kontrolü
@@ -37,46 +37,46 @@ class _SplashState extends ConsumerState<Splash> {
       final userModel = await authService.checkSession();
 
       if (userModel != null) {
-        debugPrint('✅ [SPLASH] Session geçerli, kullanıcı: ${userModel.id}');
+  
 
-        // 2. Post-login işlemleri (async, non-blocking)
+
         _handlePostLoginTasks(userModel);
 
-        // 3. Yönlendirme
+
         final isGuest = userModel.credential == 'guest';
         final hasCompletedProfile = userModel.answerData != null;
 
         if (isGuest || hasCompletedProfile) {
-          // Misafir kullanıcı veya profil tamamlanmış kullanıcı
-          debugPrint('✅ [SPLASH] Authenticated kullanıcı - NavbarShell\'e yönlendiriliyor');
+
+          debugPrint(' Authenticated kullanıcı - NavbarShell\'e yönlendiriliyor');
           _navigateToAuthenticated();
         } else {
-          // Profil tamamlanmamış normal kullanıcı
-          debugPrint('⚠️ [SPLASH] Profil tamamlanmamış - ProfileSetup\'a yönlendiriliyor');
+
+          debugPrint(' Profil tamamlanmamış - ProfileSetup\'a yönlendiriliyor');
           _navigateToProfileSetup();
         }
       } else {
-        // Token yok veya geçersiz
-        debugPrint('⚠️ [SPLASH] Session geçersiz veya token yok - Onboarding\'e yönlendiriliyor');
+
+        debugPrint(' Session geçersiz veya token yok - Onboarding\'e yönlendiriliyor');
         _navigateToOnboarding();
       }
     } catch (e) {
-      debugPrint('❌ [SPLASH] Hata: $e');
+      debugPrint(' Hata: $e');
       _navigateToOnboarding();
     }
   }
 
-  /// Post-login async işlemleri (non-blocking)
+
   void _handlePostLoginTasks(userModel) {
     Future.microtask(() async {
       try {
-        // 1. Notification service register
+
         _registerUserForNotifications(userModel.id.toString());
 
-        // 2. Chat'leri yeniden yükle
+
         _refreshChats();
 
-        // 3. Periodic notifications başlat
+
         _initializePeriodicNotifications();
 
         debugPrint('✅ [SPLASH] Post-login işlemleri başlatıldı');
@@ -86,27 +86,28 @@ class _SplashState extends ConsumerState<Splash> {
     });
   }
 
-  /// Notification service'e kullanıcıyı kaydet (async, non-blocking)
+
+
   void _registerUserForNotifications(String userId) {
     Future.microtask(() async {
       try {
         final notificationService = NotificationService();
         await notificationService.registerUser(userId);
-        debugPrint('✅ [SPLASH] Kullanıcı notification service\'e kaydedildi: $userId');
+        debugPrint(' Kullanıcı notification service\'e kaydedildi: $userId');
       } catch (e) {
-        debugPrint('⚠️ [SPLASH] Notification service kayıt hatası (göz ardı edildi): $e');
+        debugPrint(' Notification service kayıt hatası (göz ardı edildi): $e');
       }
     });
   }
 
-  /// Chat'leri yeniden yükle (async, non-blocking)
+
   void _refreshChats() {
     Future.microtask(() {
       try {
         ref.read(chatProvider.notifier).refreshChats();
-        debugPrint('✅ [SPLASH] Chat\'ler yeniden yükleme başlatıldı');
+        debugPrint(' Chat\'ler yeniden yükleme başlatıldı');
       } catch (e) {
-        debugPrint('⚠️ [SPLASH] Chat yenileme hatası (göz ardı edildi): $e');
+        debugPrint(' Chat yenileme hatası (göz ardı edildi): $e');
       }
     });
   }
@@ -115,12 +116,12 @@ class _SplashState extends ConsumerState<Splash> {
   void _initializePeriodicNotifications() {
     Future.microtask(() async {
       try {
-        debugPrint('🔄 [SPLASH] Periodic notifications başlatılıyor...');
+        debugPrint(' Periodic notifications başlatılıyor...');
         final scheduler = PeriodicNotificationScheduler();
         await scheduler.initializeAndSchedule();
-        debugPrint('✅ [SPLASH] Periodic notifications initialized');
+        debugPrint(' Periodic notifications initialized');
       } catch (e) {
-        debugPrint('❌ [SPLASH] Error initializing periodic notifications (göz ardı edildi): $e');
+        debugPrint(' Error initializing periodic notifications (göz ardı edildi): $e');
       }
     });
   }
@@ -137,7 +138,7 @@ class _SplashState extends ConsumerState<Splash> {
     });
   }
 
-  /// ProfileSetup'a yönlendir
+
   void _navigateToProfileSetup() {
     if (!mounted) return;
     Future.microtask(() {
@@ -149,7 +150,7 @@ class _SplashState extends ConsumerState<Splash> {
     });
   }
 
-  /// Onboarding'e yönlendir
+
   void _navigateToOnboarding() {
     if (!mounted) return;
     Future.microtask(() {

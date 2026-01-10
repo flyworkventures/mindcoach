@@ -77,11 +77,11 @@ class ChatState {
 class ChatNotifier extends Notifier<ChatState> {
   @override
   ChatState build() {
-    // Varsayılan değerler (API yüklenene kadar)
+
     final user = ref.read(userProvider);
     final userName = user?.username ?? '';
     
-    // İlk yüklemede API'den chat'leri çek (build tamamlandıktan sonra)
+
     Future(() {
       if (!ref.mounted) return;
       _loadChats();
@@ -99,19 +99,17 @@ class ChatNotifier extends Notifier<ChatState> {
     state = state.copyWith(isLoading: true, error: null);
     
     try {
-      // Önce consultants'ların yüklenmesini bekle
+    
       final specialistsState = ref.read(specialistsProvider);
       var consultants = specialistsState.specialists ?? [];
-      
-      // Eğer consultants henüz yüklenmemişse, biraz bekle ve tekrar dene
+
       if (consultants.isEmpty) {
         await Future.delayed(const Duration(milliseconds: 500));
         if (!ref.mounted) return;
         
         final updatedSpecialistsState = ref.read(specialistsProvider);
         consultants = updatedSpecialistsState.specialists ?? [];
-        
-        // Hala boşsa, consultants'ları manuel olarak yüklemeyi dene
+
         if (consultants.isEmpty) {
           await ref.read(specialistsProvider.notifier).init();
           if (!ref.mounted) return;
@@ -126,30 +124,26 @@ class ChatNotifier extends Notifier<ChatState> {
       
       if (!ref.mounted) return;
       
-      print('📥 API\'den ${chatModels.length} chat yüklendi');
-      print('👥 ${consultants.length} consultant mevcut');
-      
-      // ChatModel'leri ChatItem'lara dönüştür
+
       final chatItems = <ChatItem>[];
       for (final chatModel in chatModels) {
-        // ConsultantId'yi SpecialistId'ye çevir
+
         SpecialistId? specialistId = _consultantIdToSpecialistId(
           chatModel.consultantId,
           consultants,
         );
         
-        // Eğer specialistId bulunamazsa, ID'ye göre fallback yap
+
         if (specialistId == null && chatModel.consultantId >= 1 && chatModel.consultantId <= 5) {
           specialistId = SpecialistId.values[chatModel.consultantId - 1];
         }
         
-        // Hala null ise, bu chat'i atla
+
         if (specialistId == null) {
           print('⚠️ Consultant ID ${chatModel.consultantId} için SpecialistId bulunamadı');
           continue;
         }
-        
-        // lastMessageDate'i DateTime'a çevir
+
         DateTime messageTime;
         if (chatModel.lastMessageDate != null) {
           try {
@@ -166,8 +160,7 @@ class ChatNotifier extends Notifier<ChatState> {
         } else {
           messageTime = DateTime.now();
         }
-        
-        // Consultant bilgilerini bul
+
         ConsultantModel? consultant;
         if (consultants.isNotEmpty) {
           consultant = consultants.firstWhere(
@@ -202,7 +195,7 @@ class ChatNotifier extends Notifier<ChatState> {
         chatItems.add(chatItem);
       }
       
-      print('✅ ${chatItems.length} chat item oluşturuldu');
+      print(' ${chatItems.length} chat item oluşturuldu');
       
       // Kullanıcı adını güncelle
       final user = ref.read(userProvider);
@@ -217,7 +210,7 @@ class ChatNotifier extends Notifier<ChatState> {
         error: null,
       );
       
-      print('✅ State güncellendi: ${state.chats.length} chat gösteriliyor');
+      print('State güncellendi: ${state.chats.length} chat gösteriliyor');
     } catch (e) {
       if (!ref.mounted) return;
       state = state.copyWith(
@@ -227,13 +220,11 @@ class ChatNotifier extends Notifier<ChatState> {
     }
   }
 
-  /// Consultant ID'yi SpecialistId enum'ına çevir
-  /// Önce consultants listesinden name'e göre, bulunamazsa ID'ye göre mapping yapar
   SpecialistId? _consultantIdToSpecialistId(
     int consultantId,
     List<ConsultantModel> consultants,
   ) {
-    // Önce consultants listesinden consultant'ı bul
+
     if (consultants.isNotEmpty) {
       final consultant = consultants.firstWhere(
         (c) => c.id == consultantId,
@@ -249,15 +240,15 @@ class ChatNotifier extends Notifier<ChatState> {
         ),
       );
       
-      // Eğer consultant bulunduysa, names'ine göre SpecialistId'yi bul
+
       if (consultant.id != -1) {
         final names = consultant.names;
-        // Tüm dillerdeki isimleri kontrol et
+ 
         for (final nameValue in names.values) {
           if (nameValue is String) {
             final nameLower = nameValue.toLowerCase().trim();
             
-            // SpecialistId enum değerlerine göre eşleştir
+
             if (nameLower.contains('aura') || nameLower == 'aura') {
               return SpecialistId.aura;
             } else if (nameLower.contains('zen') || nameLower == 'zen') {
@@ -274,9 +265,7 @@ class ChatNotifier extends Notifier<ChatState> {
       }
     }
     
-    // Eğer names'e göre eşleşme bulunamazsa, ID'ye göre fallback yap
-    // Consultant ID'leri genellikle 1-5 arası olabilir (aura, zen, elara, orion, cyra)
-    // ID mapping: 1=aura, 2=zen, 3=elara, 4=orion, 5=cyra
+
     if (consultantId >= 1 && consultantId <= 5) {
       return SpecialistId.values[consultantId - 1];
     }
@@ -284,14 +273,14 @@ class ChatNotifier extends Notifier<ChatState> {
     return null;
   }
 
-  /// Chat'leri yeniden yükle
+
   Future<void> refreshChats() async {
     await _loadChats();
   }
 
 
   Future<void> deleteChat(SpecialistId id) async {
-    // Önce chat'i bul ve consultantId'yi al
+
     final chatItem = state.chats.firstWhere(
       (c) => c.specialistId == id,
       orElse: () => ChatItem(
@@ -307,27 +296,25 @@ class ChatNotifier extends Notifier<ChatState> {
     final consultantId = chatItem.consultantId;
     
     try {
-      // Backend'de chat'i sil
+
       final chatRepo = ChatRepo(ref);
       await chatRepo.deleteChat(consultantId);
-      debugPrint('✅ Chat backend\'de silindi: consultantId=$consultantId');
+      debugPrint(' Chat backend\'de silindi: consultantId=$consultantId');
     } catch (e) {
-      debugPrint('⚠️ Chat silme API hatası: $e');
-      // API hatası olsa bile local state'ten sil (optimistic update)
+      debugPrint(' Chat silme API hatası: $e');
+
     }
-    
-    // Chat'i state'ten sil
+
     final filtered = state.chats.where((c) => c.specialistId != id).toList();
     state = state.copyWith(chats: filtered);
     
-    // Chat silindiğinde, o chat'in mesajlarını da conversation provider'dan temizle
-    // Böylece yeni sohbet başlatınca eski mesajlar görünmez
+
     try {
       final conversationsNotifier = ref.read(conversationsProvider.notifier);
       conversationsNotifier.clearMessages(consultantId);
-      debugPrint('✅ Chat silindi ve mesajlar temizlendi: consultantId=$consultantId');
+      debugPrint(' Chat silindi ve mesajlar temizlendi: consultantId=$consultantId');
     } catch (e) {
-      debugPrint('⚠️ Chat silme sırasında mesaj temizleme hatası: $e');
+      debugPrint('Chat silme sırasında mesaj temizleme hatası: $e');
     }
   }
 
@@ -353,7 +340,7 @@ class ChatNotifier extends Notifier<ChatState> {
       return;
     }
 
-    // Consultant ID'yi SpecialistId'den tahmin et (1-5 arası)
+
     final consultantId = id.index + 1;
 
     final newChat = ChatItem(
@@ -368,7 +355,6 @@ class ChatNotifier extends Notifier<ChatState> {
     state = state.copyWith(chats: [newChat, ...state.chats]);
   }
 
-  /// Conversation'dan sonra listeyi güncellemek için
   void upsertLastMessage({
     required SpecialistId id,
     required String lastMessage,
@@ -378,7 +364,7 @@ class ChatNotifier extends Notifier<ChatState> {
     final idx = state.chats.indexWhere((c) => c.specialistId == id);
 
     if (idx == -1) {
-      // Consultant ID'yi SpecialistId'den tahmin et (1-5 arası)
+
       final consultantId = id.index + 1;
       
       final newItem = ChatItem(
