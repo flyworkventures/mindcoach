@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:mindcoach/models/consultant_model.dart';
+
 
 import 'package:mindcoach/app/navbar_shell.dart';
-import 'package:mindcoach/features/chat_screen/conversation/conversation_page.dart';
-import 'package:mindcoach/features/chat_screen/conversation/video_call/video_call_screen.dart';
-import 'package:mindcoach/features/mental_tests/test_intro_screen.dart';
-import 'package:mindcoach/features/mental_tests/test_question_screen.dart';
-import 'package:mindcoach/features/mental_tests/test_result_screen.dart';
-import 'package:mindcoach/features/profile_setup/presentation/pages/profile_setup_page.dart';
-import 'package:mindcoach/features/profile_screen/appointment/appointment_screen.dart';
-import 'package:mindcoach/features/profile_screen/faq/faq_screen.dart';
-import 'package:mindcoach/features/profile_screen/presentation/goodbye_screen.dart';
-import 'package:mindcoach/features/profile_screen/presentation/invite_screen.dart';
-import 'package:mindcoach/features/profile_screen/premium/premium_screen.dart';
-import 'package:mindcoach/features/profile_screen/presentation/profile_settings.dart';
-import 'package:mindcoach/features/specialists_screen/specialists_notifier.dart';
-
-import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:mindcoach/View/chat_screen/presentation/pages/conversation_screen.dart';
+import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_screen.dart';
+import 'package:mindcoach/View/mental_tests/test_intro_screen.dart';
+import 'package:mindcoach/View/mental_tests/test_question_screen.dart';
+import 'package:mindcoach/View/mental_tests/test_result_screen.dart';
+import 'package:mindcoach/View/profile_setup/presentation/pages/profile_setup_page.dart';
+import 'package:mindcoach/View/profile_screen/appointment/appointment_screen.dart';
+import 'package:mindcoach/View/profile_screen/faq/faq_screen.dart';
+import 'package:mindcoach/View/profile_screen/notifications/notifications_screen.dart';
+import 'package:mindcoach/View/profile_screen/presentation/goodbye_screen.dart';
+import 'package:mindcoach/View/profile_screen/presentation/invite_screen.dart';
+import 'package:mindcoach/View/profile_screen/premium/premium_screen.dart';
+import 'package:mindcoach/View/profile_screen/presentation/profile_settings.dart';
+import '../../View/Onboard/onboarding_page.dart';
 import 'page_routes.dart';
 
 class AppRouter {
@@ -47,14 +48,31 @@ class AppRouter {
       case PageRoutes.appointments:
         return _page(const AppointmentsScreen(), settings);
 
+      case PageRoutes.notifications:
+        return _page(const NotificationsScreen(), settings);
+
       case PageRoutes.premimum:
         return _page(const PremiumScreen(), settings);
 
     /// CHAT
       case PageRoutes.conversationScreen:
-        final specialistId = settings.arguments as SpecialistId;
+        // ConsultantModel bekleniyor
+        final args = settings.arguments;
+        
+        if (args is! ConsultantModel) {
+          // Eğer ConsultantModel değilse, fallback oluştur
+          return _page(
+            Scaffold(
+              body: Center(
+                child: Text('Hata: ConsultantModel bekleniyor'),
+              ),
+            ),
+            settings,
+          );
+        }
+        
         return _page(
-          ConversationScreen(specialistId: specialistId),
+          ConversationScreen(specialistId: args ),
           settings,
         );
 

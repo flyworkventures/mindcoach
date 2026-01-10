@@ -31,7 +31,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingTermsPrefix =>
-      'By signing up for swipe, you agree to our ';
+      'By signing up for MindCoach, you agree to our ';
 
   @override
   String get onboardingTermsOfService => 'Terms of Service';
@@ -210,6 +210,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nameGenderFemale => 'Female';
+
+  @override
+  String get nameGenderPreferNotToSay => 'Prefer not to say';
 
   @override
   String get supportAreaTitle =>
@@ -732,4 +735,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startNewMeeting => 'Start a new meeting';
+
+  @override
+  String get continueAsGuest => 'Continue as Guest';
 }

@@ -1,9 +1,9 @@
 class PageRoutes {
-  static const String navbar = '/navbar';   // <-- shell
+  static const String navbar = '/navbar'; 
   static const profileSetup = '/profile_screen-setup';
   static const String onboarding = '/onboarding';
 
-  /// SCREENS
+
   static const String home = '/home_screen';
   static const String specialists = '/specialists_screen';
   static const String calendar = '/calendar_screen';
@@ -16,6 +16,7 @@ class PageRoutes {
   static const String invite = '/invite_screen';
   static const String faq = '/faq_screen';
   static const String appointments = '/appointments_screen';
+  static const String notifications = '/notifications_screen';
   static const String premimum = '/premium_screen';
   static const String conversationScreen = '/conversation_page';
   static const String videoCall = '/video_call_screen';

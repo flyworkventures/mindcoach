@@ -3,7 +3,12 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audioplayers_linux
+  devicelocale
+  file_selector_linux
   flutter_localization
+  flutter_secure_storage_linux
+  record_linux
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

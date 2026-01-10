@@ -1,18 +1,93 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
+import '../utils/local_db_keys.dart';
 
 final localeProvider =
 NotifierProvider<LocaleNotifier, Locale?>(LocaleNotifier.new);
 
 class LocaleNotifier extends Notifier<Locale?> {
+  final LocalDbService _localDbService = LocalDbService();
+
   @override
   Locale? build() {
-    // null => sistem dili
-    // İLERİDE: kaydedilmiş kullanıcı dili varsa burada set edilir
+
+    Future.microtask(() => _loadSavedLocale());
+
     return null;
   }
 
-  void setLocale(Locale? newLocale) => state = newLocale;
+  Future<void> _loadSavedLocale() async {
+    try {
+      final savedLocaleCode = await _localDbService.getString(
+        key: LocalDbKeys.locale,
+      );
 
-  void resetToSystemLocale() => state = null;
+      if (savedLocaleCode != null && savedLocaleCode.isNotEmpty) {
+        // "en", "tr", "de" gibi kodları Locale'e çevir
+        final locale = Locale(savedLocaleCode);
+        state = locale;
+      } else {
+        state = null;
+      }
+    } catch (e) {
+      debugPrint('Error loading saved locale: $e');
+
+      state = null;
+    }
+  }
+
+  Future<void> setLocale(Locale? newLocale) async {
+    state = newLocale;
+
+    try {
+      if (newLocale != null) {
+        await _localDbService.setString(
+          key: LocalDbKeys.locale,
+          value: newLocale.languageCode,
+        );
+      } else {
+        await _localDbService.setString(
+          key: LocalDbKeys.locale,
+          value: '',
+        );
+      }
+    } catch (e) {
+      debugPrint('Error saving locale: $e');
+    }
+  }
+
+  Future<void> resetToSystemLocale() async {
+    await setLocale(null);
+  }
+
+  Locale getCurrentLocale() {
+    if (state != null) {
+      return state!;
+    }
+
+    return ui.PlatformDispatcher.instance.locale;
+  }
+
+  String getLanguageCode() {
+    return getCurrentLocale().languageCode;
+  }
+
+
+  bool isLocaleSupported(Locale locale) {
+    const supportedLocales = [
+      Locale('en'),
+      Locale('tr'),
+      Locale('de'),
+    ];
+    return supportedLocales.any(
+      (supported) => supported.languageCode == locale.languageCode,
+    );
+  }
+  Locale getSystemLocale() {
+    return ui.PlatformDispatcher.instance.locale;
+  }
+
+  bool get hasCustomLocale => state != null;
 }

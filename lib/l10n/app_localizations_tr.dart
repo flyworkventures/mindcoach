@@ -30,7 +30,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Düşüncelerini paylaş, sorular sor ya da yeni bakış açıları keşfet. Mind Coach, gelişimini destekler ve daha net bir şekilde ilerlemene yardımcı olur.';
 
   @override
-  String get onboardingTermsPrefix => 'Swipe\'a kaydolarak ';
+  String get onboardingTermsPrefix => 'MindCoach\'a kaydolarak ';
 
   @override
   String get onboardingTermsOfService => 'Hizmet Şartları';
@@ -195,7 +195,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Kısa bir tanım, seni daha iyi tanımamıza yardımcı olur.';
 
   @override
-  String get nameGenderFullNameLabel => 'Ad Soyad';
+  String get nameGenderFullNameLabel => 'Kullanıcı Adı';
 
   @override
   String get nameGenderFullNameHint => 'Tam adını yaz';
@@ -208,6 +208,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get nameGenderFemale => 'Kadın';
+
+  @override
+  String get nameGenderPreferNotToSay => 'Belirtmeyi tercih etmiyorum';
 
   @override
   String get supportAreaTitle => 'Hangi alanda destek almak istersin?';
@@ -727,4 +730,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get startNewMeeting => 'Yeni Bir Görüşme Başlat';
+
+  @override
+  String get continueAsGuest => 'Misafir Olarak Devam Et';
 }

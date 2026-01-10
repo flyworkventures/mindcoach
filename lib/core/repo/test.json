@@ -1,0 +1,26 @@
+{
+    "success": true,
+    "data": {
+        "user": {
+            "id": 2,
+            "credential": "google",
+            "credentialData": {
+                "providerId": "google",
+                "email": "flyworktester@gmail.com",
+                "id": "108706313133834786902"
+            },
+            "username": "temp_108706313133834786902_1766776574115",
+            "nativeLang": null,
+            "gender": "unknown",
+            "answerData": null,
+            "lastPsychologicalProfile": null,
+            "userAgentNotes": null,
+            "leastSessions": null,
+            "psychologicalProfileBasedOnMessages": null,
+            "accountCreatedDate": "2025-12-26T16:16:14.000Z",
+            "generalProfile": null,
+            "generalPsychologicalProfile": null,
+            "profilePhotoUrl": "https://lh3.googleusercontent.com/a/ACg8ocJuxTLp8Ety3mYGuWQEjRw6tgXp5YAwmAUoHGgsDpiSz7Adpg=s96-c"
+        }
+    }
+}

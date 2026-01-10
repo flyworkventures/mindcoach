@@ -139,7 +139,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingTermsPrefix.
   ///
   /// In en, this message translates to:
-  /// **'By signing up for swipe, you agree to our '**
+  /// **'By signing up for MindCoach, you agree to our '**
   String get onboardingTermsPrefix;
 
   /// No description provided for @onboardingTermsOfService.
@@ -489,6 +489,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Female'**
   String get nameGenderFemale;
+
+  /// No description provided for @nameGenderPreferNotToSay.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get nameGenderPreferNotToSay;
 
   /// No description provided for @supportAreaTitle.
   ///
@@ -1449,6 +1455,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start a new meeting'**
   String get startNewMeeting;
+
+  /// No description provided for @continueAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as Guest'**
+  String get continueAsGuest;
 }
 
 class _AppLocalizationsDelegate

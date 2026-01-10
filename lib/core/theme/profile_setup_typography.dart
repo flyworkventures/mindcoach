@@ -5,7 +5,7 @@ import 'package:mindcoach/core/utils/locale_font_scaler.dart';
 class ProfileSetupTypography {
   ProfileSetupTypography._();
 
-  /// Title for all profile setup screens
+
   static TextStyle title(BuildContext context) {
     return GoogleFonts.quicksand(
       fontSize: LocaleFontScaler.scale(context, 24),
@@ -16,7 +16,7 @@ class ProfileSetupTypography {
     );
   }
 
-  /// Subtitle / description text
+
   static TextStyle subtitle(BuildContext context) {
     return GoogleFonts.quicksand(
       fontSize: LocaleFontScaler.scale(context, 14),

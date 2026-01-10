@@ -75,6 +75,7 @@
   "nameGenderGenderLabel": "Geschlecht",
   "nameGenderMale": "Männlich",
   "nameGenderFemale": "Weiblich",
+  "nameGenderPreferNotToSay": "Keine Angabe",
 
   "supportAreaTitle": "In welchem Bereich möchtest du Unterstützung erhalten?",
   "supportAreaIndividual": "Individuell",
@@ -349,5 +350,7 @@
   "selectedDate": "Ausgewähltes Datum",
 
   "newChatStarted": "Neuer Chat gestartet",
-  "startNewMeeting": "Starte ein neues Gespräch"
+  "startNewMeeting": "Starte ein neues Gespräch",
+
+  "continueAsGuest": "Als Gast fortfahren"
 }

@@ -212,6 +212,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get nameGenderFemale => 'Weiblich';
 
   @override
+  String get nameGenderPreferNotToSay => 'Keine Angabe';
+
+  @override
   String get supportAreaTitle =>
       'In welchem Bereich möchtest du Unterstützung erhalten?';
 
@@ -737,4 +740,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get startNewMeeting => 'Starte ein neues Gespräch';
+
+  @override
+  String get continueAsGuest => 'Als Gast fortfahren';
 }
