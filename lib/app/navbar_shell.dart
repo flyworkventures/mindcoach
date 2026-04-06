@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../View/calendar_screen/calendar_screen.dart';
 import '../View/chat_screen/presentation/pages/chat_screen.dart';
 import '../View/chat_screen/chat_notifier.dart';
-import '../View/home_screen/home_screen.dart';
+import '../View/HomeView/home_screen.dart';
 import '../View/profile_screen/presentation/profile_screen.dart';
 import '../View/specialists_screen/specialists_screen.dart';
 import '../Services/NotificationsService/in_app_notification_service.dart';
@@ -64,7 +64,7 @@ class _NavbarShellState extends ConsumerState<NavbarShell> with WidgetsBindingOb
     _notificationTimer?.cancel();
     _notificationTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (mounted) {
-        _refreshNotifications();
+     //   _refreshNotifications();
       }
     });
   }
@@ -165,7 +165,9 @@ class _NavbarShellState extends ConsumerState<NavbarShell> with WidgetsBindingOb
   @override
   Widget build(BuildContext context) {
     final selectedIndex = ref.watch(bottomNavProvider);
-    
+    /*
+
+
     // Chat provider'ı watch et - authenticated olduğunda chat'leri yeniden yükle
     ref.listen(chatProvider, (previous, next) {
       // İlk yüklemede veya authenticated olduğunda chat'leri yeniden yükle
@@ -178,6 +180,9 @@ class _NavbarShellState extends ConsumerState<NavbarShell> with WidgetsBindingOb
         });
       }
     });
+
+
+    */
 
     // Listen to notification changes and show new ones ONLY when new notifications are added
     ref.listen<NotificationState>(

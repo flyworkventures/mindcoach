@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/models/appointment_info.dart';
 import '../../core/utils/time_format_utils.dart';
 import '../appointments/appointments_notifier.dart';
+import '../appointments/appointment_detail_screen.dart';
 import '../specialists_screen/specialists_notifier.dart';
 
 // Stil bilgileri için kullanılan sabitler
@@ -29,6 +30,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  
+  // İptal edilen randevular için geri alma state'i
+  Map<int, DateTime> _cancelledAppointments = {}; // appointmentId -> iptal zamanı
 
   static const Color _kGradientStart = Color(0xFFFBFCFF); // #FBFCFF
   static const Color _kGradientEnd = Color(0xFFF9FAFF); // #F9FAFF
@@ -50,7 +54,24 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     if (d.isBefore(today)) return const <AppointmentInfo>[];
 
     final key = DateTime(day.year, day.month, day.day);
-    return map[key] ?? const <AppointmentInfo>[];
+    final appointments = map[key] ?? const <AppointmentInfo>[];
+    
+    // İptal edilen randevuları filtrele (sadece 3 saniye içinde geri alınabilir olanları göster)
+    return appointments.where((appointment) {
+      // Eğer randevu iptal edilmişse ve 3 saniye içinde geri alınabilirse göster
+      if (appointment.status?.toLowerCase() == 'cancelled') {
+        if (appointment.appointmentId != null && _cancelledAppointments.containsKey(appointment.appointmentId)) {
+          final cancelledTime = _cancelledAppointments[appointment.appointmentId]!;
+          final timeSinceCancelled = DateTime.now().difference(cancelledTime);
+          // 3 saniye içindeyse göster
+          return timeSinceCancelled.inSeconds < 3;
+        }
+        // 3 saniye geçtiyse veya iptal edilmiş ama _cancelledAppointments'da yoksa gösterme
+        return false;
+      }
+      // İptal edilmemiş randevuları göster
+      return true;
+    }).toList();
   }
 
 
@@ -122,10 +143,21 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 // 6. Seçilen Tarihteki Randevu Listesi
                 if (_selectedDay != null) ...[
                   ..._getAppointmentsForDay(_selectedDay!).map((info) {
-                    return _buildAppointmentCard(
-                      context: context,
-                      date: _selectedDay!,
-                      info: info,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AppointmentDetailScreen(
+                              appointment: info,
+                            ),
+                          ),
+                        );
+                      },
+                      child: _buildAppointmentCard(
+                        context: context,
+                        date: _selectedDay!,
+                        info: info,
+                      ),
                     );
                   }),
                 ],
@@ -465,7 +497,49 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
-      child: Container(
+      child:  info.appointmentId != null && _cancelledAppointments.containsKey(info.appointmentId)
+      ?     GestureDetector(
+                        onTap: () async {
+                          await _reactivateAppointment(context, info);
+                        },
+                        child: Container(
+                            width: 327.w,
+
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.25),
+              offset: const Offset(0, 2),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Randevunuz başarıyla silinmiştir! Geri Al',
+                                style: GoogleFonts.quicksand(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(
+                                Icons.undo,
+                                size: 16,
+                                color: Colors.black87,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+      : Container(
         width: 327.w,
 
         padding: const EdgeInsets.all(16.0),
@@ -481,99 +555,155 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           ],
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Sol tarafta: Koç fotoğrafı
-            Container(
-              width: 68.w,
-              height: 68.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: const Color(0xFF2BD383),
-                  width: 3,
-                ),
-              ),
-              child: ClipOval(
-                child: Image.network(
-                  photoURL,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.network(
-                      photoURL,
-                      fit: BoxFit.cover,
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            // Sağ tarafta: Koç görevi, isim, tarih/saat, durum
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Koç görevi (üstte)
-                  if (consultantJob.isNotEmpty)
-                    Text(
-                      JobConvert(consultantJob).call(),
-                      style: GoogleFonts.quicksand(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        height: 24.h / 17.h,
-                        color: Colors.black,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if (consultantJob.isNotEmpty) const SizedBox(height: 2),
-                  // Koç ismi (görevin altında)
-                  Text(
-                    consultantDisplayName,
-                    style: GoogleFonts.quicksand(
-                      fontSize: consultantJob.isNotEmpty ? 14 : 17,
-                      fontWeight: FontWeight.w500,
-                      height: consultantJob.isNotEmpty ? 20.h / 14.h : 24.h / 17.h,
-                      color: consultantJob.isNotEmpty ? _kLightGreyText : Colors.black,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  // Tarih ve saat
-                  Text(
-                    dateTimeText,
-                    style: GoogleFonts.quicksand(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      height: 18.h / 12.h,
-                      color: _kLightGreyText,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  // Durum
+      Expanded(
+        child: Row(
+          children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 3),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(info.status ?? 'scheduled'),
-                      borderRadius: BorderRadius.circular(30)
-                    ),
-                    child: Text(
-                      statusText,
+                width: 68.w,
+                height: 68.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFF2BD383),
+                    width: 3,
+                  ),
+                ),
+                child: ClipOval(
+                  child: Image.network(
+                    photoURL,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        photoURL,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Sağ tarafta: Koç görevi, isim, tarih/saat, durum
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Koç görevi (üstte)
+                    if (consultantJob.isNotEmpty)
+                      Text(
+                        JobConvert(consultantJob, context).call(),
+                        style: GoogleFonts.quicksand(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          height: 24.h / 17.h,
+                          color: Colors.black,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    if (consultantJob.isNotEmpty) const SizedBox(height: 2),
+                    // Koç ismi (görevin altında)
+                    Text(
+                      consultantDisplayName,
                       style: GoogleFonts.quicksand(
-                        fontSize: 10,
+                        fontSize: consultantJob.isNotEmpty ? 14 : 17,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                        height: consultantJob.isNotEmpty ? 20.h / 14.h : 24.h / 17.h,
+                        color: consultantJob.isNotEmpty ? _kLightGreyText : Colors.black,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    // Tarih ve saat
+                    Text(
+                      dateTimeText,
+                      style: GoogleFonts.quicksand(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        height: 18.h / 12.h,
+                        color: _kLightGreyText,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    // Durum
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5,vertical: 3),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(info.status ?? 'scheduled'),
+                        borderRadius: BorderRadius.circular(30)
+                      ),
+                      child: Text(
+                        statusText,
+                        style: GoogleFonts.quicksand(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    // Eğer randevu iptal edildiyse ve 3 saniye içindeyse "Geri Al" butonu göster
+                    if (info.appointmentId != null && _cancelledAppointments.containsKey(info.appointmentId)) ...[
+                      const SizedBox(height: 8),
+                 
+                    ],
+                  ],
+                ),
               ),
-            ),
+          ],
+        ),
+      ),
+
+              // Eğer randevu iptal edilmediyse veya 3 saniye geçtiyse PopupMenu göster
+              if (info.appointmentId == null || !_cancelledAppointments.containsKey(info.appointmentId))
+                PopupMenuButton<String>(
+                  color: Colors.white,
+                  icon: const Icon(
+                    Icons.more_horiz,
+                    size: 20,
+                    color: Color(0xFF434343),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  onSelected: (value) async {
+                    if (value == 'delete') {
+                      await _cancelAppointment(context, info);
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem<String>(
+                      height: 45.h,
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 20,
+                          ),
+                          SizedBox(width: 12.w),
+                          Text(
+                            context.l10n.delete,
+                            style: GoogleFonts.quicksand(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
           ],
         ),
       ),
@@ -605,6 +735,119 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         return Colors.red;
       default:
         return _kLightGreyText;
+    }
+  }
+
+  /// Randevuyu iptal et
+  Future<void> _cancelAppointment(BuildContext context, AppointmentInfo info) async {
+    if (info.appointmentId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Randevu ID bulunamadı'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    try {
+      final appointmentRepo = ref.read(appointmentsProvider.notifier).appointmentRepo;
+      final success = await appointmentRepo.cancelAppointment(info.appointmentId!);
+
+      if (success) {
+        // İptal zamanını kaydet (3 saniye geri alma için)
+        setState(() {
+          _cancelledAppointments[info.appointmentId!] = DateTime.now();
+        });
+
+        // Randevuları yeniden yükle (iptal edilen randevu artık görünmeyecek)
+        await ref.read(appointmentsProvider.notifier).refresh();
+
+        // 3 saniye sonra geri alma seçeneğini kaldır
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) {
+            setState(() {
+              _cancelledAppointments.remove(info.appointmentId);
+            });
+          }
+        });
+
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Randevu iptal edilemedi'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Hata: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  /// İptal edilmiş randevuyu geri al
+  Future<void> _reactivateAppointment(BuildContext context, AppointmentInfo info) async {
+    if (info.appointmentId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Randevu ID bulunamadı'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    try {
+      final appointmentRepo = ref.read(appointmentsProvider.notifier).appointmentRepo;
+      final success = await appointmentRepo.reactivateAppointment(info.appointmentId!);
+
+      if (success) {
+        // Geri alma seçeneğini kaldır
+        setState(() {
+          _cancelledAppointments.remove(info.appointmentId);
+        });
+
+        // Randevuları yeniden yükle (geri alınan randevu tekrar görünecek)
+        await ref.read(appointmentsProvider.notifier).refresh();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Randevu geri alındı',
+              style: GoogleFonts.quicksand(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Randevu geri alınamadı'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Hata: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }

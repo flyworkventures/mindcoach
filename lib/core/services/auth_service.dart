@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/Repositories/auth_repositories.dart';
+import 'package:mindcoach/Riverpod/providers/all_providers.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'package:mindcoach/core/repo/auth_repository.dart';
 import 'package:mindcoach/core/utils/local_db_keys.dart';
 import 'package:mindcoach/models/user_model.dart';
-import 'package:mindcoach/Riverpod/providers/user_provider.dart';
+import 'package:mindcoach/Riverpod/Providers/user_provider.dart';
 
 class AuthService {
   final Ref? ref;
@@ -34,7 +36,7 @@ class AuthService {
       debugPrint('🔄 [AUTH-SERVICE] Kullanıcı doğrulanıyor...');
       debugPrint('🔄 [AUTH-SERVICE] Token: ${token.substring(0, 20)}...');
       
-      final userModel = await _authRepository.verifyUserByToken(token);
+      final userModel = await AuthRepositories().verifyUserByToken(token);
       debugPrint('🔄 [AUTH-SERVICE] verifyUserByToken tamamlandı, userModel: ${userModel?.id ?? "null"}');
       
       if (userModel == null) {
@@ -50,7 +52,7 @@ class AuthService {
       
       // UserProvider'a set et
       if (ref != null) {
-        ref!.read(userProvider.notifier).setUserModel(userModelWithToken);
+        ref!.read(AllProviders.userProvider.notifier).setUserModel(userModelWithToken);
         debugPrint('✅ [AUTH-SERVICE] UserProvider güncellendi: ${userModel.id}');
       } else {
         debugPrint('⚠️ [AUTH-SERVICE] ref null, UserProvider güncellenemedi');
@@ -81,7 +83,7 @@ class AuthService {
   Future<void> clearSession() async {
     await clearToken();
     if (ref != null) {
-      ref!.read(userProvider.notifier).setUserModel(null);
+      ref!.read(AllProviders.userProvider.notifier).setUserModel(null);
       debugPrint('✅ [AUTH-SERVICE] Session temizlendi');
     }
   }

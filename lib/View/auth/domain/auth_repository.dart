@@ -9,7 +9,7 @@ import 'package:mindcoach/View/auth/domain/social_login_provider.dart';
 /// 🔁 Backend swap edildiğinde bu dosya ASLA değişmez.
 
 abstract class AuthRepository {
-  Future<void> loginWithSocial(SocialLoginProvider provider);
+
   Future<void> logout();
   Future<void> deleteAccount();
   Future<bool> isLoggedIn();

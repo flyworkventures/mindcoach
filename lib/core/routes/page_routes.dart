@@ -10,6 +10,9 @@ class PageRoutes {
   static const String chat = '/chat_screen';
   static const String profile = '/profile_screen';
 
+
+  static const String videoCallView = '/videoCallView';
+
   /// PAGES
   static const String profileSettings = '/profile_settings';
   static const String goodbye = '/goodbye_screen';

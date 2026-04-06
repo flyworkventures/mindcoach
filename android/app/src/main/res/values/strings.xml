@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">mindcoach</string>
+    
     <!-- Facebook Configuration -->
     <!-- TODO: Replace YOUR_FACEBOOK_APP_ID with your actual Facebook App ID -->
     <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
     <!-- TODO: Replace YOUR_FACEBOOK_CLIENT_TOKEN with your actual Facebook Client Token -->
     <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
+    <!-- Facebook Login Protocol Scheme (fb + App ID) -->
+    <string name="fb_login_protocol_scheme">fbYOUR_FACEBOOK_APP_ID</string>
 </resources>
 

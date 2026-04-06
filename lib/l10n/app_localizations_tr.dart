@@ -353,6 +353,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get moodGreat => 'Harika';
 
   @override
+  String get moodCalm => 'Sakin';
+
+  @override
+  String get moodHappy => 'Mutlu';
+
+  @override
+  String get moodTired => 'Yorgun';
+
+  @override
+  String get moodStressed => 'Stresli';
+
+  @override
   String get timeToTrackMood => 'Duygu durumunu takip etme zamanı';
 
   @override
@@ -662,6 +674,32 @@ class AppLocalizationsTr extends AppLocalizations {
   String get areYouSureDelete => 'Profili silmek istediğinizden emin misiniz?';
 
   @override
+  String get deleteNotificationConfirmTitle => 'Bildirimi Sil';
+
+  @override
+  String get deleteNotificationConfirmMessage =>
+      'Bu bildirimi silmek istediğinizden emin misiniz?';
+
+  @override
+  String get deleteAllNotifications => 'Hepsini Sil';
+
+  @override
+  String get deleteAllNotificationsConfirmTitle => 'Tüm Bildirimleri Sil';
+
+  @override
+  String get deleteAllNotificationsConfirmMessage =>
+      'Tüm bildirimleri silmek istediğinizden emin misiniz?';
+
+  @override
+  String get allNotificationsDeleted => 'Tüm bildirimler başarıyla silindi';
+
+  @override
+  String get noNotificationsToDelete => 'Silinecek bildirim yok';
+
+  @override
+  String get errorDeletingNotifications => 'Bildirimler silinirken hata oluştu';
+
+  @override
   String get invitePeople => 'Kişileri Davet Et';
 
   @override
@@ -733,4 +771,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get continueAsGuest => 'Misafir Olarak Devam Et';
+
+  @override
+  String get jobThoughtAndHabitGuide => 'Düşünce ve Alışkanlık Koçu';
+
+  @override
+  String get jobFamilyAssistant => 'Aile Koçu';
+
+  @override
+  String get noSpecialistsFound => 'Uzman bulunamadı';
 }

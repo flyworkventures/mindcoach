@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../constants/meeting_time_constants.dart';
-import '../domain/profile_models.dart';
+import 'package:mindcoach/View/ProfileSetupView/constants/meeting_time_constants.dart';
+import 'package:mindcoach/View/ProfileSetupView/domain/profile_models.dart';
 
 /// MeetingTimeStep
 /// ------------------------------------------------------------

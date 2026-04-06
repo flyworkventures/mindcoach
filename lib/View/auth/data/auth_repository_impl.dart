@@ -20,16 +20,18 @@ class AuthRepositoryImpl implements AuthRepository {
 
   final AuthRemoteDataSource _remote;
 
-  @override
-  Future<void> loginWithSocial(SocialLoginProvider provider) =>
-      _remote.loginWithSocial(provider);
 
-  @override
-  Future<void> logout() => _remote.logout();
+
 
   @override
   Future<void> deleteAccount() => _remote.deleteAccount();
 
   @override
   Future<bool> isLoggedIn() => _remote.isLoggedIn();
+  
+  @override
+  Future<void> logout() {
+    // TODO: implement logout
+    throw UnimplementedError();
+  }
 }

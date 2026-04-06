@@ -1,0 +1,5 @@
+
+storePassword=1234567890mind
+keyPassword=1234567890mind
+keyAlias=mindcoach
+storeFile=../mindcoach-release-key.jks

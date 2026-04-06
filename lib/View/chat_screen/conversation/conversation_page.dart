@@ -24,6 +24,7 @@ import 'package:mindcoach/models/message_model.dart';
 import 'package:mindcoach/Riverpod/providers/user_provider.dart';
  
 
+import '../../../Riverpod/providers/all_providers.dart';
 import '../notifiers/conversation_notifier.dart';
  
 
@@ -266,7 +267,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
             Center(
               child: Text(
-                'Mind Coach',
+                'MindCoach',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   fontSize: 22.w,
@@ -316,7 +317,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       shape: BoxShape.circle,
                       color: Colors.grey.shade300,
                       image:  DecorationImage(
-                        image: NetworkImage(ref.read(userProvider)?.profilePhotoUrl ?? AppConstants.defaultPpUrl),
+                        image: NetworkImage(ref.read(AllProviders.userProvider)?.profilePhotoUrl ?? AppConstants.defaultPpUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -651,8 +652,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                             constraints: BoxConstraints(),
                             onPressed: () {
                               
-                              ref.read(conversationsProvider.notifier).startVideoCall(widget.specialistId,null);
-                              Navigator.pushNamed(context, PageRoutes.videoCall);
+                         //     ref.read(conversationsProvider.notifier).startVideoCall(widget.specialistId,null);
+                            Navigator.pushNamed(context, PageRoutes.videoCallView);
                             },
                             icon: SvgPicture.asset('assets/svg/video_call.svg', width: 22.w),
                           ),
@@ -800,7 +801,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   Widget _buildGreetingContent() {
     return Center(
       child: Text(
-        ChatStrings.greeting(context, ref.read(userProvider)?.username ?? "Mindcoach"),
+        ChatStrings.greeting(context, ref.read(AllProviders.userProvider)?.username ?? "Mindcoach"),
         textAlign: TextAlign.center,
         style: GoogleFonts.quicksand(
           fontSize: 48.w,

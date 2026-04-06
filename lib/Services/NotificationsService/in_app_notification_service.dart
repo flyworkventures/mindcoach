@@ -1,28 +1,91 @@
+import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
+/// Bildirim kuyruğu için model
+class _NotificationItem {
+  final String title;
+  final String subtitle;
+  final Duration duration;
+  final VoidCallback? onTap;
+  final bool isAppointment;
+
+  _NotificationItem({
+    required this.title,
+    required this.subtitle,
+    required this.duration,
+    this.onTap,
+    required this.isAppointment,
+  });
+}
 
 class InAppNotificationService {
+  // Bildirim kuyruğu
+  static final List<_NotificationItem> _notificationQueue = [];
+  static bool _isShowingNotification = false;
+  static Timer? _currentNotificationTimer;
+
+  /// Bildirim göster (kuyruğa ekle)
+  static void _showNextNotification(BuildContext context) async{
+    if (_isShowingNotification || _notificationQueue.isEmpty) {
+      return;
+    }
+
+    _isShowingNotification = true;
+    final notification = _notificationQueue.removeAt(0);
+
+    Widget notificationCard;
+    if (notification.isAppointment) {
+      notificationCard = _AppointmentNotificationCard(
+        title: notification.title,
+        subtitle: notification.subtitle,
+      );
+    } else {
+      notificationCard = _WelcomeNotificationCard(
+        title: notification.title,
+        subtitle: notification.subtitle,
+      );
+    }
+    final audioPlayer =AudioPlayer();
+    await audioPlayer.play(AssetSource("sounds/notification.wav"));
+     InAppNotification.show(
+      child: notificationCard,
+      context: context,
+      duration: notification.duration,
+      onTap: notification.onTap,
+    );
+
+    // Bildirim süresi bittikten sonra bir sonraki bildirimi göster
+    _currentNotificationTimer = Timer(notification.duration + const Duration(milliseconds: 300), () {
+      _isShowingNotification = false;
+      _currentNotificationTimer?.cancel();
+      _currentNotificationTimer = null;
+      
+      // Bir sonraki bildirimi göster (eğer varsa)
+      if (_notificationQueue.isNotEmpty && context.mounted) {
+        _showNextNotification(context);
+      }
+    });
+  }
+
   static void showWelcomeNotification(
     BuildContext context, {
     required String title,
     required String subtitle,
     Duration duration = const Duration(seconds: 3),
   }) {
-    InAppNotification.show(
-      child: _WelcomeNotificationCard(
-        title: title,
-        subtitle: subtitle,
-      ),
-      context: context,
+    _notificationQueue.add(_NotificationItem(
+      title: title,
+      subtitle: subtitle,
       duration: duration,
-      onTap: () {
-      },
-    );
+      isAppointment: false,
+    ));
+    
+    _showNextNotification(context);
   }
-
 
   static void showAppointmentNotification(
     BuildContext context, {
@@ -31,15 +94,15 @@ class InAppNotificationService {
     Duration duration = const Duration(seconds: 4),
     VoidCallback? onTap,
   }) {
-    InAppNotification.show(
-      child: _AppointmentNotificationCard(
-        title: title,
-        subtitle: subtitle,
-      ),
-      context: context,
+    _notificationQueue.add(_NotificationItem(
+      title: title,
+      subtitle: subtitle,
       duration: duration,
       onTap: onTap,
-    );
+      isAppointment: true,
+    ));
+    
+    _showNextNotification(context);
   }
 
   static void showCustomNotification(

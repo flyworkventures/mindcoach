@@ -7,7 +7,9 @@ import '../core/config/size_config.dart';
 import '../core/locale/locale_provider.dart';
 import '../core/routes/app_router.dart';
 import '../l10n/app_localizations.dart';
-import '../View/splash/splash.dart';
+import '../View/SplashView/splash_view.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -21,12 +23,12 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Mind Coach',
-   
+      title: 'MindCoach',
+      navigatorKey: navigatorKey,
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-
+//routes: AppRouter.routes,
       home: const Splash(),
 
       onGenerateRoute: AppRouter.generateRoute,

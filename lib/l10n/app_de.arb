@@ -138,6 +138,10 @@
   "moodNeutral": "Neutral",
   "moodGood": "Gut",
   "moodGreat": "Großartig",
+  "moodCalm": "Ruhig",
+  "moodHappy": "Glücklich",
+  "moodTired": "Müde",
+  "moodStressed": "Gestresst",
 
   "timeToTrackMood": "Es ist Zeit, deine Stimmung zu verfolgen",
 
@@ -352,5 +356,10 @@
   "newChatStarted": "Neuer Chat gestartet",
   "startNewMeeting": "Starte ein neues Gespräch",
 
-  "continueAsGuest": "Als Gast fortfahren"
+  "continueAsGuest": "Als Gast fortfahren",
+
+  "jobThoughtAndHabitGuide": "Gedanken- und Gewohnheits-Coach",
+  "jobFamilyAssistant": "Familien-Coach",
+
+  "noSpecialistsFound": "Keine Spezialisten gefunden"
 }

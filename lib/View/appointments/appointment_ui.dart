@@ -146,7 +146,7 @@ class AppointmentCardUi extends ConsumerWidget {
                   Text(
                     () {
                       try {
-                        return JobConvert(consultantJob).call();
+                        return JobConvert(consultantJob, context).call();
                       } catch (e) {
                         debugPrint("⚠️ JobConvert hatası: $e");
                         return consultantJob;

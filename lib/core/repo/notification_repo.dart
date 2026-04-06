@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
-import 'package:mindcoach/http/http_service.dart';
+import 'package:mindcoach/Http/http_service.dart';
 import 'package:mindcoach/models/notification_model.dart';
 
 class NotificationRepo {
@@ -55,6 +55,44 @@ class NotificationRepo {
     }
 
     return NotificationModel.fromMap(json['data']['notification']);
+  }
+
+  /// Bildirimi sil
+  /// DELETE /notifications/:id
+  /// Response 200: { "success": true, "message": "Notification deleted successfully" }
+  /// Response 404: { "success": false, "error": "Notification not found" }
+  Future<bool> deleteNotification(int id) async {
+    HttpService httpService = HttpService(ref: ref);
+    var res = await httpService.delete(
+      path: AppConstants.deleteNotificationURL(id),
+    );
+
+    var json = jsonDecode(res.body);
+    
+    if (res.statusCode == 200) {
+      return json['success'] == true;
+    } else if (res.statusCode == 404) {
+      throw Exception(json['error'] ?? 'Notification not found');
+    } else {
+      throw Exception('Failed to delete notification: ${res.statusCode}');
+    }
+  }
+
+  /// Tüm bildirimleri sil
+  /// DELETE /notifications
+  Future<bool> deleteAllNotifications() async {
+    HttpService httpService = HttpService(ref: ref);
+    var res = await httpService.delete(
+      path: AppConstants.deleteAllNotificationsURL,
+    );
+
+    var json = jsonDecode(res.body);
+    
+    if (res.statusCode == 200) {
+      return json['success'] == true;
+    } else {
+      throw Exception(json['error'] ?? 'Failed to delete all notifications');
+    }
   }
 }
 

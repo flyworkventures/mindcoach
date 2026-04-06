@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mindcoach/http/http_service.dart';
+import 'package:mindcoach/Http/http_service.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,6 +15,7 @@ import 'package:mindcoach/models/message_model.dart';
 
 import '../../specialists_screen/specialists_notifier.dart';
 import '../chat_notifier.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 
 class ChatMessage {
   final String id;
@@ -120,20 +121,89 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
   }
 
 
+  /// Premium kontrolü yap
+  bool _isPremium() {
+
+    
+    try {
+      // UserProvider'dan kullanıcı bilgisini al
+      bool premium = ref!.watch(AllProviders.premiumProvider);
+      return premium;
+    } catch (e) {
+      log("⚠️ Premium kontrolü hatası: $e");
+      return false;
+    }
+
+    
+  }
+
+  /// Premium mesaj gönder - text, image veya voice gönderebilir
+  Future<void> sendPremiumMessage({
+    required int consultantId,
+    String? message,
+    File? imageFile,
+    File? audioFile,
+  }) async {
+    try {
+      ChatRepo chatRepo = ChatRepo(ref);
+      await chatRepo.sendPremiumMessage(
+        consultantId: consultantId,
+        message: message,
+        imageFile: imageFile,
+        audioFile: audioFile,
+      );
+      
+      // Chat listesindeki son mesajı güncelle
+      String lastMessage;
+      if (imageFile != null) {
+        lastMessage = message?.isNotEmpty == true ? message! : '[Resim]';
+      } else if (audioFile != null) {
+        lastMessage = message?.isNotEmpty == true ? message! : '[Sesli Mesaj]';
+      } else {
+        lastMessage = message?.trim() ?? '';
+      }
+      
+      if (lastMessage.isNotEmpty) {
+        _updateChatListLastMessage(consultantId, lastMessage, true);
+      }
+      
+      // Mesaj gönderildikten sonra mesajları yeniden yükle (sadece text mesaj için)
+      if (imageFile == null && audioFile == null && message != null && message.trim().isNotEmpty) {
+        await getMessages(consultantId);
+      }
+    } catch (e) {
+      log("❌ sendPremiumMessage hatası: $e");
+      rethrow;
+    }
+  }
+
+  /// Normal mesaj gönder - premium kontrolü yapar
   Future<void> sendMessage({
     required int id,
     required String text,
-  }) async{
+  }) async {
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
-    ChatRepo chatRepo = ChatRepo(ref);
-    await chatRepo.sendMessagesFromConsultantId(id, text);
     
-    // Chat listesindeki son mesajı güncelle
-    _updateChatListLastMessage(id, trimmed, true);
+    bool isPremium = true;
     
-    // Mesaj gönderildikten sonra mesajları yeniden yükle
-    await getMessages(id);
+    if (isPremium==true) {
+      // Premium kullanıcı - premium mesaj gönder
+      await sendPremiumMessage(
+        consultantId: id,
+        message: trimmed,
+      );
+    } else {
+      // Normal kullanıcı - normal mesaj gönder
+      ChatRepo chatRepo = ChatRepo(ref);
+      await chatRepo.sendMessagesFromConsultantId(id, trimmed);
+      
+      // Chat listesindeki son mesajı güncelle
+      _updateChatListLastMessage(id, trimmed, true);
+      
+      // Mesaj gönderildikten sonra mesajları yeniden yükle
+      await getMessages(id);
+    }
   }
   
   /// Consultant ID'yi SpecialistId'ye çevir (basit mapping: 1-5 arası)
@@ -162,51 +232,67 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
     }
   }
 
-  /// Resim mesajı gönder (multipart/form-data)
-  /// Dosya otomatik olarak Bunny CDN'e yüklenir
+  /// Resim mesajı gönder - premium kontrolü yapar
   Future<void> sendImageMessage({
     required int consultantId,
     required File imageFile,
     String? message,
   }) async {
-    ChatRepo chatRepo = ChatRepo(ref);
-    await chatRepo.sendImageMessage(
-      consultantId: consultantId,
-      imageFile: imageFile,
-      message: message,
-    );
+    final isPremium = _isPremium();
     
-    // Chat listesindeki son mesajı güncelle
-    final lastMessage = message?.isNotEmpty == true ? message! : '[Resim]';
-    _updateChatListLastMessage(consultantId, lastMessage, true);
-    
-    // Mesajlar arka planda yüklenecek (fire-and-forget)
+    if (isPremium) {
+      // Premium kullanıcı - premium mesaj gönder
+      await sendPremiumMessage(
+        consultantId: consultantId,
+        imageFile: imageFile,
+        message: message,
+      );
+    } else {
+      // Normal kullanıcı - normal mesaj gönder
+      ChatRepo chatRepo = ChatRepo(ref);
+      await chatRepo.sendImageMessage(
+        consultantId: consultantId,
+        imageFile: imageFile,
+        message: message,
+      );
+      
+      // Chat listesindeki son mesajı güncelle
+      final lastMessage = message?.isNotEmpty == true ? message! : '[Resim]';
+      _updateChatListLastMessage(consultantId, lastMessage, true);
+    }
   }
 
-  /// Sesli mesaj gönder (multipart/form-data)
-  /// Dosya otomatik olarak Bunny CDN'e yüklenir
-  /// message parametresi null olarak gönderilir (boş bırakılır)
+  /// Sesli mesaj gönder - premium kontrolü yapar
   Future<void> sendVoiceMessage({
     required int consultantId,
     required File audioFile,
     String? message,
   }) async {
     try {
-      ChatRepo chatRepo = ChatRepo(ref);
-      // Fire-and-forget: İstek gönderildikten sonra loading bitir, yanıt bekleme
-      await chatRepo.sendVoiceMessage(
-        consultantId: consultantId,
-        audioFile: audioFile,
-        message: null, // Mesaj boş bırakılıyor
-      );
+      final isPremium = _isPremium();
       
-      // Chat listesindeki son mesajı güncelle
-      _updateChatListLastMessage(consultantId, '[Sesli Mesaj]', true);
-      
-      // Mesajlar arka planda yüklenecek (fire-and-forget)
+      if (isPremium) {
+        // Premium kullanıcı - premium mesaj gönder
+        await sendPremiumMessage(
+          consultantId: consultantId,
+          audioFile: audioFile,
+          message: message,
+        );
+      } else {
+        // Normal kullanıcı - normal mesaj gönder
+        ChatRepo chatRepo = ChatRepo(ref);
+        await chatRepo.sendVoiceMessage(
+          consultantId: consultantId,
+          audioFile: audioFile,
+          message: null, // Mesaj boş bırakılıyor
+        );
+        
+        // Chat listesindeki son mesajı güncelle
+        _updateChatListLastMessage(consultantId, '[Sesli Mesaj]', true);
+      }
     } catch (e) {
       log("❌ sendVoiceMessage hatası: $e");
-      rethrow; // Hata yukarıya fırlatılsın ki UI'da gösterilebilsin
+      rethrow;
     }
   }
 

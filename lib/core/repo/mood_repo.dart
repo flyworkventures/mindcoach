@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/http/http_service.dart';
-import 'package:mindcoach/Riverpod/providers/user_provider.dart';
 
 class MoodRepo {
   final Ref? ref;
@@ -16,7 +16,7 @@ class MoodRepo {
     try {
       HttpService httpService = HttpService(ref: ref);
 
-      final tokenUserId = ref?.read(userProvider)?.id;
+      final tokenUserId = ref?.read(AllProviders.userProvider)?.id;
       if (tokenUserId == null) {
         log("Token'dan userId alınamadı");
         return null;
@@ -25,10 +25,11 @@ class MoodRepo {
 
       final today = DateTime.now();
       final todayString = "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
-      log("Bugünkü tarih kontrolü (local): $todayString");
+      log("🔍 Bugünkü tarih kontrolü (local): $todayString");
       
 
-      final pathWithQuery = "${AppConstants.getUserMoodsURL(tokenUserId)}?limit=1&offset=0";
+      // Daha fazla kayıt al (bugünün kaydını bulmak için)
+      final pathWithQuery = "${AppConstants.getUserMoodsURL(tokenUserId)}?limit=50&offset=0";
       final response = await httpService.get(
         path: pathWithQuery,
       );
@@ -37,8 +38,10 @@ class MoodRepo {
         final json = jsonDecode(response.body);
         final data = json["data"];
         
+        log("📥 API'den ${data is List ? data.length : 0} mood kaydı geldi");
+        
         if (data != null && data is List && data.isNotEmpty) {
-
+          // Tüm kayıtları kontrol et (bugünün kaydını bulmak için)
           for (var moodRecord in data) {
             final recordDate = moodRecord["date"] as String?;
             
@@ -50,35 +53,33 @@ class MoodRepo {
                 recordDateOnly = recordDate;
               }
               
+              log("📅 Kayıt tarihi kontrol ediliyor: $recordDateOnly");
 
               try {
+                String localDateString;
                 if (recordDate.contains('T')) {
                   final utcDate = DateTime.parse(recordDate);
                   final localDate = utcDate.toLocal();
-                  final localDateString = "${localDate.year}-${localDate.month.toString().padLeft(2, '0')}-${localDate.day.toString().padLeft(2, '0')}";
+                  localDateString = "${localDate.year}-${localDate.month.toString().padLeft(2, '0')}-${localDate.day.toString().padLeft(2, '0')}";
                   
-                  log("API tarihi: $recordDateOnly (UTC) -> $localDateString (local)");
-
-                  if (localDateString == todayString) {
-                    log("Bugünkü mood bulundu: ${moodRecord["mood"]}, date: $localDateString");
-                    return {
-                      'date': recordDate,
-                      'mood': moodRecord["mood"],
-                    };
-                  }
+                  log("📅 API tarihi: $recordDateOnly (UTC) -> $localDateString (local)");
                 } else {
-                  if (recordDateOnly == todayString) {
-                    log("Bugünkü mood bulundu: ${moodRecord["mood"]}, date: $recordDateOnly");
-                    return {
-                      'date': recordDate,
-                      'mood': moodRecord["mood"],
-                    };
-                  }
+                  localDateString = recordDateOnly;
+                  log("📅 API tarihi: $recordDateOnly (zaten local format)");
+                }
+
+                if (localDateString == todayString) {
+                  log("✅ Bugünkü mood bulundu: ${moodRecord["mood"]}, date: $localDateString");
+                  return {
+                    'date': recordDate,
+                    'mood': moodRecord["mood"],
+                  };
                 }
               } catch (e) {
-                log("Tarih parse hatası: $e");
+                log("⚠️ Tarih parse hatası: $e");
+                // Fallback: string karşılaştırması
                 if (recordDateOnly == todayString) {
-                  log("Bugünkü mood bulundu (fallback): ${moodRecord["mood"]}, date: $recordDateOnly");
+                  log("✅ Bugünkü mood bulundu (fallback): ${moodRecord["mood"]}, date: $recordDateOnly");
                   return {
                     'date': recordDate,
                     'mood': moodRecord["mood"],
@@ -89,7 +90,7 @@ class MoodRepo {
           }
         }
         
-        log(" Bugünkü mood kaydı bulunamadı (bugün: $todayString)");
+        log("❌ Bugünkü mood kaydı bulunamadı (bugün: $todayString)");
         return null;
       } else {
         log("GET mood hatası: ${response.statusCode}");

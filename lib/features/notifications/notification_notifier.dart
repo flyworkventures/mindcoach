@@ -98,6 +98,38 @@ class NotificationNotifier extends Notifier<NotificationState> {
       );
     }
   }
+
+  /// Bildirimi sil
+  Future<void> deleteNotification(int id) async {
+    try {
+      final success = await notificationRepo.deleteNotification(id);
+      if (success) {
+        // Bildirimi listeden kaldır
+        final updatedNotifications = state.notifications
+            .where((notification) => notification.id != id)
+            .toList();
+        state = state.copyWith(notifications: updatedNotifications);
+      }
+    } catch (e) {
+      debugPrint('Error deleting notification: $e');
+      state = state.copyWith(error: e.toString());
+    }
+  }
+
+  /// Tüm bildirimleri sil
+  Future<void> deleteAllNotifications() async {
+    try {
+      final success = await notificationRepo.deleteAllNotifications();
+      if (success) {
+        // Tüm bildirimleri listeden kaldır
+        state = state.copyWith(notifications: []);
+      }
+    } catch (e) {
+      debugPrint('Error deleting all notifications: $e');
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
 }
 
 final notificationNotifierProvider =

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mindcoach/View/splash/splash.dart';
+import 'package:mindcoach/View/SplashView/splash_view.dart';
 
 import '../core/config/app_status_notifier.dart';
-import '../View/Onboard/onboarding_page.dart';
-import '../View/profile_setup/presentation/pages/profile_setup_page.dart';
-import 'navbar_shell.dart';
+import '../View/OnboardView/onboarding_page.dart';
+import '../View/ProfileSetupView/profile_setup_view.dart';
+import '../View/BottomNavBar/bottom_nav_bar.dart';
 
 
 
@@ -77,8 +77,8 @@ class AuthGateState extends ConsumerState<AuthGate> {
         return const MindCoachOnboarding();
 
       case AppStatus.authenticated:
-        debugPrint('📱 [AUTH-GATE] NavbarShell gösteriliyor');
-        return const NavbarShell();
+        debugPrint('📱 [AUTH-GATE] BottomNavBar gösteriliyor');
+        return const BottomNavBar();
 
       case AppStatus.unauthenticated:
         debugPrint('📱 [AUTH-GATE] OnboardingScreen gösteriliyor (unauthenticated)');

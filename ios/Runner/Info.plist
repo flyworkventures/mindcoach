@@ -47,15 +47,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Fotoğraf çekmek için kamera erişimine ihtiyacımız var.</string>
+	<string>The camera is used to take photos that you can upload and share inside the app.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Sesli mesaj gönderebilmek için mikrofon erişimine ihtiyacımız var.</string>
+	<string>Your microphone is used to record and send voice messages within the app.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Fotoğraf kaydetmek için galeri erişimine ihtiyacımız var.</string>
+	<string>Your photo library is used so you can choose photos to upload and share in the app.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Fotoğraf seçmek için galeri erişimine ihtiyacımız var.</string>
+	<string>Your photo library is used so you can choose photos to upload and share in the app.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Bildirimlerinizi size daha iyi ulaştırmak için konum bilgisine ihtiyacımız var.</string>
+	<string>Your location is used to send you relevant notifications based on your area while using the app.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
@@ -68,6 +68,11 @@
 	<string>Main</string>
 	<key>UIStatusBarHidden</key>
 	<false/>
+	<key>WKWebViewJavascriptEnabled</key>
+<true/>
+
+<key>WKWebViewJavaScriptCanOpenWindowsAutomatically</key>
+<true/>
 
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

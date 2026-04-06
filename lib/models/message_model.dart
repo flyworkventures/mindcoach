@@ -10,6 +10,7 @@ class MessageModel {
   final String? fileURL;
   final bool? isVoiceMessage;
   final String? voiceURL;
+  final String? voiceMessageContent;
   MessageModel({
     required this.messageId,
     required this.chatId,
@@ -21,6 +22,7 @@ class MessageModel {
     this.fileURL,
     this.isVoiceMessage,
     this.voiceURL,
+    this.voiceMessageContent
   });
 
   MessageModel copyWith({
@@ -34,6 +36,7 @@ class MessageModel {
     String? fileURL,
     bool? isVoiceMessage,
     String? voiceURL,
+     String? voiceMessageContent,
   }) {
     return MessageModel(
       messageId: messageId ?? this.messageId,
@@ -46,6 +49,7 @@ class MessageModel {
       fileURL: fileURL ?? this.fileURL,
       isVoiceMessage: isVoiceMessage ?? this.isVoiceMessage,
       voiceURL: voiceURL ?? this.voiceURL,
+      voiceMessageContent: voiceMessageContent ?? this.voiceMessageContent
     );
   }
 
@@ -61,6 +65,7 @@ class MessageModel {
       'fileURL': fileURL,
       'isVoiceMessage': isVoiceMessage,
       'voiceURL': voiceURL,
+      'voiceMessageContent': voiceMessageContent,
     };
   }
 
@@ -87,6 +92,7 @@ class MessageModel {
       fileURL: map['fileURL'] as String?,
       isVoiceMessage: _toBool(map['isVoiceMessage']),
       voiceURL: map['voiceURL'] as String?,
+      voiceMessageContent: map['voiceMessageContent'] as String?,
     );
   }
 }

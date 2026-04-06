@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mindcoach/View/specialists_screen/presentation/widgets/specialists_filter_sheet.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 
@@ -19,9 +20,37 @@ class SpecialistsScreen extends ConsumerStatefulWidget {
 }
 
 class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
+  Set<String> _selectedJobFilters = {};
+
+  // Mevcut job tiplerini al (unique job değerleri)
+  List<String> _getAvailableJobs(List<ConsultantModel>? specialists) {
+    if (specialists == null || specialists.isEmpty) {
+      // Varsayılan job tipleri (resimdeki gibi)
+      return [
+        'Developmental Coach',
+        'Family Coach',
+        'Relationship Coach',
+        'Individual Coach',
+        'Educational Coach',
+      ];
+    }
+    
+    // Tüm unique job değerlerini al
+    final jobs = specialists.map((s) => s.job).toSet().toList();
+    return jobs;
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(specialistsProvider);
+    
+    // Filtrelenmiş specialists listesi
+    final filteredSpecialists = _selectedJobFilters.isEmpty
+        ? state.specialists
+        : state.specialists?.where((specialist) {
+            // Job değerini direkt karşılaştır
+            return _selectedJobFilters.contains(specialist.job);
+          }).toList();
 
 
 
@@ -56,15 +85,19 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
                         color: Colors.black,
                       ),
                     ),
+                    
                     IconButton(
                       onPressed: () async {
-                        // TODO: Filtreleme özelliği eklenecek
-                        // Şimdilik boş bırakıyoruz ama buton çalışır durumda
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Filtreleme özelliği yakında eklenecek'),
-                            duration: Duration(seconds: 2),
-                          ),
+                        final availableJobs = _getAvailableJobs(state.specialists);
+                        await SpecialistsFilterSheet.show(
+                          context,
+                          initial: _selectedJobFilters,
+                          availableJobs: availableJobs,
+                          onSave: (selectedJobs) {
+                            setState(() {
+                              _selectedJobFilters = selectedJobs;
+                            });
+                          },
                         );
                       },
                       icon: SvgPicture.asset(
@@ -73,6 +106,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
                         height: 20,
                       ),
                     ),
+                    
                   ],
                 ),
 
@@ -80,9 +114,17 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
 
                 // LİSTE
                 Expanded(
-                  child: state.specialists == null || state.specialists!.isEmpty
+                  child: filteredSpecialists == null || filteredSpecialists.isEmpty
                       ? Center(
-                          child: CircularProgressIndicator(),
+                          child: state.specialists == null || state.specialists!.isEmpty
+                              ? CircularProgressIndicator()
+                              : Text(
+                                  context.l10n.noSpecialistsFound,
+                                  style: GoogleFonts.quicksand(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
+                                ),
                         )
                       : ListView.separated(
                           padding: const EdgeInsets.only(
@@ -91,9 +133,9 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
                             right: 2,
                           ),
                           separatorBuilder: (_, __) => const SizedBox(height: 16),
-                          itemCount: state.specialists!.length,
+                          itemCount: filteredSpecialists.length,
                           itemBuilder: (context, index) {
-                            final item = state.specialists![index];
+                            final item = filteredSpecialists[index];
                             return _SpecialistCard(item: item);
                           },
                         ),
@@ -197,29 +239,29 @@ class _SpecialistCard extends ConsumerWidget {
                       style: GoogleFonts.quicksand(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
-                        height: 24 / 17,
+                   
                         color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                     JobConvert( item.job).call(),
+                      JobConvert(item.job, context).call(),
+                      maxLines: 1,
                       style: GoogleFonts.quicksand(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        height: 18 / 12,
                         color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       item.explanation,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.quicksand(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        height: 18 / 12,
+   
                         color: Colors.black87,
                       ),
                     ),

@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
@@ -13,7 +12,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/local_db_keys.dart';
 import 'package:mindcoach/http/http_service.dart';
-import 'package:mindcoach/models/user_model.dart';
 
 
 class AuthRepository {
@@ -21,20 +19,14 @@ class AuthRepository {
   // Server Client ID from iOS Info.plist: 137535160742-let1k5rhqu6ecqmlpj91g7336gctc8mt.apps.googleusercontent.com
   // Android Client ID: 137535160742-pai7kjdb0nlr4lm9r1j4tc0o7ulpinli.apps.googleusercontent.com
   static bool _initialized = false;
-
-  Future checkToken() async{}
   
   Future<void> _ensureInitialized() async {
     if (!_initialized) {
       if (Platform.isAndroid) {
-        debugPrint("🔵 [Google Sign-In] Initializing for Android");
-        debugPrint("🔵 [Google Sign-In] Client ID: 137535160742-pai7kjdb0nlr4lm9r1j4tc0o7ulpinli.apps.googleusercontent.com");
-        debugPrint("🔵 [Google Sign-In] Server Client ID: 137535160742-let1k5rhqu6ecqmlpj91g7336gctc8mt.apps.googleusercontent.com");
         try {
-          // attokmak değişecek
           await GoogleSignIn.instance.initialize(
-            clientId: "137535160742-pai7kjdb0nlr4lm9r1j4tc0o7ulpinli.apps.googleusercontent.com",
-            serverClientId: "137535160742-let1k5rhqu6ecqmlpj91g7336gctc8mt.apps.googleusercontent.com",
+            clientId: "931696780726-vcrf18tiqf3kim8dr5s0g8qhnuvbpip0.apps.googleusercontent.com",
+            serverClientId: "931696780726-3b9p8a9t0di2bkr7s3olir10oh00roba.apps.googleusercontent.com",
           );
           debugPrint("✅ [Google Sign-In] Android initialization successful");
         } catch (e) {
@@ -55,41 +47,67 @@ class AuthRepository {
     }
   }
 
+  Future checkToken() async{}
+
 Future<dynamic> googleSignIn() async{
   try {
     debugPrint("🔵 [Google Sign-In] Starting Google Sign-In process...");
     debugPrint("🔵 [Google Sign-In] Platform: ${Platform.isAndroid ? 'Android' : 'iOS'}");
     
-  
     await _ensureInitialized();
 
-   // Start the sign-in flow using authenticate() method
-       GoogleSignInAccount?  account = await GoogleSignIn.instance.authenticate(
-          scopeHint: ['email', 'profile'],
-        );
-      
-      // Account null kontrolü
-      if (account == null) {
-        debugPrint("❌ [Google Sign-In] Account is null - user cancelled or error occurred");
+    // Clear any existing session to avoid reauth issues
+    try {
+      debugPrint("🔵 [Google Sign-In] Clearing any existing session...");
+      await GoogleSignIn.instance.signOut();
+      await Future.delayed(const Duration(milliseconds: 500));
+      debugPrint("✅ [Google Sign-In] Session cleared");
+    } catch (e) {
+      debugPrint("ℹ️ [Google Sign-In] Sign out failed (this is OK if no session exists): $e");
+    }
+
+    // Use authenticate() method - with Credential Manager disabled, this should work better
+    debugPrint("🔵 [Google Sign-In] Attempting to authenticate...");
+    GoogleSignInAccount? account;
+          account = await GoogleSignIn.instance.authenticate(
+        scopeHint: ['email', 'profile'],
+      );
+
+    
+    // authenticate() returns null if user cancels (otherwise throws exception)
+    // If account is null, user cancelled - this is handled by the exception above
+    debugPrint("✅ [Google Sign-In] Account obtained: ${account.email}");
+    
+    // Get authentication with ID token
+    debugPrint("🔵 [Google Sign-In] Requesting authentication token...");
+    GoogleSignInAuthentication auth = await account.authentication;
+    debugPrint("✅ [Google Sign-In] Authentication obtained");
+    debugPrint("✅ [Google Sign-In] ID Token: ${auth.idToken != null ? 'Yes (${auth.idToken!.length} chars)' : 'No'}");
+    
+    if (auth.idToken == null) {
+      debugPrint("❌ [Google Sign-In] ID Token is null - requesting again...");
+      // Try to get the token again - sometimes it needs a refresh
+      auth = await account.authentication;
+      if (auth.idToken == null) {
+        debugPrint("❌ [Google Sign-In] ID Token is still null after retry");
         return false;
       }
-      
-         GoogleSignInAuthentication auth = account.authentication;
-      debugPrint("✅ [Google Sign-In] Authentication obtained");
-      debugPrint("✅ [Google Sign-In] ID Token: ${auth.idToken != null ? 'Yes (${auth.idToken!.length} chars)' : 'No'}");
-      if (auth.idToken != null) {
-        debugPrint("✅ [Google Sign-In] ID Token preview: ${auth.idToken!.substring(0, auth.idToken!.length > 50 ? 50 : auth.idToken!.length)}...");
-        // token devamı
-      bool apiSuccess = await googleAuthApiCall(auth.idToken!);
-      if (apiSuccess) {
-        return auth.idToken!;
-      } else {
-             return false;
-      }
-      }else{
-        debugPrint("❌ [Google Sign-In] ID Token is null");
-        return false;
-      }
+    }
+    
+    debugPrint("✅ [Google Sign-In] ID Token obtained successfully");
+    if (auth.idToken!.length > 50) {
+      debugPrint("✅ [Google Sign-In] ID Token preview: ${auth.idToken!.substring(0, 50)}...");
+    }
+    
+    // Call API to verify token
+    bool apiSuccess = await googleAuthApiCall(auth.idToken!);
+    if (apiSuccess) {
+      debugPrint("✅ [Google Sign-In] API call successful");
+      return auth.idToken!;
+    } else {
+      debugPrint("❌ [Google Sign-In] API call failed");
+      return false;
+    }
     
   } on GoogleSignInException catch (e) {
     debugPrint("❌ [Google Sign-In] Exception Code: ${e.code}");
@@ -97,11 +115,40 @@ Future<dynamic> googleSignIn() async{
     
     // Handle specific GoogleSignInException codes
     if (e.code == GoogleSignInExceptionCode.canceled) {
-      debugPrint("⚠️ [Google Sign-In] Sign-in was CANCELED");
       final errorString = e.toString();
-      if (errorString.contains('reauth') || errorString.contains('Account reauth')) {
-        debugPrint("❌ [Google Sign-In] Account reauth failed detected!");
+      
+      // Check if it's Error 16 (Account reauth failed)
+      if (errorString.contains('[16]') || errorString.contains('Account reauth') || errorString.contains('reauth')) {
+        debugPrint("❌ [Google Sign-In] Error 16: Account reauth failed");
+        debugPrint("❌ [Google Sign-In] ========================================");
+        debugPrint("❌ [Google Sign-In] BU HATA ŞUNLARDAN KAYNAKLANABİLİR:");
+        debugPrint("❌ [Google Sign-In] ========================================");
+        debugPrint("❌ [Google Sign-In] 1. SHA-1 ve SHA-256 fingerprint'ler Google Cloud Console'a EKLENMEMİŞ");
+        debugPrint("❌ [Google Sign-In] 2. Package name YANLIŞ (olması gereken: com.flywork.mindcoach)");
+        debugPrint("❌ [Google Sign-In] 3. OAuth Client ID YANLIŞ veya EKSİK");
+        debugPrint("❌ [Google Sign-In] 4. Credential Manager hala aktif (Android sistem hatası)");
+        debugPrint("❌ [Google Sign-In] ========================================");
+        debugPrint("❌ [Google Sign-In] YAPILMASI GEREKENLER:");
+        debugPrint("❌ [Google Sign-In] ========================================");
+        debugPrint("❌ [Google Sign-In] 1. Google Cloud Console'a gidin:");
+        debugPrint("❌ [Google Sign-In]    https://console.cloud.google.com/apis/credentials");
+        debugPrint("❌ [Google Sign-In] 2. OAuth Client ID'yi bulun:");
+        debugPrint("❌ [Google Sign-In]    931696780726-9bg4g80lakc05sf5do9a3r3pdru90sj6");
+        debugPrint("❌ [Google Sign-In] 3. Package name: com.flywork.mindcoach (TAM OLARAK)");
+        debugPrint("❌ [Google Sign-In] 4. Aşağıdaki SHA key'leri EKLEYİN:");
+        debugPrint("❌ [Google Sign-In]    DEBUG SHA-1:   C7:A6:48:26:D6:91:7C:31:B6:3E:0E:A9:3D:0A:44:90:EE:9A:5F:FA");
+        debugPrint("❌ [Google Sign-In]    DEBUG SHA-256: 2C:A9:D3:C7:E1:47:E3:D8:88:E3:FC:70:8B:79:71:10:97:FE:EE:18:F3:FC:84:8B:CC:DE:BC:B4:7F:EB:6F:C0");
+        debugPrint("❌ [Google Sign-In]    RELEASE SHA-1:   79:7E:06:14:86:C9:64:89:87:5F:29:1E:25:81:4A:04:F6:50:70:2A");
+        debugPrint("❌ [Google Sign-In]    RELEASE SHA-256: 51:A4:50:FE:A0:AB:58:DA:E5:E8:15:B6:E4:79:09:1A:D2:E5:BF:44:FA:3D:28:8F:8A:8D:46:C4:F5:50:BC:D5");
+        debugPrint("❌ [Google Sign-In] 5. 10-15 dakika bekleyin");
+        debugPrint("❌ [Google Sign-In] 6. Uygulamayı tamamen kapatıp yeniden açın");
+        debugPrint("❌ [Google Sign-In] ========================================");
+        debugPrint("❌ [Google Sign-In] Detaylı talimatlar: android/SHA_KEYS_TO_ADD.md");
+        debugPrint("❌ [Google Sign-In] ========================================");
+      } else {
+        debugPrint("⚠️ [Google Sign-In] Sign-in was CANCELED by user");
       }
+      return false;
     } else {
       debugPrint("❌ [Google Sign-In] Error code: ${e.code}");
     }
@@ -130,6 +177,7 @@ Future<dynamic> googleSignIn() async{
         break;
       case 'DEVELOPER_ERROR':
         debugPrint("❌ [Google Sign-In] DEVELOPER_ERROR - Configuration issue");
+        debugPrint("❌ [Google Sign-In] Check OAuth Client ID, package name, and SHA fingerprints");
         break;
       case '10':
         debugPrint("❌ [Google Sign-In] Error 10 - OAuth configuration issue");
@@ -143,6 +191,11 @@ Future<dynamic> googleSignIn() async{
     }
     
     log("❌ [Google Sign-In] Platform Exception in googleSignIn method. Code: ${e.code}, Message: ${e.message}, Details: ${e.details}");
+    return false;
+  } catch (e, stackTrace) {
+    debugPrint("❌ [Google Sign-In] Unexpected error: $e");
+    debugPrint("❌ [Google Sign-In] Stack trace: $stackTrace");
+    log("❌ [Google Sign-In] Unexpected error in googleSignIn method. Error: $e, StackTrace: $stackTrace");
     return false;
   } 
 }
@@ -167,88 +220,6 @@ Future<bool> googleAuthApiCall(String idToken)async{
        }
 
       
-}
-
-Future<UserModel?> verifyUserByToken(String token) async {
-  try {
-    debugPrint('🔄 [AUTH-REPO] verifyUserByToken başlatılıyor...');
-    
-    HttpService httpService = HttpService();
-    debugPrint('🔄 [AUTH-REPO] HttpService oluşturuldu, /auth/verify endpoint\'ine istek gönderiliyor...');
-    
-    var res = await httpService.get(
-      path: AppConstants.verifyTokenURL,
-      headers: {
-        "Authorization": "Bearer $token",
-        "Content-Type": "application/json"
-      }
-    );
-    
-    debugPrint('✅ [AUTH-REPO] /auth/verify response alındı, statusCode: ${res.statusCode}');
-    
-    if (res.statusCode == 200) {
-      var json = jsonDecode(res.body);
-      debugPrint('✅ [AUTH-REPO] Response JSON parse edildi');
-      
-      if (json["success"] == true && json["data"] != null) {
-        // Yeni API formatı: {"success": true, "data": {"valid": true, "user": {...}}}
-        if (json["data"]["valid"] == true && json["data"]["user"] != null) {
-          debugPrint('✅ [AUTH-REPO] Token geçerli, user model oluşturuluyor...');
-          UserModel userModel = UserModel.fromMap(json["data"]["user"]);
-          debugPrint('✅ [AUTH-REPO] UserModel oluşturuldu: ${userModel.id}');
-          return userModel;
-        } else {
-          debugPrint('❌ [AUTH-REPO] Token validation error: valid=false veya user=null');
-          return null;
-        }
-      } else {
-        debugPrint('❌ [AUTH-REPO] Response format hatası: success=false veya data=null');
-        return null;
-      }
-    } else {
-      debugPrint('❌ [AUTH-REPO] Request to validation error: statusCode=${res.statusCode}');
-      debugPrint('❌ [AUTH-REPO] Response body: ${res.body}');
-      return null;
-    }
-  } catch (e, stackTrace) {
-    debugPrint('❌ [AUTH-REPO] verifyUserByToken hatası: $e');
-    debugPrint('❌ [AUTH-REPO] Stack trace: $stackTrace');
-    return null;
-  }
-}
-
-
-Future<bool> completeProfile(String username,String gender,List<String> avaibleDays,String avaibleHours,String area,String speakingStyle,Ref ref)async{
-   HttpService httpService = HttpService(ref: ref);
-  
-  // Username boşsa veya sadece boşluklardan oluşuyorsa "MindCoach User" olarak ayarla
-  final finalUsername = (username.trim().isEmpty) ? 'MindCoach User' : username.trim();
-  
-  debugPrint('📝 [AUTH-REPO] Profil tamamlanıyor: username="$finalUsername" (orijinal: "$username")');
-  
-  var body = {
-  "username": finalUsername,
-  "nativeLang": "tr",
-  "gender": gender,
-  "answerData": {
-    "avaibleDays": avaibleDays,
-    "avaibleHours": avaibleHours,
-    "supportArea": area,
-    "agentSpeakStyle": speakingStyle
-  }
-};
-
-  var response = await httpService.put(path: AppConstants.completeProfileURL,
-  body: body
-  );
-  if (response.statusCode == 200) {
-    debugPrint("✅ Profile Completed successfully");
-    return true;
-  } else {
-    debugPrint("❌ Profile completion failed: ${response.statusCode}");
-    debugPrint("Response body: ${response.body}");
-    return false;
-  }
 }
 
 

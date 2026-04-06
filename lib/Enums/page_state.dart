@@ -1,0 +1,4 @@
+enum PageState {
+  loading,
+  normal
+}

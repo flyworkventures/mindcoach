@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
-import 'package:mindcoach/Riverpod/providers/user_provider.dart';
+import 'package:mindcoach/Riverpod/Providers/user_provider.dart';
+
+import '../../Riverpod/providers/all_providers.dart';
 
 class StreamCallRepo {
   final WidgetRef? ref;
@@ -21,7 +23,7 @@ class StreamCallRepo {
       final url = Uri.parse("${AppConstants.baseURL}${AppConstants.videoCallURL}");
       final request = http.MultipartRequest('POST', url);
       
-      final token = ref?.read(userProvider)?.token ?? "";
+      final token = ref?.read(AllProviders.userProvider)?.token ?? "";
       request.headers['Authorization'] = 'Bearer $token';
  
       final fileExtension = audioFile.path.split('.').last.toLowerCase();

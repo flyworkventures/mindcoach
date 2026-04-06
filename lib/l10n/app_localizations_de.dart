@@ -356,6 +356,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get moodGreat => 'Großartig';
 
   @override
+  String get moodCalm => 'Ruhig';
+
+  @override
+  String get moodHappy => 'Glücklich';
+
+  @override
+  String get moodTired => 'Müde';
+
+  @override
+  String get moodStressed => 'Gestresst';
+
+  @override
   String get timeToTrackMood => 'Es ist Zeit, deine Stimmung zu verfolgen';
 
   @override
@@ -672,6 +684,33 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bist du sicher, dass du das Profil löschen möchtest?';
 
   @override
+  String get deleteNotificationConfirmTitle => 'Delete Notification';
+
+  @override
+  String get deleteNotificationConfirmMessage =>
+      'Are you sure you want to delete this notification?';
+
+  @override
+  String get deleteAllNotifications => 'Delete All';
+
+  @override
+  String get deleteAllNotificationsConfirmTitle => 'Delete All Notifications';
+
+  @override
+  String get deleteAllNotificationsConfirmMessage =>
+      'Are you sure you want to delete all notifications?';
+
+  @override
+  String get allNotificationsDeleted =>
+      'All notifications deleted successfully';
+
+  @override
+  String get noNotificationsToDelete => 'No notifications to delete';
+
+  @override
+  String get errorDeletingNotifications => 'Error deleting notifications';
+
+  @override
   String get invitePeople => 'Leute einladen';
 
   @override
@@ -743,4 +782,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get continueAsGuest => 'Als Gast fortfahren';
+
+  @override
+  String get jobThoughtAndHabitGuide => 'Gedanken- und Gewohnheits-Coach';
+
+  @override
+  String get jobFamilyAssistant => 'Familien-Coach';
+
+  @override
+  String get noSpecialistsFound => 'Keine Spezialisten gefunden';
 }

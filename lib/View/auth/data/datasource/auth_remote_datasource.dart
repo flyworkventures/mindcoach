@@ -19,8 +19,8 @@ import '../../domain/social_login_provider.dart';
 /// UI ve feature katmanları bu değişimden etkilenmez.
 
 abstract class AuthRemoteDataSource {
-  Future<void> loginWithSocial(SocialLoginProvider provider);
-  Future<void> logout();
+ 
+
   Future<void> deleteAccount();
   Future<bool> isLoggedIn();
 }

@@ -138,6 +138,10 @@
   "moodNeutral": "Normal",
   "moodGood": "İyi",
   "moodGreat": "Harika",
+  "moodCalm": "Sakin",
+  "moodHappy": "Mutlu",
+  "moodTired": "Yorgun",
+  "moodStressed": "Stresli",
 
   "timeToTrackMood": "Duygu durumunu takip etme zamanı",
 
@@ -297,6 +301,14 @@
   "deleteProfile": "Profili Sil",
   "cancel": "İptal",
   "delete": "Sil",
+  "deleteNotificationConfirmTitle": "Bildirimi Sil",
+  "deleteNotificationConfirmMessage": "Bu bildirimi silmek istediğinizden emin misiniz?",
+  "deleteAllNotifications": "Hepsini Sil",
+  "deleteAllNotificationsConfirmTitle": "Tüm Bildirimleri Sil",
+  "deleteAllNotificationsConfirmMessage": "Tüm bildirimleri silmek istediğinizden emin misiniz?",
+  "allNotificationsDeleted": "Tüm bildirimler başarıyla silindi",
+  "noNotificationsToDelete": "Silinecek bildirim yok",
+  "errorDeletingNotifications": "Bildirimler silinirken hata oluştu",
   "areYouSureDelete": "Profili silmek istediğinizden emin misiniz?",
 
   "invitePeople": "Kişileri Davet Et",
@@ -346,5 +358,10 @@
   "newChatStarted": "Yeni Sohbet Başlatıldı",
   "startNewMeeting": "Yeni Bir Görüşme Başlat",
 
-  "continueAsGuest": "Misafir Olarak Devam Et"
+  "continueAsGuest": "Misafir Olarak Devam Et",
+
+  "jobThoughtAndHabitGuide": "Düşünce ve Alışkanlık Koçu",
+  "jobFamilyAssistant": "Aile Koçu",
+
+  "noSpecialistsFound": "Uzman bulunamadı"
 }

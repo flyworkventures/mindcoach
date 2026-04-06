@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mindcoach/View/profile_screen/presentation/widgets/notification_card.dart';
-import 'package:mindcoach/View/profile_screen/presentation/widgets/profile_menu_card.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+
 import 'package:mindcoach/Riverpod/providers/user_provider.dart';
+import 'package:mindcoach/View/ProfileView/notifiers/notification_notifier.dart';
+import 'package:mindcoach/View/ProfileView/notifiers/subscription_notifier.dart';
+import 'package:mindcoach/View/ProfileView/presentation/widgets/notification_card.dart';
+import 'package:mindcoach/View/ProfileView/presentation/widgets/profile_menu_card.dart';
 
 import '../../../../core/routes/page_routes.dart';
 import '../../../../core/utils/context_l10n_extensions.dart';
 import '../../../../core/utils/screen_size_extensions.dart';
 
 
-import '../notifiers/notification_notifier.dart';
-import '../notifiers/subscription_notifier.dart';
+
 
 
 class ProfileScreen extends ConsumerWidget {
@@ -25,7 +28,7 @@ class ProfileScreen extends ConsumerWidget {
 
     final l10n = context.l10n;
 
-    final userState = ref.watch(userProvider);
+    final userState = ref.watch(AllProviders.userProvider);
     final planType = ref.watch(subscriptionProvider.select((s) => s.plan));
     final notificationsEnabled =
     ref.watch(notificationSettingsProvider.select((s) => s.enabled));
@@ -80,7 +83,7 @@ class ProfileScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: NetworkImage(userState!.profilePhotoUrl??"https://mindcoach.b-cdn.net/1024x1024.jpg"),
+                        image: NetworkImage(userState?.profilePhotoUrl??"https://mindcoach.b-cdn.net/1024x1024.jpg"),
                         fit: BoxFit.cover,
                       ),
                       
@@ -92,7 +95,7 @@ class ProfileScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userState.username ?? "",
+                          userState?.username ?? "MindCoach User",
                           style: GoogleFonts.quicksand(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
@@ -101,8 +104,9 @@ class ProfileScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
+                        if( userState?.credentialData["email"] != null)
                         Text(
-                          userState.credentialData["email"] ?? "",
+                          userState?.credentialData["email"] ?? "",
                           style: GoogleFonts.quicksand(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,

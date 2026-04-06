@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingola – Gizlilik Politikası</title>
+
+  <style>
+    :root{
+      --bg:#f6f7f9;
+      --card:#ffffff;
+      --text:#111;
+      --muted:#4a4a4a;
+      --border:#e7e7e7;
+      --dash:#d9d9d9;
+      --shadow: 0 10px 28px rgba(0,0,0,.06);
+      --btn:#f3f4f6;
+      --btnActive:#111;
+      --btnActiveText:#fff;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height:1.6;
+    }
+    .wrap{
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    h1{
+      margin:0 0 6px;
+      font-size: 26px;
+      letter-spacing: -0.2px;
+    }
+    .subtitle{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size: 16px;
+    }
+    .panel{display:none}
+    .panel.active{display:block}
+    h2{
+      margin: 18px 0 8px;
+      font-size: 16px;
+      letter-spacing: -0.1px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+    }
+    h3{
+      font-size: 14px;
+      margin: 12px 0 4px;
+      color: #333;
+      font-weight: 700;
+    }
+    p{margin:8px 0; font-size:14px;}
+    ul{margin:8px 0 8px 18px; padding:0}
+    li{margin:6px 0; font-size:14px;}
+    .footer{
+      margin-top: 16px;
+      font-size: 12px;
+      color:#666;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .btn-tr, .btn-en {
+      background-color: #f3f4f6;
+      color: #111;
+    }
+    .btn-active {
+      background-color: #111 !important;
+      color: #fff !important;
+      border-color: #111;
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width:520px){
+      body{padding:12px}
+      .card{padding:16px}
+      h1{font-size:20px}
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="card">
+      
+      <div class="btn-container">
+        <button class="btn btn-tr" id="tab-tr">Türkçe</button>
+        <button class="btn btn-en" id="tab-en">English</button>
+      </div>
+
+      <article id="panel-tr" class="panel active" role="tabpanel">
+        <h1>Lingola – Gizlilik Politikası</h1>
+        <p class="subtitle">Son Güncelleme Tarihi: 2025</p>
+        <p>
+          Lingola’ya hoş geldiniz. Lingola olarak kullanıcı gizliliğini ciddiyetle ele alıyor; kişisel verilerinizi güvenli, şeffaf ve kontrollü bir şekilde işlemeyi taahhüt ediyoruz.
+          Lingola’yı kullanarak bu politikada belirtilen uygulamaları kabul etmiş sayılırsınız.
+        </p>
+
+        <h2>1. Toplanan Bilgiler</h2>
+        <h3>a) Kullanıcı Tarafından Sağlanan Bilgiler</h3>
+        <ul>
+          <li>Ad, kullanıcı adı veya profil bilgileri</li>
+          <li>E-posta adresi</li>
+          <li>Uygulama tercihleri</li>
+          <li>Dil seçimleri ve kullanım ayarları</li>
+        </ul>
+        <h3>b) Otomatik Olarak Toplanan Bilgiler</h3>
+        <ul>
+          <li>Cihaz bilgileri (model, işletim sistemi, uygulama sürümü)</li>
+          <li>IP adresi ve temel etkileşim kayıtları</li>
+          <li>Uygulama içi kullanım ve gezinme bilgileri</li>
+        </ul>
+
+        <h2>2. Verilerin Kullanım Amaçları</h2>
+        <ul>
+          <li>Hesap oluşturma, yönetimi ve güvenli giriş</li>
+          <li>Dil öğrenme deneyiminin kişiselleştirilmesi</li>
+          <li>Uygulama performansının ve kararlılığının artırılması</li>
+          <li>Yeni özelliklerin geliştirilmesi ve güvenliğin sağlanması</li>
+        </ul>
+        <p>Kişisel bilgiler izniniz olmadan üçüncü taraflara satılmaz.</p>
+
+        <h2>3. Üçüncü Taraf Hizmetler</h2>
+        <p>Analiz ve teknik altyapı hizmetleri sunan sağlayıcılarla çalışılabilir. Bu sağlayıcılar verileri yalnızca Lingola adına ve kendi gizlilik politikaları çerçevesinde işler.</p>
+
+        <h2>4. Çerezler</h2>
+        <p>Kullanıcı tercihlerini hatırlamak ve hizmet kalitesini artırmak amacıyla çerezler kullanılabilir. Detaylar Çerez Politikası’nda yer alır.</p>
+
+        <h2>5. Veri Saklama ve Güvenlik</h2>
+        <p>Veriler işleme amaçları gerektirdiği sürece saklanır. Yetkisiz erişime karşı endüstri standartlarında güvenlik önlemleri uygulanır.</p>
+
+        <h2>6. Kullanıcı Hakları</h2>
+        <p>Verilerinize erişme, düzeltme, silme veya onayı geri çekme haklarına sahipsiniz. Talepleriniz destek ekibi tarafından değerlendirilir.</p>
+
+        <h2>10. İletişim</h2>
+        <p>📩 E-posta: <a href="mailto:support@fly-work.com">support@fly-work.com</a></p>
+      </article>
+
+      <article id="panel-en" class="panel" role="tabpanel">
+        <h1>Lingola – Privacy Policy</h1>
+        <p class="subtitle">Last Updated: 2025</p>
+        <p>
+          Welcome to Lingola. At Lingola, we take user privacy seriously and commit to processing your personal data in a secure, transparent, and controlled manner.
+          By using Lingola, you agree to the practices described in this policy.
+        </p>
+
+        <h2>1. Collected Information</h2>
+        <h3>a) Information Provided by the User</h3>
+        <ul>
+          <li>Name, username, or profile information</li>
+          <li>Email address</li>
+          <li>App preferences</li>
+          <li>Language selections and usage settings</li>
+        </ul>
+        <h3>b) Automatically Collected Information</h3>
+        <ul>
+          <li>Device information (model, operating system, app version)</li>
+          <li>IP address and basic interaction logs</li>
+          <li>In-app usage and navigation data</li>
+        </ul>
+
+        <h2>2. Data Usage Purposes</h2>
+        <ul>
+          <li>Account creation, management, and secure login</li>
+          <li>Personalization of the language learning experience</li>
+          <li>Improving app performance and stability</li>
+          <li>Developing new features and ensuring security</li>
+        </ul>
+        <p>Personal information is not sold to third parties without your consent.</p>
+
+        <h2>3. Third-Party Services</h2>
+        <p>We may work with providers for analytics and technical infrastructure. These providers process data only on behalf of Lingola and under their own privacy policies.</p>
+
+        <h2>4. Cookies</h2>
+        <p>Cookies may be used to remember preferences and improve service quality. Details are available in our Cookie Policy.</p>
+
+        <h2>5. Data Retention and Security</h2>
+        <p>Data is retained as long as necessary for processing purposes. Industry-standard security measures are applied to prevent unauthorized access.</p>
+
+        <h2>6. User Rights</h2>
+        <p>You have the right to access, correct, delete your data, or withdraw consent. Requests are evaluated by the support team.</p>
+
+        <h2>10. Contact</h2>
+        <p>📩 Email: <a href="mailto:support@fly-work.com">support@fly-work.com</a></p>
+      </article>
+
+      <p class="footer">© 2025 Lingola. Tüm hakları saklıdır / All rights reserved.</p>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const tabTr = document.getElementById('tab-tr');
+      const tabEn = document.getElementById('tab-en');
+      const panelTr = document.getElementById('panel-tr');
+      const panelEn = document.getElementById('panel-en');
+
+      function activate(lang){
+        const isTR = lang === 'tr';
+        panelTr.classList.toggle('active', isTR);
+        panelEn.classList.toggle('active', !isTR);
+        tabTr.classList.toggle('btn-active', isTR);
+        tabEn.classList.toggle('btn-active', !isTR);
+      }
+
+      tabTr.addEventListener('click', () => activate('tr'));
+      tabEn.addEventListener('click', () => activate('en'));
+
+      activate('tr');
+    })();
+  </script>
+</body>
+</html>

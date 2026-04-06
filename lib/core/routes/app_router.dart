@@ -1,25 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:mindcoach/View/VideoCallView/video_call_view.dart';
+import 'package:mindcoach/View/threed.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 
 
-import 'package:mindcoach/app/navbar_shell.dart';
+import 'package:mindcoach/View/BottomNavBar/bottom_nav_bar.dart';
 import 'package:mindcoach/View/chat_screen/presentation/pages/conversation_screen.dart';
 import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_screen.dart';
 import 'package:mindcoach/View/mental_tests/test_intro_screen.dart';
 import 'package:mindcoach/View/mental_tests/test_question_screen.dart';
 import 'package:mindcoach/View/mental_tests/test_result_screen.dart';
-import 'package:mindcoach/View/profile_setup/presentation/pages/profile_setup_page.dart';
-import 'package:mindcoach/View/profile_screen/appointment/appointment_screen.dart';
-import 'package:mindcoach/View/profile_screen/faq/faq_screen.dart';
-import 'package:mindcoach/View/profile_screen/notifications/notifications_screen.dart';
-import 'package:mindcoach/View/profile_screen/presentation/goodbye_screen.dart';
-import 'package:mindcoach/View/profile_screen/presentation/invite_screen.dart';
-import 'package:mindcoach/View/profile_screen/premium/premium_screen.dart';
-import 'package:mindcoach/View/profile_screen/presentation/profile_settings.dart';
-import '../../View/Onboard/onboarding_page.dart';
+import 'package:mindcoach/View/ProfileSetupView/profile_setup_view.dart';
+import 'package:mindcoach/View/ProfileView/appointment/appointment_screen.dart';
+import 'package:mindcoach/View/ProfileView/faq/faq_screen.dart';
+import 'package:mindcoach/View/ProfileView/notifications/notifications_screen.dart';
+import 'package:mindcoach/View/ProfileView/presentation/goodbye_screen.dart';
+import 'package:mindcoach/View/ProfileView/presentation/invite_screen.dart';
+import 'package:mindcoach/View/ProfileView/premium/premium_screen.dart';
+import 'package:mindcoach/View/ProfileSettingsView/profile_settings.dart';
+import '../../View/OnboardView/onboarding_page.dart';
 import 'page_routes.dart';
 
 class AppRouter {
+
+  static Map<String, WidgetBuilder> routes = {
+    PageRoutes.onboarding: (_) => const OnboardingScreen(),
+    PageRoutes.profileSetup: (_) => const MindCoachOnboarding(),
+    PageRoutes.navbar: (_) => const BottomNavBar(),
+
+    PageRoutes.profileSettings: (_) => const ProfileSettingsScreen(),
+    PageRoutes.goodbye: (_) => const GoodbyeScreen(),
+    PageRoutes.invite: (_) => const InviteScreen(),
+    PageRoutes.faq: (_) => const FaqScreen(),
+    PageRoutes.appointments: (_) => const AppointmentsScreen(),
+    PageRoutes.notifications: (_) => const NotificationsScreen(),
+    PageRoutes.premimum: (_) => const PremiumScreen(),
+    PageRoutes.videoCallView: (_)=> VideoCallView(),
+
+    PageRoutes.conversationScreen: (context) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is! ConsultantModel) {
+        return const Scaffold(
+          body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+        );
+      }
+      return ConversationScreen(specialistId: args);
+    },
+
+    PageRoutes.videoCall: (_) => const VideoCallScreen(),
+
+    PageRoutes.testIntroScreen: (context) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+      return TestIntroScreen(
+        testName: (args['testName'] as String?) ?? 'Default Test',
+        testTitle: (args['testTitle'] as String?) ?? 'Introductory Information',
+        imagePath: (args['imagePath'] as String?) ?? 'assets/chars/char0.jpg',
+        totalQuestions: _parseInt(args['totalQuestions'], fallback: 7),
+      );
+    },
+
+    PageRoutes.testQuestionScreen: (_) => const TestQuestionScreen(),
+
+    PageRoutes.testResultScreen: (context) {
+      final results = _parseResultsMap(ModalRoute.of(context)?.settings.arguments);
+      return TestResultScreen(results: results);
+    },
+  };
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
     /// ROOT / SHELL
@@ -30,7 +77,7 @@ class AppRouter {
         return _page(const MindCoachOnboarding(), settings);
 
       case PageRoutes.navbar:
-        return _page(const NavbarShell(), settings);
+        return _page(const BottomNavBar(), settings);
 
     /// PROFILE PAGES
       case PageRoutes.profileSettings:

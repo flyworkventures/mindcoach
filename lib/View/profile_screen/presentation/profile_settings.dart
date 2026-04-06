@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mindcoach/Riverpod/providers/all_providers.dart';
 import 'dart:io';
 import 'dart:convert';
 
@@ -22,7 +23,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../auth/presentation/controller/auth_controller.dart';
 import '../../../Riverpod/providers/user_provider.dart';
 import '../../../core/utils/app_constants.dart';
-import '../../../http/http_service.dart';
+import '../../../Http/http_service.dart';
 import '../../../models/user_model.dart';
 import '../../../core/config/app_status_notifier.dart';
 import 'package:http/http.dart' as http;
@@ -49,7 +50,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     super.initState();
 
     // Mevcut userProvider'dan kullanıcı bilgilerini al
-    final user = ref.read(userProvider);
+    final user = ref.read(AllProviders.userProvider);
     if (user != null) {
       // Username'i fullName olarak kullan
       _nameController = TextEditingController(text: user.username ?? '');
@@ -169,7 +170,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
       final request = http.MultipartRequest('POST', url);
       
       // Authorization header ekle
-      final token = ref.read(userProvider)?.token ?? "";
+      final token = ref.read(AllProviders.userProvider)?.token ?? "";
       request.headers['Authorization'] = 'Bearer $token';
       
       // Fotoğraf dosyasını ekle
@@ -187,11 +188,11 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
           // UserModel'i güncelle
           final userModel = UserModel.fromMap(json['data']['user']);
           // Token'ı koru
-          final currentUser = ref.read(userProvider);
+          final currentUser = ref.read(AllProviders.userProvider);
           final updatedUser = userModel.copyWith(
             token: currentUser?.token,
           );
-          ref.read(userProvider.notifier).setUserModel(updatedUser);
+          ref.read(AllProviders.userProvider.notifier).setUserModel(updatedUser);
         }
       } else {
         final json = jsonDecode(response.body);
@@ -246,7 +247,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                           children: [
                             Builder(
                               builder: (context) {
-                                final user = ref.watch(userProvider);
+                                final user = ref.watch(AllProviders.userProvider);
                                 final imageProvider = user?.profilePhotoUrl != null && user!.profilePhotoUrl!.isNotEmpty
                                     ? NetworkImage(user.profilePhotoUrl!) as ImageProvider
                                     :  NetworkImage(AppConstants.defaultPpUrl) as ImageProvider;
@@ -396,11 +397,11 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                                     // UserModel'i güncelle
                                     final userModel = UserModel.fromMap(json['data']['user']);
                                     // Token'ı koru
-                                    final currentUser = ref.read(userProvider);
+                                    final currentUser = ref.read(AllProviders.userProvider);
                                     final updatedUser = userModel.copyWith(
                                       token: currentUser?.token,
                                     );
-                                    ref.read(userProvider.notifier).setUserModel(updatedUser);
+                                    ref.read(AllProviders.userProvider.notifier).setUserModel(updatedUser);
                                     
                                     if (mounted) {
                                       ScaffoldMessenger.of(context).showSnackBar(
@@ -523,7 +524,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                                       }
                                       
                                       try {
-                                        await ref.read(authControllerProvider.notifier).logout(context);
+                                        await ref.read(AllProviders.authProvider.notifier).logout();
                                         // Logout başarılı, direkt Onboarding'e yönlendirildi
                                         if (mounted) {
                                           ScaffoldMessenger.of(context).showSnackBar(

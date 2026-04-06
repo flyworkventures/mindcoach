@@ -2,13 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Utils/logger.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
-import 'package:mindcoach/Riverpod/providers/user_provider.dart';
 
 class HttpService {
 	final String baseUrl;
-  final dynamic ref; 
+  final Ref? ref; 
 
 	HttpService({this.baseUrl = AppConstants.baseURL, this.ref});
 
@@ -16,12 +18,13 @@ class HttpService {
   Map<String, String> get header {
     try {
   
-      final token = (ref as dynamic)?.watch(userProvider)?.token ?? "";
+      final token = ref?.watch(AllProviders.userProvider)?.token ?? "";
       return {
         "Authorization": "Bearer $token",
         'Content-Type': 'application/json'
       };
     } catch (e) {
+    
       return {
         "Authorization": "Bearer ",
         'Content-Type': 'application/json'
@@ -32,23 +35,23 @@ class HttpService {
 
 
  Future<http.Response> post({required String path,dynamic body,Map<String, String>? headers}) async{
-  log("sent body: $body, header: $header");
+  Logger.info(text: "POST: $path,",className: "HttpService",functionName: "post");
  http.Response response = await http.post(Uri.parse("$baseUrl$path"),body: body == null ? null : jsonEncode(body),headers: header);
  if (response.statusCode == 200) {
-   log("POST: Response ${response.body}");
+Logger.info(text: "RESPONSE $path: ${response.body}",className: "HttpService",functionName: "post");
  }else{
-     log("POST ERR: Response ${response.body}");
+  Logger.errorLog(text: "RESPONSE $path: ${response.body}",className: "HttpService",functionName: "post");
  }
  return response;
  }
 
  Future<http.Response> get({required String path,dynamic body,Map<String, String>? headers}) async{
-  log("sent body: $body, header: $headers path: $path");
+  Logger.info(text: "GET: $path,",className: "HttpService",functionName: "get");
  http.Response response = await http.get(Uri.parse("$baseUrl$path"),headers: headers ?? header);
  if (response.statusCode == 200) {
-   log("POST: Response ${response.body}");
+  Logger.info(text: "RESPONSE $path: ${response.body}",className: "HttpService",functionName: "post");
  }else{
-     log("POST ERR: Response ${response.body}");
+    Logger.errorLog(text: "RESPONSE $path: ${response.body}",className: "HttpService",functionName: "post");
  }
  return response;
  }
@@ -68,12 +71,12 @@ class HttpService {
 
 
  Future<http.Response> put({required String path,dynamic body,Map<String, String>? headers}) async{
-  log("sent body: $body, header: $header");
+  Logger.info(text: "PUT: $path, Token: ${header["Authorization"]}",className: "HttpService",functionName: "put");
  http.Response response = await http.put(Uri.parse("$baseUrl$path"),body: body == null ? null : jsonEncode(body),headers: headers ?? header);
  if (response.statusCode == 200) {
-   log("POST: Response ${response.body}");
+    Logger.info(text: "PUT Response $path:  ${response.body}",className: "HttpService",functionName: "put");
  }else{
-   log("POST ERR: Response ${response.body}");
+   Logger.errorLog(text: "PUT Response $path:  ${response.body}",className: "HttpService",functionName: "put");
  }
  return response;
  }
@@ -152,7 +155,7 @@ try {
       final request = http.MultipartRequest('POST', url);
       
       // Authorization header ekle
-      final token = ref?.watch(userProvider)?.token ?? "";
+      final token = ref?.watch(AllProviders.userProvider)?.token ?? "";
       request.headers['Authorization'] = 'Bearer $token';
       
       // Dosyayı ekle (resim için 'file', ses için 'voice')

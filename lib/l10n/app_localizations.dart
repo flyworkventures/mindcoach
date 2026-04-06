@@ -766,6 +766,30 @@ abstract class AppLocalizations {
   /// **'Great'**
   String get moodGreat;
 
+  /// No description provided for @moodCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm'**
+  String get moodCalm;
+
+  /// No description provided for @moodHappy.
+  ///
+  /// In en, this message translates to:
+  /// **'Happy'**
+  String get moodHappy;
+
+  /// No description provided for @moodTired.
+  ///
+  /// In en, this message translates to:
+  /// **'Tired'**
+  String get moodTired;
+
+  /// No description provided for @moodStressed.
+  ///
+  /// In en, this message translates to:
+  /// **'Stressed'**
+  String get moodStressed;
+
   /// No description provided for @timeToTrackMood.
   ///
   /// In en, this message translates to:
@@ -1330,6 +1354,54 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete the profile?'**
   String get areYouSureDelete;
 
+  /// No description provided for @deleteNotificationConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Notification'**
+  String get deleteNotificationConfirmTitle;
+
+  /// No description provided for @deleteNotificationConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this notification?'**
+  String get deleteNotificationConfirmMessage;
+
+  /// No description provided for @deleteAllNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All'**
+  String get deleteAllNotifications;
+
+  /// No description provided for @deleteAllNotificationsConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Notifications'**
+  String get deleteAllNotificationsConfirmTitle;
+
+  /// No description provided for @deleteAllNotificationsConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all notifications?'**
+  String get deleteAllNotificationsConfirmMessage;
+
+  /// No description provided for @allNotificationsDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'All notifications deleted successfully'**
+  String get allNotificationsDeleted;
+
+  /// No description provided for @noNotificationsToDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications to delete'**
+  String get noNotificationsToDelete;
+
+  /// No description provided for @errorDeletingNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting notifications'**
+  String get errorDeletingNotifications;
+
   /// No description provided for @invitePeople.
   ///
   /// In en, this message translates to:
@@ -1461,6 +1533,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue as Guest'**
   String get continueAsGuest;
+
+  /// No description provided for @jobThoughtAndHabitGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Thought and Habit Coach'**
+  String get jobThoughtAndHabitGuide;
+
+  /// No description provided for @jobFamilyAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Coach'**
+  String get jobFamilyAssistant;
+
+  /// No description provided for @noSpecialistsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No specialists found'**
+  String get noSpecialistsFound;
 }
 
 class _AppLocalizationsDelegate

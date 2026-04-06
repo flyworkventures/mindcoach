@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Shape Key Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            min-width: 300px;
+            max-width: 90%;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: background 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #5568d3;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        input[type="file"]:hover {
+            border-color: #5568d3;
+            background: #f5f5f5;
+        }
+
+        .value-display {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        #info strong {
+            color: #667eea;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 50px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="canvas-container"></div>
+        
+        <div id="info">
+            <strong>Three.js Shape Key Test</strong><br>
+            GLB dosyası yükleyin ve Key1 shape key'ini kontrol edin.
+        </div>
+
+        <div id="loading">
+            <div class="spinner"></div>
+            <div>Model yükleniyor...</div>
+        </div>
+
+        <div id="controls">
+            <div class="control-group">
+                <label for="fileInput">GLB Dosyası:</label>
+                <input type="file" id="fileInput" accept=".glb">
+            </div>
+            <div class="control-group" id="key1Control" style="display: none;">
+                <label for="key1Slider">
+                    Key1:
+                    <span class="value-display" id="key1Value">0.00</span>
+                </label>
+                <input 
+                    type="range" 
+                    id="key1Slider" 
+                    min="0" 
+                    max="1" 
+                    step="0.01" 
+                    value="0"
+                >
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        let scene, camera, renderer, controls;
+        let currentModel = null;
+        let morphTargetDictionary = null;
+        let morphTargetInfluences = null;
+
+        // Scene setup
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a2e);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(
+                75,
+                container.clientWidth / container.clientHeight,
+                0.1,
+                1000
+            );
+            camera.position.set(0, 0, 5);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Controls
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight1.position.set(5, 5, 5);
+            scene.add(directionalLight1);
+
+            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+            directionalLight2.position.set(-5, -5, -5);
+            scene.add(directionalLight2);
+
+            // Grid helper
+            const gridHelper = new THREE.GridHelper(10, 10);
+            scene.add(gridHelper);
+
+            // Axes helper
+            const axesHelper = new THREE.AxesHelper(5);
+            scene.add(axesHelper);
+
+            // File input handler
+            const fileInput = document.getElementById('fileInput');
+            fileInput.addEventListener('change', handleFileLoad);
+
+            // Key1 slider handler
+            const key1Slider = document.getElementById('key1Slider');
+            key1Slider.addEventListener('input', handleKey1Change);
+
+            // Window resize handler
+            window.addEventListener('resize', onWindowResize);
+
+            animate();
+        }
+
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const loadingDiv = document.getElementById('loading');
+            loadingDiv.style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                loadGLB(arrayBuffer);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function loadModelFromURL(url) {
+            const loadingDiv = document.getElementById('loading');
+            loadingDiv.style.display = 'block';
+
+            const loader = new GLTFLoader();
+            
+            loader.load(
+                url,
+                (gltf) => {
+                    processLoadedModel(gltf);
+                },
+                (progress) => {
+                    console.log('Loading progress:', progress);
+                },
+                (error) => {
+                    console.error('Error loading GLB from URL:', error);
+                    alert('GLB dosyası yüklenirken hata oluştu: ' + error.message);
+                    document.getElementById('loading').style.display = 'none';
+                }
+            );
+        }
+
+        function loadGLB(arrayBuffer) {
+            const loadingDiv = document.getElementById('loading');
+            loadingDiv.style.display = 'block';
+
+            const loader = new GLTFLoader();
+            
+            loader.parse(arrayBuffer, '', (gltf) => {
+                processLoadedModel(gltf);
+            }, (error) => {
+                console.error('Error loading GLB:', error);
+                alert('GLB dosyası yüklenirken hata oluştu: ' + error.message);
+                document.getElementById('loading').style.display = 'none';
+            });
+        }
+
+        function processLoadedModel(gltf) {
+                // Remove previous model
+                if (currentModel) {
+                    scene.remove(currentModel);
+                    currentModel.traverse((child) => {
+                        if (child.geometry) child.geometry.dispose();
+                        if (child.material) {
+                            if (Array.isArray(child.material)) {
+                                child.material.forEach(mat => mat.dispose());
+                            } else {
+                                child.material.dispose();
+                            }
+                        }
+                    });
+                }
+
+                currentModel = gltf.scene;
+                scene.add(currentModel);
+
+                // Calculate bounding box for camera positioning
+                const box = new THREE.Box3().setFromObject(currentModel);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const fov = camera.fov * (Math.PI / 180);
+                let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+                cameraZ *= 1.5;
+                camera.position.set(center.x, center.y, center.z + cameraZ);
+                camera.lookAt(center);
+                controls.target.copy(center);
+                controls.update();
+
+                // Find morph targets (shape keys)
+                let foundKey1 = false;
+                let key1Name = null;
+                currentModel.traverse((child) => {
+                    if (child.isMesh && child.morphTargetDictionary) {
+                        morphTargetDictionary = child.morphTargetDictionary;
+                        morphTargetInfluences = child.morphTargetInfluences;
+
+                        console.log('Morph Targets:', Object.keys(morphTargetDictionary));
+                        
+                        // Check if Key 1 or Key1 exists (try both variations)
+                        if (morphTargetDictionary.hasOwnProperty('Key 1')) {
+                            foundKey1 = true;
+                            key1Name = 'Key 1';
+                            const key1Control = document.getElementById('key1Control');
+                            key1Control.style.display = 'block';
+                            console.log('Key 1 found! Index:', morphTargetDictionary['Key 1']);
+                        } else if (morphTargetDictionary.hasOwnProperty('Key1')) {
+                            foundKey1 = true;
+                            key1Name = 'Key1';
+                            const key1Control = document.getElementById('key1Control');
+                            key1Control.style.display = 'block';
+                            console.log('Key1 found! Index:', morphTargetDictionary['Key1']);
+                        }
+                    }
+                });
+
+                if (!foundKey1) {
+                    alert('Key1 shape key bulunamadı! Model\'de morph target kontrol edin.');
+                    console.log('Available morph targets:', Object.keys(morphTargetDictionary || {}));
+                }
+
+                document.getElementById('loading').style.display = 'none';
+        }
+
+        function setKey1Value(value) {
+            const numValue = parseFloat(value);
+            if (isNaN(numValue)) return;
+            
+            // Update slider if it exists
+            const slider = document.getElementById('key1Slider');
+            if (slider) {
+                slider.value = numValue;
+                document.getElementById('key1Value').textContent = numValue.toFixed(2);
+            }
+
+            if (morphTargetDictionary && morphTargetInfluences) {
+                // Try Key 1 first (with space), then Key1
+                let key1Index = null;
+                if (morphTargetDictionary.hasOwnProperty('Key 1')) {
+                    key1Index = morphTargetDictionary['Key 1'];
+                } else if (morphTargetDictionary.hasOwnProperty('Key1')) {
+                    key1Index = morphTargetDictionary['Key1'];
+                }
+                
+                if (key1Index !== null) {
+                    morphTargetInfluences[key1Index] = numValue;
+                }
+            }
+        }
+
+        function handleKey1Change(event) {
+            const value = parseFloat(event.target.value);
+            setKey1Value(value);
+        }
+
+        // Global functions for Flutter to call
+        window.setKey1Value = setKey1Value;
+        window.loadModelFromURL = loadModelFromURL;
+
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

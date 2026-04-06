@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/View/ProfileSetupView/profile_setup_view.dart';
 import 'package:mindcoach/core/services/auth_service.dart';
 import 'package:mindcoach/Services/NotificationsService/notification_service.dart';
 import 'package:mindcoach/Services/NotificationsService/periodic_notification_scheduler.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
-import 'package:mindcoach/View/Onboard/onboarding_page.dart';
-import 'package:mindcoach/View/profile_setup/presentation/pages/profile_setup_page.dart';
+import 'package:mindcoach/View/OnboardView/onboarding_page.dart';
 import 'package:mindcoach/app/navbar_shell.dart';
 
 class Splash extends ConsumerStatefulWidget {

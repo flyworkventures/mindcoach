@@ -135,6 +135,10 @@
   "moodNeutral": "Neutral",
   "moodGood": "Good",
   "moodGreat": "Great",
+  "moodCalm": "Calm",
+  "moodHappy": "Happy",
+  "moodTired": "Tired",
+  "moodStressed": "Stressed",
 
   "timeToTrackMood": "It's time to track your mood",
 
@@ -293,6 +297,14 @@
   "cancel": "Cancel",
   "delete": "Delete",
   "areYouSureDelete": "Are you sure you want to delete the profile?",
+  "deleteNotificationConfirmTitle": "Delete Notification",
+  "deleteNotificationConfirmMessage": "Are you sure you want to delete this notification?",
+  "deleteAllNotifications": "Delete All",
+  "deleteAllNotificationsConfirmTitle": "Delete All Notifications",
+  "deleteAllNotificationsConfirmMessage": "Are you sure you want to delete all notifications?",
+  "allNotificationsDeleted": "All notifications deleted successfully",
+  "noNotificationsToDelete": "No notifications to delete",
+  "errorDeletingNotifications": "Error deleting notifications",
 
   "invitePeople": "Invite People",
   "copyLinkInviteFriend": "Copy the link to invite your friends",
@@ -341,5 +353,10 @@
   "newChatStarted" : "New Chat Started",
   "startNewMeeting": "Start a new meeting",
 
-  "continueAsGuest": "Continue as Guest"
+  "continueAsGuest": "Continue as Guest",
+
+  "jobThoughtAndHabitGuide": "Thought and Habit Coach",
+  "jobFamilyAssistant": "Family Coach",
+
+  "noSpecialistsFound": "No specialists found"
 }

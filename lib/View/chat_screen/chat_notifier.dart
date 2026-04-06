@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import '../../core/repo/chat_repo.dart';
 import '../../models/consultant_model.dart';
-import '../../Riverpod/providers/user_provider.dart';
 import '../specialists_screen/specialists_notifier.dart';
 import 'notifiers/conversation_notifier.dart';
 
@@ -78,7 +78,7 @@ class ChatNotifier extends Notifier<ChatState> {
   @override
   ChatState build() {
 
-    final user = ref.read(userProvider);
+    final user = ref.read(AllProviders.userProvider);
     final userName = user?.username ?? '';
     
 
@@ -198,7 +198,7 @@ class ChatNotifier extends Notifier<ChatState> {
       print(' ${chatItems.length} chat item oluşturuldu');
       
       // Kullanıcı adını güncelle
-      final user = ref.read(userProvider);
+      final user = ref.read(AllProviders.userProvider);
       final userName = user?.username ?? state.currentUserName;
       
       if (!ref.mounted) return;
