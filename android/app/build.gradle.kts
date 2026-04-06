@@ -14,6 +14,7 @@ plugins {
 val keystoreProperties = Properties()
 val keystorePropertiesFile = file("$projectDir/key.properties").takeIf { it.exists() } 
     ?: rootProject.file("key.properties").takeIf { it.exists() }
+    
 if (keystorePropertiesFile != null && keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
     println("✅ [Gradle] Keystore properties loaded from: ${keystorePropertiesFile.absolutePath}")
