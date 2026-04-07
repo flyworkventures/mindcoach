@@ -9,25 +9,27 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get onboardingTitle1 => 'Understand Yourself Better';
+  String get onboardingTitle1 => 'Feeling overwhelmed?';
 
   @override
-  String get onboardingTitle2 => 'Bring Order to Your Mind';
+  String get onboardingDesc1 =>
+      'Talk to a certified coach in minutes — whenever you need it.';
 
   @override
-  String get onboardingTitle3 => 'A Guide Always Within Reach';
+  String get onboardingTitle2 => 'Talk your way.';
 
   @override
-  String get onboardingDescription1 =>
-      'Mind Coach helps you clarify your thoughts, explore your inner world, and navigate life with greater awareness. Take charge of your own journey with confidence.';
+  String get onboardingDesc2 => 'Text, voice, or video';
 
   @override
-  String get onboardingDescription2 =>
-      'Stress, overthinking, hesitation, or scattered ideas… Mind Coach turns them into clear insights tailored to you. Discover the power of a focused and organized mind.';
+  String get onboardingTitle3 => 'Find the right coach for you.';
 
   @override
-  String get onboardingDescription3 =>
-      'Share your thoughts, ask questions, and explore new perspectives anytime. Mind Coach supports your growth and helps you move forward with clarity and ease.';
+  String get onboardingDesc3 =>
+      'Get matched based on your goals, schedule and preferences.';
+
+  @override
+  String get swipeToContinue => 'Swipe to continue';
 
   @override
   String get onboardingTermsPrefix =>
@@ -81,8 +83,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getStarted => 'Get Started';
 
   @override
-  String get approachTitle =>
-      'How would you like your counselor to approach you?';
+  String get findMyCoaches => 'Find My Coaches';
+
+  @override
+  String get approachTitle => 'How should your coach approach you?';
+
+  @override
+  String get approachSubtitle =>
+      'Helps us match your personality to the right coach';
 
   @override
   String get approachPatient => 'Patient';
@@ -193,8 +201,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nameGenderTitle => 'Tell us a bit about yourself';
 
   @override
-  String get nameGenderSubtitle =>
-      'A short bio helps others know the real you. Keep it fun and genuine.';
+  String get nameGenderSubtitle => 'So your coach can get to know the real you';
 
   @override
   String get nameGenderFullNameLabel => 'Full Name';
@@ -215,11 +222,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nameGenderPreferNotToSay => 'Prefer not to say';
 
   @override
-  String get supportAreaTitle =>
-      'In which area would you like to receive support?';
+  String get supportAreaTitle => 'What area would you like support with?';
 
   @override
-  String get supportAreaIndividual => 'Individual';
+  String get supportAreaSubtitle =>
+      'We\'ll only show coaches who specialise in this';
+
+  @override
+  String get supportAreaIndividual => 'Individual Growth';
 
   @override
   String get supportAreaFamily => 'Family';
@@ -237,28 +247,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get availableDaysTitle => 'Which days are you available?';
 
   @override
-  String get dayMonday => 'Monday';
+  String get availableDaysSubtitle =>
+      'So we only show coaches free when you are';
 
   @override
-  String get dayTuesday => 'Tuesday';
+  String get dayMonday => 'Mon';
 
   @override
-  String get dayWednesday => 'Wednesday';
+  String get dayTuesday => 'Tue';
 
   @override
-  String get dayThursday => 'Thursday';
+  String get dayWednesday => 'Wed';
 
   @override
-  String get dayFriday => 'Friday';
+  String get dayThursday => 'Thu';
 
   @override
-  String get daySaturday => 'Saturday';
+  String get dayFriday => 'Fri';
 
   @override
-  String get daySunday => 'Sunday';
+  String get daySaturday => 'Sat';
 
   @override
-  String get meetingTimeTitle => 'What time would you like to meet?';
+  String get daySunday => 'Sun';
+
+  @override
+  String get meetingTimeTitle => 'What time works best for you?';
+
+  @override
+  String get meetingTimeSubtitle =>
+      'Coaches with matching slots will be highlighted';
 
   @override
   String get meetingTimeMorning => 'Morning';
@@ -273,13 +291,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meetingTimeFlexible => 'Flexible';
 
   @override
-  String get meetingTimeMorningRange => '(8:00 AM–12:00 PM)';
+  String get meetingTimeMorningRange => '08:00 - 12:00';
 
   @override
-  String get meetingTimeAfternoonRange => '(12:00 PM–6:00 PM)';
+  String get meetingTimeAfternoonRange => '12:00 - 16:00';
 
   @override
-  String get meetingTimeEveningRange => '(6:00 PM–9:00 PM)';
+  String get meetingTimeEveningRange => '16:00 - 21:00';
 
   @override
   String get meetingTimeFlexibleRange => '';

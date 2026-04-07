@@ -24,8 +24,11 @@ class ApproachStrings {
   static String title(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return loc.approachTitle;
-    // l10n'da: "approachTitle": "How would you like the specialist to approach you?"
-    // TR: "Uzmanın sana nasıl yaklaşmasını istersin?"
+  }
+
+  static String subtitle(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    return loc.approachSubtitle;
   }
 
   /// Listede gözükecek yaklaşım etiketleri

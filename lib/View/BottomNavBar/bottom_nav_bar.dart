@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,14 +9,13 @@ import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/View/HomeView/home_view.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 
+import '../../Services/NotificationsService/in_app_notification_service.dart';
+import '../../app/navbar_provider.dart';
+import '../../features/notifications/notification_notifier.dart';
+import '../ProfileView/profile_view.dart';
 import '../calendar_screen/calendar_screen.dart';
 import '../chat_screen/presentation/pages/chat_screen.dart';
-import '../HomeView/home_screen.dart';
-import '../ProfileView/profile_view.dart';
 import '../specialists_screen/specialists_screen.dart';
-import '../../Services/NotificationsService/in_app_notification_service.dart';
-import '../../features/notifications/notification_notifier.dart';
-import '../../app/navbar_provider.dart';
 
 class BottomNavBar extends ConsumerStatefulWidget {
   const BottomNavBar({super.key});
@@ -24,44 +24,41 @@ class BottomNavBar extends ConsumerStatefulWidget {
   ConsumerState<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends ConsumerState<BottomNavBar> with WidgetsBindingObserver {
+class _BottomNavBarState extends ConsumerState<BottomNavBar>
+    with WidgetsBindingObserver {
   final Set<int> _shownNotificationIds = {};
   Timer? _notificationTimer;
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(()=> ref.read(AllControllers.homeController.notifier).getMotivationText());
+    Future.microtask(
+      () =>
+          ref.read(AllControllers.homeController.notifier).getMotivationText(),
+    );
 
     WidgetsBinding.instance.addObserver(this);
-     showWelcomeNotification();
-    Future.delayed(Duration(seconds: 7)).then((a){
-          // Initial load
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _refreshNotifications();
-    });
+    showWelcomeNotification();
+    Future.delayed(Duration(seconds: 7)).then((a) {
+      // Initial load
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _refreshNotifications();
+      });
 
-    // Set up periodic notification check (every 30 seconds)
-    _startNotificationTimer();
-     
-     
+      // Set up periodic notification check (every 30 seconds)
+      _startNotificationTimer();
     });
-    
   }
 
-
-void showWelcomeNotification()async{
-
-
-   InAppNotificationService.showWelcomeNotification(
-        context,
-        title: 'Hoş Geldiniz! 👋',
-        subtitle: 'Merhaba ${ref.read(AllProviders.userProvider)?.username}, MindCoach\'a hoş geldiniz!',
-        duration: const Duration(seconds: 4),
-      );
-}
-
-
+  void showWelcomeNotification() async {
+    InAppNotificationService.showWelcomeNotification(
+      context,
+      title: 'Hoş Geldiniz! 👋',
+      subtitle:
+          'Merhaba ${ref.read(AllProviders.userProvider)?.username}, MindCoach\'a hoş geldiniz!',
+      duration: const Duration(seconds: 4),
+    );
+  }
 
   @override
   void dispose() {
@@ -73,7 +70,7 @@ void showWelcomeNotification()async{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    
+
     // When app comes to foreground, refresh notifications
     if (state == AppLifecycleState.resumed) {
       _refreshNotifications();
@@ -90,9 +87,8 @@ void showWelcomeNotification()async{
   }
 
   Future<void> _refreshNotifications() async {
-    
     if (!mounted) return;
-    
+
     try {
       // Refresh notifications - ref.listen will automatically trigger _checkAndShowNotifications
       // if there are new notifications
@@ -102,7 +98,7 @@ void showWelcomeNotification()async{
     }
   }
 
-  void _checkAndShowNotifications() async{
+  void _checkAndShowNotifications() async {
     if (!mounted) return;
 
     final notificationState = ref.read(notificationNotifierProvider);
@@ -120,12 +116,14 @@ void showWelcomeNotification()async{
             try {
               final sentTime = DateTime.parse(notification.sentTime!);
               final timeDifference = now.difference(sentTime);
-              
+
               // Only show notifications created within the last 10 minutes
               if (timeDifference.inMinutes > 10) {
                 // Too old, mark as shown but don't display
                 _shownNotificationIds.add(notification.id);
-                debugPrint('⏭️ Skipping old notification (${timeDifference.inMinutes} minutes old): ${notification.id}');
+                debugPrint(
+                  '⏭️ Skipping old notification (${timeDifference.inMinutes} minutes old): ${notification.id}',
+                );
                 continue;
               }
             } catch (e) {
@@ -140,11 +138,11 @@ void showWelcomeNotification()async{
             continue;
           }
 
-  AudioPlayer audioPlayer = AudioPlayer();
-  await audioPlayer.play(AssetSource('sounds/notification.wav'));
+          AudioPlayer audioPlayer = AudioPlayer();
+          await audioPlayer.play(AssetSource('sounds/notification.wav'));
           InAppNotificationService.showAppointmentNotification(
             onTap: () {
-                 Navigator.pushNamed(context, PageRoutes.notifications);
+              Navigator.pushNamed(context, PageRoutes.notifications);
             },
             context,
             title: notification.title,
@@ -156,9 +154,11 @@ void showWelcomeNotification()async{
         }
       }
     }
-    
+
     if (newNotificationsShown > 0) {
-      debugPrint('✅ Shown $newNotificationsShown new appointment notification(s)');
+      debugPrint(
+        '✅ Shown $newNotificationsShown new appointment notification(s)',
+      );
     }
   }
 
@@ -209,35 +209,37 @@ void showWelcomeNotification()async{
     */
 
     // Listen to notification changes and show new ones ONLY when new notifications are added
-    ref.listen<NotificationState>(
-      notificationNotifierProvider,
-      (previous, next) {
-        if (!mounted) return;
-        
-        // Only check if there are actually new notifications
-        if (previous == null) {
-          // First load - DON'T show old notifications, only mark them as seen
-          // This prevents showing 3-hour-old notifications when app opens
-          for (final notification in next.notifications) {
-            if (notification.metadata['type'] == 'appointment') {
-              // Mark all existing notifications as shown (don't display them)
-              _shownNotificationIds.add(notification.id);
-            }
-          }
-          debugPrint('📋 Marked ${next.notifications.length} existing notifications as seen (not showing old ones)');
-        } else {
-          // Check if new notifications were added (by comparing IDs)
-          final previousIds = previous.notifications.map((n) => n.id).toSet();
-          final nextIds = next.notifications.map((n) => n.id).toSet();
-          final newIds = nextIds.difference(previousIds);
-          
-          // Only show notifications if there are actually new ones
-          if (newIds.isNotEmpty) {
-            _checkAndShowNotifications();
+    ref.listen<NotificationState>(notificationNotifierProvider, (
+      previous,
+      next,
+    ) {
+      if (!mounted) return;
+
+      // Only check if there are actually new notifications
+      if (previous == null) {
+        // First load - DON'T show old notifications, only mark them as seen
+        // This prevents showing 3-hour-old notifications when app opens
+        for (final notification in next.notifications) {
+          if (notification.metadata['type'] == 'appointment') {
+            // Mark all existing notifications as shown (don't display them)
+            _shownNotificationIds.add(notification.id);
           }
         }
-      },
-    );
+        debugPrint(
+          '📋 Marked ${next.notifications.length} existing notifications as seen (not showing old ones)',
+        );
+      } else {
+        // Check if new notifications were added (by comparing IDs)
+        final previousIds = previous.notifications.map((n) => n.id).toSet();
+        final nextIds = next.notifications.map((n) => n.id).toSet();
+        final newIds = nextIds.difference(previousIds);
+
+        // Only show notifications if there are actually new ones
+        if (newIds.isNotEmpty) {
+          _checkAndShowNotifications();
+        }
+      }
+    });
 
     return Scaffold(
       extendBody: true,

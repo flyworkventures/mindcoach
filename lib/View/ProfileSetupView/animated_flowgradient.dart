@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -42,40 +43,19 @@ class _AnimatedFlowBackgroundState extends State<AnimatedFlowBackground>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
-        final t = _controller.value * 2 * pi;
-        final size = MediaQuery.of(context).size;
-
         return Container(
-          // Tamamen renkli ana zemin – orb paleti
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: [0.0, 0.3, 0.6, 1.0],
-                colors: [
-                  Color(0xFFC4DCFF), // üst sol mavi
-                  Color(0xFFF1C4FF), // pembe-lila
-                  Color(0xFFBFF9F1), // mint taban
-                  Color(0xFFE6D6FF), // alt sağ morumsu
-                ],
-              ),
-            ),
-
-
-            child: Stack(
+          color: Colors.grey.shade100,
+          child: Stack(
             children: [
               // Blobların base pozisyonları biraz yukarı kayık
-              _blob(t, const Alignment(-0.8, -0.9), size.width * 1.5, colors[0], 0.9, 1.1),
-              _blob(t, const Alignment(0.8, -0.5), size.width * 1.4, colors[1], 1.3, 0.8),
-              _blob(t, const Alignment(-0.4, -0.1), size.width * 1.6, colors[2], 0.7, 1.3),
-              _blob(t, const Alignment(0.6, 0.4), size.width * 1.3, colors[3], 1.2, 0.9),
-              _blob(t, const Alignment(0.0, 0.7), size.width * 1.2, colors[4], 1.0, 1.2),
-
               IgnorePointer(
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: RadialGradient(
-                      center: const Alignment(0, -0.35), // tam ortadan biraz yukarı
+                      center: const Alignment(
+                        0,
+                        -0.5,
+                      ), // tam ortadan biraz yukarı
                       radius: 0.85,
                       colors: [
                         Colors.white.withValues(alpha: 0.55),
@@ -120,16 +100,11 @@ class _AnimatedFlowBackgroundState extends State<AnimatedFlowBackground>
 
               BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 8),
-                child: Container(
-                  color: Colors.white.withValues(alpha: 0.04),
-                ),
+                child: Container(color: Colors.white.withValues(alpha: 0.04)),
               ),
 
               /// deneme amaçlı koydum bu olmayabilir
-              Padding(
-                padding: const EdgeInsets.only(top: 54.0),
-                child: Lottie.asset('assets/json/setup_animation.json'),
-              ),
+              Center(child: Lottie.asset('assets/json/setup_animation.json')),
             ],
           ),
         );
@@ -138,13 +113,13 @@ class _AnimatedFlowBackgroundState extends State<AnimatedFlowBackground>
   }
 
   Widget _blob(
-      double t,
-      Alignment base,
-      double size,
-      Color color,
-      double speedX,
-      double speedY,
-      ) {
+    double t,
+    Alignment base,
+    double size,
+    Color color,
+    double speedX,
+    double speedY,
+  ) {
     final dx = sin(t * speedX) * 0.30;
     final dy = cos(t * speedY) * 0.30;
 

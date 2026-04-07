@@ -8,7 +8,7 @@ class ProfileSetupTypography {
 
   static TextStyle title(BuildContext context) {
     return GoogleFonts.quicksand(
-      fontSize: LocaleFontScaler.scale(context, 24),
+      fontSize: LocaleFontScaler.scale(context, 20),
       fontWeight: FontWeight.w600,
       height: 1.0,
       letterSpacing: 0,

@@ -8,6 +8,7 @@ class MeetingTimeStrings {
   static AppLocalizations _loc(BuildContext context) => AppLocalizations.of(context)!;
 
   static String title(BuildContext context) => _loc(context).meetingTimeTitle;
+  static String subtitle(BuildContext context) => _loc(context).meetingTimeSubtitle;
 
   static String label(BuildContext context, MeetingTime time) {
     final loc = _loc(context);

@@ -1,14 +1,12 @@
 name: mindcoach
 description: "A new Flutter project."
 
-
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+21
 
 environment:
   sdk: ^3.10.1
-
 
 dependencies:
   flutter:
@@ -60,9 +58,6 @@ dependencies:
   #camera: ^0.11.3
   #permission_handler: ^12.0.1
 
-
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -73,25 +68,26 @@ flutter:
   uses-material-design: true
   generate: true # dil dosyasını üretmesi için
   assets:
-   - assets/
-   - assets/json/
-   - assets/chars/
-   - assets/icons/
-   - assets/policies/en/
-   - assets/policies/tr/
-   - assets/policies/de/
-   - assets/svg/
-   - assets/images/
-   - assets/sounds/
-
-
+    - assets/
+    - assets/json/
+    - assets/chars/
+    - assets/icons/
+    - assets/policies/en/
+    - assets/policies/tr/
+    - assets/policies/de/
+    - assets/svg/
+    - assets/images/
+    - assets/sounds/
 
 flutter_native_splash:
-  color: "#FFFFFF" # splash bg color
-  image: "assets/logo/appicon.png" # resmin yolu
-  android: true # Android
-  ios: true     # iOS
+  # Tam ekran olması için 'image' yerine 'background_image' kullanıyoruz.
+  # Bu özellik iOS ve Android 11 (ve altı) cihazlarda resmi tam ekran yapar.
+  background_image: "assets/logo/onboarding.png"
+  android: true
+  ios: true
 
+  # Android 12 ve sonrasında işletim sistemi tam ekran resme izin vermez (zorunlu kuraldır).
+  # Bu yüzden burada mecburen 'color' ve 'image' olarak bırakıyoruz.
   android_12:
     color: "#FFFFFF"
-    image: "assets/logo/appicon.png"
+    image: "assets/logo/onboarding.png"

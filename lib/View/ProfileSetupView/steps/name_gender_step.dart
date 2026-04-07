@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../core/utils/screen_size_extensions.dart';
-import '../constants/name_gender_strings.dart';
+import 'package:mindcoach/View/ProfileSetupView/constants/name_gender_strings.dart';
 import 'package:mindcoach/View/ProfileSetupView/domain/profile_models.dart';
+import 'package:mindcoach/core/utils/screen_size_extensions.dart';
+
+// ============================================================================
+// 4. EKRAN 1: NAME & GENDER STEP TASARIMI
+// ============================================================================
 
 class NameGenderStep extends StatefulWidget {
   final String fullName;
@@ -53,179 +56,149 @@ class _NameGenderStepState extends State<NameGenderStep> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start, // Metinler Sola Dayalı
         children: [
-        Center(
-          child: Text(
+          // ---------------- Başlık & Alt Başlık ----------------
+          Text(
             NameGenderStrings.title(context),
-            style: widget.titleStyle,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
-            child: Text(
-              NameGenderStrings.subtitle(context),
-              style: widget.subtitleStyle,
-              textAlign: TextAlign.center,
+            style: GoogleFonts.quicksand(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              height: 1.2,
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.only(left: 12.0),
-          child: Text(
+          const SizedBox(height: 6),
+          Text(
+            NameGenderStrings.subtitle(context),
+            style: GoogleFonts.quicksand(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF96989C),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // ---------------- Name Input ----------------
+          Text(
             NameGenderStrings.fullNameLabel(context),
             style: GoogleFonts.quicksand(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              height: 1.0,
-              letterSpacing: 0,
-              color: const Color(0xFF1D1D1D),
+              color: const Color(0xFF96989C),
             ),
           ),
-        ),
-        const SizedBox(height: 7),
-        Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: SizedBox(
-            width: 301.w,
-            height: 50.h,
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            height: 50.h, // Figma Height
             child: TextFormField(
               controller: _nameController,
               onChanged: widget.onFullNameChanged,
-              cursorColor: Color(0xFF434343),
+              cursorColor: const Color(0xFF21BC87),
               decoration: InputDecoration(
                 hintText: NameGenderStrings.fullNameHint(context),
                 hintStyle: GoogleFonts.quicksand(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFF434343),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFFCACACA),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 8,
+                  horizontal: 20, // Figma Padding
+                  vertical: 10,
                 ),
+                // Unselected Border: 2px #E2E2E2, Radius: 16px
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: const BorderSide(color: Colors.black, width: 1),
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(
+                    color: Color(0xFFE2E2E2),
+                    width: 2,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: const BorderSide(color: Colors.black, width: 1),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(16),
                   borderSide: const BorderSide(
-                    color: Color(0xFF2BD383),
-                    width: 1.2,
+                    color: Color(0xFFE2E2E2),
+                    width: 2,
+                  ),
+                ),
+                // Selected Border: 2px #21BC87
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF21BC87),
+                    width: 2,
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.only(left: 12.0),
-          child: Text(
+          const SizedBox(height: 8),
+
+          // ---------------- Gender Selection ----------------
+          Text(
             NameGenderStrings.genderLabel(context),
             style: GoogleFonts.quicksand(
               fontSize: 14,
-              fontWeight: FontWeight.w500,
-              height: 1.0,
-              letterSpacing: 0,
-              color: const Color(0xFF1D1D1D),
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF96989C),
             ),
           ),
-        ),
-        const SizedBox(height: 7),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          const SizedBox(height: 8),
+          Row(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: _GenderChip(
-                      label: NameGenderStrings.maleLabel(context),
-                      icon: Icons.male,
-                      isSelected: widget.gender == Gender.male,
-                      onTap: () => widget.onGenderChanged(Gender.male),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _GenderChip(
-                      label: NameGenderStrings.femaleLabel(context),
-                      icon: Icons.female,
-                      isSelected: widget.gender == Gender.female,
-                      onTap: () => widget.onGenderChanged(Gender.female),
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: _GenderChip(
+                  label: NameGenderStrings.maleLabel(context),
+                  icon: Icons.male,
+                  isSelected: widget.gender == Gender.male,
+                  onTap: () => widget.onGenderChanged(Gender.male),
+                ),
               ),
-              const SizedBox(height: 10),
-              _GenderChipNoIcon(
-                label: NameGenderStrings.noGender(context),
-                isSelected: widget.gender == Gender.unknown,
-                onTap: () => widget.onGenderChanged(Gender.unknown),
+              const SizedBox(width: 12), // Figma Gap: 10-12px
+              Expanded(
+                child: _GenderChip(
+                  label: NameGenderStrings.femaleLabel(context),
+                  icon: Icons.female,
+                  isSelected: widget.gender == Gender.female,
+                  onTap: () => widget.onGenderChanged(Gender.female),
+                ),
               ),
             ],
           ),
-        ),
-        SizedBox(height: 20.h),
-      ],
-    ),
-    );
-  }
-}
-class _GenderChipNoIcon extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
 
-  const _GenderChipNoIcon({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
+          const SizedBox(height: 16),
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 45.h,
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF2BD383) : const Color(0xFF000000),
-            width: 1,
+          // ---------------- Prefer not to mention ----------------
+          Center(
+            child: GestureDetector(
+              onTap: () => widget.onGenderChanged(Gender.unknown),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 16,
+                ),
+                child: Text(
+                  NameGenderStrings.noGender(context),
+                  style: GoogleFonts.quicksand(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF96989C), // Gri Renk
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: GoogleFonts.quicksand(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF434343),
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+          SizedBox(height: 20.h),
+        ],
       ),
     );
   }
 }
+
+// ---------------- Gender Seçim Butonları Tasarımı ----------------
 class _GenderChip extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -243,42 +216,47 @@ class _GenderChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        height: 50.h,
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 14),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: 50.h, // Figma Height: 50px
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(50),
+          // Seçiliyse %10 Yeşil Arkaplan, Değilse Beyaz
+          color: isSelected
+              ? const Color(0xFF21BC87).withOpacity(0.10)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(16), // Figma Radius: 16px
           border: Border.all(
+            // Seçiliyse 2px Yeşil, Değilse 2px Gri (#E2E2E2)
             color: isSelected
-                ? const Color(0xFF2BD383)
-                : const Color(0xFF000000),
-            width: 1,
+                ? const Color(0xFF21BC87)
+                : const Color(0xFFE2E2E2),
+            width: 2, // Figma Border: 2px
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(
+              icon,
+              size: 24,
+              color: isSelected
+                  ? const Color(0xFF21BC87)
+                  : const Color(0xFF96989C),
+            ),
+            const SizedBox(width: 8),
             Flexible(
               child: Text(
                 label,
                 style: GoogleFonts.quicksand(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFF434343),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected
+                      ? const Color(0xFF21BC87)
+                      : const Color(0xFF96989C),
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
-            ),
-            const SizedBox(width: 6),
-            Icon(
-              icon,
-              size: 34,
-              fontWeight: FontWeight.bold,
-              color: isSelected
-                  ? const Color(0xFF2bd383)
-                  : const Color(0xFF3A3A3A),
             ),
           ],
         ),

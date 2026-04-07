@@ -8,6 +8,7 @@ class SupportAreaStrings {
   static AppLocalizations _loc(BuildContext context) => AppLocalizations.of(context)!;
 
   static String title(BuildContext context) => _loc(context).supportAreaTitle;
+  static String subtitle(BuildContext context) => _loc(context).supportAreaSubtitle;
 
   static String optionLabel(BuildContext context, SupportArea value) {
     final loc = _loc(context);

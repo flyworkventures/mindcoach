@@ -103,38 +103,44 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingTitle1.
   ///
   /// In en, this message translates to:
-  /// **'Understand Yourself Better'**
+  /// **'Feeling overwhelmed?'**
   String get onboardingTitle1;
+
+  /// No description provided for @onboardingDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a certified coach in minutes — whenever you need it.'**
+  String get onboardingDesc1;
 
   /// No description provided for @onboardingTitle2.
   ///
   /// In en, this message translates to:
-  /// **'Bring Order to Your Mind'**
+  /// **'Talk your way.'**
   String get onboardingTitle2;
+
+  /// No description provided for @onboardingDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Text, voice, or video'**
+  String get onboardingDesc2;
 
   /// No description provided for @onboardingTitle3.
   ///
   /// In en, this message translates to:
-  /// **'A Guide Always Within Reach'**
+  /// **'Find the right coach for you.'**
   String get onboardingTitle3;
 
-  /// No description provided for @onboardingDescription1.
+  /// No description provided for @onboardingDesc3.
   ///
   /// In en, this message translates to:
-  /// **'Mind Coach helps you clarify your thoughts, explore your inner world, and navigate life with greater awareness. Take charge of your own journey with confidence.'**
-  String get onboardingDescription1;
+  /// **'Get matched based on your goals, schedule and preferences.'**
+  String get onboardingDesc3;
 
-  /// No description provided for @onboardingDescription2.
+  /// No description provided for @swipeToContinue.
   ///
   /// In en, this message translates to:
-  /// **'Stress, overthinking, hesitation, or scattered ideas… Mind Coach turns them into clear insights tailored to you. Discover the power of a focused and organized mind.'**
-  String get onboardingDescription2;
-
-  /// No description provided for @onboardingDescription3.
-  ///
-  /// In en, this message translates to:
-  /// **'Share your thoughts, ask questions, and explore new perspectives anytime. Mind Coach supports your growth and helps you move forward with clarity and ease.'**
-  String get onboardingDescription3;
+  /// **'Swipe to continue'**
+  String get swipeToContinue;
 
   /// No description provided for @onboardingTermsPrefix.
   ///
@@ -232,11 +238,23 @@ abstract class AppLocalizations {
   /// **'Get Started'**
   String get getStarted;
 
+  /// No description provided for @findMyCoaches.
+  ///
+  /// In en, this message translates to:
+  /// **'Find My Coaches'**
+  String get findMyCoaches;
+
   /// No description provided for @approachTitle.
   ///
   /// In en, this message translates to:
-  /// **'How would you like your counselor to approach you?'**
+  /// **'How should your coach approach you?'**
   String get approachTitle;
+
+  /// No description provided for @approachSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Helps us match your personality to the right coach'**
+  String get approachSubtitle;
 
   /// No description provided for @approachPatient.
   ///
@@ -457,7 +475,7 @@ abstract class AppLocalizations {
   /// No description provided for @nameGenderSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'A short bio helps others know the real you. Keep it fun and genuine.'**
+  /// **'So your coach can get to know the real you'**
   String get nameGenderSubtitle;
 
   /// No description provided for @nameGenderFullNameLabel.
@@ -499,13 +517,19 @@ abstract class AppLocalizations {
   /// No description provided for @supportAreaTitle.
   ///
   /// In en, this message translates to:
-  /// **'In which area would you like to receive support?'**
+  /// **'What area would you like support with?'**
   String get supportAreaTitle;
+
+  /// No description provided for @supportAreaSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll only show coaches who specialise in this'**
+  String get supportAreaSubtitle;
 
   /// No description provided for @supportAreaIndividual.
   ///
   /// In en, this message translates to:
-  /// **'Individual'**
+  /// **'Individual Growth'**
   String get supportAreaIndividual;
 
   /// No description provided for @supportAreaFamily.
@@ -538,53 +562,65 @@ abstract class AppLocalizations {
   /// **'Which days are you available?'**
   String get availableDaysTitle;
 
+  /// No description provided for @availableDaysSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'So we only show coaches free when you are'**
+  String get availableDaysSubtitle;
+
   /// No description provided for @dayMonday.
   ///
   /// In en, this message translates to:
-  /// **'Monday'**
+  /// **'Mon'**
   String get dayMonday;
 
   /// No description provided for @dayTuesday.
   ///
   /// In en, this message translates to:
-  /// **'Tuesday'**
+  /// **'Tue'**
   String get dayTuesday;
 
   /// No description provided for @dayWednesday.
   ///
   /// In en, this message translates to:
-  /// **'Wednesday'**
+  /// **'Wed'**
   String get dayWednesday;
 
   /// No description provided for @dayThursday.
   ///
   /// In en, this message translates to:
-  /// **'Thursday'**
+  /// **'Thu'**
   String get dayThursday;
 
   /// No description provided for @dayFriday.
   ///
   /// In en, this message translates to:
-  /// **'Friday'**
+  /// **'Fri'**
   String get dayFriday;
 
   /// No description provided for @daySaturday.
   ///
   /// In en, this message translates to:
-  /// **'Saturday'**
+  /// **'Sat'**
   String get daySaturday;
 
   /// No description provided for @daySunday.
   ///
   /// In en, this message translates to:
-  /// **'Sunday'**
+  /// **'Sun'**
   String get daySunday;
 
   /// No description provided for @meetingTimeTitle.
   ///
   /// In en, this message translates to:
-  /// **'What time would you like to meet?'**
+  /// **'What time works best for you?'**
   String get meetingTimeTitle;
+
+  /// No description provided for @meetingTimeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Coaches with matching slots will be highlighted'**
+  String get meetingTimeSubtitle;
 
   /// No description provided for @meetingTimeMorning.
   ///
@@ -613,19 +649,19 @@ abstract class AppLocalizations {
   /// No description provided for @meetingTimeMorningRange.
   ///
   /// In en, this message translates to:
-  /// **'(8:00 AM–12:00 PM)'**
+  /// **'08:00 - 12:00'**
   String get meetingTimeMorningRange;
 
   /// No description provided for @meetingTimeAfternoonRange.
   ///
   /// In en, this message translates to:
-  /// **'(12:00 PM–6:00 PM)'**
+  /// **'12:00 - 16:00'**
   String get meetingTimeAfternoonRange;
 
   /// No description provided for @meetingTimeEveningRange.
   ///
   /// In en, this message translates to:
-  /// **'(6:00 PM–9:00 PM)'**
+  /// **'16:00 - 21:00'**
   String get meetingTimeEveningRange;
 
   /// No description provided for @meetingTimeFlexibleRange.

@@ -4,15 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../constants/meeting_time_constants.dart';
 import '../domain/profile_models.dart';
 
-/// MeetingTimeStep
-/// ------------------------------------------------------------
-/// Kullanıcının tercih ettiği görüşme zaman aralığını seçtiği step.
-/// - State: MeetingTime (enum)
-/// - UI: MeetingTimeStrings ile localized label + range gösterir
-///
-/// TODO(N8N):
-/// - Bu enum server payload’ına mapper ile çevrilecek (swap kolay)
-class MeetingTimeStep extends StatefulWidget {
+class MeetingTimeStep extends StatelessWidget {
   const MeetingTimeStep({
     super.key,
     required this.selectedTime,
@@ -26,165 +18,134 @@ class MeetingTimeStep extends StatefulWidget {
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
 
-  @override
-  State<MeetingTimeStep> createState() => _MeetingTimeStepState();
-}
+  static const _displayOptions = [
+    MeetingTime.morning,
+    MeetingTime.afternoon,
+    MeetingTime.evening,
+  ];
 
-class _MeetingTimeStepState extends State<MeetingTimeStep> {
-  late final List<MeetingTime> _options;
-  late int _currentIndex;
-  late FixedExtentScrollController _controller;
-
-  int _indexForInitial() {
-    final externalIndex = _options.indexOf(widget.selectedTime);
-    if (externalIndex != -1) return externalIndex;
-    return 0;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _options = MeetingTime.values;
-    _currentIndex = _indexForInitial();
-    _controller = FixedExtentScrollController(initialItem: _currentIndex);
-  }
-
-  @override
-  void didUpdateWidget(covariant MeetingTimeStep oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.selectedTime != widget.selectedTime) {
-      final newIndex = _indexForInitial();
-      if (newIndex != _currentIndex) {
-        _currentIndex = newIndex;
-        // Delay the jumpToItem call to avoid triggering onSelectedItemChanged during build phase
-        Future.microtask(() {
-          if (mounted && _controller.hasClients) {
-            _controller.jumpToItem(_currentIndex);
-          }
-        });
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  TextStyle _styleForIndex(int index) {
-    final diff = (index - _currentIndex).abs();
-
-    if (diff == 0) {
-      return GoogleFonts.quicksand(
-        fontSize: 24,
-        fontWeight: FontWeight.w400,
-        height: 1.0,
-        color: Colors.black,
-      );
-    } else if (diff == 1) {
-      return GoogleFonts.quicksand(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-        height: 1.0,
-        color: const Color(0xFF8E8E8E),
-      );
-    } else {
-      return GoogleFonts.quicksand(
-        fontSize: 12,
-        fontWeight: FontWeight.w400,
-        height: 1.0,
-        color: const Color(0xFFCBCBCB),
-      );
-    }
-  }
-
-  TextStyle _styleForRange(int index) {
-    final diff = (index - _currentIndex).abs();
-
-    if (diff == 0) {
-      return GoogleFonts.quicksand(
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        height: 1.0,
-        color: Colors.black,
-      );
-    } else if (diff == 1) {
-      return GoogleFonts.quicksand(
-        fontSize: 12,
-        fontWeight: FontWeight.w400,
-        height: 1.0,
-        color: const Color(0xFF8E8E8E),
-      );
-    } else {
-      return GoogleFonts.quicksand(
-        fontSize: 10,
-        fontWeight: FontWeight.w400,
-        height: 1.0,
-        color: const Color(0xFFCBCBCB),
-      );
-    }
-  }
+  static const _icons = {
+    MeetingTime.morning: '🌅',
+    MeetingTime.afternoon: '🌤️',
+    MeetingTime.evening: '🌙',
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          MeetingTimeStrings.title(context),
-          style: widget.titleStyle,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 42 * 4,
-          child: ListWheelScrollView.useDelegate(
-            controller: _controller,
-            itemExtent: 38,
-            physics: const FixedExtentScrollPhysics(),
-            overAndUnderCenterOpacity: 1.0,
-            perspective: 0.0002,
-            diameterRatio: 10.0,
-            onSelectedItemChanged: (index) {
-              setState(() => _currentIndex = index);
-              // Delay the callback to avoid modifying provider during build phase
-              Future.microtask(() {
-                if (mounted) {
-                  widget.onTimeChanged(_options[index]);
-                }
-              });
-            },
-            childDelegate: ListWheelChildBuilderDelegate(
-              childCount: _options.length,
-              builder: (context, index) {
-                if (index < 0 || index >= _options.length) return null;
-
-                final time = _options[index];
-                final label = MeetingTimeStrings.label(context, time);
-                final range = MeetingTimeStrings.range(context, time);
-
-                final style = _styleForIndex(index);
-                final rangeStyle = _styleForRange(index);
-
-                return Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(label, style: style),
-                      const SizedBox(width: 6),
-                      Text(range, style: rangeStyle),
-                    ],
-                  ),
-                );
-              },
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            MeetingTimeStrings.title(context),
+            style: GoogleFonts.quicksand(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              height: 1.2,
             ),
           ),
+          const SizedBox(height: 6),
+          Text(
+            MeetingTimeStrings.subtitle(context),
+            style: GoogleFonts.quicksand(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF96989C),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ..._displayOptions.map((time) {
+            final selected = selectedTime == time;
+            final label = MeetingTimeStrings.label(context, time);
+            final range = MeetingTimeStrings.range(context, time);
+            final icon = _icons[time] ?? '';
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _MeetingTimeCard(
+                icon: icon,
+                label: label,
+                range: range,
+                isSelected: selected,
+                onTap: () => onTimeChanged(time),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _MeetingTimeCard extends StatelessWidget {
+  final String icon;
+  final String label;
+  final String range;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _MeetingTimeCard({
+    required this.icon,
+    required this.label,
+    required this.range,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFF21BC87).withValues(alpha: 0.06)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected
+                ? const Color(0xFF21BC87)
+                : const Color(0xFFE2E2E2),
+            width: 2,
+          ),
         ),
-      ],
+        child: Row(
+          children: [
+            Text(icon, style: const TextStyle(fontSize: 32)),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: GoogleFonts.quicksand(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected
+                          ? const Color(0xFF21BC87)
+                          : const Color(0xFF1D1D1D),
+                    ),
+                  ),
+                  Text(
+                    range,
+                    style: GoogleFonts.quicksand(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF96989C),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

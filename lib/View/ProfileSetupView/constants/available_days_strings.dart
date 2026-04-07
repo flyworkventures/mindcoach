@@ -12,6 +12,7 @@ class AvailableDaysStrings {
   static AppLocalizations _loc(BuildContext context) => AppLocalizations.of(context)!;
 
   static String title(BuildContext context) => _loc(context).availableDaysTitle;
+  static String subtitle(BuildContext context) => _loc(context).availableDaysSubtitle;
 
   static String dayLabel(BuildContext context, Weekday day) {
     final loc = _loc(context);

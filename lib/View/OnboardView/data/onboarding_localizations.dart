@@ -16,8 +16,8 @@ extension OnboardingTexts on AppLocalizations {
   ];
 
   List<String> get onboardingDescriptions => [
-    onboardingDescription1,
-    onboardingDescription2,
-    onboardingDescription3,
+    onboardingDesc1,
+    onboardingDesc2,
+    onboardingDesc3,
   ];
 }

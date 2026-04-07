@@ -9,25 +9,27 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get onboardingTitle1 => 'Kendini Daha İyi Anla';
+  String get onboardingTitle1 => 'Bunalmış mı hissediyorsunuz?';
 
   @override
-  String get onboardingTitle2 => 'Zihnini Düzenle';
+  String get onboardingDesc1 =>
+      'İhtiyacınız olan her an, dakikalar içinde sertifikalı bir koçla konuşun.';
 
   @override
-  String get onboardingTitle3 => 'Her Zaman Yanında Bir Rehber';
+  String get onboardingTitle2 => 'Kendi tarzınızda iletişim kurun.';
 
   @override
-  String get onboardingDescription1 =>
-      'Mind Coach, düşüncelerini netleştirmeni, iç dünyanı keşfetmeni ve yaşamını daha bilinçli bir şekilde yönlendirmeni sağlar. Kendi yolculuğunun kontrolünü güvenle eline al.';
+  String get onboardingDesc2 => 'Yazılı, sesli veya görüntülü';
 
   @override
-  String get onboardingDescription2 =>
-      'Stres, yoğun düşünceler, kararsızlık veya dağınık fikirler… Mind Coach bunları sana özel net içgörülere dönüştürür. Odaklanmış bir zihnin gücünü keşfet.';
+  String get onboardingTitle3 => 'Sizin için en doğru koçu bulun.';
 
   @override
-  String get onboardingDescription3 =>
-      'Düşüncelerini paylaş, sorular sor ya da yeni bakış açıları keşfet. Mind Coach, gelişimini destekler ve daha net bir şekilde ilerlemene yardımcı olur.';
+  String get onboardingDesc3 =>
+      'Hedeflerinize, programınıza ve tercihlerinize en uygun eşleşmeyi sağlayın.';
+
+  @override
+  String get swipeToContinue => 'Devam etmek için kaydırın';
 
   @override
   String get onboardingTermsPrefix => 'MindCoach\'a kaydolarak ';
@@ -80,7 +82,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get getStarted => 'Başla';
 
   @override
-  String get approachTitle => 'Danışmanın sana nasıl yaklaşmasını istersin?';
+  String get findMyCoaches => 'Koçlarımı Bul';
+
+  @override
+  String get approachTitle => 'Koçun sana nasıl yaklaşmalı?';
+
+  @override
+  String get approachSubtitle =>
+      'Kişiliğini doğru koçla eşleştirmemize yardımcı olur';
 
   @override
   String get approachPatient => 'Sabırlı';
@@ -191,8 +200,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nameGenderTitle => 'Bize biraz kendinden bahset';
 
   @override
-  String get nameGenderSubtitle =>
-      'Kısa bir tanım, seni daha iyi tanımamıza yardımcı olur.';
+  String get nameGenderSubtitle => 'Koçun seni daha iyi tanıyabilsin diye';
 
   @override
   String get nameGenderFullNameLabel => 'Kullanıcı Adı';
@@ -216,7 +224,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get supportAreaTitle => 'Hangi alanda destek almak istersin?';
 
   @override
-  String get supportAreaIndividual => 'Bireysel';
+  String get supportAreaSubtitle =>
+      'Sadece bu alanda uzmanlaşmış koçları göstereceğiz';
+
+  @override
+  String get supportAreaIndividual => 'Bireysel Gelişim';
 
   @override
   String get supportAreaFamily => 'Aile';
@@ -231,31 +243,39 @@ class AppLocalizationsTr extends AppLocalizations {
   String get supportAreaPersonalDevelopment => 'Kişisel gelişim';
 
   @override
-  String get availableDaysTitle => 'Hangi günler müsaitsiniz?';
+  String get availableDaysTitle => 'Hangi günler müsaitsin?';
 
   @override
-  String get dayMonday => 'Pazartesi';
+  String get availableDaysSubtitle =>
+      'Sadece müsait olduğun günlerde uygun koçları göstereceğiz';
 
   @override
-  String get dayTuesday => 'Salı';
+  String get dayMonday => 'Pzt';
 
   @override
-  String get dayWednesday => 'Çarşamba';
+  String get dayTuesday => 'Sal';
 
   @override
-  String get dayThursday => 'Perşembe';
+  String get dayWednesday => 'Çar';
 
   @override
-  String get dayFriday => 'Cuma';
+  String get dayThursday => 'Per';
 
   @override
-  String get daySaturday => 'Cumartesi';
+  String get dayFriday => 'Cum';
 
   @override
-  String get daySunday => 'Pazar';
+  String get daySaturday => 'Cmt';
 
   @override
-  String get meetingTimeTitle => 'Görüşmeleri hangi saatlerde yapmak istersin?';
+  String get daySunday => 'Paz';
+
+  @override
+  String get meetingTimeTitle => 'Hangi saat aralığı sana en uygun?';
+
+  @override
+  String get meetingTimeSubtitle =>
+      'Uygun saatleri olan koçlar öne çıkarılacak';
 
   @override
   String get meetingTimeMorning => 'Sabah';
@@ -270,13 +290,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get meetingTimeFlexible => 'Esnek';
 
   @override
-  String get meetingTimeMorningRange => '(08:00–12:00)';
+  String get meetingTimeMorningRange => '08:00 - 12:00';
 
   @override
-  String get meetingTimeAfternoonRange => '(12:00–18:00)';
+  String get meetingTimeAfternoonRange => '12:00 - 16:00';
 
   @override
-  String get meetingTimeEveningRange => '(18:00–21:00)';
+  String get meetingTimeEveningRange => '16:00 - 21:00';
 
   @override
   String get meetingTimeFlexibleRange => '';
