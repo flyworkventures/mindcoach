@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
@@ -11,7 +10,8 @@ class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
+  ConsumerState<NotificationsScreen> createState() =>
+      _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
@@ -27,80 +27,92 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   /// Tüm bildirimleri silme dialog'unu göster
   Future<void> _showDeleteAllDialog(BuildContext context) async {
     final l10n = context.l10n;
-    final hasNotifications = ref.read(notificationNotifierProvider).notifications.isNotEmpty;
-    
+    final hasNotifications = ref
+        .read(notificationNotifierProvider)
+        .notifications
+        .isNotEmpty;
+
     if (!hasNotifications) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             l10n.noNotificationsToDelete,
-            style: GoogleFonts.quicksand(),
+            style: const TextStyle(fontFamily: 'Geist'),
           ),
         ),
       );
       return;
     }
 
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: Text(
-            l10n.deleteAllNotificationsConfirmTitle,
-            style: GoogleFonts.quicksand(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
-            ),
-          ),
-          content: Text(
-            l10n.deleteAllNotificationsConfirmMessage,
-            style: GoogleFonts.quicksand(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFF666666),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(
-                l10n.cancel,
-                style: GoogleFonts.quicksand(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF666666),
+    final confirmed =
+        await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Text(
+                l10n.deleteAllNotificationsConfirmTitle,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(
-                l10n.delete,
-                style: GoogleFonts.quicksand(
+              content: Text(
+                l10n.deleteAllNotificationsConfirmMessage,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.red,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF666666),
                 ),
               ),
-            ),
-          ],
-        );
-      },
-    ) ?? false;
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(
+                    l10n.cancel,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF666666),
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(
+                    l10n.delete,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
 
     if (confirmed) {
       try {
-        await ref.read(notificationNotifierProvider.notifier).deleteAllNotifications();
+        await ref
+            .read(notificationNotifierProvider.notifier)
+            .deleteAllNotifications();
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 l10n.allNotificationsDeleted,
-                style: GoogleFonts.quicksand(),
+                style: const TextStyle(fontFamily: 'Geist'),
               ),
               backgroundColor: const Color(0xFF2BD383),
             ),
@@ -112,7 +124,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             SnackBar(
               content: Text(
                 l10n.errorDeletingNotifications,
-                style: GoogleFonts.quicksand(),
+                style: const TextStyle(fontFamily: 'Geist'),
               ),
               backgroundColor: Colors.red,
             ),
@@ -123,62 +135,73 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   }
 
   /// Silme dialog'unu göster
-  Future<bool> _showDeleteDialog(BuildContext context, int notificationId) async {
+  Future<bool> _showDeleteDialog(
+    BuildContext context,
+    int notificationId,
+  ) async {
     final l10n = context.l10n;
     return await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: Text(
-            l10n.deleteNotificationConfirmTitle,
-            style: GoogleFonts.quicksand(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
-            ),
-          ),
-          content: Text(
-            l10n.deleteNotificationConfirmMessage,
-            style: GoogleFonts.quicksand(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFF666666),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(
-                l10n.cancel,
-                style: GoogleFonts.quicksand(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF666666),
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Text(
+                l10n.deleteNotificationConfirmTitle,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop(true);
-                // Bildirimi sil
-                await ref.read(notificationNotifierProvider.notifier).deleteNotification(notificationId);
-              },
-              child: Text(
-                l10n.delete,
-                style: GoogleFonts.quicksand(
+              content: Text(
+                l10n.deleteNotificationConfirmMessage,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.red,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF666666),
                 ),
               ),
-            ),
-          ],
-        );
-      },
-    ) ?? false;
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(
+                    l10n.cancel,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF666666),
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop(true);
+                    // Bildirimi sil
+                    await ref
+                        .read(notificationNotifierProvider.notifier)
+                        .deleteNotification(notificationId);
+                  },
+                  child: Text(
+                    l10n.delete,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 
   @override
@@ -187,74 +210,49 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     final notificationState = ref.watch(notificationNotifierProvider);
 
     return Scaffold(
-      backgroundColor: Color(0xffF2F5FC),
+      backgroundColor: Colors.white,
       body: SafeArea(
+        top: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: kTextTabBarHeight),
             // Header
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-              decoration: const BoxDecoration(
-               color: Color(0xffF2F5FC)
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              decoration: const BoxDecoration(color: Colors.white),
               child: Row(
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      width: 40.w,
-                      height: 40.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
+                    child: const Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: Icon(
                         Icons.arrow_back_ios_new,
-                        size: 18,
-                        color: Color(0xFF434343),
+                        size: 20,
+                        color: Colors.black,
                       ),
                     ),
                   ),
-                  SizedBox(width: 16.w),
+                  SizedBox(width: 12.w),
                   Text(
                     l10n.notifications,
-                    style: GoogleFonts.quicksand(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black,
                     ),
                   ),
                   const Spacer(),
                   // More options menu
                   PopupMenuButton<String>(
-                    icon: Container(
-                      width: 40.w,
-                      height: 40.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.more_horiz,
-                        size: 20,
-                        color: Color(0xFF434343),
-                      ),
+                    icon: const Icon(
+                      Icons.more_horiz,
+                      size: 24,
+                      color: Colors.black,
                     ),
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -276,9 +274,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                             SizedBox(width: 12.w),
                             Text(
                               context.l10n.deleteAllNotifications,
-                              style: GoogleFonts.quicksand(
+                              style: const TextStyle(
+                                fontFamily: 'Geist',
                                 fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 color: Colors.red,
                               ),
                             ),
@@ -293,113 +292,137 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
             // Notifications List
             Expanded(
-              child: notificationState.isLoading && notificationState.notifications.isEmpty
+              child:
+                  notificationState.isLoading &&
+                      notificationState.notifications.isEmpty
                   ? const Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2BD383)),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFF2BD383),
+                        ),
                       ),
                     )
                   : notificationState.error != null
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.error_outline,
-                                size: 64,
-                                color: Colors.grey[400],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Bildirimler yüklenirken bir hata oluştu',
-                                style: GoogleFonts.quicksand(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () {
-                                  ref.read(notificationNotifierProvider.notifier).refresh();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF2BD383),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Tekrar Dene',
-                                  style: GoogleFonts.quicksand(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ],
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Colors.grey[400],
                           ),
-                        )
-                      : notificationState.notifications.isEmpty
-                          ? Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.notifications_none,
-                                    size: 64,
-                                    color: Colors.grey[400],
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'Henüz bildiriminiz yok',
-                                    style: GoogleFonts.quicksand(
-                                      fontSize: 16,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : RefreshIndicator(
-                              onRefresh: () async {
-                                await ref.read(notificationNotifierProvider.notifier).refresh();
-                              },
-                              color: const Color(0xFF2BD383),
-                              child: ListView.separated(
-                                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                                itemCount: notificationState.notifications.length,
-                                separatorBuilder: (context, index) => SizedBox(height: 12.h),
-                                itemBuilder: (context, index) {
-                                  final notification = notificationState.notifications[index];
-                                  return Dismissible(
-                                    key: Key('notification_${notification.id}'),
-                                    direction: DismissDirection.endToStart,
-                                    background: Container(
-                                      alignment: Alignment.centerRight,
-                                      padding: EdgeInsets.only(right: 20.w),
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(24),
-                                      ),
-                                      child: const Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                        size: 28,
-                                      ),
-                                    ),
-                                    confirmDismiss: (direction) async {
-                                      // Dialog göster ve kullanıcının onayını al
-                                      return await _showDeleteDialog(context, notification.id);
-                                    },
-                                    onDismissed: (direction) {
-                                      // Dialog'da onaylandıysa zaten silindi
-                                    },
-                                    child: _NotificationCard(notification: notification),
-                                  );
-                                },
+                          const SizedBox(height: 16),
+                          Text(
+                            'Bildirimler yüklenirken bir hata oluştu',
+                            style: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 16,
+                              color: Color(0xFF666666),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              ref
+                                  .read(notificationNotifierProvider.notifier)
+                                  .refresh();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF2BD383),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
+                            child: const Text(
+                              'Tekrar Dene',
+                              style: TextStyle(
+                                fontFamily: 'Geist',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : notificationState.notifications.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.notifications_none,
+                            size: 64,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Henüz bildiriminiz yok',
+                            style: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 16,
+                              color: Color(0xFF666666),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        await ref
+                            .read(notificationNotifierProvider.notifier)
+                            .refresh();
+                      },
+                      color: const Color(0xFF2BD383),
+                      backgroundColor: Colors.white,
+                      child: ListView.separated(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
+                        itemCount: notificationState.notifications.length,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 16.h),
+                        itemBuilder: (context, index) {
+                          final notification =
+                              notificationState.notifications[index];
+                          return Dismissible(
+                            key: Key('notification_${notification.id}'),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              padding: EdgeInsets.only(right: 20.w),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(
+                                  16,
+                                ), // Figma ile uyumlu
+                              ),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                            ),
+                            confirmDismiss: (direction) async {
+                              // Dialog göster ve kullanıcının onayını al
+                              return await _showDeleteDialog(
+                                context,
+                                notification.id,
+                              );
+                            },
+                            onDismissed: (direction) {
+                              // Dialog'da onaylandıysa zaten silindi
+                            },
+                            child: _NotificationCard(
+                              notification: notification,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
             ),
           ],
         ),
@@ -413,53 +436,25 @@ class _NotificationCard extends StatelessWidget {
 
   const _NotificationCard({required this.notification});
 
-  IconData _getIconForType(String type) {
-    switch (type) {
-      case 'appointment':
-        return Icons.calendar_today;
-      case 'system_notification':
-        return Icons.notifications;
-      case 'announcement':
-        return Icons.campaign;
-      default:
-        return Icons.notifications;
-    }
-  }
-
-  Color _getIconColorForType(String type) {
-    switch (type) {
-      case 'appointment':
-        return const Color(0xFF2BD383);
-      case 'system_notification':
-        return const Color(0xFF11998E);
-      case 'announcement':
-        return const Color(0xFFFF9800);
-      default:
-        return const Color(0xFF434343);
-    }
-  }
-
   String _formatDate(String? dateString) {
     if (dateString == null) return '';
     try {
-      final date = DateTime.parse(dateString);
+      final date = DateTime.parse(dateString).toLocal();
       final now = DateTime.now();
-      final difference = now.difference(date);
 
-      if (difference.inDays == 0) {
-        if (difference.inHours == 0) {
-          if (difference.inMinutes == 0) {
-            return 'Az önce';
-          }
-          return '${difference.inMinutes} dakika önce';
-        }
-        return '${difference.inHours} saat önce';
-      } else if (difference.inDays == 1) {
+      // Aynı gün içindeyse saati göster (Figma: "18:00")
+      if (date.year == now.year &&
+          date.month == now.month &&
+          date.day == now.day) {
+        return DateFormat('HH:mm').format(date);
+      }
+      // Dün
+      else if (now.difference(date).inDays == 1) {
         return 'Dün';
-      } else if (difference.inDays < 7) {
-        return '${difference.inDays} gün önce';
-      } else {
-        return DateFormat('dd MMM yyyy', 'tr_TR').format(date);
+      }
+      // Daha eskiyse
+      else {
+        return DateFormat('dd MMM', 'tr_TR').format(date);
       }
     } catch (e) {
       return '';
@@ -468,70 +463,100 @@ class _NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // API'den veya metadata'dan appointment olup olmadığını belirle
+    final bool isAppointment = notification.type == 'appointment';
+
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: const EdgeInsets.all(12), // Figma Padding: 10px / 12px
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            blurRadius: 12,
-            offset:  Offset(0, 2),
-          ),
-        ],
+        color: isAppointment
+            ? const Color(0xFF21BC87).withValues(alpha: 0.10)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isAppointment
+              ? const Color(0xFF21BC87)
+              : Colors.black.withValues(alpha: 0.05),
+          width: 1,
+        ),
+        boxShadow: isAppointment
+            ? [
+                BoxShadow(
+                  color: const Color(0xFF2BD383).withValues(alpha: 0.20),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                  spreadRadius: 0,
+                ),
+              ]
+            : [],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icon
-  
-          SizedBox(width: 12.w),
-          // Content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
                   notification.title,
-                  style: GoogleFonts.quicksand(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  notification.subtitle,
-                  style: GoogleFonts.quicksand(
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
                     fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF666666),
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                    height: 1.28, // Line height 18px / Size 14px
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
-               
-              ],
-            ),
-            
-          ),
-           if (notification.sentTime != null) ...[
-                  SizedBox(height: 8.h),
-                  Text(
-                    _formatDate(notification.sentTime),
-                    style: GoogleFonts.quicksand(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFF999999),
-                    ),
+              ),
+              const SizedBox(width: 8),
+              if (notification.sentTime != null)
+                Text(
+                  _formatDate(notification.sentTime),
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF96989C),
                   ),
-                ],
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            notification.subtitle,
+            style: const TextStyle(
+              fontFamily: 'Geist',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF96989C),
+              height: 1.2,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+
+          // Sadece randevulara özel tıklanabilir link (Figma Card 3)
+          if (isAppointment) ...[
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () {
+                // TODO: Randevu detaylarına yönlendir
+              },
+              child: const Text(
+                'Click to view appointment details', // Localize edebilirsin
+                style: TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF21BC87),
+                  decoration: TextDecoration.underline,
+                  decorationColor: Color(0xFF21BC87),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 }
-

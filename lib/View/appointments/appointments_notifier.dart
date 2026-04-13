@@ -339,56 +339,31 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     final now = DateTime.now();
     final map = state.appointments;
 
-    log("🔍 findNextAppointment çağrıldı, şu an: $now");
-    log("🔍 Toplam ${map.length} gün için randevu var");
-
     DateTime? bestDateTime;
     AppointmentInfo? bestInfo;
 
-    // Tüm randevuları kontrol et ve en yakın gelecek randevuyu bul
     for (final entry in map.entries) {
       final infos = entry.value;
       if (infos.isEmpty) continue;
 
-      // Her bir AppointmentInfo için appointmentDateTime'ı kontrol et
       for (final info in infos) {
-        // appointmentDateTime kullan (tam tarih + saat)
         final appointmentDateTime = info.appointmentDateTime;
-        if (appointmentDateTime == null) {
-          log("⚠️ appointmentDateTime null, atlandı: consultantId=${info.consultantId}");
-          continue;
-        }
-        
-        log("📅 Randevu kontrol ediliyor: $appointmentDateTime, consultantId=${info.consultantId}, status=${info.status}");
-        
-        // Sadece gelecekteki randevuları kontrol et
-        if (!appointmentDateTime.isAfter(now)) {
-          log("⏭️ Geçmiş randevu atlandı: $appointmentDateTime (şimdi: $now)");
-          continue;
-        }
-        
-        // İptal edilmiş randevuları atla
-        if (info.status?.toLowerCase() == 'cancelled') {
-          log("⏭️ İptal edilmiş randevu atlandı: consultantId=${info.consultantId}");
-          continue;
-        }
+        if (appointmentDateTime == null) continue;
 
-        // En yakın randevuyu bul
+        if (!appointmentDateTime.isAfter(now)) continue;
+
+        if (info.status?.toLowerCase() == 'cancelled') continue;
+
         if (bestDateTime == null || appointmentDateTime.isBefore(bestDateTime)) {
           bestDateTime = appointmentDateTime;
           bestInfo = info;
-          log("✅ Yeni en yakın randevu: $appointmentDateTime, consultantId=${info.consultantId}");
         }
       }
     }
 
-    if (bestDateTime == null || bestInfo == null) {
-      log("⚠️ Yaklaşan randevu bulunamadı");
-      return null;
-    }
-    
-    log("✅ En yakın randevu bulundu: $bestDateTime, consultantId=${bestInfo.consultantId}");
-    return MapEntry(bestDateTime, bestInfo);
+    return (bestDateTime != null && bestInfo != null)
+        ? MapEntry(bestDateTime, bestInfo)
+        : null;
   }
 
   void upsertAppointment(DateTime dateTime, AppointmentInfo info) {

@@ -1,32 +1,27 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:audioplayers/audioplayers.dart' as audio_players;
-import 'package:audio_waveforms/audio_waveforms.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:mindcoach/View/chat_screen/constants/chat_strings.dart';
+import 'package:mindcoach/View/chat_screen/constants/conversation_strings.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
-
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
-import 'package:mindcoach/core/utils/locale_font_scaler.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
+import 'package:mindcoach/core/utils/locale_font_scaler.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
-
-import 'package:mindcoach/View/chat_screen/constants/conversation_strings.dart';
-import 'package:mindcoach/View/chat_screen/constants/chat_strings.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 import 'package:mindcoach/models/message_model.dart';
-import 'package:mindcoach/Riverpod/providers/user_provider.dart';
- 
+import 'package:path_provider/path_provider.dart';
 
 import '../../../Riverpod/providers/all_providers.dart';
 import '../notifiers/conversation_notifier.dart';
- 
 
 // Stil bilgileri için kullanılan sabitler
 const Color _kAppbarGreen = Color(0xFF11998E);
@@ -40,10 +35,7 @@ const Color _kInputShadow = Color(0x40000000);
 class ConversationScreen extends ConsumerStatefulWidget {
   final ConsultantModel specialistId;
 
-  const ConversationScreen({
-    super.key,
-    required this.specialistId,
-  });
+  const ConversationScreen({super.key, required this.specialistId});
 
   @override
   ConsumerState<ConversationScreen> createState() => _ConversationScreenState();
@@ -62,14 +54,14 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   Timer? _messagesStreamTimer; // Mesajları periyodik çekmek için timer
   RecorderController? _recorderController; // Ses kaydı için controller
 
-   @override
+  @override
   void initState() {
     super.initState();
-   
+
     _recorderController = RecorderController()
       ..androidEncoder = AndroidEncoder.aac
       ..androidOutputFormat = AndroidOutputFormat.mpeg4
-      ..sampleRate = 44100 
+      ..sampleRate = 44100
       ..bitRate = 128000;
 
     debugPrint(" RecorderController initialize edildi");
@@ -80,17 +72,22 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         ref.read(conversationsProvider.notifier).clearSelectedImage();
         _lastProcessedImagePath = null;
         if (mounted) {
-          await ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
+          await ref
+              .read(conversationsProvider.notifier)
+              .getMessages(widget.specialistId.id);
         }
       } catch (e) {
         debugPrint(" ConversationPage initState hatası: $e");
       }
     });
-    
 
-    _messagesStreamTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+    _messagesStreamTimer = Timer.periodic(const Duration(milliseconds: 500), (
+      _,
+    ) {
       if (mounted) {
-        ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
+        ref
+            .read(conversationsProvider.notifier)
+            .getMessages(widget.specialistId.id);
       } else {
         _messagesStreamTimer?.cancel();
         _messagesStreamTimer = null;
@@ -112,12 +109,12 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           ref.read(conversationsProvider.notifier).cancelRecording();
         }
       } catch (e) {
-
         debugPrint("⚠️ dispose sırasında ref kullanılamadı (normal): $e");
       }
     }
     super.dispose();
   }
+
   void _toggleMenu() {
     setState(() => _isMenuOpen = !_isMenuOpen);
 
@@ -126,14 +123,19 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       _lastProcessedImagePath = null;
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    final List<MessageModel> allMessages = ref
+        .watch(conversationsProvider)
+        .messages;
 
-    final List<MessageModel> allMessages = ref.watch(conversationsProvider).messages;
-
-    final selectedImage = ref.watch(conversationsProvider.select((state) => state.selectedImage));
-    final isRecording = ref.watch(conversationsProvider.select((state) => state.isRecording));
-    
+    final selectedImage = ref.watch(
+      conversationsProvider.select((state) => state.selectedImage),
+    );
+    final isRecording = ref.watch(
+      conversationsProvider.select((state) => state.isRecording),
+    );
 
     if (isRecording && _recordingTimer == null) {
       _recordingTimer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -148,7 +150,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       _recordingTimer?.cancel();
       _recordingTimer = null;
     }
-    
 
     if (selectedImage == null && _lastProcessedImagePath != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -164,10 +165,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       ..sort((a, b) {
         final dateA = _parseSentTime(a.sentTime);
         final dateB = _parseSentTime(b.sentTime);
-        return dateB.compareTo(dateA); 
+        return dateB.compareTo(dateA);
       });
-
-
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -189,7 +188,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 25.w, vertical: 10.h),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 25.w,
+                        vertical: 10.h,
+                      ),
                       width: 339.w,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -205,13 +207,17 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       ),
                       child: Stack(
                         children: [
-                          if (messages.isEmpty) Center(child: _buildGreetingContent()),
+                          if (messages.isEmpty)
+                            Center(child: _buildGreetingContent()),
 
                           ListView.builder(
                             physics: const ClampingScrollPhysics(),
                             reverse: true,
                             itemCount: messages.length,
-                            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 14.h,
+                            ),
                             itemBuilder: (context, index) {
                               final m = messages[index];
                               return _MessageBubble(message: m);
@@ -223,7 +229,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                   ),
 
                   _buildInputArea(
-                    widget.specialistId.names[ref.read(localeProvider.notifier).getLanguageCode()],
+                    widget.specialistId.names[ref
+                        .read(localeProvider.notifier)
+                        .getLanguageCode()],
                     selectedImage,
                   ),
                 ],
@@ -250,7 +258,12 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     final l10n = context.l10n;
 
     return Padding(
-      padding: EdgeInsets.only(top: 15.h, bottom: 10.h, left: 16.w, right: 16.w),
+      padding: EdgeInsets.only(
+        top: 15.h,
+        bottom: 10.h,
+        left: 16.w,
+        right: 16.w,
+      ),
       child: SizedBox(
         height: 40.h,
         child: Stack(
@@ -260,7 +273,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               left: 0,
               child: IconButton(
                 padding: EdgeInsets.zero,
-                icon: SvgPicture.asset('assets/svg/arrow_back.svg', width: 10.w),
+                icon: SvgPicture.asset(
+                  'assets/svg/arrow_back.svg',
+                  width: 10.w,
+                ),
                 onPressed: () => Navigator.pop(context),
               ),
             ),
@@ -297,7 +313,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         border: Border.all(color: _kFreeBorder, width: 1.w),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 2.h,
+                        ),
                         child: Text(
                           l10n.free,
                           style: GoogleFonts.quicksand(
@@ -316,8 +335,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.grey.shade300,
-                      image:  DecorationImage(
-                        image: NetworkImage(ref.read(AllProviders.userProvider)?.profilePhotoUrl ?? AppConstants.defaultPpUrl),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          ref
+                                  .read(AllProviders.userProvider)
+                                  ?.profilePhotoUrl ??
+                              AppConstants.defaultPpUrl,
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -334,23 +358,24 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   Widget _buildInputArea(String mentorName, XFile? selectedImage) {
     final hasText = _messageController.text.trim().isNotEmpty;
     var hasImage = ref.watch(conversationsProvider).selectedImage != null;
-    final isRecording = ref.watch(conversationsProvider.select((state) => state.isRecording));
-    final recordingDuration = ref.watch(conversationsProvider.select((state) => state.recordingDuration));
+    final isRecording = ref.watch(
+      conversationsProvider.select((state) => state.isRecording),
+    );
+    final recordingDuration = ref.watch(
+      conversationsProvider.select((state) => state.recordingDuration),
+    );
     final canSend = hasText || hasImage;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 8.h),
       child: Column(
-        mainAxisSize: MainAxisSize.min, 
+        mainAxisSize: MainAxisSize.min,
         children: [
-        
           if (isRecording)
             Container(
               margin: EdgeInsets.only(bottom: 8.h),
               width: 339.w,
-              constraints: BoxConstraints(
-                maxHeight: 100.h,
-              ),
+              constraints: BoxConstraints(maxHeight: 100.h),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12.w),
@@ -363,11 +388,14 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 ],
               ),
               child: Row(
-                mainAxisSize: MainAxisSize.max, 
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.h,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -397,12 +425,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                               ],
                             ),
                           ),
-                       
                         ],
                       ),
                     ),
                   ),
-              
+
                   if (_recorderController != null)
                     Expanded(
                       child: Padding(
@@ -419,41 +446,41 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                               showMiddleLine: false,
                               waveThickness: 2.0,
                             ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.w),
-                                color: Colors.transparent,
-                              ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.w),
+                              color: Colors.transparent,
                             ),
                           ),
                         ),
                       ),
+                    ),
 
                   if (_recorderController != null)
-                      Expanded(
-                            child: IconButton(
-                              onPressed: () async {
-                                // Kayıt iptal et
-                                if (mounted) {
-                                  await ref.read(conversationsProvider.notifier).cancelRecording();
-                                  if (_recorderController != null) {
-                                    await _recorderController!.stop();
-                                  }
-                                }
-                              },
-                              icon: Icon(Icons.close, color: Colors.red, size: 20.w),
-                            ),
-                          ),
-
-
+                    Expanded(
+                      child: IconButton(
+                        onPressed: () async {
+                          // Kayıt iptal et
+                          if (mounted) {
+                            await ref
+                                .read(conversationsProvider.notifier)
+                                .cancelRecording();
+                            if (_recorderController != null) {
+                              await _recorderController!.stop();
+                            }
+                          }
+                        },
+                        icon: Icon(Icons.close, color: Colors.red, size: 20.w),
+                      ),
+                    ),
                 ],
               ),
             ),
-        
+
           if (hasImage && !isRecording)
             Container(
               margin: EdgeInsets.only(bottom: 8.h),
               width: 339.w,
-              height:    50.h,
+              height: 50.h,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(40.w),
@@ -471,11 +498,16 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                   Row(
                     children: [
                       Container(
-                                      margin: EdgeInsets.only(right: 10),
+                        margin: EdgeInsets.only(right: 10),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(40.w),
                           child: Image.file(
-                            File(ref.watch(conversationsProvider).selectedImage!.path),
+                            File(
+                              ref
+                                  .watch(conversationsProvider)
+                                  .selectedImage!
+                                  .path,
+                            ),
                             width: 50.w,
                             height: 50.h,
                             fit: BoxFit.cover,
@@ -483,22 +515,16 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         ),
                       ),
 
-                        Text(
-                   "Image",
-                   maxLines: 1,
-                   style: GoogleFonts.poppins(
-                    
-                  
-                   ),
-                  ),
+                      Text("Image", maxLines: 1, style: GoogleFonts.poppins()),
                     ],
                   ),
-                
+
                   IconButton(
                     onPressed: () {
-                    
-                      ref.read(conversationsProvider.notifier).clearSelectedImage();
-                    
+                      ref
+                          .read(conversationsProvider.notifier)
+                          .clearSelectedImage();
+
                       setState(() {
                         _lastProcessedImagePath = null;
                       });
@@ -515,12 +541,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 ],
               ),
             ),
-         
+
           Container(
             width: 339.w,
-            constraints: BoxConstraints(
-              maxHeight: 80.h, 
-            ),
+            constraints: BoxConstraints(maxHeight: 80.h),
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -534,7 +558,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               ],
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min, 
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
@@ -544,7 +568,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       controller: _messageController,
                       style: GoogleFonts.quicksand(fontSize: 14.w),
                       decoration: InputDecoration(
-                        hintText: ConversationStrings.askMentor(context, mentorName),
+                        hintText: ConversationStrings.askMentor(
+                          context,
+                          mentorName,
+                        ),
                         hintStyle: GoogleFonts.quicksand(
                           fontSize: 12.w,
                           fontWeight: FontWeight.w500,
@@ -568,9 +595,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max, 
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-
                     IconButton(
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
@@ -578,7 +604,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       icon: SvgPicture.asset(
                         'assets/svg/add_icon.svg',
                         width: 18.w,
-                        colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
+                        colorFilter: const ColorFilter.mode(
+                          Colors.black54,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
 
@@ -586,7 +615,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       IconButton(
                         padding: EdgeInsets.zero,
                         constraints: BoxConstraints(),
-                        onPressed: _isSendingImage ? null : (isRecording ? _sendVoiceMessageFromRecording : _sendMessage),
+                        onPressed: _isSendingImage
+                            ? null
+                            : (isRecording
+                                  ? _sendVoiceMessageFromRecording
+                                  : _sendMessage),
                         icon: Container(
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
@@ -599,10 +632,16 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                                   height: 16.h,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
                                   ),
                                 )
-                              : Icon(Icons.send, color: Colors.white, size: 16.w),
+                              : Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 16.w,
+                                ),
                         ),
                       ),
 
@@ -611,23 +650,21 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                     
                           GestureDetector(
                             onTap: () async {
-                            
                               if (!isRecording) {
                                 await _startRecording();
                               }
                             },
                             onLongPressStart: (details) async {
-                            
                               if (!isRecording) {
                                 await _startRecording();
                               }
                             },
                             onLongPressEnd: (details) async {
-                          
-                              debugPrint("🎤 onLongPressEnd tetiklendi, isRecording: $isRecording");
+                              debugPrint(
+                                "🎤 onLongPressEnd tetiklendi, isRecording: $isRecording",
+                              );
                               if (isRecording && _recorderController != null) {
                                 await _stopAndSendRecording();
                               }
@@ -646,16 +683,21 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                               ),
                             ),
                           ),
-                          
+
                           IconButton(
                             padding: EdgeInsets.zero,
                             constraints: BoxConstraints(),
                             onPressed: () {
-                              
-                         //     ref.read(conversationsProvider.notifier).startVideoCall(widget.specialistId,null);
-                            Navigator.pushNamed(context, PageRoutes.videoCallView);
+                              //     ref.read(conversationsProvider.notifier).startVideoCall(widget.specialistId,null);
+                              Navigator.pushNamed(
+                                context,
+                                PageRoutes.videoCallView,
+                              );
                             },
-                            icon: SvgPicture.asset('assets/svg/video_call.svg', width: 22.w),
+                            icon: SvgPicture.asset(
+                              'assets/svg/video_call.svg',
+                              width: 22.w,
+                            ),
                           ),
                         ],
                       ),
@@ -670,26 +712,26 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     );
   }
 
-
   Future<void> _sendMessage() async {
     final hasText = _messageController.text.trim().isNotEmpty;
-    final selectedImage = ref.watch(conversationsProvider.select((state) => state.selectedImage));
+    final selectedImage = ref.watch(
+      conversationsProvider.select((state) => state.selectedImage),
+    );
     final hasImage = selectedImage != null;
 
     if (!hasText && !hasImage) return;
 
     try {
       if (hasImage) {
-
-        final image = ref.watch(conversationsProvider.select((state) => state.selectedImage));
+        final image = ref.watch(
+          conversationsProvider.select((state) => state.selectedImage),
+        );
         if (image != null) {
           await _handleImageSelected(image);
         }
       } else if (hasText) {
-
         final trimmed = _messageController.text.trim();
         if (trimmed.isEmpty) return;
-
 
         if (hasImage) {
           ref.read(conversationsProvider.notifier).clearSelectedImage();
@@ -698,20 +740,21 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           });
         }
 
-
-        ref.read(conversationsProvider.notifier).sendMessage(
-              id: widget.specialistId.id,
-              text: trimmed,
-            ).then((_) {
-
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted) {
-              ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
-            }
-          });
-        }).catchError((e) {
-          debugPrint("❌ Mesaj gönderme hatası: $e");
-        });
+        ref
+            .read(conversationsProvider.notifier)
+            .sendMessage(id: widget.specialistId.id, text: trimmed)
+            .then((_) {
+              Future.delayed(const Duration(milliseconds: 500), () {
+                if (mounted) {
+                  ref
+                      .read(conversationsProvider.notifier)
+                      .getMessages(widget.specialistId.id);
+                }
+              });
+            })
+            .catchError((e) {
+              debugPrint("❌ Mesaj gönderme hatası: $e");
+            });
 
         _messageController.clear();
         setState(() {});
@@ -748,14 +791,12 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         ),
         child: Column(
           children: [
-            _buildMenuItem(
-              l10n.camera,
-              'assets/svg/camera_icon.svg',
-              () async {
-                _toggleMenu();
-                await ref.read(conversationsProvider.notifier).pickImageFromCamera();
-              },
-            ),
+            _buildMenuItem(l10n.camera, 'assets/svg/camera_icon.svg', () async {
+              _toggleMenu();
+              await ref
+                  .read(conversationsProvider.notifier)
+                  .pickImageFromCamera();
+            }),
             _buildMenuItem(
               l10n.gallery,
               'assets/svg/gallery_icon.svg',
@@ -781,7 +822,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               SvgPicture.asset(
                 svgPath,
                 width: 20.w,
-                colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
+                colorFilter: const ColorFilter.mode(
+                  Colors.black54,
+                  BlendMode.srcIn,
+                ),
               ),
               SizedBox(width: 8.w),
               Text(
@@ -801,7 +845,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   Widget _buildGreetingContent() {
     return Center(
       child: Text(
-        ChatStrings.greeting(context, ref.read(AllProviders.userProvider)?.username ?? "Mindcoach"),
+        ChatStrings.greeting(
+          context,
+          ref.read(AllProviders.userProvider)?.username ?? "Mindcoach",
+        ),
         textAlign: TextAlign.center,
         style: GoogleFonts.quicksand(
           fontSize: 48.w,
@@ -819,7 +866,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     );
   }
 
-
   Future<void> _sendVoiceMessage(String audioPath) async {
     try {
       final file = File(audioPath);
@@ -835,30 +881,33 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         return;
       }
 
-   
-      ref.read(conversationsProvider.notifier).sendVoiceMessage(
+      ref
+          .read(conversationsProvider.notifier)
+          .sendVoiceMessage(
             consultantId: widget.specialistId.id,
             audioFile: file,
-            message: null, 
-          ).then((_) {
-
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) {
-            ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
-          }
-        });
-      }).catchError((e) {
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Sesli mesaj gönderilemedi: ${e.toString()}'),
-              duration: const Duration(seconds: 3),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      });
+            message: null,
+          )
+          .then((_) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (mounted) {
+                ref
+                    .read(conversationsProvider.notifier)
+                    .getMessages(widget.specialistId.id);
+              }
+            });
+          })
+          .catchError((e) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Sesli mesaj gönderilemedi: ${e.toString()}'),
+                  duration: const Duration(seconds: 3),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -874,29 +923,27 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
   /// Kayıt başlat (onTap ve onLongPressStart için ortak metod)
   Future<void> _startRecording() async {
-    if (_recorderController == null) {
-      _recorderController = RecorderController()
-        ..androidEncoder = AndroidEncoder.aac
-        ..androidOutputFormat = AndroidOutputFormat.mpeg4
-        ..sampleRate = 44100 
-        ..bitRate = 128000; 
-     
-    }
-    
+    _recorderController ??= RecorderController()
+      ..androidEncoder = AndroidEncoder.aac
+      ..androidOutputFormat = AndroidOutputFormat.mpeg4
+      ..sampleRate = 44100
+      ..bitRate = 128000;
+
     final isRecording = ref.read(conversationsProvider).isRecording;
     if (!isRecording && _recorderController != null) {
       try {
-        final path = (await getTemporaryDirectory()).path + '/voice_message_${DateTime.now().millisecondsSinceEpoch}.m4a';
+        final path =
+            '${(await getTemporaryDirectory()).path}/voice_message_${DateTime.now().millisecondsSinceEpoch}.m4a';
         debugPrint(" Kayıt başlatılıyor: $path");
-        
+
         // State'i önce güncelle
-        await ref.read(conversationsProvider.notifier).startRecordingWithPath(path);
-        
+        await ref
+            .read(conversationsProvider.notifier)
+            .startRecordingWithPath(path);
+
         // Sonra kaydı başlat
         await _recorderController!.record(path: path);
-
       } catch (e, stackTrace) {
-
         await ref.read(conversationsProvider.notifier).cancelRecording();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -916,18 +963,15 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     if (isRecording && _recorderController != null) {
       try {
         debugPrint("RecorderController durduruluyor...");
-        
 
         final path = await _recorderController!.stop();
         debugPrint(" RecorderController durduruldu, path: $path");
-        
 
         if (path != null && path.isNotEmpty) {
-
           ref.read(conversationsProvider.notifier).updateRecordingPath(path);
 
           await ref.read(conversationsProvider.notifier).stopRecording();
-          
+
           // Dosya var mı kontrol et
           final file = File(path);
           if (await file.exists() && mounted) {
@@ -978,7 +1022,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     }
   }
 
-
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
@@ -988,78 +1031,72 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
   DateTime _parseSentTime(dynamic sentTime) {
     if (sentTime == null) {
-      return DateTime(1970); 
+      return DateTime(1970);
     }
-    
+
     if (sentTime is DateTime) {
       return sentTime;
     }
-    
+
     if (sentTime is String) {
       try {
         return DateTime.parse(sentTime);
       } catch (e) {
-      
         return DateTime(1970);
       }
     }
-    
-   
+
     return DateTime(1970);
   }
-
 
   Future<void> _handleImageSelected(XFile image) async {
     if (image.path == _lastProcessedImagePath || _isSendingImage) {
       return;
     }
-    
-  
+
     setState(() {
       _lastProcessedImagePath = image.path;
       _isSendingImage = true;
     });
-    
-    if (!mounted) return;
-    
-    try {
 
+    if (!mounted) return;
+
+    try {
       final file = File(image.path);
-      
 
       final messageText = _messageController.text.trim();
-      
-     
-      ref.read(conversationsProvider.notifier).sendImageMessage(
-        consultantId: widget.specialistId.id,
-        imageFile: file,
-        message: messageText.isNotEmpty ? messageText : null,
-      ).then((_) {
 
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) {
-            ref.read(conversationsProvider.notifier).getMessages(widget.specialistId.id);
-          }
-        });
-      }).catchError((e) {
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Resim gönderilemedi: ${e.toString()}'),
-              duration: const Duration(seconds: 3),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      });
-      
+      ref
+          .read(conversationsProvider.notifier)
+          .sendImageMessage(
+            consultantId: widget.specialistId.id,
+            imageFile: file,
+            message: messageText.isNotEmpty ? messageText : null,
+          )
+          .then((_) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (mounted) {
+                ref
+                    .read(conversationsProvider.notifier)
+                    .getMessages(widget.specialistId.id);
+              }
+            });
+          })
+          .catchError((e) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Resim gönderilemedi: ${e.toString()}'),
+                  duration: const Duration(seconds: 3),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          });
 
       _messageController.clear();
-      
 
       ref.read(conversationsProvider.notifier).clearSelectedImage();
-      
 
       if (mounted) {
         setState(() {
@@ -1067,10 +1104,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           _isSendingImage = false;
         });
       }
-      
-    
     } catch (e) {
-
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1080,7 +1114,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         ),
       );
     } finally {
-
       if (mounted) {
         setState(() {
           _isSendingImage = false;
@@ -1106,46 +1139,44 @@ class _MessageBubbleState extends State<_MessageBubble> {
   @override
   void initState() {
     super.initState();
-   
+
     _loadAudioDuration();
-    
 
     _globalAudioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
-        final isThisPlaying = _currentlyPlayingMessageId == widget.message.messageId.toString();
+        final isThisPlaying =
+            _currentlyPlayingMessageId == widget.message.messageId.toString();
         setState(() {
-          _isPlaying = isThisPlaying && state == audio_players.PlayerState.playing;
+          _isPlaying =
+              isThisPlaying && state == audio_players.PlayerState.playing;
         });
       }
     });
     _globalAudioPlayer.onDurationChanged.listen((duration) {
       if (mounted && duration != Duration.zero) {
-    
         setState(() {
           _duration = duration;
         });
       }
     });
     _globalAudioPlayer.onPlayerComplete.listen((_) {
-      if (mounted && _currentlyPlayingMessageId == widget.message.messageId.toString()) {
+      if (mounted &&
+          _currentlyPlayingMessageId == widget.message.messageId.toString()) {
         setState(() {
           _isPlaying = false;
         });
         _currentlyPlayingMessageId = null;
       }
     });
-    
-
   }
 
   Future<void> _loadAudioDuration() async {
-    if (widget.message.voiceURL != null && widget.message.voiceURL!.isNotEmpty) {
+    if (widget.message.voiceURL != null &&
+        widget.message.voiceURL!.isNotEmpty) {
       try {
-       
         final tempPlayer = audio_players.AudioPlayer();
         Duration? loadedDuration;
         bool durationLoaded = false;
-        
 
         final subscription = tempPlayer.onDurationChanged.listen((duration) {
           if (duration != Duration.zero && !durationLoaded) {
@@ -1153,19 +1184,20 @@ class _MessageBubbleState extends State<_MessageBubble> {
             durationLoaded = true;
           }
         });
-        
-        await tempPlayer.setSource(audio_players.UrlSource(widget.message.voiceURL!));
-        
+
+        await tempPlayer.setSource(
+          audio_players.UrlSource(widget.message.voiceURL!),
+        );
 
         int attempts = 0;
         while (!durationLoaded && attempts < 20 && mounted) {
           await Future.delayed(Duration(milliseconds: 100));
           attempts++;
         }
-        
+
         await subscription.cancel();
         await tempPlayer.dispose();
-        
+
         if (loadedDuration != null && mounted) {
           setState(() {
             _duration = loadedDuration!;
@@ -1174,14 +1206,12 @@ class _MessageBubbleState extends State<_MessageBubble> {
         }
       } catch (e) {
         debugPrint(" Ses süresi okunamadı: $e");
-      
       }
     }
   }
 
   @override
   void dispose() {
-
     if (_currentlyPlayingMessageId == widget.message.messageId.toString()) {
       _globalAudioPlayer.stop();
       _currentlyPlayingMessageId = null;
@@ -1192,8 +1222,8 @@ class _MessageBubbleState extends State<_MessageBubble> {
 
   Future<void> _togglePlayPause() async {
     try {
-
-      if (_currentlyPlayingMessageId != null && _currentlyPlayingMessageId != widget.message.messageId.toString()) {
+      if (_currentlyPlayingMessageId != null &&
+          _currentlyPlayingMessageId != widget.message.messageId.toString()) {
         await _globalAudioPlayer.stop();
       }
 
@@ -1204,13 +1234,15 @@ class _MessageBubbleState extends State<_MessageBubble> {
           _isPlaying = false;
         });
       } else {
-        if (widget.message.voiceURL != null && widget.message.voiceURL!.isNotEmpty) {
+        if (widget.message.voiceURL != null &&
+            widget.message.voiceURL!.isNotEmpty) {
           _currentlyPlayingMessageId = widget.message.messageId.toString();
-          
-          try {
 
-            await _globalAudioPlayer.setSource(audio_players.UrlSource(widget.message.voiceURL!));
-          
+          try {
+            await _globalAudioPlayer.setSource(
+              audio_players.UrlSource(widget.message.voiceURL!),
+            );
+
             await _globalAudioPlayer.resume();
             setState(() {
               _isPlaying = true;
@@ -1253,8 +1285,14 @@ class _MessageBubbleState extends State<_MessageBubble> {
   @override
   Widget build(BuildContext context) {
     final isMe = widget.message.sender == "user";
-    final hasImage = widget.message.isFile == true && widget.message.fileURL != null && widget.message.fileURL!.isNotEmpty;
-    final hasVoice = widget.message.isVoiceMessage == true && widget.message.voiceURL != null && widget.message.voiceURL!.isNotEmpty;
+    final hasImage =
+        widget.message.isFile == true &&
+        widget.message.fileURL != null &&
+        widget.message.fileURL!.isNotEmpty;
+    final hasVoice =
+        widget.message.isVoiceMessage == true &&
+        widget.message.voiceURL != null &&
+        widget.message.voiceURL!.isNotEmpty;
 
     return Padding(
       padding: EdgeInsets.only(bottom: 10.h),
@@ -1262,7 +1300,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 260.w),
-            child: Container(
+          child: Container(
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
             decoration: BoxDecoration(
               color: isMe ? const Color(0xFF2BD383) : const Color(0xFFF2F3F5),
@@ -1271,7 +1309,6 @@ class _MessageBubbleState extends State<_MessageBubble> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 if (hasImage)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12.w),
@@ -1283,7 +1320,10 @@ class _MessageBubbleState extends State<_MessageBubble> {
                         return Container(
                           height: 150.h,
                           color: Colors.grey[300],
-                          child: Icon(Icons.broken_image, color: Colors.grey[600]),
+                          child: Icon(
+                            Icons.broken_image,
+                            color: Colors.grey[600],
+                          ),
                         );
                       },
                       loadingBuilder: (context, child, loadingProgress) {
@@ -1294,7 +1334,8 @@ class _MessageBubbleState extends State<_MessageBubble> {
                           child: Center(
                             child: CircularProgressIndicator(
                               value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
                                   : null,
                             ),
                           ),
@@ -1306,7 +1347,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
                 if (hasVoice) ...[
                   if (hasImage) SizedBox(height: 8.h),
                   Row(
-                    mainAxisSize: MainAxisSize.min, 
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         padding: EdgeInsets.zero,
@@ -1321,51 +1362,67 @@ class _MessageBubbleState extends State<_MessageBubble> {
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Column(
-                          mainAxisSize: MainAxisSize.min, 
+                          mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          
                             StreamBuilder<Duration>(
-                              stream: _isPlaying 
-                                  ? Stream.periodic(Duration(milliseconds: 100), (_) {
-                                     
-                                      return Duration.zero; 
-                                    })
+                              stream: _isPlaying
+                                  ? Stream.periodic(
+                                      Duration(milliseconds: 100),
+                                      (_) {
+                                        return Duration.zero;
+                                      },
+                                    )
                                   : Stream.value(Duration.zero),
                               builder: (context, snapshot) {
                                 return SizedBox(
                                   height: 30.h,
-                                  width: double.infinity, 
+                                  width: double.infinity,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min, 
-                                    children: List.generate(
-                                      15, 
-                                      (index) {
-                                       
-                                        final random = (index * 7 + DateTime.now().millisecondsSinceEpoch) % 10;
-                                        return Flexible(
-                                          child: AnimatedContainer(
-                                            duration: Duration(milliseconds: 100),
-                                            width: 2.5.w, // 3.w'den 2.5.w'ye düşürüldü
-                                            height: _isPlaying 
-                                                ? (index % 3 == 0 ? 20.h + random : (index % 2 == 0 ? 12.h + (random ~/ 2) : 8.h + (random ~/ 3)))
-                                                : (index % 3 == 0 ? 20.h : (index % 2 == 0 ? 12.h : 8.h)),
-                                            decoration: BoxDecoration(
-                                              color: isMe ? Colors.white70 : Colors.black54,
-                                              borderRadius: BorderRadius.circular(2.w),
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: List.generate(15, (index) {
+                                      final random =
+                                          (index * 7 +
+                                              DateTime.now()
+                                                  .millisecondsSinceEpoch) %
+                                          10;
+                                      return Flexible(
+                                        child: AnimatedContainer(
+                                          duration: Duration(milliseconds: 100),
+                                          width: 2.5
+                                              .w, // 3.w'den 2.5.w'ye düşürüldü
+                                          height: _isPlaying
+                                              ? (index % 3 == 0
+                                                    ? 20.h + random
+                                                    : (index % 2 == 0
+                                                          ? 12.h + (random ~/ 2)
+                                                          : 8.h +
+                                                                (random ~/ 3)))
+                                              : (index % 3 == 0
+                                                    ? 20.h
+                                                    : (index % 2 == 0
+                                                          ? 12.h
+                                                          : 8.h)),
+                                          decoration: BoxDecoration(
+                                            color: isMe
+                                                ? Colors.white70
+                                                : Colors.black54,
+                                            borderRadius: BorderRadius.circular(
+                                              2.w,
                                             ),
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 );
                               },
                             ),
                             SizedBox(height: 4.h),
-                          
+
                             Text(
                               _duration != Duration.zero
                                   ? _formatDuration(_duration)
@@ -1383,7 +1440,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
                     ],
                   ),
                 ],
-            
+
                 if (widget.message.message.isNotEmpty && !hasVoice) ...[
                   if (hasImage) SizedBox(height: 8.h),
                   Text(
@@ -1396,7 +1453,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
                     ),
                   ),
                 ],
-              
+
                 SizedBox(height: 4.h),
                 Text(
                   _formatMessageTime(widget.message.sentTime),
@@ -1413,7 +1470,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
       ),
     );
   }
-  
+
   String _formatMessageTime(dynamic sentTime) {
     try {
       DateTime dateTime;
@@ -1426,11 +1483,11 @@ class _MessageBubbleState extends State<_MessageBubble> {
       } else {
         return '';
       }
-      
+
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
-      
+
       if (messageDate == today) {
         // Bugün: Sadece saat göster
         final hour = dateTime.hour.toString().padLeft(2, '0');
@@ -1455,4 +1512,3 @@ class _MessageBubbleState extends State<_MessageBubble> {
     }
   }
 }
-

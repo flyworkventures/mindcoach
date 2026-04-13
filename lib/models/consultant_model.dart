@@ -17,7 +17,8 @@ class ConsultantModel {
   final String? updatedAt; // Updated timestamp
   final String? voiceId; // Voice ID
   final List? roles; // Consultant roles
-  
+  final double rating; // Star rating (0-5)
+
   ConsultantModel({
     required this.id,
     required this.names,
@@ -32,6 +33,7 @@ class ConsultantModel {
     this.updatedAt,
     this.voiceId,
     this.roles,
+    this.rating = 0.0,
   });
 
   ConsultantModel copyWith({
@@ -48,6 +50,7 @@ class ConsultantModel {
     String? updatedAt,
     String? voiceId,
     List? roles,
+    double? rating,
   }) {
     return ConsultantModel(
       id: id ?? this.id,
@@ -63,6 +66,7 @@ class ConsultantModel {
       updatedAt: updatedAt ?? this.updatedAt,
       voiceId: voiceId ?? this.voiceId,
       roles: roles ?? this.roles,
+      rating: rating ?? this.rating,
     );
   }
 
@@ -81,6 +85,7 @@ class ConsultantModel {
       'updatedAt': updatedAt,
       'voiceId': voiceId,
       'roles': roles,
+      'rating': rating,
     };
   }
 
@@ -99,6 +104,7 @@ class ConsultantModel {
       updatedAt: map['updatedAt'] as String? ?? map['updated_at'] as String?,
       voiceId: map['voiceId'] as String? ?? map['voice_id'] as String?,
       roles: map['roles'] as List?,
+      rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -108,7 +114,7 @@ class ConsultantModel {
 
   @override
   String toString() {
-    return 'ConsultantModel(id: $id, names: $names, mainPrompt: $mainPrompt, photoURL: $photoURL, creadtedDate: $creadtedDate, explanation: $explanation, features: $features, job: $job, url3d: $url3d, createdAt: $createdAt, updatedAt: $updatedAt, voiceId: $voiceId, roles: $roles)';
+    return 'ConsultantModel(id: $id, names: $names, mainPrompt: $mainPrompt, photoURL: $photoURL, creadtedDate: $creadtedDate, explanation: $explanation, features: $features, job: $job, url3d: $url3d, createdAt: $createdAt, updatedAt: $updatedAt, voiceId: $voiceId, roles: $roles, rating: $rating)';
   }
 
   @override
@@ -128,7 +134,8 @@ class ConsultantModel {
       other.createdAt == createdAt &&
       other.updatedAt == updatedAt &&
       other.voiceId == voiceId &&
-      listEquals(other.roles, roles);
+      listEquals(other.roles, roles) &&
+      other.rating == rating;
   }
 
   @override
@@ -145,6 +152,7 @@ class ConsultantModel {
       createdAt.hashCode ^
       updatedAt.hashCode ^
       voiceId.hashCode ^
-      (roles?.hashCode ?? 0);
+      (roles?.hashCode ?? 0) ^
+      rating.hashCode;
   }
 }

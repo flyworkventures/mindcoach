@@ -40,7 +40,7 @@ import 'package:mindcoach/models/user_model.dart';
       Logger.info(text: 'Session Temizlendi', className: 'ProfileSettingsController', functionName: 'logout');
       ref.read(bottomNavProvider.notifier).setTab(0);
       state = PageState.normal;
-      navigatorKey.currentState?.pushNamedAndRemoveUntil(PageRoutes.onboarding, (a)=> false);
+      navigatorKey.currentState?.pushNamedAndRemoveUntil(PageRoutes.login, (a)=> false);
   Logger.info(text: 'Navigated to Onboarding and cleared routes', className: 'ProfileSettingsController', functionName: 'logout');
 
      } catch (e, st) {

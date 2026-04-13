@@ -129,7 +129,7 @@ class _MeetingTimeCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       color: isSelected
                           ? const Color(0xFF21BC87)
-                          : const Color(0xFF1D1D1D),
+                          : const Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
                   Text(

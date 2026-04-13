@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/routes/page_routes.dart';
-import '../../core/utils/screen_size_extensions.dart';
 import '../../l10n/app_localizations.dart';
-
-import 'constants/test_colors.dart';
 import 'notifiers/test_flow_notifier.dart';
-import 'widgets/test_header.dart';
 
 class TestIntroScreen extends ConsumerWidget {
   final String testName;
@@ -30,139 +25,177 @@ class TestIntroScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: TestColors.pageBackground,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: TestColors.pageBackground,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: Colors.white, // Tasarımdaki bembeyaz arkaplan
+      body: SafeArea(
+        child: Column(
+          children: [
+            // --- HEADER ---
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
                 children: [
-                  TestHeader(title: testName),
-
-                  SizedBox(height: 36.h),
-
-                  // Title + questions count
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          testTitle,
-                          style: GoogleFonts.quicksand(
-                            fontSize: 20.w,
-                            fontWeight: FontWeight.w700,
-                            height: 24 / 20,
-                            color: TestColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        l10n.questionsForAdults(totalQuestions),
-                        style: GoogleFonts.quicksand(
-                          fontSize: 14.w,
-                          fontWeight: FontWeight.w500,
-                          height: 18 / 14,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 16.h),
-
-                  // Card
-                  Center(
-                    child: Container(
-                      width: 323.w,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(29.w),
-                        border: Border.all(color: TestColors.cardBorderSoft, width: 1.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(13.w),
-                            child: SvgPicture.asset(imagePath, height: 150.h),
-                          ),
-                          SizedBox(height: 25.h),
-                          _RuleList(rules: [l10n.testRule1, l10n.testRule2, l10n.testRule3]),
-                          SizedBox(height: 15.h),
-                          const Divider(color: TestColors.borderLight, thickness: 1.0),
-                          SizedBox(height: 10.h),
-                          Text(
-                            l10n.testDisclaimer,
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.quicksand(
-                              fontSize: 13.w,
-                              fontWeight: FontWeight.w300,
-                              height: 15 / 13,
-                              color: Colors.grey.shade700,
-                            ),
-                          ),
-                        ],
-                      ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 16,
+                      color: Colors.black,
                     ),
                   ),
-
-                  SizedBox(height: 20.h),
-
-                  // Continue
-                  Center(
-                    child: InkWell(
-                      onTap: () {
-                        ref.read(testFlowProvider.notifier).initTest(
-                          testName: testName,
-                          testTitle: testTitle,
-                          imagePath: imagePath,
-                          totalQuestions: totalQuestions,
-                        );
-
-                        Navigator.pushNamed(context, PageRoutes.testQuestionScreen);
-                      },
-                      child: Container(
-                        width: 317.w,
-                        height: 44.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: TestColors.brandPrimaryGreen,
-                          borderRadius: BorderRadius.circular(50.w),
-                        ),
-                        child: Text(
-                          l10n.continueButton,
-                          style: GoogleFonts.quicksand(
-                            fontSize: 17.w,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                  const SizedBox(width: 16),
+                  Text(
+                    testName, // Örn: Mental Test
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
+
+            const SizedBox(height: 24),
+
+            // --- TITLE & SUBTITLE ---
+            Text(
+              testTitle, // Örn: Stress scale test
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 16,
+                fontWeight: FontWeight.w600, // SemiBold
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              l10n.questionsForAdults(
+                totalQuestions,
+              ), // Örn: 7 Questions for Adults
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 12,
+                fontWeight: FontWeight.w500, // Medium
+                color: Color(0xFF96989C), // Gri ikincil renk
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 24),
+
+            // --- MAIN CARD ---
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: Colors.black.withValues(alpha: 0.05),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(
+                          alpha: 0.03,
+                        ), // Çok hafif gölge
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      // Illustration
+                      SvgPicture.asset(
+                        imagePath, // Örn: 'assets/svg/stressed.svg'
+                        height: 180,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(height: 32),
+
+                      // Rules List
+                      _RuleList(
+                        rules: [l10n.testRule1, l10n.testRule2, l10n.testRule3],
+                      ),
+
+                      const SizedBox(height: 24),
+                      const Divider(
+                        color: Color(0xFFE8E8E8),
+                        thickness: 1.0,
+                        height: 1,
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Disclaimer Text
+                      Text(
+                        l10n.testDisclaimer,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300, // Light
+                          color: Color(0xFF96989C),
+                          height: 16 / 12, // Figma'daki line-height
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // --- BOTTOM CONTINUE BUTTON ---
+            Padding(
+              padding: const EdgeInsets.only(left: 24, right: 24, top: 12),
+              child: GestureDetector(
+                onTap: () {
+                  ref
+                      .read(testFlowProvider.notifier)
+                      .initTest(
+                        testName: testName,
+                        testTitle: testTitle,
+                        imagePath: imagePath,
+                        totalQuestions: totalQuestions,
+                      );
+                  Navigator.pushNamed(context, PageRoutes.testQuestionScreen);
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: const Color(
+                      0xFF21BC87,
+                    ), // Tasarımdaki yeşil ton (yaklaşık değer)
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Continue', // veya l10n.continueButton
+                    style: TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
+// ============================================================================
+// KURALLAR LİSTESİ WIDGET'I
+// ============================================================================
 class _RuleList extends StatelessWidget {
   const _RuleList({required this.rules});
   final List<String> rules;
@@ -172,39 +205,47 @@ class _RuleList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: rules.map((rule) {
+        // Metin içindeki kalın (bold) yapılması gereken kısımları "**" işaretinden ayırıyoruz
         final parts = rule.split('**');
+
         return Padding(
-          padding: EdgeInsets.only(bottom: 4.h),
+          padding: const EdgeInsets.only(bottom: 8), // Satırlar arası boşluk
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Madde İşareti (Nokta)
               Container(
-                margin: EdgeInsets.only(top: 5.h, right: 8.w),
-                width: 4.w,
-                height: 4.h,
+                margin: const EdgeInsets.only(top: 6, right: 8),
+                width: 4,
+                height: 4,
                 decoration: const BoxDecoration(
-                  color: TestColors.textPrimary,
+                  color: Colors.black,
                   shape: BoxShape.circle,
                 ),
               ),
+              // Metin
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: GoogleFonts.quicksand(
-                      fontSize: 15.w,
-                      fontWeight: FontWeight.w500,
-                      height: 20 / 15,
-                      color: TestColors.textPrimary,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400, // Regular
+                      color: Colors.black,
+                      height: 20 / 14, // Figma Line Height: 20px
                     ),
                     children: [
                       for (var i = 0; i < parts.length; i++)
                         TextSpan(
                           text: parts[i],
-                          style: GoogleFonts.quicksand(
-                            fontWeight: i.isOdd ? FontWeight.w700 : FontWeight.w500,
-                            fontSize: 15.w,
-                            height: 20 / 15,
-                            color: TestColors.textPrimary,
+                          style: TextStyle(
+                            fontFamily: 'Geist',
+                            // ** arasındaki metinler bold olacak
+                            fontWeight: i.isOdd
+                                ? FontWeight.w700
+                                : FontWeight.w400,
+                            fontSize: 14,
+                            color: Colors.black,
                           ),
                         ),
                     ],

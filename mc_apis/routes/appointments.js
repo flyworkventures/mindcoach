@@ -45,9 +45,7 @@ router.post('/webhook', async (req, res) => {
       error: error.message || 'Internal server error'
     });
   }
-});
-
-/**
+});/**
  * @route GET /appointments/user/:userId
  * @desc Get all appointments for a user
  * @param {number} userId - User ID
@@ -113,7 +111,6 @@ router.get('/user/:userId/upcoming', authenticate, async (req, res) => {
     }
 
     const appointment = await AppointmentService.getUpcomingAppointmentByUserId(userId);
-
     if (!appointment) {
       return res.status(200).json({
         success: true,
@@ -128,6 +125,111 @@ router.get('/user/:userId/upcoming', authenticate, async (req, res) => {
     });
   } catch (error) {
     console.error('Error getting upcoming appointment:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Internal server error'
+    });
+  }
+});
+
+
+router.delete('/:id', authenticate, async (req, res) => {
+  try {
+    const appointmentId = parseInt(req.params.id);
+    const userId = req.userId; // From authentication middleware
+
+    if (isNaN(appointmentId)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid appointment ID'
+      });
+    }
+
+    const result = await AppointmentService.cancelAppointment(appointmentId, userId);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      data: result.appointment
+    });
+  } catch (error) {
+    console.error('Error cancelling appointment:', error);
+
+    // Handle specific error cases
+    if (error.message === 'Appointment not found') {
+      return res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    }
+
+    if (error.message === 'Unauthorized: Appointment does not belong to user') {
+      return res.status(403).json({
+        success: false,
+        error: error.message
+      });
+    }
+
+    if (error.message === 'Appointment is already cancelled' ||
+      error.message === 'Cannot cancel a completed appointment') {
+      return res.status(400).json({
+        success: false,
+        error: error.message
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Internal server error'
+    });
+  }
+});
+
+router.put('/:id/reactivate', authenticate, async (req, res) => {
+  try {
+    const appointmentId = parseInt(req.params.id);
+    const userId = req.userId; // From authentication middleware
+
+    if (isNaN(appointmentId)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid appointment ID'
+      });
+    }
+
+    const result = await AppointmentService.reactivateAppointment(appointmentId, userId);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      data: result.appointment
+    });
+  } catch (error) {
+    console.error('Error reactivating appointment:', error);
+
+    // Handle specific error cases
+    if (error.message === 'Appointment not found') {
+      return res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    }
+
+    if (error.message === 'Unauthorized: Appointment does not belong to user') {
+      return res.status(403).json({
+        success: false,
+        error: error.message
+      });
+    }
+
+    if (error.message.includes('Cannot reactivate appointment with status') ||
+      error.message === 'Cannot reactivate an appointment that has already passed') {
+      return res.status(400).json({
+        success: false,
+        error: error.message
+      });
+    }
+
     res.status(500).json({
       success: false,
       error: error.message || 'Internal server error'

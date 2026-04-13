@@ -9,6 +9,40 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get relaxingSound => 'Entspannende Klänge';
+
+  @override
+  String get seeAll => 'Alle ansehen';
+
+  @override
+  String get premiumHeadlinePart1 => 'Ein Raum, um ohne Vorurteile ';
+
+  @override
+  String get premiumHeadlineHighlight => 'verstanden';
+
+  @override
+  String get premiumHeadlinePart2 => ' zu werden.';
+
+  @override
+  String get premiumSubtitle =>
+      'Tausende haben diesen Schritt bereits gewagt. Jetzt bist du an der Reihe — 3 Tage völlig kostenlos.';
+
+  @override
+  String get premiumFeature1 => '24/7 unbegrenzter Zugang';
+
+  @override
+  String get premiumFeature2 => 'Vorrangiger und schneller Zugriff';
+
+  @override
+  String get premiumFeature3 => 'Speziell auf dich zugeschnittene KI';
+
+  @override
+  String get premiumAnnualDiscount => '40% Rabatt auf das Jahresabo';
+
+  @override
+  String get premiumCta => 'Loslegen';
+
+  @override
   String get onboardingTitle1 => 'Fühlen Sie sich überfordert?';
 
   @override
@@ -84,6 +118,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get findMyCoaches => 'Meine Coaches finden';
+
+  @override
+  String get loginSubtitle =>
+      'Melde dich an, um deinen Coach zu finden und deine Reise zu starten. Dauert 2 Minuten.';
+
+  @override
+  String get continueWithGoogle => 'Weiter mit Google';
+
+  @override
+  String get continueWithApple => 'Weiter mit Apple';
+
+  @override
+  String get dataPrivacyNotice =>
+      'Deine Daten werden niemals an Dritte weitergegeben. Du kannst dein Konto jederzeit löschen.';
 
   @override
   String get approachTitle => 'Wie soll dein Coach auf dich zugehen?';
@@ -811,5 +859,377 @@ class AppLocalizationsDe extends AppLocalizations {
   String get jobFamilyAssistant => 'Familien-Coach';
 
   @override
+  String get jobAdult => 'Erwachsenen-Coach';
+
+  @override
+  String get jobChild => 'Kinder-Coach';
+
+  @override
+  String get jobTeenage => 'Jugend-Coach';
+
+  @override
+  String get jobPersonal => 'Persönlicher Coach';
+
+  @override
+  String get jobExamAnxiety => 'Prüfungsangst-Coach';
+
+  @override
   String get noSpecialistsFound => 'Keine Spezialisten gefunden';
+
+  @override
+  String get featureFamilyConflicts => 'Familienkonflikte';
+
+  @override
+  String get featureParenting => 'Erziehung';
+
+  @override
+  String get featureCommunication => 'Kommunikation';
+
+  @override
+  String get featureBoundaries => 'Grenzen setzen';
+
+  @override
+  String get featureRelationshipRepair => 'Beziehungsreparatur';
+
+  @override
+  String get featureDivorceSupport => 'Scheidungsunterstützung';
+
+  @override
+  String get featureChildBehavior => 'Kinderverhalten';
+
+  @override
+  String get featureFamilyHarmony => 'Familienharmonie';
+
+  @override
+  String get featureStressManagement => 'Stressbewältigung';
+
+  @override
+  String get featureSelfConfidence => 'Selbstvertrauen';
+
+  @override
+  String get featureLifeBalance => 'Lebensbalance';
+
+  @override
+  String get featureCareerGuidance => 'Karriereberatung';
+
+  @override
+  String get featureEmotionalRegulation => 'Emotionsregulierung';
+
+  @override
+  String get featureDecisionMaking => 'Entscheidungsfindung';
+
+  @override
+  String get featureMotivation => 'Motivation';
+
+  @override
+  String get featurePersonalGrowth => 'Persönliches Wachstum';
+
+  @override
+  String get featureEmotionalAwareness => 'Emotionales Bewusstsein';
+
+  @override
+  String get featureSocialSkills => 'Soziale Fähigkeiten';
+
+  @override
+  String get featureSchoolAdaptation => 'Schulanpassung';
+
+  @override
+  String get featureSelfExpression => 'Selbstausdruck';
+
+  @override
+  String get featureFearManagement => 'Angstbewältigung';
+
+  @override
+  String get featureFriendshipBuilding => 'Freundschaften aufbauen';
+
+  @override
+  String get featureFocusAttention => 'Fokus und Aufmerksamkeit';
+
+  @override
+  String get featureBehavioralSupport => 'Verhaltensunterstützung';
+
+  @override
+  String get featureIdentityDevelopment => 'Identitätsentwicklung';
+
+  @override
+  String get featurePeerPressure => 'Gruppendruck';
+
+  @override
+  String get featureAcademicStress => 'Akademischer Stress';
+
+  @override
+  String get featureSelfEsteem => 'Selbstwertgefühl';
+
+  @override
+  String get featureDigitalWellbeing => 'Digitales Wohlbefinden';
+
+  @override
+  String get featureAngerManagement => 'Wutbewältigung';
+
+  @override
+  String get featureFuturePlanning => 'Zukunftsplanung';
+
+  @override
+  String get featureParentCommunication => 'Elternkommunikation';
+
+  @override
+  String get featureLoneliness => 'Einsamkeit';
+
+  @override
+  String get featureAnxietySupport => 'Angstunterstützung';
+
+  @override
+  String get featureGriefProcessing => 'Trauerverarbeitung';
+
+  @override
+  String get featureMindfulness => 'Achtsamkeit';
+
+  @override
+  String get featureSleepImprovement => 'Schlafverbesserung';
+
+  @override
+  String get featureOverthinking => 'Überdenken';
+
+  @override
+  String get featureSelfDiscovery => 'Selbstfindung';
+
+  @override
+  String get featureEmotionalHealing => 'Emotionale Heilung';
+
+  @override
+  String get featureTestAnxiety => 'Prüfungsangst';
+
+  @override
+  String get featureStudyTechniques => 'Lerntechniken';
+
+  @override
+  String get featureTimeManagement => 'Zeitmanagement';
+
+  @override
+  String get featurePerformancePressure => 'Leistungsdruck';
+
+  @override
+  String get featureConcentration => 'Konzentration';
+
+  @override
+  String get featureRelaxationMethods => 'Entspannungsmethoden';
+
+  @override
+  String get featureExamPreparation => 'Prüfungsvorbereitung';
+
+  @override
+  String get featureConfidenceBuilding => 'Selbstvertrauen aufbauen';
+
+  @override
+  String get explanationFamilyAssistant =>
+      'Ein Familien-Coach, der Ihnen hilft, Familiendynamiken zu navigieren, Konflikte zu lösen, Eltern-Kind-Bindungen zu stärken und ein harmonischeres Zuhause zu schaffen. Ob Kommunikationsprobleme, Grenzfragen oder große Lebensübergänge wie Scheidung – Ihr Coach bietet einen sicheren Raum, um gemeinsam Lösungen zu finden.';
+
+  @override
+  String get explanationAdult =>
+      'Ein Coach für persönliche Entwicklung, der für Erwachsene konzipiert ist, die ihr Leben in die Hand nehmen wollen. Von der Stressbewältigung über den Aufbau von Selbstvertrauen bis hin zu wichtigen Karriereentscheidungen und der Suche nach Lebensbalance – Ihr Coach unterstützt Sie mit praktischen Strategien, die auf Ihre einzigartigen Herausforderungen zugeschnitten sind.';
+
+  @override
+  String get explanationChild =>
+      'Ein einfühlsamer und unterstützender Coach, der speziell dafür ausgebildet ist, Kindern zu helfen, ihre Emotionen auszudrücken, soziale Fähigkeiten aufzubauen und sich an das Schulleben anzupassen. Mit altersgerechten Techniken hilft Ihr Coach Kindern, Ängste zu überwinden, die Konzentration zu verbessern und gesunde Freundschaften in einer sicheren Umgebung aufzubauen.';
+
+  @override
+  String get explanationTeenage =>
+      'Ein Coach, der die Erfahrungen von Teenagern wirklich versteht. Von Identitätsfindung und Gruppendruck über akademischen Stress bis hin zu digitalem Wohlbefinden – Ihr Coach hilft Jugendlichen, Selbstwertgefühl aufzubauen, Emotionen zu bewältigen und die Zukunft zu planen, während sie eine gesunde Kommunikation mit den Eltern pflegen.';
+
+  @override
+  String get explanationPersonal =>
+      'Ein mitfühlender persönlicher Coach, der sich auf Ihr inneres Wohlbefinden konzentriert. Ob Sie mit Einsamkeit, Angst, Trauer oder einfach nur Überdenken kämpfen – Ihr Coach führt Sie durch Achtsamkeitsübungen, emotionale Heilungstechniken und Selbstfindungsübungen, um Frieden und Klarheit zu finden.';
+
+  @override
+  String get explanationExamAnxiety =>
+      'Ein spezialisierter Coach, der Schülern hilft, Prüfungsangst zu überwinden und ihr wahres akademisches Potenzial freizusetzen. Durch bewährte Lerntechniken, Entspannungsmethoden und vertrauensbildende Übungen verwandelt Ihr Coach Prüfungsstress in fokussierte Vorbereitung und ruhige Leistung.';
+
+  @override
+  String get explanationFamilyAssistant1 =>
+      'Ein engagierter Familien-Coach, der sich auf die Lösung tief verwurzelter Familienkonflikte und den Wiederaufbau belasteter Beziehungen spezialisiert hat. Mit Expertise in Erziehungsherausforderungen, Kommunikationsfähigkeiten und dem Setzen gesunder Grenzen begleitet dieser Coach Familien durch schwierige Übergänge wie Scheidung und unterstützt Kinder bei Verhaltensänderungen — in einem sicheren, wertfreien Raum.';
+
+  @override
+  String get explanationFamilyAssistant2 =>
+      'Ein warmherziger und einfühlsamer Familien-Coach, der sich auf die Stärkung der wichtigsten Bindungen konzentriert. Spezialisiert auf effektive Erziehungsstrategien, offene Kommunikation und Beziehungsreparatur hilft dieser Coach Familien, nach schwierigen Phasen wie Trennung oder Scheidung zu heilen und die emotionale sowie Verhaltensentwicklung der Kinder für dauerhafte Harmonie zu fördern.';
+
+  @override
+  String get explanationAdult1 =>
+      'Ein ergebnisorientierter Coach für Erwachsene, die bedeutsame Veränderungen suchen. Mit Fokus auf Stressbewältigung, Lebensbalance und Karriereberatung hilft dieser Coach Ihnen, Ihre Emotionen zu regulieren, selbstbewusste Entscheidungen zu treffen und durch praktische, zielorientierte Strategien nachhaltiges persönliches Wachstum zu erreichen.';
+
+  @override
+  String get explanationAdult2 =>
+      'Ein ganzheitlicher Entwicklungscoach, der Erwachsene befähigt, ihr volles Potenzial auszuschöpfen. Vom Aufbau unerschütterlichen Selbstvertrauens und Stressbewältigung über Karriereorientierung bis hin zu täglicher Motivation vereint dieser Coach Emotionsregulierungstechniken mit umsetzbaren Lebensstrategien für dauerhafte positive Veränderung.';
+
+  @override
+  String get explanationTeenage1 =>
+      'Ein Coach, der die einzigartigen Herausforderungen der Adoleszenz zutiefst versteht. Von Identitätsentwicklung und Widerstand gegen Gruppendruck über akademischen Stress bis hin zu gesunden digitalen Gewohnheiten hilft dieser Coach Teenagern, ihr Selbstwertgefühl zu stärken, Wut zu kontrollieren, ihre Zukunft zu planen und offen mit ihren Eltern zu kommunizieren.';
+
+  @override
+  String get explanationTeenage2 =>
+      'Ein einfühlsamer Wegbegleiter durch die turbulenten Jugendjahre. Spezialisiert auf Identitätsfindung, akademischen Druck und digitales Wohlbefinden befähigt dieser Coach Jugendliche, Widerstandskraft gegen Gruppeneinfluss zu entwickeln, Wut konstruktiv zu bewältigen, langfristige Ziele aufzubauen und gesunde Eltern-Teenager-Beziehungen zu pflegen.';
+
+  @override
+  String get explanationChild1 =>
+      'Ein fürsorglicher Coach, der Kinder in ihren prägendsten Jahren unterstützt. Mit sanften, altersgerechten Methoden hilft dieser Coach Kindern, emotionales Bewusstsein zu entwickeln, soziale Fähigkeiten aufzubauen, sich an das Schulleben anzupassen, sich frei auszudrücken, Ängste zu überwinden, bedeutungsvolle Freundschaften zu schließen, die Konzentration zu verbessern und positive Verhaltensmuster zu entwickeln.';
+
+  @override
+  String get explanationChild2 =>
+      'Ein liebevoller und geduldiger Coach, der sich dem Gedeihen von Kindern widmet. Mit Fokus auf emotionale Intelligenz, soziale Entwicklung und Schulanpassung schafft dieser Coach eine sichere Umgebung, in der Kinder lernen, ihre Gefühle auszudrücken, Ängste zu überwinden, dauerhafte Freundschaften aufzubauen, ihre Konzentration zu stärken und die Verhaltensunterstützung zu erhalten, die sie für selbstbewusstes Wachstum brauchen.';
+
+  @override
+  String get explanationPersonal1 =>
+      'Ein zutiefst mitfühlender Coach, der sich auf Ihr emotionales Wohlbefinden und Ihren inneren Frieden konzentriert. Ob Sie Einsamkeit, Angst, Trauer oder schlaflose Nächte erleben — dieser Coach führt Sie durch Achtsamkeitspraktiken, emotionale Heilungsprozesse und Selbstfindungsreisen, um sich vom Überdenken zu befreien und dauerhafte Klarheit zu finden.';
+
+  @override
+  String get explanationPersonal2 =>
+      'Ein unterstützender und intuitiver persönlicher Coach, der Ihnen hilft, sich wieder mit sich selbst zu verbinden. Spezialisiert auf Angstbewältigung, Achtsamkeitstechniken und Schlafverbesserung führt dieser Coach Sie sanft durch Muster des Überdenkens und emotionaler Belastung hin zu echtem Heilen und einem erneuerten Gefühl innerer Ruhe.';
+
+  @override
+  String get explanationExamAnxiety1 =>
+      'Ein fokussierter und methodischer Coach, der Prüfungsstress in selbstbewusste Leistung verwandelt. Spezialisiert auf Zeitmanagement, Umgang mit Leistungsdruck und Aufbau tiefer Konzentration stattet dieser Coach Schüler mit praktischen Entspannungsmethoden, strukturierten Prüfungsvorbereitungstechniken und vertrauensbildenden Strategien für akademischen Erfolg aus.';
+
+  @override
+  String get explanationExamAnxiety2 =>
+      'Ein spezialisierter akademischer Coach, der Schülern hilft, Prüfungsangst zu überwinden und klüger zu lernen. Durch bewährte Lerntechniken, effektives Zeitmanagement und Resilienz gegen Leistungsdruck baut dieser Coach tiefe Konzentrationsfähigkeiten, strukturierte Prüfungsvorbereitungsgewohnheiten und dauerhaftes Selbstvertrauen für jeden Prüfungstag auf.';
+
+  @override
+  String get filterTitle => 'Filtern';
+
+  @override
+  String get filterCoachingArea => 'Coaching-Bereich';
+
+  @override
+  String get filterExpertise => 'Fachgebiet';
+
+  @override
+  String get filterSelectCoachingArea => 'Coaching-Bereich auswählen';
+
+  @override
+  String get filterSave => 'Speichern';
+
+  @override
+  String get coachDetailInformation => 'Informationen';
+
+  @override
+  String get coachDetailUnlimitedMemory => 'Unbegrenzt';
+
+  @override
+  String get coachDetailMemory => 'Gedächtnis';
+
+  @override
+  String get coachDetailMultilingual => 'Mehrsprachig';
+
+  @override
+  String get coachDetailLanguage => 'Sprache';
+
+  @override
+  String get coachDetailAvailability => 'Verfügbarkeit';
+
+  @override
+  String get coachDetailAppointment => 'Termin';
+
+  @override
+  String get coachDetailStartVideoCall => 'Videoanruf starten';
+
+  @override
+  String get coachDetailOnline => 'Online';
+
+  @override
+  String get coachDetailVerified => 'Verifiziert';
+
+  @override
+  String get coachDetailCreateAppointment => 'Termin erstellen';
+
+  @override
+  String get searchSoundHint => 'Sounds, Stimmungen, Vibes suchen..';
+
+  @override
+  String get featuredForYou => 'Für dich empfohlen';
+
+  @override
+  String get mostPopular => 'Am beliebtesten';
+
+  @override
+  String get soundCategoryFocus => 'Fokus';
+
+  @override
+  String get soundCategorySleep => 'Schlaf';
+
+  @override
+  String get soundCategoryMeditation => 'Meditation';
+
+  @override
+  String get soundCategoryRelax => 'Entspannen';
+
+  @override
+  String get soundDeepWorkFlow => 'Deep Work Flow';
+
+  @override
+  String get soundDeepWorkFlowSub => 'Steigere deine Produktivität';
+
+  @override
+  String get soundBinauralBeats => 'Binaurale Beats';
+
+  @override
+  String get soundBinauralBeatsSub => 'Stimme deine Gehirnwellen ab';
+
+  @override
+  String get soundLibraryAmbience => 'Bibliotheks-Ambiente';
+
+  @override
+  String get soundLibraryAmbienceSub => 'Ruhige Studienatmosphäre';
+
+  @override
+  String get soundRainOnWindow => 'Regen am Fenster';
+
+  @override
+  String get soundRainOnWindowSub => 'Gleite in ruhigen Schlaf';
+
+  @override
+  String get soundOceanWaves => 'Meereswellen';
+
+  @override
+  String get soundOceanWavesSub => 'Beruhigende Wellenrhythmen';
+
+  @override
+  String get soundDeepSpaceDrone => 'Weltraum-Drone';
+
+  @override
+  String get soundDeepSpaceDroneSub => 'Kosmische Ambient-Reise';
+
+  @override
+  String get soundTibetanBowls => 'Tibetische Klangschalen';
+
+  @override
+  String get soundTibetanBowlsSub => 'Uralte Heilschwingungen';
+
+  @override
+  String get soundForestBirds => 'Waldvögel';
+
+  @override
+  String get soundForestBirdsSub => 'Morgenmelodie der Natur';
+
+  @override
+  String get soundMorningZen => 'Morgen-Zen';
+
+  @override
+  String get soundMorningZenSub => 'Starte achtsam in den Tag';
+
+  @override
+  String get soundFireplaceCrackle => 'Kaminknistern';
+
+  @override
+  String get soundFireplaceCrackleSub => 'Warme und gemütliche Vibes';
+
+  @override
+  String get soundGentleStream => 'Sanfter Bach';
+
+  @override
+  String get soundGentleStreamSub => 'Fließende Wasserruhe';
+
+  @override
+  String get soundSoftPiano => 'Sanftes Klavier';
+
+  @override
+  String get soundSoftPianoSub => 'Zarte Melodien zum Entspannen';
 }

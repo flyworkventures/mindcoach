@@ -1,23 +1,22 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mindcoach/View/chat_screen/conversation/conversation_page.dart';
 import 'package:mindcoach/core/global_constants/month_strings.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
-import 'package:mindcoach/core/utils/job_convert.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
+import 'package:mindcoach/core/utils/job_convert.dart';
 import 'package:mindcoach/models/consultant_model.dart';
+
 import '../specialists_screen/specialists_notifier.dart';
-import '../chat_screen/presentation/pages/conversation_screen.dart';
 import 'appointment_video_call_screen.dart';
 
 class AppointmentDetailScreen extends ConsumerStatefulWidget {
   final AppointmentInfo appointment;
 
-  const AppointmentDetailScreen({
-    super.key,
-    required this.appointment,
-  });
+  const AppointmentDetailScreen({super.key, required this.appointment});
 
   @override
   ConsumerState<AppointmentDetailScreen> createState() =>
@@ -101,9 +100,9 @@ class _AppointmentDetailScreenState
 
     // Randevu zamanı gelmiş mi kontrol et (5 dakika tolerans)
     if (timeDifference.inMinutes < -5) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Randevu zamanı geçmiş')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Randevu zamanı geçmiş')));
       return;
     }
 
@@ -112,7 +111,8 @@ class _AppointmentDetailScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Randevu zamanı henüz gelmedi. Kalan süre: ${timeDifference.inHours} saat ${timeDifference.inMinutes % 60} dakika'),
+            'Randevu zamanı henüz gelmedi. Kalan süre: ${timeDifference.inHours} saat ${timeDifference.inMinutes % 60} dakika',
+          ),
         ),
       );
       return;
@@ -121,9 +121,8 @@ class _AppointmentDetailScreenState
     // Randevu zamanı geldi, video call ekranına yönlendir
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AppointmentVideoCallScreen(
-          appointment: widget.appointment,
-        ),
+        builder: (context) =>
+            AppointmentVideoCallScreen(appointment: widget.appointment),
       ),
     );
   }
@@ -134,16 +133,16 @@ class _AppointmentDetailScreenState
       // ConsultantModel henüz yüklenmemişse, tekrar dene
       final consultantId = widget.appointment.consultantId;
       if (consultantId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Consultant bulunamadı')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Consultant bulunamadı')));
         return;
       }
 
       try {
         final consultantsState = ref.read(specialistsProvider);
         final consultants = consultantsState.specialists;
-        
+
         if (consultants == null || consultants.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Consultant listesi yüklenemedi')),
@@ -155,12 +154,12 @@ class _AppointmentDetailScreenState
           (c) => c.id == consultantId,
           orElse: () => consultants.first,
         );
-        
+
         _consultantModel = consultant;
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Consultant yüklenemedi: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Consultant yüklenemedi: $e')));
         return;
       }
     }
@@ -168,9 +167,8 @@ class _AppointmentDetailScreenState
     // ConversationScreen'e yönlendir
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ConversationScreen(
-          specialistId: _consultantModel!,
-        ),
+        builder: (context) =>
+            ConversationScreen(specialistId: _consultantModel!),
       ),
     );
   }
@@ -180,13 +178,13 @@ class _AppointmentDetailScreenState
     final l = context.l10n;
     final langCode = context.langCode;
     final appointmentDateTime = widget.appointment.appointmentDateTime;
-    
+
     // Consultant bilgisini al
     final consultantId = widget.appointment.consultantId;
     final consultantJob = widget.appointment.job ?? '';
     String consultantDisplayName = widget.appointment.specialistName;
     String photoURL = '';
-    
+
     if (consultantId != null) {
       try {
         final consultantsState = ref.watch(specialistsProvider);
@@ -197,9 +195,10 @@ class _AppointmentDetailScreenState
               (c) => c.id == consultantId,
               orElse: () => consultants.first,
             );
-            consultantDisplayName = consultant.names[langCode] as String? ?? 
-                                     consultant.names['en'] as String? ?? 
-                                     consultant.names.values.first.toString();
+            consultantDisplayName =
+                consultant.names[langCode] as String? ??
+                consultant.names['en'] as String? ??
+                consultant.names.values.first.toString();
             photoURL = consultant.photoURL;
             // ConsultantModel'i sakla (Talk Now butonu için)
             _consultantModel = consultant;
@@ -216,7 +215,8 @@ class _AppointmentDetailScreenState
     String dateText = '';
     if (appointmentDateTime != null) {
       final monthLabel = MonthStrings.name(context, appointmentDateTime.month);
-      dateText = '$monthLabel ${appointmentDateTime.day}, ${appointmentDateTime.year}';
+      dateText =
+          '$monthLabel ${appointmentDateTime.day}, ${appointmentDateTime.year}';
     }
 
     return Scaffold(
@@ -245,7 +245,7 @@ class _AppointmentDetailScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              
+
               // "Next Session" başlığı
               Text(
                 'Next Session',
@@ -350,57 +350,56 @@ class _AppointmentDetailScreenState
                     const SizedBox(height: 20),
 
                     // "TIME REMAINING" başlığı
-                 Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color(0xffF8FAFC)
-                  ),
-                  child: Column(
-                    children: [
-                         Center(
-                      child: Text(
-                        'TIME REMAINING',
-                        style: GoogleFonts.quicksand(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFA6A6A6),
-                        ),
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color(0xffF8FAFC),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Countdown
-                    Center(
-                      
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Column(
                         children: [
-                          _buildCountdownItem(
-                            _remainingDays.toString().padLeft(2, '0'),
-                            l.days,
+                          Center(
+                            child: Text(
+                              'TIME REMAINING',
+                              style: GoogleFonts.quicksand(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFFA6A6A6),
+                              ),
+                            ),
                           ),
-                          _buildCountdownSeparator(),
-                          _buildCountdownItem(
-                            _remainingHours.toString().padLeft(2, '0'),
-                            l.hours,
-                          ),
-                          _buildCountdownSeparator(),
-                          _buildCountdownItem(
-                            _remainingMinutes.toString().padLeft(2, '0'),
-                            l.minutes,
-                          ),
-                          _buildCountdownSeparator(),
-                          _buildCountdownItem(
-                            _remainingSeconds.toString().padLeft(2, '0'),
-                            l.seconds,
+                          const SizedBox(height: 10),
+
+                          // Countdown
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildCountdownItem(
+                                  _remainingDays.toString().padLeft(2, '0'),
+                                  l.days,
+                                ),
+                                _buildCountdownSeparator(),
+                                _buildCountdownItem(
+                                  _remainingHours.toString().padLeft(2, '0'),
+                                  l.hours,
+                                ),
+                                _buildCountdownSeparator(),
+                                _buildCountdownItem(
+                                  _remainingMinutes.toString().padLeft(2, '0'),
+                                  l.minutes,
+                                ),
+                                _buildCountdownSeparator(),
+                                _buildCountdownItem(
+                                  _remainingSeconds.toString().padLeft(2, '0'),
+                                  l.seconds,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    ],
-                  ),
-                 ),
                     const SizedBox(height: 25),
 
                     // "Join Session" butonu

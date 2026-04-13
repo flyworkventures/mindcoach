@@ -109,12 +109,12 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'] as int,
-      credential: map['credential'] as String,
-      credentialData: map['credentialData'] as dynamic,
-      username: map['username'] as String,
+      id: map['id'] is int ? map['id'] as int : int.tryParse(map['id'].toString()) ?? 0,
+      credential: map['credential'] as String? ?? 'unknown',
+      credentialData: map['credentialData'],
+      username: map['username'] != null ? map['username'] as String : null,
       nativeLang: map['nativeLang'] != null ? map['nativeLang'] as String : null,
-      gender: map['gender'] as String,
+      gender: map['gender'] as String? ?? 'unknown',
       answerData: map['answerData'] == null || (map['answerData'] is Map && (map['answerData'] as Map).isEmpty) 
         ? null 
         : QuestionAnswers.fromMap(map['answerData'] as Map<String,dynamic>),
@@ -122,7 +122,7 @@ class UserModel {
       userAgentNotes: map['userAgentNotes'],
       leastSessions: map['leastSessions'],
       psychologicalProfileBasedOnMessages: map['psychologicalProfileBasedOnMessages'] != null ? map['psychologicalProfileBasedOnMessages'] as String : null,
-      accountCreatedDate: map['accountCreatedDate'] as String,
+      accountCreatedDate: map['accountCreatedDate'] != null ? map['accountCreatedDate'] as String : '',
       generalProfile: map['generalProfile'] != null ? map['generalProfile'] as String : null,
       generalPsychologicalProfile: map['generalPsychologicalProfile'] != null ? map['generalPsychologicalProfile'] as String : null,
       profilePhotoUrl: map['profilePhotoUrl'],

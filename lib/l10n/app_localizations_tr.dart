@@ -9,6 +9,40 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get relaxingSound => 'Rahatlatıcı Sesler';
+
+  @override
+  String get seeAll => 'Tümünü Gör';
+
+  @override
+  String get premiumHeadlinePart1 => 'Yargılanmadan,\nsadece ';
+
+  @override
+  String get premiumHeadlineHighlight => 'anlaşılmak';
+
+  @override
+  String get premiumHeadlinePart2 => ' için\nbir alan.';
+
+  @override
+  String get premiumSubtitle =>
+      'Binlerce kişi bu adımı attı. Sıra sizde — 3 gün tamamen ücretsiz.';
+
+  @override
+  String get premiumFeature1 => '7/24 sınırsız iletişim';
+
+  @override
+  String get premiumFeature2 => 'Öncelikli ve hızlı erişim';
+
+  @override
+  String get premiumFeature3 => 'Gelişmiş AI ile size özel';
+
+  @override
+  String get premiumAnnualDiscount => 'Yıllık alımda %40 indirim';
+
+  @override
+  String get premiumCta => 'Başlayın';
+
+  @override
   String get onboardingTitle1 => 'Bunalmış mı hissediyorsunuz?';
 
   @override
@@ -83,6 +117,20 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get findMyCoaches => 'Koçlarımı Bul';
+
+  @override
+  String get loginSubtitle =>
+      'Koçunu bulmak ve yolculuğuna başlamak için giriş yap. 2 dakika sürer.';
+
+  @override
+  String get continueWithGoogle => 'Google ile Devam Et';
+
+  @override
+  String get continueWithApple => 'Apple ile Devam Et';
+
+  @override
+  String get dataPrivacyNotice =>
+      'Verileriniz üçüncü taraflarla paylaşılmaz. Hesabınızı istediğiniz zaman silebilirsiniz.';
 
   @override
   String get approachTitle => 'Koçun sana nasıl yaklaşmalı?';
@@ -799,5 +847,377 @@ class AppLocalizationsTr extends AppLocalizations {
   String get jobFamilyAssistant => 'Aile Koçu';
 
   @override
+  String get jobAdult => 'Yetişkin Koçu';
+
+  @override
+  String get jobChild => 'Çocuk Koçu';
+
+  @override
+  String get jobTeenage => 'Ergen Koçu';
+
+  @override
+  String get jobPersonal => 'Bireysel Koç';
+
+  @override
+  String get jobExamAnxiety => 'Sınav Kaygısı Koçu';
+
+  @override
   String get noSpecialistsFound => 'Uzman bulunamadı';
+
+  @override
+  String get featureFamilyConflicts => 'Aile İçi Çatışmalar';
+
+  @override
+  String get featureParenting => 'Ebeveynlik';
+
+  @override
+  String get featureCommunication => 'İletişim';
+
+  @override
+  String get featureBoundaries => 'Sınır Koyma';
+
+  @override
+  String get featureRelationshipRepair => 'İlişki Onarımı';
+
+  @override
+  String get featureDivorceSupport => 'Boşanma Desteği';
+
+  @override
+  String get featureChildBehavior => 'Çocuk Davranışı';
+
+  @override
+  String get featureFamilyHarmony => 'Aile Uyumu';
+
+  @override
+  String get featureStressManagement => 'Stres Yönetimi';
+
+  @override
+  String get featureSelfConfidence => 'Özgüven';
+
+  @override
+  String get featureLifeBalance => 'Yaşam Dengesi';
+
+  @override
+  String get featureCareerGuidance => 'Kariyer Rehberliği';
+
+  @override
+  String get featureEmotionalRegulation => 'Duygu Düzenleme';
+
+  @override
+  String get featureDecisionMaking => 'Karar Verme';
+
+  @override
+  String get featureMotivation => 'Motivasyon';
+
+  @override
+  String get featurePersonalGrowth => 'Kişisel Gelişim';
+
+  @override
+  String get featureEmotionalAwareness => 'Duygusal Farkındalık';
+
+  @override
+  String get featureSocialSkills => 'Sosyal Beceriler';
+
+  @override
+  String get featureSchoolAdaptation => 'Okula Uyum';
+
+  @override
+  String get featureSelfExpression => 'Kendini İfade Etme';
+
+  @override
+  String get featureFearManagement => 'Korku Yönetimi';
+
+  @override
+  String get featureFriendshipBuilding => 'Arkadaşlık Kurma';
+
+  @override
+  String get featureFocusAttention => 'Odaklanma ve Dikkat';
+
+  @override
+  String get featureBehavioralSupport => 'Davranış Desteği';
+
+  @override
+  String get featureIdentityDevelopment => 'Kimlik Gelişimi';
+
+  @override
+  String get featurePeerPressure => 'Akran Baskısı';
+
+  @override
+  String get featureAcademicStress => 'Akademik Stres';
+
+  @override
+  String get featureSelfEsteem => 'Özsaygı';
+
+  @override
+  String get featureDigitalWellbeing => 'Dijital İyilik Hali';
+
+  @override
+  String get featureAngerManagement => 'Öfke Yönetimi';
+
+  @override
+  String get featureFuturePlanning => 'Gelecek Planlaması';
+
+  @override
+  String get featureParentCommunication => 'Ebeveyn İletişimi';
+
+  @override
+  String get featureLoneliness => 'Yalnızlık';
+
+  @override
+  String get featureAnxietySupport => 'Kaygı Desteği';
+
+  @override
+  String get featureGriefProcessing => 'Yas Süreci';
+
+  @override
+  String get featureMindfulness => 'Farkındalık';
+
+  @override
+  String get featureSleepImprovement => 'Uyku İyileştirme';
+
+  @override
+  String get featureOverthinking => 'Aşırı Düşünme';
+
+  @override
+  String get featureSelfDiscovery => 'Kendini Keşfetme';
+
+  @override
+  String get featureEmotionalHealing => 'Duygusal İyileşme';
+
+  @override
+  String get featureTestAnxiety => 'Sınav Kaygısı';
+
+  @override
+  String get featureStudyTechniques => 'Çalışma Teknikleri';
+
+  @override
+  String get featureTimeManagement => 'Zaman Yönetimi';
+
+  @override
+  String get featurePerformancePressure => 'Performans Baskısı';
+
+  @override
+  String get featureConcentration => 'Konsantrasyon';
+
+  @override
+  String get featureRelaxationMethods => 'Rahatlama Yöntemleri';
+
+  @override
+  String get featureExamPreparation => 'Sınava Hazırlık';
+
+  @override
+  String get featureConfidenceBuilding => 'Güven İnşası';
+
+  @override
+  String get explanationFamilyAssistant =>
+      'Aile dinamiklerinde yol almanıza, çatışmaları çözmenize, ebeveyn-çocuk bağlarını güçlendirmenize ve daha uyumlu bir ev ortamı oluşturmanıza yardımcı olan bir aile koçu. İletişim kopuklukları, sınır sorunları veya boşanma gibi büyük yaşam geçişleriyle karşı karşıya olsanız da, koçunuz birlikte çözüm üretebileceğiniz güvenli bir alan sunar.';
+
+  @override
+  String get explanationAdult =>
+      'Hayatının kontrolünü eline almak isteyen yetişkinler için tasarlanmış bir kişisel gelişim koçu. Günlük stresi yönetmekten özgüven inşa etmeye, önemli kariyer kararları almaktan yaşam dengesi bulmaya kadar, koçunuz benzersiz zorluklarınıza ve hedeflerinize özel pratik stratejilerle sizi destekler.';
+
+  @override
+  String get explanationChild =>
+      'Çocukların duygularını ifade etmelerine, sosyal beceriler geliştirmelerine ve okul hayatına uyum sağlamalarına yardımcı olmak için özel olarak eğitilmiş nazik ve destekleyici bir koç. Yaşa uygun tekniklerle koçunuz, çocukların korkularını yenmelerine, odaklanmalarını artırmalarına ve güvenli bir ortamda sağlıklı arkadaşlıklar kurmalarına yardımcı olur.';
+
+  @override
+  String get explanationTeenage =>
+      'Ergenlik deneyimini gerçekten anlayan bir koç. Kimlik keşfinden akran baskısına, akademik stresten dijital iyilik haline kadar, koçunuz gençlerin özsaygı geliştirmelerine, duygularını yönetmelerine ve ebeveynleriyle sağlıklı iletişim kurarken geleceği planlamalarına yardımcı olur.';
+
+  @override
+  String get explanationPersonal =>
+      'İç dünyanıza odaklanan şefkatli bir bireysel koç. Yalnızlık, kaygı, yas ya da aşırı düşünme ile mücadele ediyor olsanız da, koçunuz farkındalık uygulamaları, duygusal iyileşme teknikleri ve kendini keşfetme egzersizleriyle huzur ve netlik bulmanıza rehberlik eder.';
+
+  @override
+  String get explanationExamAnxiety =>
+      'Öğrencilerin sınav kaygısını yenmelerine ve gerçek akademik potansiyellerini ortaya çıkarmalarına yardımcı olan uzman bir koç. Kanıtlanmış çalışma teknikleri, rahatlama yöntemleri ve güven inşa eden egzersizlerle koçunuz, sınav stresini odaklanmış hazırlığa ve sakin bir performansa dönüştürür.';
+
+  @override
+  String get explanationFamilyAssistant1 =>
+      'Köklü aile içi çatışmaları çözme ve yıpranmış ilişkileri yeniden inşa etme konusunda uzmanlaşmış bir aile koçu. Ebeveynlik zorlukları, iletişim becerileri ve sağlıklı sınırlar koyma konularındaki uzmanlığıyla, boşanma gibi zor geçiş dönemlerinde ailelere rehberlik ederken çocukların davranışsal değişimlerini güvenli ve yargısız bir alanda destekler.';
+
+  @override
+  String get explanationFamilyAssistant2 =>
+      'En önemli bağları güçlendirmeye odaklanan sıcak ve empatik bir aile koçu. Etkili ebeveynlik stratejileri, açık iletişim ve ilişki onarımı konularında uzmanlaşan bu koç, ayrılık veya boşanma gibi zor dönemlerin ardından ailelerin iyileşmesine yardımcı olurken, çocukların duygusal ve davranışsal gelişimini kalıcı bir uyum için destekler.';
+
+  @override
+  String get explanationAdult1 =>
+      'Anlamlı değişim arayan yetişkinler için sonuç odaklı bir koç. Stres yönetimi, yaşam dengesi kurma ve kariyer rehberliğine odaklanarak, duygularınızı düzenlemenize, özgüvenli kararlar almanıza ve pratik, hedef odaklı stratejilerle sürdürülebilir kişisel gelişim elde etmenize yardımcı olur.';
+
+  @override
+  String get explanationAdult2 =>
+      'Yetişkinlerin tam potansiyellerine ulaşmalarını sağlayan bütüncül bir gelişim koçu. Sarsılmaz bir özgüven inşa etmekten stres yönetimine, kariyer yönü bulmaktan günlük motivasyona kadar, duygu düzenleme teknikleriyle uygulanabilir yaşam stratejilerini birleştirerek kalıcı pozitif değişim yaratır.';
+
+  @override
+  String get explanationTeenage1 =>
+      'Ergenliğin kendine özgü zorluklarını derinden anlayan bir koç. Kimlik gelişimi ve akran baskısından akademik stres ve sağlıklı dijital alışkanlıklar kurmaya kadar, gençlerin özsaygılarını güçlendirmelerine, öfkelerini kontrol etmelerine, geleceklerini planlamalarına ve ebeveynleriyle açık iletişim kurmalarına yardımcı olur.';
+
+  @override
+  String get explanationTeenage2 =>
+      'Çalkantılı ergenlik yıllarında empatik bir rehber. Kimlik keşfi, akademik baskı ve dijital iyilik hali konularında uzmanlaşan bu koç, gençleri akran etkisine karşı dayanıklılık geliştirmeye, öfkeyi yapıcı biçimde yönetmeye, uzun vadeli hedefler kurmaya ve sağlıklı ebeveyn-ergen ilişkilerini sürdürmeye yönlendirir.';
+
+  @override
+  String get explanationChild1 =>
+      'Çocukları en kritik gelişim yıllarında desteklemek için tasarlanmış şefkatli bir koç. Nazik ve yaşa uygun yöntemlerle, çocukların duygusal farkındalık geliştirmelerine, sosyal beceriler kazanmalarına, okula uyum sağlamalarına, kendilerini özgürce ifade etmelerine, korkularını yenmelerine, anlamlı arkadaşlıklar kurmalarına, odaklanmalarını artırmalarına ve olumlu davranış kalıpları geliştirmelerine yardımcı olur.';
+
+  @override
+  String get explanationChild2 =>
+      'Çocukların gelişip büyümesine adanmış özenli ve sabırlı bir koç. Duygusal zeka, sosyal gelişim ve okula uyum odaklı bu koç, çocukların duygularını ifade etmeyi öğrendikleri, korkularını yendikleri, kalıcı arkadaşlıklar kurdukları, konsantrasyonlarını güçlendirdikleri ve özgüvenle büyümek için ihtiyaç duydukları davranış desteğini aldıkları güvenli bir ortam yaratır.';
+
+  @override
+  String get explanationPersonal1 =>
+      'Duygusal iyilik halinize ve iç huzurunuza derinden odaklanan şefkatli bir koç. Yalnızlık, kaygı, yas ya da uykusuz geceler yaşıyor olsanız da, farkındalık uygulamaları, duygusal iyileşme süreçleri ve kendini keşfetme yolculuklarıyla aşırı düşünmeden kurtulmanıza ve kalıcı bir netlik bulmanıza rehberlik eder.';
+
+  @override
+  String get explanationPersonal2 =>
+      'Kendinizle yeniden bağ kurmanıza yardımcı olan destekleyici ve sezgisel bir bireysel koç. Kaygı yönetimi, farkındalık teknikleri ve uyku iyileştirme konularında uzmanlaşan bu koç, aşırı düşünme ve duygusal sıkıntı kalıplarından gerçek iyileşmeye ve yenilenmiş bir iç huzura doğru nazikçe rehberlik eder.';
+
+  @override
+  String get explanationExamAnxiety1 =>
+      'Sınav stresini özgüvenli performansa dönüştüren odaklanmış ve sistematik bir koç. Zaman yönetimi, performans baskısıyla başa çıkma ve derin konsantrasyon geliştirme konularında uzmanlaşan bu koç, öğrencileri pratik rahatlama yöntemleri, yapılandırılmış sınav hazırlık teknikleri ve akademik başarı için güven inşa eden stratejilerle donatır.';
+
+  @override
+  String get explanationExamAnxiety2 =>
+      'Öğrencilerin sınav kaygısını yenmelerine ve daha akıllı çalışmalarına adanmış uzman bir akademik koç. Kanıtlanmış çalışma teknikleri, etkili zaman yönetimi ve performans baskısına dayanıklılık yoluyla, derin konsantrasyon becerileri, yapılandırılmış sınav hazırlık alışkanlıkları ve her sınav günü için kalıcı bir özgüven inşa eder.';
+
+  @override
+  String get filterTitle => 'Filtrele';
+
+  @override
+  String get filterCoachingArea => 'Koçluk Alanı';
+
+  @override
+  String get filterExpertise => 'Uzmanlık';
+
+  @override
+  String get filterSelectCoachingArea => 'Koçluk Alanı Seçin';
+
+  @override
+  String get filterSave => 'Kaydet';
+
+  @override
+  String get coachDetailInformation => 'Bilgi';
+
+  @override
+  String get coachDetailUnlimitedMemory => 'Sınırsız';
+
+  @override
+  String get coachDetailMemory => 'Hafıza';
+
+  @override
+  String get coachDetailMultilingual => 'Çok Dilli';
+
+  @override
+  String get coachDetailLanguage => 'Dil';
+
+  @override
+  String get coachDetailAvailability => 'Müsaitlik';
+
+  @override
+  String get coachDetailAppointment => 'Randevu';
+
+  @override
+  String get coachDetailStartVideoCall => 'Görüntülü Görüşme Başlat';
+
+  @override
+  String get coachDetailOnline => 'Çevrimiçi';
+
+  @override
+  String get coachDetailVerified => 'Doğrulanmış';
+
+  @override
+  String get coachDetailCreateAppointment => 'Randevu oluştur';
+
+  @override
+  String get searchSoundHint => 'Ses, ruh hali, atmosfer ara..';
+
+  @override
+  String get featuredForYou => 'Senin İçin Önerilen';
+
+  @override
+  String get mostPopular => 'En Popüler';
+
+  @override
+  String get soundCategoryFocus => 'Odaklanma';
+
+  @override
+  String get soundCategorySleep => 'Uyku';
+
+  @override
+  String get soundCategoryMeditation => 'Meditasyon';
+
+  @override
+  String get soundCategoryRelax => 'Rahatlama';
+
+  @override
+  String get soundDeepWorkFlow => 'Derin Çalışma Akışı';
+
+  @override
+  String get soundDeepWorkFlowSub => 'Verimliliğinizi artırın';
+
+  @override
+  String get soundBinauralBeats => 'Binaural Vuruşlar';
+
+  @override
+  String get soundBinauralBeatsSub => 'Beyin dalgalarınızı ayarlayın';
+
+  @override
+  String get soundLibraryAmbience => 'Kütüphane Ambiyansı';
+
+  @override
+  String get soundLibraryAmbienceSub => 'Sessiz çalışma atmosferi';
+
+  @override
+  String get soundRainOnWindow => 'Pencerede Yağmur';
+
+  @override
+  String get soundRainOnWindowSub => 'Huzurlu bir uykuya dalın';
+
+  @override
+  String get soundOceanWaves => 'Okyanus Dalgaları';
+
+  @override
+  String get soundOceanWavesSub => 'Sakinleştirici dalga ritmi';
+
+  @override
+  String get soundDeepSpaceDrone => 'Derin Uzay Sesi';
+
+  @override
+  String get soundDeepSpaceDroneSub => 'Kozmik ortam yolculuğu';
+
+  @override
+  String get soundTibetanBowls => 'Tibet Çanakları';
+
+  @override
+  String get soundTibetanBowlsSub => 'Kadim şifa titreşimleri';
+
+  @override
+  String get soundForestBirds => 'Orman Kuşları';
+
+  @override
+  String get soundForestBirdsSub => 'Doğanın sabah melodisi';
+
+  @override
+  String get soundMorningZen => 'Sabah Zeni';
+
+  @override
+  String get soundMorningZenSub => 'Güne bilinçli başlayın';
+
+  @override
+  String get soundFireplaceCrackle => 'Şömine Çıtırtısı';
+
+  @override
+  String get soundFireplaceCrackleSub => 'Sıcak ve huzurlu hisler';
+
+  @override
+  String get soundGentleStream => 'Hafif Dere Akışı';
+
+  @override
+  String get soundGentleStreamSub => 'Akan suyun dinginliği';
+
+  @override
+  String get soundSoftPiano => 'Yumuşak Piyano';
+
+  @override
+  String get soundSoftPianoSub => 'Rahatlatıcı zarif melodiler';
 }

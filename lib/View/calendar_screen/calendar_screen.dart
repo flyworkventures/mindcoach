@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mindcoach/core/global_constants/month_strings.dart';
-import 'package:mindcoach/core/utils/job_convert.dart';
-import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
+import 'package:mindcoach/core/utils/job_convert.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../core/models/appointment_info.dart';
-import '../../core/utils/time_format_utils.dart';
-import '../appointments/appointments_notifier.dart';
 import '../appointments/appointment_detail_screen.dart';
+import '../appointments/appointments_notifier.dart';
 import '../specialists_screen/specialists_notifier.dart';
 
 // Stil bilgileri için kullanılan sabitler
-const Color _kPrimaryGreen = Color(0xFF2BD383);
-const Color _kGreyBackground = Color(0xFFC4C4C4);
-const Color _kLightGreyText = Color(0xFFA6A6A6);
+const Color _kPrimaryGreen = Color(0xFF21BC87);
+const Color _kLightGreyText = Color(0xFF96989C);
 
 class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
@@ -27,15 +25,12 @@ class CalendarScreen extends ConsumerStatefulWidget {
 
 class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   // TableCalendar için gerekli değişkenler
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  
-  // İptal edilen randevular için geri alma state'i
-  Map<int, DateTime> _cancelledAppointments = {}; // appointmentId -> iptal zamanı
 
-  static const Color _kGradientStart = Color(0xFFFBFCFF); // #FBFCFF
-  static const Color _kGradientEnd = Color(0xFFF9FAFF); // #F9FAFF
+  // İptal edilen randevular için geri alma state'i
+  final Map<int, DateTime> _cancelledAppointments = {};
 
   @override
   void initState() {
@@ -55,278 +50,324 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
     final key = DateTime(day.year, day.month, day.day);
     final appointments = map[key] ?? const <AppointmentInfo>[];
-    
-    // İptal edilen randevuları filtrele (sadece 3 saniye içinde geri alınabilir olanları göster)
+
+    // İptal edilen randevuları filtrele
     return appointments.where((appointment) {
-      // Eğer randevu iptal edilmişse ve 3 saniye içinde geri alınabilirse göster
       if (appointment.status?.toLowerCase() == 'cancelled') {
-        if (appointment.appointmentId != null && _cancelledAppointments.containsKey(appointment.appointmentId)) {
-          final cancelledTime = _cancelledAppointments[appointment.appointmentId]!;
+        if (appointment.appointmentId != null &&
+            _cancelledAppointments.containsKey(appointment.appointmentId)) {
+          final cancelledTime =
+              _cancelledAppointments[appointment.appointmentId]!;
           final timeSinceCancelled = DateTime.now().difference(cancelledTime);
-          // 3 saniye içindeyse göster
           return timeSinceCancelled.inSeconds < 3;
         }
-        // 3 saniye geçtiyse veya iptal edilmiş ama _cancelledAppointments'da yoksa gösterme
         return false;
       }
-      // İptal edilmemiş randevuları göster
       return true;
     }).toList();
   }
 
-
+  // Takvim şeridi için o haftanın günlerini hesaplayan yardımcı fonksiyon
+  List<DateTime> _getCurrentWeekDays(DateTime focused) {
+    // Hafta Pazartesi(1) başlıyor kabul ediyoruz
+    int currentWeekday = focused.weekday;
+    DateTime startOfWeek = focused.subtract(Duration(days: currentWeekday - 1));
+    return List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final l = context.l10n;
-    final appointmentsState = ref.watch(appointmentsProvider);
-
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [_kGradientStart, _kGradientEnd],
-            stops: [0.075, 1.0133],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 33.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 32.h),
+      backgroundColor: Colors.white, // Figma arkaplanı beyaz
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 24),
 
-                // 1. Kalan Süre Başlığı
-                Text(
-                  l.timeRemainingTitle,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.quicksand(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    height: 24 / 14,
-                    color: Colors.black,
-                  ),
+              // 1. Ay/Yıl Gösteren Kart ve Navigasyon
+              _buildMonthNavigationHeader(context),
+              const SizedBox(height: 24),
+
+              // 2. HAFTALIK ŞERİT (Weekly Timeline)
+              _buildWeeklyTimelineRow(),
+              const SizedBox(height: 24),
+
+              // 3. Takvim Görünümü (TableCalendar)
+              _buildCustomCalendar(context),
+              const SizedBox(height: 32),
+
+              // 4. "Today's sessions" Başlığı
+              const Text(
+                "Today's sessions",
+                style: TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600, // SemiBold
+                  color: Colors.black,
                 ),
-                SizedBox(height: 10.h),
+              ),
+              const SizedBox(height: 16),
 
-                // 2. Kalan Süre Kartı
-                _buildRemainingTimeCard(context, appointmentsState),
-                SizedBox(height: 25.h),
-
-                // 3. Calendar Başlığı
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    l.calendar, // ARB: "Calendar"
-                    style: GoogleFonts.quicksand(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      height: 24.h / 17.h,
-                      color: Colors.black,
+              // 5. Seçilen Tarihteki Randevu Listesi
+              if (_selectedDay != null) ...[
+                ..._getAppointmentsForDay(_selectedDay!).map((info) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AppointmentDetailScreen(appointment: info),
+                        ),
+                      );
+                    },
+                    child: _buildAppointmentCard(
+                      context: context,
+                      date: _selectedDay!,
+                      info: info,
                     ),
-                  ),
-                ),
-                SizedBox(height: 15.h),
-
-                // 4. Ay/Yıl Gösteren Kart ve Navigasyon
-                _buildMonthNavigationCard(context),
-                SizedBox(height: 10.h),
-
-                // 5. Takvim Görünümü (TableCalendar)
-                _buildCustomCalendar(context),
-                SizedBox(height: 20.h),
-
-                // 6. Seçilen Tarihteki Randevu Listesi
-                if (_selectedDay != null) ...[
-                  ..._getAppointmentsForDay(_selectedDay!).map((info) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => AppointmentDetailScreen(
-                              appointment: info,
-                            ),
-                          ),
-                        );
-                      },
-                      child: _buildAppointmentCard(
-                        context: context,
-                        date: _selectedDay!,
-                        info: info,
-                      ),
-                    );
-                  }),
-                ],
-
-                SizedBox(height: 80.h), // Alt navigasyon barı için boşluk
+                  );
+                }),
               ],
-            ),
+
+              // 6. "Make an Appointment" Butonu
+              const SizedBox(height: 8),
+              _buildMakeAppointmentButton(),
+
+              const SizedBox(height: 80), // Alt navigasyon barı için boşluk
+            ],
           ),
         ),
       ),
     );
   }
 
-  // --- Kalan süre kartı ---
+  // --- Ay/Yıl Başlığı ---
 
-  Widget _buildRemainingTimeCard(
-    BuildContext context,
-    AppointmentsState appointmentsState,
-  ) {
-    final l = context.l10n;
+  Widget _buildMonthNavigationHeader(BuildContext context) {
+    final monthLabel = MonthStrings.name(
+      context,
+      _focusedDay.month,
+    ).toUpperCase();
+    final dayLabel = DateFormat('EEEE').format(_focusedDay); // 'Friday'
 
-    return Container(
-      width: 327.w,
-      height: 84.h,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _buildTimeItem(context, appointmentsState.remainingDays, l.days),
-          _buildSeparator(),
-          _buildTimeItem(context, appointmentsState.remainingHours, l.hours),
-          _buildSeparator(),
-          _buildTimeItem(
-            context,
-            appointmentsState.remainingMinutes,
-            l.minutes,
-          ),
-          _buildSeparator(),
-          _buildTimeItem(
-            context,
-            appointmentsState.remainingSeconds,
-            l.seconds,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimeItem(BuildContext context, String value, String label) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Text(
-            value,
-            style: GoogleFonts.quicksand(
-              fontSize: 40,
-              fontWeight: FontWeight.w600,
-              color: _kPrimaryGreen,
-            ),
-          ),
-        ),
-        Transform.translate(
-          offset: const Offset(0.0, -5.0),
-          child: Text(
-            label,
-            style: GoogleFonts.quicksand(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              height: 1,
-              color: const Color(0xFFBEBEBE),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSeparator() {
-    return Transform.translate(
-      offset: const Offset(0.0, -5.0),
-      child: Text(
-        ':',
-        style: GoogleFonts.quicksand(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          height: 1,
-          color: _kGreyBackground.withValues(alpha: 0.6),
-        ),
-      ),
-    );
-  }
-
-  // --- Ay/Yıl kartı ---
-
-  Widget _buildMonthNavigationCard(BuildContext context) {
-    final monthLabel = MonthStrings.name(context, _focusedDay.month);
-
-    return Container(
-      width: 333.w,
-      height: 48.h,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '$monthLabel ${_focusedDay.year}',
-              style: GoogleFonts.quicksand(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                height: 24.h / 17.h,
-                color: Colors.black,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 14,
+                fontWeight: FontWeight.w700, // Bold
+                color: _kPrimaryGreen,
+                letterSpacing: 1.0,
               ),
             ),
+            const SizedBox(height: 4),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios, size: 16),
-                  onPressed: () {
-                    setState(() {
-                      _focusedDay = DateTime(
-                        _focusedDay.year,
-                        _focusedDay.month - 1,
-                        _focusedDay.day,
-                      );
-                    });
-                  },
+                Text(
+                  '${_focusedDay.day}',
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700, // Bold
+                    color: Colors.black,
+                    height: 1.0,
+                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onPressed: () {
-                    setState(() {
-                      _focusedDay = DateTime(
-                        _focusedDay.year,
-                        _focusedDay.month + 1,
-                        _focusedDay.day,
-                      );
-                    });
-                  },
+                const SizedBox(width: 8),
+                Text(
+                  dayLabel,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500, // Medium
+                    color: _kLightGreyText,
+                  ),
                 ),
               ],
             ),
           ],
         ),
-      ),
+        Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _focusedDay = DateTime(
+                    _focusedDay.year,
+                    _focusedDay.month - 1,
+                    _focusedDay.day,
+                  );
+                });
+              },
+              child: SvgPicture.asset(
+                'assets/icons/ic_left.svg',
+                width: 32,
+                height: 32,
+              ),
+            ),
+            const SizedBox(width: 8),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _focusedDay = DateTime(
+                    _focusedDay.year,
+                    _focusedDay.month + 1,
+                    _focusedDay.day,
+                  );
+                });
+              },
+              child: SvgPicture.asset(
+                'assets/icons/ic_right.svg',
+                width: 32,
+                height: 32,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // --- HAFTALIK ŞERİT WIDGET'I ---
+  Widget _buildWeeklyTimelineRow() {
+    final weekDays = _getCurrentWeekDays(_focusedDay);
+    final today = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: weekDays.map((date) {
+        final currentDate = DateTime(date.year, date.month, date.day);
+        final isSelected =
+            _selectedDay != null && isSameDay(_selectedDay, currentDate);
+
+        final isPast = currentDate.isBefore(today);
+        final hasEvent = _getAppointmentsForDay(currentDate).isNotEmpty;
+
+        final dayName = DateFormat(
+          'EEE',
+        ).format(date).toUpperCase(); // MON, TUE...
+        final dayNumber = '${date.day}';
+
+        // --- SEÇİLİ GÜN (Yeşil Kapsül) ---
+        if (isSelected) {
+          return GestureDetector(
+            onTap: () => setState(() => _selectedDay = currentDate),
+            child: Container(
+              height: 94, // Figma yüksekliği
+              width: 50,
+              decoration: BoxDecoration(
+                color: _kPrimaryGreen,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    dayName,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600, // SemiBold
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    dayNumber,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700, // Bold
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  // Olay varsa altındaki beyaz nokta
+                  if (hasEvent)
+                    Container(
+                      width: 4,
+                      height: 4,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // --- SEÇİLİ OLMAYAN GÜN ---
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              _selectedDay = currentDate;
+              _focusedDay = currentDate;
+            });
+          },
+          child: SizedBox(
+            height: 94,
+            width: 40,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  dayName,
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isPast
+                        ? _kLightGreyText.withValues(alpha: 0.5)
+                        : _kLightGreyText,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  dayNumber,
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: isPast
+                        ? Colors.black.withValues(alpha: 0.3)
+                        : Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // Olay varsa altındaki yeşil nokta
+                if (hasEvent)
+                  Container(
+                    width: 4,
+                    height: 4,
+                    decoration: const BoxDecoration(
+                      color: _kPrimaryGreen,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -335,131 +376,130 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   Widget _buildCustomCalendar(BuildContext context) {
     final langCode = context.langCode;
 
-    return TableCalendar<AppointmentInfo>(
-      startingDayOfWeek: langCode == 'en'
-          ? StartingDayOfWeek.sunday
-          : StartingDayOfWeek.monday,
-      firstDay: DateTime.utc(2020, 1, 1),
-      lastDay: DateTime.utc(2030, 12, 31),
-      focusedDay: _focusedDay,
-      calendarFormat: _calendarFormat,
-      availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-      headerVisible: false,
-      rowHeight: 40.0.h,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E2E2)),
+      ),
+      child: TableCalendar<AppointmentInfo>(
+        startingDayOfWeek: langCode == 'en'
+            ? StartingDayOfWeek.sunday
+            : StartingDayOfWeek.monday,
+        firstDay: DateTime.utc(2020, 1, 1),
+        lastDay: DateTime.utc(2030, 12, 31),
+        focusedDay: _focusedDay,
+        calendarFormat: _calendarFormat,
+        availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+        headerVisible: false,
+        rowHeight: 44.0, // Figma: 44px
+        daysOfWeekHeight: 40.0,
 
-      calendarBuilders: CalendarBuilders<AppointmentInfo>(
-        // Haftanın günleri başlığı
-        dowBuilder: (dowContext, day) {
-          final locale = Localizations.localeOf(dowContext);
-          // Örn: en -> Mon, tr -> Pzt, de -> Mo
-          final label = DateFormat.E(
-            locale.toLanguageTag(),
-          ).format(day); // kısa gün adı
+        calendarBuilders: CalendarBuilders<AppointmentInfo>(
+          // Haftanın günleri başlığı (M, T, W, T, F, S, S)
+          dowBuilder: (dowContext, day) {
+            final locale = Localizations.localeOf(dowContext);
+            final label = DateFormat.E(
+              locale.toLanguageTag(),
+            ).format(day).substring(0, 1);
 
-          return Center(
-            child: Text(
-              label,
-              style: GoogleFonts.quicksand(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                height: 1,
-                color: Colors.black,
-              ),
-            ),
-          );
-        },
-
-        markerBuilder: (context, day, events) {
-          if (events.isNotEmpty) {
-            return Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 4),
-                width: 4.w,
-                height: 4.h,
-                decoration: const BoxDecoration(
-                  color: _kPrimaryGreen,
-                  shape: BoxShape.circle,
+            return Center(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: _kLightGreyText,
                 ),
               ),
             );
+          },
+
+          markerBuilder: (context, day, events) {
+            if (events.isNotEmpty) {
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 4),
+                  width: 4,
+                  height: 4,
+                  decoration: const BoxDecoration(
+                    color: _kPrimaryGreen,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              );
+            }
+            return null;
+          },
+        ),
+
+        calendarStyle: CalendarStyle(
+          outsideDaysVisible: false, // Önceki/sonraki ay günleri gizle
+          weekendTextStyle: const TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+          defaultTextStyle: const TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+          todayDecoration: const BoxDecoration(
+            color: Colors.black, // Bugün siyah yuvarlak içinde
+            shape: BoxShape.circle,
+          ),
+          todayTextStyle: const TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+          selectedDecoration: const BoxDecoration(
+            color: _kPrimaryGreen, // Seçili gün yeşil yuvarlak içinde
+            shape: BoxShape.circle,
+          ),
+          selectedTextStyle: const TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
+        eventLoader: _getAppointmentsForDay,
+        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+        onDaySelected: (selectedDay, focusedDay) {
+          if (!isSameDay(_selectedDay, selectedDay)) {
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+            });
           }
-          return null;
+        },
+        onPageChanged: (focusedDay) {
+          _focusedDay = focusedDay;
         },
       ),
-
-      daysOfWeekHeight: 20.0.h,
-
-      daysOfWeekStyle: DaysOfWeekStyle(
-        weekdayStyle: GoogleFonts.quicksand(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          height: 24.h / 14.h,
-          color: Colors.black,
-        ),
-        weekendStyle: GoogleFonts.quicksand(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          height: 24.h / 14.h,
-          color: Colors.black54,
-        ),
-      ),
-
-      calendarStyle: CalendarStyle(
-        weekendTextStyle: const TextStyle(color: Colors.black54),
-        defaultTextStyle: const TextStyle(color: Colors.black),
-        todayDecoration: BoxDecoration(
-          color: _kPrimaryGreen.withValues(alpha: 0.5),
-          shape: BoxShape.circle,
-        ),
-        selectedDecoration: const BoxDecoration(
-          color: _kPrimaryGreen,
-          shape: BoxShape.circle,
-        ),
-        markerDecoration: const BoxDecoration(
-          color: _kPrimaryGreen,
-          shape: BoxShape.circle,
-        ),
-        selectedTextStyle: GoogleFonts.quicksand(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
-      ),
-
-      eventLoader: _getAppointmentsForDay,
-      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-      onDaySelected: (selectedDay, focusedDay) {
-        if (!isSameDay(_selectedDay, selectedDay)) {
-          setState(() {
-            _selectedDay = selectedDay;
-            _focusedDay = focusedDay;
-          });
-        }
-      },
-      onPageChanged: (focusedDay) {
-        _focusedDay = focusedDay;
-      },
     );
   }
 
-  // --- Randevu kartı ---
+  // --- Randevu Kartı ---
 
   Widget _buildAppointmentCard({
     required BuildContext context,
     required DateTime date,
     required AppointmentInfo info,
   }) {
-    // Dil kodunu al
     final langCode = context.langCode;
-    
-    // Consultant bilgisini al (dil bazlı isim için)
     final consultantId = info.consultantId;
     final consultantJob = info.job ?? '';
-    String consultantDisplayName = info.specialistName; // Fallback
+    String consultantDisplayName = info.specialistName;
     String photoURL = '';
-    
-    // Consultant bilgisini ref'ten al (eğer consultantId varsa)
+
     if (consultantId != null) {
       try {
         final consultantsState = ref.watch(specialistsProvider);
@@ -468,386 +508,155 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           try {
             final consultant = consultants.firstWhere(
               (c) => c.id == consultantId,
-              orElse: () => consultants.first, // Fallback: ilk consultant
+              orElse: () => consultants.first,
             );
-            // Dil koduna göre ismi al (en, tr, de)
-            consultantDisplayName = consultant.names[langCode] as String? ?? 
-                                     consultant.names['en'] as String? ?? 
-                                     consultant.names.values.first.toString();
+            consultantDisplayName =
+                consultant.names[langCode] as String? ??
+                consultant.names['en'] as String? ??
+                consultant.names.values.first.toString();
             photoURL = consultant.photoURL;
           } catch (e) {
-            // Consultant bulunamadı, fallback kullan
             debugPrint("⚠️ Consultant bulunamadı (ID: $consultantId): $e");
           }
         }
       } catch (e) {
-        // Provider hatası, fallback kullan
         debugPrint("⚠️ SpecialistsProvider hatası: $e");
       }
     }
-    
-    // Tarih ve saat bilgisi
-    final appointmentDateTime = info.appointmentDateTime ?? DateTime(date.year, date.month, date.day, 9, 0);
-    final monthLabel = MonthStrings.name(context, appointmentDateTime.month);
-    final formattedTime = TimeFormatUtils.formatTime(context, appointmentDateTime);
-    final dateTimeText = '$monthLabel ${appointmentDateTime.day} | $formattedTime';
-    
-    // Status bilgisi
-    final statusText = _getStatusText(context, info.status ?? 'scheduled');
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15.0),
-      child:  info.appointmentId != null && _cancelledAppointments.containsKey(info.appointmentId)
-      ?     GestureDetector(
-                        onTap: () async {
-                          await _reactivateAppointment(context, info);
-                        },
-                        child: Container(
-                            width: 327.w,
+    final appointmentDateTime =
+        info.appointmentDateTime ??
+        DateTime(date.year, date.month, date.day, 9, 0);
+    final formattedTime = DateFormat('HH:mm').format(appointmentDateTime);
 
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              offset: const Offset(0, 2),
-              blurRadius: 4,
-            ),
-          ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16), // Figma: Radius 16px
+        border: Border.all(
+          color: Colors.black.withValues(alpha: 0.05), // Çok hafif kenarlık
         ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Randevunuz başarıyla silinmiştir! Geri Al',
-                                style: GoogleFonts.quicksand(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              const Icon(
-                                Icons.undo,
-                                size: 16,
-                                color: Colors.black87,
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-      : Container(
-        width: 327.w,
-
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              offset: const Offset(0, 2),
-              blurRadius: 4,
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Sol tarafta: Koç fotoğrafı
-      Expanded(
-        child: Row(
-          children: [
-                  Container(
-                width: 68.w,
-                height: 68.h,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFF2BD383),
-                    width: 3,
-                  ),
-                ),
-                child: ClipOval(
-                  child: Image.network(
-                    photoURL,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.network(
-                        photoURL,
-                        fit: BoxFit.cover,
-                      );
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Sağ tarafta: Koç görevi, isim, tarih/saat, durum
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Koç görevi (üstte)
-                    if (consultantJob.isNotEmpty)
-                      Text(
-                        JobConvert(consultantJob, context).call(),
-                        style: GoogleFonts.quicksand(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          height: 24.h / 17.h,
-                          color: Colors.black,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    if (consultantJob.isNotEmpty) const SizedBox(height: 2),
-                    // Koç ismi (görevin altında)
-                    Text(
-                      consultantDisplayName,
-                      style: GoogleFonts.quicksand(
-                        fontSize: consultantJob.isNotEmpty ? 14 : 17,
-                        fontWeight: FontWeight.w500,
-                        height: consultantJob.isNotEmpty ? 20.h / 14.h : 24.h / 17.h,
-                        color: consultantJob.isNotEmpty ? _kLightGreyText : Colors.black,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    // Tarih ve saat
-                    Text(
-                      dateTimeText,
-                      style: GoogleFonts.quicksand(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        height: 18.h / 12.h,
-                        color: _kLightGreyText,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    // Durum
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5,vertical: 3),
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(info.status ?? 'scheduled'),
-                        borderRadius: BorderRadius.circular(30)
-                      ),
-                      child: Text(
-                        statusText,
-                        style: GoogleFonts.quicksand(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    // Eğer randevu iptal edildiyse ve 3 saniye içindeyse "Geri Al" butonu göster
-                    if (info.appointmentId != null && _cancelledAppointments.containsKey(info.appointmentId)) ...[
-                      const SizedBox(height: 8),
-                 
-                    ],
-                  ],
-                ),
-              ),
-          ],
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(
+              0xFFB6BECA,
+            ).withValues(alpha: 0.3), // Hafif gölge
+            offset: const Offset(0, 2),
+            blurRadius: 4,
+          ),
+        ],
       ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Sol taraf resim
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              image: DecorationImage(
+                image: NetworkImage(photoURL),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
 
-              // Eğer randevu iptal edilmediyse veya 3 saniye geçtiyse PopupMenu göster
-              if (info.appointmentId == null || !_cancelledAppointments.containsKey(info.appointmentId))
-                PopupMenuButton<String>(
-                  color: Colors.white,
-                  icon: const Icon(
-                    Icons.more_horiz,
-                    size: 20,
-                    color: Color(0xFF434343),
+          // Orta taraf isim ve görev
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  consultantDisplayName,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600, // SemiBold
+                    color: Colors.black,
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onSelected: (value) async {
-                    if (value == 'delete') {
-                      await _cancelAppointment(context, info);
-                    }
-                  },
-                  itemBuilder: (BuildContext context) => [
-                    PopupMenuItem<String>(
-                      height: 45.h,
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                            size: 20,
-                          ),
-                          SizedBox(width: 12.w),
-                          Text(
-                            context.l10n.delete,
-                            style: GoogleFonts.quicksand(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
-          ],
-        ),
+                const SizedBox(height: 4),
+                if (consultantJob.isNotEmpty)
+                  Text(
+                    JobConvert(consultantJob, context).call(),
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: _kLightGreyText,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+
+          // Sağ taraf Saat (Yeşil Kapsül)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: _kPrimaryGreen.withValues(alpha: 0.1), // %10 saydam yeşil
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: _kPrimaryGreen,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  formattedTime,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: _kPrimaryGreen,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  /// Status metnini döndürür
-  String _getStatusText(BuildContext context, String status) {
-    switch (status.toLowerCase()) {
-      case 'scheduled':
-        return 'Planlandı';
-      case 'completed':
-        return 'Tamamlandı';
-      case 'cancelled':
-        return 'İptal Edildi';
-      default:
-        return status;
-    }
-  }
-
-  /// Status rengini döndürür
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'scheduled':
-        return const Color(0xFF2BD383); // Yeşil
-      case 'completed':
-        return const Color(0xFF7B7B7B); // Gri
-      case 'cancelled':
-        return Colors.red;
-      default:
-        return _kLightGreyText;
-    }
-  }
-
-  /// Randevuyu iptal et
-  Future<void> _cancelAppointment(BuildContext context, AppointmentInfo info) async {
-    if (info.appointmentId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Randevu ID bulunamadı'),
-          backgroundColor: Colors.red,
+  // --- Yeni Randevu Ekle Butonu ---
+  Widget _buildMakeAppointmentButton() {
+    return GestureDetector(
+      // GestureDetector dışarıya alındı
+      onTap: () {
+        // Yeni randevu ekranına yönlendirme
+      },
+      child: Container(
+        width: double.infinity,
+        height: 48,
+        decoration: BoxDecoration(
+          color: _kPrimaryGreen.withValues(alpha: 0.1), // Açık yeşil zemin
+          borderRadius: BorderRadius.circular(16),
         ),
-      );
-      return;
-    }
-
-    try {
-      final appointmentRepo = ref.read(appointmentsProvider.notifier).appointmentRepo;
-      final success = await appointmentRepo.cancelAppointment(info.appointmentId!);
-
-      if (success) {
-        // İptal zamanını kaydet (3 saniye geri alma için)
-        setState(() {
-          _cancelledAppointments[info.appointmentId!] = DateTime.now();
-        });
-
-        // Randevuları yeniden yükle (iptal edilen randevu artık görünmeyecek)
-        await ref.read(appointmentsProvider.notifier).refresh();
-
-        // 3 saniye sonra geri alma seçeneğini kaldır
-        Future.delayed(const Duration(seconds: 3), () {
-          if (mounted) {
-            setState(() {
-              _cancelledAppointments.remove(info.appointmentId);
-            });
-          }
-        });
-
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Randevu iptal edilemedi'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Hata: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  /// İptal edilmiş randevuyu geri al
-  Future<void> _reactivateAppointment(BuildContext context, AppointmentInfo info) async {
-    if (info.appointmentId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Randevu ID bulunamadı'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    try {
-      final appointmentRepo = ref.read(appointmentsProvider.notifier).appointmentRepo;
-      final success = await appointmentRepo.reactivateAppointment(info.appointmentId!);
-
-      if (success) {
-        // Geri alma seçeneğini kaldır
-        setState(() {
-          _cancelledAppointments.remove(info.appointmentId);
-        });
-
-        // Randevuları yeniden yükle (geri alınan randevu tekrar görünecek)
-        await ref.read(appointmentsProvider.notifier).refresh();
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Randevu geri alındı',
-              style: GoogleFonts.quicksand(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(Icons.add_circle_outline, color: _kPrimaryGreen, size: 20),
+            SizedBox(width: 8),
+            Text(
+              'Make an Appointment',
+              style: TextStyle(
+                fontFamily: 'Geist',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: Colors.white,
+                color: _kPrimaryGreen,
               ),
             ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Randevu geri alınamadı'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Hata: $e'),
-          backgroundColor: Colors.red,
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 }

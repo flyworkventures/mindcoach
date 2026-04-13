@@ -2,6 +2,7 @@ class PageRoutes {
   static const String navbar = '/navbar'; 
   static const profileSetup = '/profile_screen-setup';
   static const String onboarding = '/onboarding';
+  static const String login = '/login';
 
 
   static const String home = '/home_screen';
@@ -26,4 +27,6 @@ class PageRoutes {
   static const String testIntroScreen = '/test_intro_screen';
   static const String testQuestionScreen = '/test_question_screen';
   static const String testResultScreen = '/test_result_screen';
+  static const String specialistDetail = '/specialist_detail';
+  static const String relaxingSoundScreen = '/relaxing_sound_screen';
 }

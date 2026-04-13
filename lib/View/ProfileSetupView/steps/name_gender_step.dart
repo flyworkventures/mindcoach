@@ -11,7 +11,9 @@ import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 class NameGenderStep extends StatefulWidget {
   final String fullName;
   final ValueChanged<String> onFullNameChanged;
-  final Gender gender;
+  // Not: Eğer başlangıçta boş gelmesi için Gender'ı nullable (Gender?) yaptıysan
+  // buradaki tipleri de ona göre güncellemen gerekebilir.
+  final Gender? gender;
   final ValueChanged<Gender> onGenderChanged;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
@@ -20,7 +22,7 @@ class NameGenderStep extends StatefulWidget {
     super.key,
     required this.fullName,
     required this.onFullNameChanged,
-    required this.gender,
+    this.gender,
     required this.onGenderChanged,
     required this.titleStyle,
     required this.subtitleStyle,
@@ -185,7 +187,10 @@ class _NameGenderStepState extends State<NameGenderStep> {
                   style: GoogleFonts.quicksand(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF96989C), // Gri Renk
+                    // Seçiliyse Yeşil (#21BC87), değilse Gri (#96989C)
+                    color: widget.gender == Gender.unknown
+                        ? const Color(0xFF21BC87)
+                        : const Color(0xFF96989C),
                   ),
                 ),
               ),

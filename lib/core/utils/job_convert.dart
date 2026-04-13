@@ -14,6 +14,16 @@ class JobConvert {
         return l10n.jobFamilyAssistant;
       case 'thought_and_habit_guide':
         return l10n.jobThoughtAndHabitGuide;
+      case 'adult':
+        return l10n.jobAdult;
+      case 'child':
+        return l10n.jobChild;
+      case 'teenage':
+        return l10n.jobTeenage;
+      case 'personal':
+        return l10n.jobPersonal;
+      case 'exam_anxiety':
+        return l10n.jobExamAnxiety;
       default:
         return value;
     }

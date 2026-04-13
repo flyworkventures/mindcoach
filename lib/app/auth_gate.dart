@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mindcoach/View/SplashView/splash_view.dart';
+import 'package:mindcoach/View/splash/splash.dart';
+import 'package:mindcoach/app/navbar_shell.dart';
 
 import '../core/config/app_status_notifier.dart';
 import '../View/OnboardView/onboarding_page.dart';
 import '../View/ProfileSetupView/profile_setup_view.dart';
-import '../View/BottomNavBar/bottom_nav_bar.dart';
 
 
 

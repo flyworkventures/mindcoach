@@ -78,16 +78,11 @@ flutter:
     - assets/svg/
     - assets/images/
     - assets/sounds/
+    - assets/musics/
 
 flutter_native_splash:
-  # Tam ekran olması için 'image' yerine 'background_image' kullanıyoruz.
-  # Bu özellik iOS ve Android 11 (ve altı) cihazlarda resmi tam ekran yapar.
-  background_image: "assets/logo/onboarding.png"
+  color: "#FFFFFF"
   android: true
   ios: true
-
-  # Android 12 ve sonrasında işletim sistemi tam ekran resme izin vermez (zorunlu kuraldır).
-  # Bu yüzden burada mecburen 'color' ve 'image' olarak bırakıyoruz.
   android_12:
     color: "#FFFFFF"
-    image: "assets/logo/onboarding.png"

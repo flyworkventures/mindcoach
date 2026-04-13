@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:mindcoach/View/VideoCallView/video_call_view.dart';
-import 'package:mindcoach/View/threed.dart';
-import 'package:mindcoach/models/consultant_model.dart';
-
-
-import 'package:mindcoach/View/BottomNavBar/bottom_nav_bar.dart';
-import 'package:mindcoach/View/chat_screen/presentation/pages/conversation_screen.dart';
-import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_screen.dart';
-import 'package:mindcoach/View/mental_tests/test_intro_screen.dart';
-import 'package:mindcoach/View/mental_tests/test_question_screen.dart';
-import 'package:mindcoach/View/mental_tests/test_result_screen.dart';
+import 'package:mindcoach/View/LoginView/login_view.dart';
+import 'package:mindcoach/View/ProfileSettingsView/profile_settings.dart';
 import 'package:mindcoach/View/ProfileSetupView/profile_setup_view.dart';
 import 'package:mindcoach/View/ProfileView/appointment/appointment_screen.dart';
 import 'package:mindcoach/View/ProfileView/faq/faq_screen.dart';
 import 'package:mindcoach/View/ProfileView/notifications/notifications_screen.dart';
+import 'package:mindcoach/View/ProfileView/premium/premium_screen.dart';
 import 'package:mindcoach/View/ProfileView/presentation/goodbye_screen.dart';
 import 'package:mindcoach/View/ProfileView/presentation/invite_screen.dart';
-import 'package:mindcoach/View/ProfileView/premium/premium_screen.dart';
-import 'package:mindcoach/View/ProfileSettingsView/profile_settings.dart';
+import 'package:mindcoach/View/VideoCallView/video_call_view.dart';
+import 'package:mindcoach/View/chat_screen/conversation/conversation_page.dart';
+import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_screen.dart';
+import 'package:mindcoach/View/relaxing_sound/relaxing_sound_screen.dart';
+import 'package:mindcoach/View/specialists_screen/specialist_detail_screen.dart';
+import 'package:mindcoach/View/mental_tests/test_intro_screen.dart';
+import 'package:mindcoach/View/mental_tests/test_question_screen.dart';
+import 'package:mindcoach/View/mental_tests/test_result_screen.dart';
+import 'package:mindcoach/app/navbar_shell.dart';
+import 'package:mindcoach/models/consultant_model.dart';
+
 import '../../View/OnboardView/onboarding_page.dart';
 import 'page_routes.dart';
 
 class AppRouter {
-
   static Map<String, WidgetBuilder> routes = {
     PageRoutes.onboarding: (_) => const OnboardingScreen(),
     PageRoutes.profileSetup: (_) => const MindCoachOnboarding(),
+    PageRoutes.login: (_) => const LoginView(),
     PageRoutes.navbar: (_) => const BottomNavBar(),
 
     PageRoutes.profileSettings: (_) => const ProfileSettingsScreen(),
@@ -35,7 +36,8 @@ class AppRouter {
     PageRoutes.appointments: (_) => const AppointmentsScreen(),
     PageRoutes.notifications: (_) => const NotificationsScreen(),
     PageRoutes.premimum: (_) => const PremiumScreen(),
-    PageRoutes.videoCallView: (_)=> VideoCallView(),
+    PageRoutes.videoCallView: (_) => VideoCallView(),
+    PageRoutes.relaxingSoundScreen: (_) => const RelaxingSoundScreen(),
 
     PageRoutes.conversationScreen: (context) {
       final args = ModalRoute.of(context)?.settings.arguments;
@@ -49,8 +51,20 @@ class AppRouter {
 
     PageRoutes.videoCall: (_) => const VideoCallScreen(),
 
+    PageRoutes.specialistDetail: (context) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is! ConsultantModel) {
+        return const Scaffold(
+          body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+        );
+      }
+      return SpecialistDetailScreen(specialist: args);
+    },
+
     PageRoutes.testIntroScreen: (context) {
-      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+          {};
       return TestIntroScreen(
         testName: (args['testName'] as String?) ?? 'Default Test',
         testTitle: (args['testTitle'] as String?) ?? 'Introductory Information',
@@ -62,24 +76,29 @@ class AppRouter {
     PageRoutes.testQuestionScreen: (_) => const TestQuestionScreen(),
 
     PageRoutes.testResultScreen: (context) {
-      final results = _parseResultsMap(ModalRoute.of(context)?.settings.arguments);
+      final results = _parseResultsMap(
+        ModalRoute.of(context)?.settings.arguments,
+      );
       return TestResultScreen(results: results);
     },
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-    /// ROOT / SHELL
+      /// ROOT / SHELL
       case PageRoutes.onboarding:
         return _page(const OnboardingScreen(), settings);
 
       case PageRoutes.profileSetup:
         return _page(const MindCoachOnboarding(), settings);
 
+      case PageRoutes.login:
+        return _page(const LoginView(), settings);
+
       case PageRoutes.navbar:
         return _page(const BottomNavBar(), settings);
 
-    /// PROFILE PAGES
+      /// PROFILE PAGES
       case PageRoutes.profileSettings:
         return _page(const ProfileSettingsScreen(), settings);
 
@@ -101,40 +120,54 @@ class AppRouter {
       case PageRoutes.premimum:
         return _page(const PremiumScreen(), settings);
 
-    /// CHAT
+      /// CHAT
       case PageRoutes.conversationScreen:
         // ConsultantModel bekleniyor
         final args = settings.arguments;
-        
+
         if (args is! ConsultantModel) {
           // Eğer ConsultantModel değilse, fallback oluştur
           return _page(
             Scaffold(
-              body: Center(
-                child: Text('Hata: ConsultantModel bekleniyor'),
-              ),
+              body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
             ),
             settings,
           );
         }
-        
-        return _page(
-          ConversationScreen(specialistId: args ),
-          settings,
-        );
+
+        return _page(ConversationScreen(specialistId: args), settings);
 
       case PageRoutes.videoCall:
         return _page(const VideoCallScreen(), settings);
 
-    /// TESTS
+      /// RELAXING SOUND
+      case PageRoutes.relaxingSoundScreen:
+        return _page(const RelaxingSoundScreen(), settings);
+
+      /// SPECIALIST DETAIL
+      case PageRoutes.specialistDetail:
+        final args = settings.arguments;
+        if (args is! ConsultantModel) {
+          return _page(
+            const Scaffold(
+              body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+            ),
+            settings,
+          );
+        }
+        return _page(SpecialistDetailScreen(specialist: args), settings);
+
+      /// TESTS
       case PageRoutes.testIntroScreen:
         final args = settings.arguments as Map<String, dynamic>? ?? {};
 
         return _page(
           TestIntroScreen(
             testName: (args['testName'] as String?) ?? 'Default Test',
-            testTitle: (args['testTitle'] as String?) ?? 'Introductory Information',
-            imagePath: (args['imagePath'] as String?) ?? 'assets/chars/char0.jpg',
+            testTitle:
+                (args['testTitle'] as String?) ?? 'Introductory Information',
+            imagePath:
+                (args['imagePath'] as String?) ?? 'assets/chars/char0.jpg',
             totalQuestions: _parseInt(args['totalQuestions'], fallback: 7),
           ),
           settings,
@@ -147,22 +180,17 @@ class AppRouter {
         final results = _parseResultsMap(settings.arguments);
         return _page(TestResultScreen(results: results), settings);
 
-    /// FALLBACK
+      /// FALLBACK
       default:
         return _page(
-          const Scaffold(
-            body: Center(child: Text('Hata: Rota Bulunamadı!')),
-          ),
+          const Scaffold(body: Center(child: Text('Hata: Rota Bulunamadı!'))),
           settings,
         );
     }
   }
 
   static MaterialPageRoute _page(Widget child, RouteSettings settings) {
-    return MaterialPageRoute(
-      builder: (_) => child,
-      settings: settings,
-    );
+    return MaterialPageRoute(builder: (_) => child, settings: settings);
   }
 
   static int _parseInt(dynamic value, {required int fallback}) {
@@ -187,6 +215,4 @@ class AppRouter {
 
     return <int, int>{};
   }
-
-
 }

@@ -100,6 +100,72 @@ abstract class AppLocalizations {
     Locale('tr'),
   ];
 
+  /// No description provided for @relaxingSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Relaxing Sound'**
+  String get relaxingSound;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See All'**
+  String get seeAll;
+
+  /// No description provided for @premiumHeadlinePart1.
+  ///
+  /// In en, this message translates to:
+  /// **'A space just to be '**
+  String get premiumHeadlinePart1;
+
+  /// No description provided for @premiumHeadlineHighlight.
+  ///
+  /// In en, this message translates to:
+  /// **'understood'**
+  String get premiumHeadlineHighlight;
+
+  /// No description provided for @premiumHeadlinePart2.
+  ///
+  /// In en, this message translates to:
+  /// **',\nwithout judgment.'**
+  String get premiumHeadlinePart2;
+
+  /// No description provided for @premiumSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Thousands have taken this step. Now it\'s your turn — 3 days completely free.'**
+  String get premiumSubtitle;
+
+  /// No description provided for @premiumFeature1.
+  ///
+  /// In en, this message translates to:
+  /// **'24/7 unlimited access'**
+  String get premiumFeature1;
+
+  /// No description provided for @premiumFeature2.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority connection'**
+  String get premiumFeature2;
+
+  /// No description provided for @premiumFeature3.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced AI tailored for you'**
+  String get premiumFeature3;
+
+  /// No description provided for @premiumAnnualDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'40% off on annual plan'**
+  String get premiumAnnualDiscount;
+
+  /// No description provided for @premiumCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get premiumCta;
+
   /// No description provided for @onboardingTitle1.
   ///
   /// In en, this message translates to:
@@ -243,6 +309,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Find My Coaches'**
   String get findMyCoaches;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to find your coach and start your journey. Takes 2 minutes.'**
+  String get loginSubtitle;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @continueWithApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get continueWithApple;
+
+  /// No description provided for @dataPrivacyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is never shared with third parties. You can delete your account at any time.'**
+  String get dataPrivacyNotice;
 
   /// No description provided for @approachTitle.
   ///
@@ -1582,11 +1672,719 @@ abstract class AppLocalizations {
   /// **'Family Coach'**
   String get jobFamilyAssistant;
 
+  /// No description provided for @jobAdult.
+  ///
+  /// In en, this message translates to:
+  /// **'Adult Coach'**
+  String get jobAdult;
+
+  /// No description provided for @jobChild.
+  ///
+  /// In en, this message translates to:
+  /// **'Child Coach'**
+  String get jobChild;
+
+  /// No description provided for @jobTeenage.
+  ///
+  /// In en, this message translates to:
+  /// **'Teen Coach'**
+  String get jobTeenage;
+
+  /// No description provided for @jobPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Coach'**
+  String get jobPersonal;
+
+  /// No description provided for @jobExamAnxiety.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam Anxiety Coach'**
+  String get jobExamAnxiety;
+
   /// No description provided for @noSpecialistsFound.
   ///
   /// In en, this message translates to:
   /// **'No specialists found'**
   String get noSpecialistsFound;
+
+  /// No description provided for @featureFamilyConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Conflicts'**
+  String get featureFamilyConflicts;
+
+  /// No description provided for @featureParenting.
+  ///
+  /// In en, this message translates to:
+  /// **'Parenting'**
+  String get featureParenting;
+
+  /// No description provided for @featureCommunication.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication'**
+  String get featureCommunication;
+
+  /// No description provided for @featureBoundaries.
+  ///
+  /// In en, this message translates to:
+  /// **'Boundaries'**
+  String get featureBoundaries;
+
+  /// No description provided for @featureRelationshipRepair.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship Repair'**
+  String get featureRelationshipRepair;
+
+  /// No description provided for @featureDivorceSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Divorce Support'**
+  String get featureDivorceSupport;
+
+  /// No description provided for @featureChildBehavior.
+  ///
+  /// In en, this message translates to:
+  /// **'Child Behavior'**
+  String get featureChildBehavior;
+
+  /// No description provided for @featureFamilyHarmony.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Harmony'**
+  String get featureFamilyHarmony;
+
+  /// No description provided for @featureStressManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Stress Management'**
+  String get featureStressManagement;
+
+  /// No description provided for @featureSelfConfidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-Confidence'**
+  String get featureSelfConfidence;
+
+  /// No description provided for @featureLifeBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Life Balance'**
+  String get featureLifeBalance;
+
+  /// No description provided for @featureCareerGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Career Guidance'**
+  String get featureCareerGuidance;
+
+  /// No description provided for @featureEmotionalRegulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Emotional Regulation'**
+  String get featureEmotionalRegulation;
+
+  /// No description provided for @featureDecisionMaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Decision Making'**
+  String get featureDecisionMaking;
+
+  /// No description provided for @featureMotivation.
+  ///
+  /// In en, this message translates to:
+  /// **'Motivation'**
+  String get featureMotivation;
+
+  /// No description provided for @featurePersonalGrowth.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Growth'**
+  String get featurePersonalGrowth;
+
+  /// No description provided for @featureEmotionalAwareness.
+  ///
+  /// In en, this message translates to:
+  /// **'Emotional Awareness'**
+  String get featureEmotionalAwareness;
+
+  /// No description provided for @featureSocialSkills.
+  ///
+  /// In en, this message translates to:
+  /// **'Social Skills'**
+  String get featureSocialSkills;
+
+  /// No description provided for @featureSchoolAdaptation.
+  ///
+  /// In en, this message translates to:
+  /// **'School Adaptation'**
+  String get featureSchoolAdaptation;
+
+  /// No description provided for @featureSelfExpression.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-Expression'**
+  String get featureSelfExpression;
+
+  /// No description provided for @featureFearManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Fear Management'**
+  String get featureFearManagement;
+
+  /// No description provided for @featureFriendshipBuilding.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendship Building'**
+  String get featureFriendshipBuilding;
+
+  /// No description provided for @featureFocusAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus & Attention'**
+  String get featureFocusAttention;
+
+  /// No description provided for @featureBehavioralSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Behavioral Support'**
+  String get featureBehavioralSupport;
+
+  /// No description provided for @featureIdentityDevelopment.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity Development'**
+  String get featureIdentityDevelopment;
+
+  /// No description provided for @featurePeerPressure.
+  ///
+  /// In en, this message translates to:
+  /// **'Peer Pressure'**
+  String get featurePeerPressure;
+
+  /// No description provided for @featureAcademicStress.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic Stress'**
+  String get featureAcademicStress;
+
+  /// No description provided for @featureSelfEsteem.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-Esteem'**
+  String get featureSelfEsteem;
+
+  /// No description provided for @featureDigitalWellbeing.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital Wellbeing'**
+  String get featureDigitalWellbeing;
+
+  /// No description provided for @featureAngerManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Anger Management'**
+  String get featureAngerManagement;
+
+  /// No description provided for @featureFuturePlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Future Planning'**
+  String get featureFuturePlanning;
+
+  /// No description provided for @featureParentCommunication.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent Communication'**
+  String get featureParentCommunication;
+
+  /// No description provided for @featureLoneliness.
+  ///
+  /// In en, this message translates to:
+  /// **'Loneliness'**
+  String get featureLoneliness;
+
+  /// No description provided for @featureAnxietySupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Anxiety Support'**
+  String get featureAnxietySupport;
+
+  /// No description provided for @featureGriefProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Grief Processing'**
+  String get featureGriefProcessing;
+
+  /// No description provided for @featureMindfulness.
+  ///
+  /// In en, this message translates to:
+  /// **'Mindfulness'**
+  String get featureMindfulness;
+
+  /// No description provided for @featureSleepImprovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Improvement'**
+  String get featureSleepImprovement;
+
+  /// No description provided for @featureOverthinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Overthinking'**
+  String get featureOverthinking;
+
+  /// No description provided for @featureSelfDiscovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-Discovery'**
+  String get featureSelfDiscovery;
+
+  /// No description provided for @featureEmotionalHealing.
+  ///
+  /// In en, this message translates to:
+  /// **'Emotional Healing'**
+  String get featureEmotionalHealing;
+
+  /// No description provided for @featureTestAnxiety.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Anxiety'**
+  String get featureTestAnxiety;
+
+  /// No description provided for @featureStudyTechniques.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Techniques'**
+  String get featureStudyTechniques;
+
+  /// No description provided for @featureTimeManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Management'**
+  String get featureTimeManagement;
+
+  /// No description provided for @featurePerformancePressure.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Pressure'**
+  String get featurePerformancePressure;
+
+  /// No description provided for @featureConcentration.
+  ///
+  /// In en, this message translates to:
+  /// **'Concentration'**
+  String get featureConcentration;
+
+  /// No description provided for @featureRelaxationMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Relaxation Methods'**
+  String get featureRelaxationMethods;
+
+  /// No description provided for @featureExamPreparation.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam Preparation'**
+  String get featureExamPreparation;
+
+  /// No description provided for @featureConfidenceBuilding.
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence Building'**
+  String get featureConfidenceBuilding;
+
+  /// No description provided for @explanationFamilyAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'A family coach who helps you navigate through family dynamics, resolve conflicts, strengthen parent-child bonds, and build a more harmonious home environment. Whether you\'re dealing with communication breakdowns, boundary issues, or major life transitions like divorce, your coach provides a safe space to explore solutions together.'**
+  String get explanationFamilyAssistant;
+
+  /// No description provided for @explanationAdult.
+  ///
+  /// In en, this message translates to:
+  /// **'A personal development coach designed for adults who want to take control of their lives. From managing daily stress and building self-confidence to making important career decisions and finding life balance, your coach supports you with practical strategies tailored to your unique challenges and goals.'**
+  String get explanationAdult;
+
+  /// No description provided for @explanationChild.
+  ///
+  /// In en, this message translates to:
+  /// **'A gentle and supportive coach specially trained to help children express their emotions, build social skills, and adapt to school life. Using age-appropriate techniques, your coach helps kids overcome fears, improve focus, and develop healthy friendships in a safe and encouraging environment.'**
+  String get explanationChild;
+
+  /// No description provided for @explanationTeenage.
+  ///
+  /// In en, this message translates to:
+  /// **'A coach who truly understands the teenage experience. From identity exploration and peer pressure to academic stress and digital wellbeing, your coach helps teens build self-esteem, manage emotions, and plan for the future while maintaining healthy communication with parents.'**
+  String get explanationTeenage;
+
+  /// No description provided for @explanationPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'A compassionate personal coach focused on your inner wellbeing. Whether you\'re struggling with loneliness, anxiety, grief, or simply overthinking, your coach guides you through mindfulness practices, emotional healing techniques, and self-discovery exercises to help you find peace and clarity.'**
+  String get explanationPersonal;
+
+  /// No description provided for @explanationExamAnxiety.
+  ///
+  /// In en, this message translates to:
+  /// **'A specialized coach who helps students conquer exam anxiety and unlock their true academic potential. Through proven study techniques, relaxation methods, and confidence-building exercises, your coach transforms test stress into focused preparation and calm performance.'**
+  String get explanationExamAnxiety;
+
+  /// No description provided for @explanationFamilyAssistant1.
+  ///
+  /// In en, this message translates to:
+  /// **'A dedicated family coach specializing in resolving deep-rooted family conflicts and rebuilding strained relationships. With expertise in parenting challenges, communication skills, and setting healthy boundaries, this coach helps families navigate difficult transitions like divorce while guiding children through behavioral changes — all within a safe, judgment-free space.'**
+  String get explanationFamilyAssistant1;
+
+  /// No description provided for @explanationFamilyAssistant2.
+  ///
+  /// In en, this message translates to:
+  /// **'A warm and empathetic family coach focused on strengthening the bonds that matter most. Specializing in effective parenting strategies, open communication, and relationship repair, this coach helps families heal after difficult periods like separation or divorce, while supporting children\'s emotional and behavioral development toward lasting harmony.'**
+  String get explanationFamilyAssistant2;
+
+  /// No description provided for @explanationAdult1.
+  ///
+  /// In en, this message translates to:
+  /// **'A results-driven coach for adults seeking meaningful change. With a focus on stress management, achieving life balance, and career guidance, this coach helps you regulate your emotions, make confident decisions, and unlock sustainable personal growth through practical, goal-oriented strategies.'**
+  String get explanationAdult1;
+
+  /// No description provided for @explanationAdult2.
+  ///
+  /// In en, this message translates to:
+  /// **'A holistic development coach empowering adults to reach their full potential. From building unshakable self-confidence and managing stress to finding career direction and daily motivation, this coach combines emotional regulation techniques with actionable life strategies to create lasting positive change.'**
+  String get explanationAdult2;
+
+  /// No description provided for @explanationTeenage1.
+  ///
+  /// In en, this message translates to:
+  /// **'A coach who deeply understands the unique challenges of adolescence. From navigating identity development and resisting peer pressure to managing academic stress and building healthy digital habits, this coach helps teens strengthen their self-esteem, control anger, plan their future, and communicate openly with their parents.'**
+  String get explanationTeenage1;
+
+  /// No description provided for @explanationTeenage2.
+  ///
+  /// In en, this message translates to:
+  /// **'An empathetic guide through the turbulent teenage years. Specializing in identity exploration, academic pressure, and digital wellbeing, this coach empowers teens to develop resilience against peer influence, manage anger constructively, build long-term goals, and maintain healthy parent-teen relationships.'**
+  String get explanationTeenage2;
+
+  /// No description provided for @explanationChild1.
+  ///
+  /// In en, this message translates to:
+  /// **'A nurturing coach designed to support children through their most formative years. Using gentle, age-appropriate methods, this coach helps kids develop emotional awareness, build social skills, adapt to school life, express themselves freely, overcome fears, form meaningful friendships, improve focus, and develop positive behavioral patterns.'**
+  String get explanationChild1;
+
+  /// No description provided for @explanationChild2.
+  ///
+  /// In en, this message translates to:
+  /// **'A caring and patient coach dedicated to helping children thrive. With a focus on emotional intelligence, social development, and school adaptation, this coach creates a safe environment where kids learn to express their feelings, conquer fears, build lasting friendships, strengthen concentration, and receive the behavioral support they need to grow confidently.'**
+  String get explanationChild2;
+
+  /// No description provided for @explanationPersonal1.
+  ///
+  /// In en, this message translates to:
+  /// **'A deeply compassionate coach focused on your emotional wellbeing and inner peace. Whether you\'re experiencing loneliness, anxiety, grief, or restless nights, this coach guides you through mindfulness practices, emotional healing processes, and self-discovery journeys to help you break free from overthinking and find lasting clarity.'**
+  String get explanationPersonal1;
+
+  /// No description provided for @explanationPersonal2.
+  ///
+  /// In en, this message translates to:
+  /// **'A supportive and intuitive personal coach who helps you reconnect with yourself. Specializing in anxiety management, mindfulness techniques, and sleep improvement, this coach gently guides you through patterns of overthinking and emotional distress toward genuine healing and a renewed sense of inner calm.'**
+  String get explanationPersonal2;
+
+  /// No description provided for @explanationExamAnxiety1.
+  ///
+  /// In en, this message translates to:
+  /// **'A focused and methodical coach who transforms exam stress into confident performance. Specializing in time management, handling performance pressure, and building deep concentration, this coach equips students with practical relaxation methods, structured exam preparation techniques, and confidence-building strategies for academic success.'**
+  String get explanationExamAnxiety1;
+
+  /// No description provided for @explanationExamAnxiety2.
+  ///
+  /// In en, this message translates to:
+  /// **'A specialized academic coach dedicated to helping students overcome test anxiety and study smarter. Through proven study techniques, effective time management, and performance pressure resilience, this coach builds deep concentration skills, structured exam preparation habits, and lasting confidence for every test day.'**
+  String get explanationExamAnxiety2;
+
+  /// No description provided for @filterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filterTitle;
+
+  /// No description provided for @filterCoachingArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Coaching Area'**
+  String get filterCoachingArea;
+
+  /// No description provided for @filterExpertise.
+  ///
+  /// In en, this message translates to:
+  /// **'Expertise'**
+  String get filterExpertise;
+
+  /// No description provided for @filterSelectCoachingArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Coaching Area'**
+  String get filterSelectCoachingArea;
+
+  /// No description provided for @filterSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get filterSave;
+
+  /// No description provided for @coachDetailInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Information'**
+  String get coachDetailInformation;
+
+  /// No description provided for @coachDetailUnlimitedMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited'**
+  String get coachDetailUnlimitedMemory;
+
+  /// No description provided for @coachDetailMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory'**
+  String get coachDetailMemory;
+
+  /// No description provided for @coachDetailMultilingual.
+  ///
+  /// In en, this message translates to:
+  /// **'Multilingual'**
+  String get coachDetailMultilingual;
+
+  /// No description provided for @coachDetailLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get coachDetailLanguage;
+
+  /// No description provided for @coachDetailAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get coachDetailAvailability;
+
+  /// No description provided for @coachDetailAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment'**
+  String get coachDetailAppointment;
+
+  /// No description provided for @coachDetailStartVideoCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Video Call'**
+  String get coachDetailStartVideoCall;
+
+  /// No description provided for @coachDetailOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get coachDetailOnline;
+
+  /// No description provided for @coachDetailVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get coachDetailVerified;
+
+  /// No description provided for @coachDetailCreateAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an appointment'**
+  String get coachDetailCreateAppointment;
+
+  /// No description provided for @searchSoundHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search sounds, moods, vibes..'**
+  String get searchSoundHint;
+
+  /// No description provided for @featuredForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured For You'**
+  String get featuredForYou;
+
+  /// No description provided for @mostPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Popular'**
+  String get mostPopular;
+
+  /// No description provided for @soundCategoryFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get soundCategoryFocus;
+
+  /// No description provided for @soundCategorySleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get soundCategorySleep;
+
+  /// No description provided for @soundCategoryMeditation.
+  ///
+  /// In en, this message translates to:
+  /// **'Meditation'**
+  String get soundCategoryMeditation;
+
+  /// No description provided for @soundCategoryRelax.
+  ///
+  /// In en, this message translates to:
+  /// **'Relax'**
+  String get soundCategoryRelax;
+
+  /// No description provided for @soundDeepWorkFlow.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep Work Flow'**
+  String get soundDeepWorkFlow;
+
+  /// No description provided for @soundDeepWorkFlowSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Enhance your productivity'**
+  String get soundDeepWorkFlowSub;
+
+  /// No description provided for @soundBinauralBeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Binaural Beats'**
+  String get soundBinauralBeats;
+
+  /// No description provided for @soundBinauralBeatsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Tune your brainwaves'**
+  String get soundBinauralBeatsSub;
+
+  /// No description provided for @soundLibraryAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'Library Ambience'**
+  String get soundLibraryAmbience;
+
+  /// No description provided for @soundLibraryAmbienceSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet study atmosphere'**
+  String get soundLibraryAmbienceSub;
+
+  /// No description provided for @soundRainOnWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain on Window'**
+  String get soundRainOnWindow;
+
+  /// No description provided for @soundRainOnWindowSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Drift into peaceful sleep'**
+  String get soundRainOnWindowSub;
+
+  /// No description provided for @soundOceanWaves.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean Waves'**
+  String get soundOceanWaves;
+
+  /// No description provided for @soundOceanWavesSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Rhythmic waves to calm you'**
+  String get soundOceanWavesSub;
+
+  /// No description provided for @soundDeepSpaceDrone.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep Space Drone'**
+  String get soundDeepSpaceDrone;
+
+  /// No description provided for @soundDeepSpaceDroneSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Cosmic ambient journey'**
+  String get soundDeepSpaceDroneSub;
+
+  /// No description provided for @soundTibetanBowls.
+  ///
+  /// In en, this message translates to:
+  /// **'Tibetan Bowls'**
+  String get soundTibetanBowls;
+
+  /// No description provided for @soundTibetanBowlsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Ancient healing vibrations'**
+  String get soundTibetanBowlsSub;
+
+  /// No description provided for @soundForestBirds.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest Birds'**
+  String get soundForestBirds;
+
+  /// No description provided for @soundForestBirdsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Nature\'s morning melody'**
+  String get soundForestBirdsSub;
+
+  /// No description provided for @soundMorningZen.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning Zen'**
+  String get soundMorningZen;
+
+  /// No description provided for @soundMorningZenSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your day mindfully'**
+  String get soundMorningZenSub;
+
+  /// No description provided for @soundFireplaceCrackle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fireplace Crackle'**
+  String get soundFireplaceCrackle;
+
+  /// No description provided for @soundFireplaceCrackleSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm and cozy vibes'**
+  String get soundFireplaceCrackleSub;
+
+  /// No description provided for @soundGentleStream.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle Stream'**
+  String get soundGentleStream;
+
+  /// No description provided for @soundGentleStreamSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Flowing water serenity'**
+  String get soundGentleStreamSub;
+
+  /// No description provided for @soundSoftPiano.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft Piano'**
+  String get soundSoftPiano;
+
+  /// No description provided for @soundSoftPianoSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Delicate melodies to unwind'**
+  String get soundSoftPianoSub;
 }
 
 class _AppLocalizationsDelegate

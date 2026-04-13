@@ -47,7 +47,7 @@ class AvailableDaysStep extends StatelessWidget {
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 12,
-          runSpacing: 10,
+          runSpacing: 12,
           children: _days.map((day) {
             final selected = availableDays.contains(day);
             return GestureDetector(
@@ -55,12 +55,12 @@ class AvailableDaysStep extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 width: 80,
-                height: 44,
+                height: 50,
                 decoration: BoxDecoration(
                   color: selected
                       ? const Color(0xFF21BC87).withValues(alpha: 0.06)
                       : Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: selected
                         ? const Color(0xFF21BC87)
@@ -77,7 +77,7 @@ class AvailableDaysStep extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       color: selected
                           ? const Color(0xFF21BC87)
-                          : const Color(0xFF1D1D1D),
+                          : const Color(0xFF96989C),
                     ),
                   ),
                 ),
