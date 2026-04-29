@@ -29,6 +29,9 @@ class NotificationState {
 
 class NotificationNotifier extends Notifier<NotificationState> {
   NotificationRepo? _notificationRepo;
+  bool _isRefreshing = false;
+  DateTime? _lastRefreshAt;
+  static const Duration _minRefreshInterval = Duration(seconds: 90);
 
   NotificationRepo get notificationRepo {
     _notificationRepo ??= NotificationRepo(ref);
@@ -70,6 +73,14 @@ class NotificationNotifier extends Notifier<NotificationState> {
   /// Refresh notifications
   /// Only updates state if there are actual changes
   Future<void> refresh() async {
+    final now = DateTime.now();
+    final recentlyRefreshed =
+        _lastRefreshAt != null &&
+        now.difference(_lastRefreshAt!) < _minRefreshInterval;
+
+    if (_isRefreshing || recentlyRefreshed) return;
+
+    _isRefreshing = true;
     state = state.copyWith(isLoading: true, error: null);
     try {
       final newNotifications = await notificationRepo.getUserNotifications(
@@ -90,12 +101,15 @@ class NotificationNotifier extends Notifier<NotificationState> {
         // No changes, just update loading state
         state = state.copyWith(isLoading: false);
       }
+      _lastRefreshAt = DateTime.now();
     } catch (e) {
       debugPrint('Error refreshing notifications: $e');
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
       );
+    } finally {
+      _isRefreshing = false;
     }
   }
 

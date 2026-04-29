@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -90,7 +91,7 @@ class _AppointmentDetailScreenState
     final appointmentDateTime = widget.appointment.appointmentDateTime;
     if (appointmentDateTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Randevu tarihi bulunamadı')),
+        SnackBar(content: Text(context.l10n.errorAppointmentDateNotFound)),
       );
       return;
     }
@@ -102,7 +103,7 @@ class _AppointmentDetailScreenState
     if (timeDifference.inMinutes < -5) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Randevu zamanı geçmiş')));
+      ).showSnackBar(SnackBar(content: Text(context.l10n.errorAppointmentExpired)));
       return;
     }
 
@@ -110,9 +111,7 @@ class _AppointmentDetailScreenState
     if (timeDifference.inMinutes > 5) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Randevu zamanı henüz gelmedi. Kalan süre: ${timeDifference.inHours} saat ${timeDifference.inMinutes % 60} dakika',
-          ),
+          content: Text(context.l10n.errorAppointmentNotYet),
         ),
       );
       return;
@@ -135,7 +134,7 @@ class _AppointmentDetailScreenState
       if (consultantId == null) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Consultant bulunamadı')));
+        ).showSnackBar(SnackBar(content: Text(context.l10n.errorConsultantNotFound)));
         return;
       }
 
@@ -145,7 +144,7 @@ class _AppointmentDetailScreenState
 
         if (consultants == null || consultants.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Consultant listesi yüklenemedi')),
+            SnackBar(content: Text(context.l10n.errorConsultantsNotLoaded)),
           );
           return;
         }
@@ -159,7 +158,7 @@ class _AppointmentDetailScreenState
       } catch (e) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Consultant yüklenemedi: $e')));
+        ).showSnackBar(SnackBar(content: Text(context.l10n.errorConsultantLoadFailed)));
         return;
       }
     }
@@ -291,15 +290,14 @@ class _AppointmentDetailScreenState
                           ),
                           child: ClipOval(
                             child: photoURL.isNotEmpty
-                                ? Image.network(
-                                    photoURL,
+                                ? CachedNetworkImage(
+                                    imageUrl: photoURL,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        color: Colors.grey[300],
-                                        child: const Icon(Icons.person),
-                                      );
-                                    },
+                                    placeholder: (_, __) => const SizedBox.shrink(),
+                                    errorWidget: (_, __, ___) => Container(
+                                      color: Colors.grey[300],
+                                      child: const Icon(Icons.person),
+                                    ),
                                   )
                                 : Container(
                                     color: Colors.grey[300],

@@ -7,7 +7,16 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_hi.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_ja.dart';
+import 'app_localizations_ko.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ru.dart';
 import 'app_localizations_tr.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -97,7 +106,16 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('de'),
     Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('hi'),
+    Locale('it'),
+    Locale('ja'),
+    Locale('ko'),
+    Locale('pt'),
+    Locale('ru'),
     Locale('tr'),
+    Locale('zh'),
   ];
 
   /// No description provided for @relaxingSound.
@@ -111,6 +129,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See All'**
   String get seeAll;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @typeAMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeAMessage;
 
   /// No description provided for @premiumHeadlinePart1.
   ///
@@ -175,7 +205,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingDesc1.
   ///
   /// In en, this message translates to:
-  /// **'Talk to a certified coach in minutes — whenever you need it.'**
+  /// **'Talk to a certified guide in minutes — whenever you need it.'**
   String get onboardingDesc1;
 
   /// No description provided for @onboardingTitle2.
@@ -193,7 +223,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingTitle3.
   ///
   /// In en, this message translates to:
-  /// **'Find the right coach for you.'**
+  /// **'Find the right guide for you.'**
   String get onboardingTitle3;
 
   /// No description provided for @onboardingDesc3.
@@ -211,7 +241,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingTermsPrefix.
   ///
   /// In en, this message translates to:
-  /// **'By signing up for MindCoach, you agree to our '**
+  /// **'By signing up for __MINDguide2__, you agree to our '**
   String get onboardingTermsPrefix;
 
   /// No description provided for @onboardingTermsOfService.
@@ -307,13 +337,13 @@ abstract class AppLocalizations {
   /// No description provided for @findMyCoaches.
   ///
   /// In en, this message translates to:
-  /// **'Find My Coaches'**
+  /// **'Find My Guides'**
   String get findMyCoaches;
 
   /// No description provided for @loginSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Sign in to find your coach and start your journey. Takes 2 minutes.'**
+  /// **'Sign in to find your guide and start your journey. Takes 2 minutes.'**
   String get loginSubtitle;
 
   /// No description provided for @continueWithGoogle.
@@ -337,13 +367,13 @@ abstract class AppLocalizations {
   /// No description provided for @approachTitle.
   ///
   /// In en, this message translates to:
-  /// **'How should your coach approach you?'**
+  /// **'How should your guide approach you?'**
   String get approachTitle;
 
   /// No description provided for @approachSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Helps us match your personality to the right coach'**
+  /// **'Helps us match your personality to the right guide'**
   String get approachSubtitle;
 
   /// No description provided for @approachPatient.
@@ -565,7 +595,7 @@ abstract class AppLocalizations {
   /// No description provided for @nameGenderSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'So your coach can get to know the real you'**
+  /// **'So your guide can get to know the real you'**
   String get nameGenderSubtitle;
 
   /// No description provided for @nameGenderFullNameLabel.
@@ -613,7 +643,7 @@ abstract class AppLocalizations {
   /// No description provided for @supportAreaSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'We\'ll only show coaches who specialise in this'**
+  /// **'We\'ll only show guides who specialise in this'**
   String get supportAreaSubtitle;
 
   /// No description provided for @supportAreaIndividual.
@@ -655,7 +685,7 @@ abstract class AppLocalizations {
   /// No description provided for @availableDaysSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'So we only show coaches free when you are'**
+  /// **'So we only show guides free when you are'**
   String get availableDaysSubtitle;
 
   /// No description provided for @dayMonday.
@@ -709,7 +739,7 @@ abstract class AppLocalizations {
   /// No description provided for @meetingTimeSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Coaches with matching slots will be highlighted'**
+  /// **'Guides with matching slots will be highlighted'**
   String get meetingTimeSubtitle;
 
   /// No description provided for @meetingTimeMorning.
@@ -916,6 +946,54 @@ abstract class AppLocalizations {
   /// **'Stressed'**
   String get moodStressed;
 
+  /// No description provided for @moodTrackerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A small check-in goes a long way'**
+  String get moodTrackerSubtitle;
+
+  /// No description provided for @moodDescCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'This peace in your mind is your greatest strength. Enjoy this moment and stay balanced.'**
+  String get moodDescCalm;
+
+  /// No description provided for @moodDescHappy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your positive energy is contagious! Keep spreading joy and embracing this wonderful feeling.'**
+  String get moodDescHappy;
+
+  /// No description provided for @moodDescNeutral.
+  ///
+  /// In en, this message translates to:
+  /// **'A steady state of mind is perfectly fine. Take a moment to check in with yourself.'**
+  String get moodDescNeutral;
+
+  /// No description provided for @moodDescTired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your body is telling you to rest. Take a break and recharge — you deserve it.'**
+  String get moodDescTired;
+
+  /// No description provided for @moodDescStressed.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a deep breath. Remember, it\'s okay to slow down and take things one step at a time.'**
+  String get moodDescStressed;
+
+  /// No description provided for @todaysSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s sessions'**
+  String get todaysSessions;
+
+  /// No description provided for @makeAnAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Make an Appointment'**
+  String get makeAnAppointment;
+
   /// No description provided for @timeToTrackMood.
   ///
   /// In en, this message translates to:
@@ -1036,25 +1114,25 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get continueButton;
 
-  /// First rule: evaluate your last week, bold part between **
+  /// No description provided for @testRule1.
   ///
   /// In en, this message translates to:
   /// **'Evaluate your **last week**.'**
   String get testRule1;
 
-  /// Second rule: recommended frequency of the test
+  /// No description provided for @testRule2.
   ///
   /// In en, this message translates to:
   /// **'It is recommended that you take the test **once a week**.'**
   String get testRule2;
 
-  /// Third rule: user can continue later
+  /// No description provided for @testRule3.
   ///
   /// In en, this message translates to:
   /// **'If you stop the test halfway through, **you can continue from where you left off.**'**
   String get testRule3;
 
-  /// Legal/medical disclaimer for mental health test
+  /// No description provided for @testDisclaimer.
   ///
   /// In en, this message translates to:
   /// **'The results of this test provide insight into individual mental health but do not replace a diagnosis or recommendation as discussed with a mental health professional.'**
@@ -1234,6 +1312,18 @@ abstract class AppLocalizations {
   /// **'Remember, this test is an awareness tool, not a medical diagnosis. Taking time for yourself is the first step toward feeling better.'**
   String get stressAnalysisRemember;
 
+  /// No description provided for @testResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Test result'**
+  String get testResult;
+
+  /// No description provided for @mentalTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Mental Test'**
+  String get mentalTest;
+
   /// No description provided for @backToHome.
   ///
   /// In en, this message translates to:
@@ -1291,7 +1381,7 @@ abstract class AppLocalizations {
   /// No description provided for @specialistElaraTitle.
   ///
   /// In en, this message translates to:
-  /// **'Development Coach'**
+  /// **'Development Guide'**
   String get specialistElaraTitle;
 
   /// No description provided for @specialistElaraDescription.
@@ -1396,6 +1486,222 @@ abstract class AppLocalizations {
   /// **'Calendar'**
   String get calendar;
 
+  /// No description provided for @age.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get age;
+
+  /// No description provided for @enterYourAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your age'**
+  String get enterYourAge;
+
+  /// No description provided for @profileSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved successfully'**
+  String get profileSaved;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @deleteAccountWhyLeaving.
+  ///
+  /// In en, this message translates to:
+  /// **'We don\'t want you to go, but we understand.'**
+  String get deleteAccountWhyLeaving;
+
+  /// No description provided for @deleteAccountImproveQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'To help us improve the __MINDguide__ experience, could you tell us why you\'re leaving?'**
+  String get deleteAccountImproveQuestion;
+
+  /// No description provided for @deleteReasonNotRealistic.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t find the AI characters realistic.'**
+  String get deleteReasonNotRealistic;
+
+  /// No description provided for @deleteReasonTechnicalIssues.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m experiencing technical issues with video chats.'**
+  String get deleteReasonTechnicalIssues;
+
+  /// No description provided for @deleteReasonPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'The subscription prices are above my expectations.'**
+  String get deleteReasonPrice;
+
+  /// No description provided for @deleteReasonNoCharacters.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t find the type of characters I was looking for.'**
+  String get deleteReasonNoCharacters;
+
+  /// No description provided for @deleteReasonShortTry.
+  ///
+  /// In en, this message translates to:
+  /// **'I just wanted to try it for a short while.'**
+  String get deleteReasonShortTry;
+
+  /// No description provided for @deleteReasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get deleteReasonOther;
+
+  /// No description provided for @messageOptionalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Message (optional)'**
+  String get messageOptionalLabel;
+
+  /// No description provided for @specialOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Special offer'**
+  String get specialOffer;
+
+  /// No description provided for @specialOfferSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you go, take a look at the offer we\'ve prepared for you.'**
+  String get specialOfferSubtitle;
+
+  /// No description provided for @switchTo1MonthPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to 1-Month Plan'**
+  String get switchTo1MonthPlan;
+
+  /// No description provided for @monthlyPlanPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'\$79/month, cancel anytime'**
+  String get monthlyPlanPrice;
+
+  /// No description provided for @noLongTermCommitment.
+  ///
+  /// In en, this message translates to:
+  /// **'No long-term commitment. Stay connected with our community on a month-to-month basis.'**
+  String get noLongTermCommitment;
+
+  /// No description provided for @whatYouKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'What you\'ll keep:'**
+  String get whatYouKeep;
+
+  /// No description provided for @featureAllCharacters.
+  ///
+  /// In en, this message translates to:
+  /// **'Access all characters'**
+  String get featureAllCharacters;
+
+  /// No description provided for @featureUnlimitedVideoCalls.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited video calls'**
+  String get featureUnlimitedVideoCalls;
+
+  /// No description provided for @featureUnlimitedCharacterEditing.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited character editing'**
+  String get featureUnlimitedCharacterEditing;
+
+  /// No description provided for @switchToMonthlyPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to Monthly Plan'**
+  String get switchToMonthlyPlan;
+
+  /// No description provided for @areYouSure.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure?'**
+  String get areYouSure;
+
+  /// No description provided for @finalOfferSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We really don\'t want to see you go. Here\'s what you\'ll lose:'**
+  String get finalOfferSubtitle;
+
+  /// No description provided for @featureUnlimitedCharacterAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited character access'**
+  String get featureUnlimitedCharacterAccess;
+
+  /// No description provided for @featureUnlimitedVideoCallAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited video call access'**
+  String get featureUnlimitedVideoCallAccess;
+
+  /// No description provided for @featureUnlimitedCharacterEditingAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited character editing access'**
+  String get featureUnlimitedCharacterEditingAccess;
+
+  /// No description provided for @stayAnd60Off.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay and get 60% off for 1 month'**
+  String get stayAnd60Off;
+
+  /// No description provided for @bestOfferPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Our best offer ever. Just \$27.60/month'**
+  String get bestOfferPrice;
+
+  /// No description provided for @accept60OffAndStay.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept 60% Off & Stay'**
+  String get accept60OffAndStay;
+
+  /// No description provided for @sadToSeeYouGo.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re sad to see you go'**
+  String get sadToSeeYouGo;
+
+  /// No description provided for @membershipCancelledInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Your membership has been cancelled. You\'ll have access until the end of your current billing period.'**
+  String get membershipCancelledInfo;
+
+  /// No description provided for @changeYourMind.
+  ///
+  /// In en, this message translates to:
+  /// **'Change your mind?'**
+  String get changeYourMind;
+
+  /// No description provided for @reactivateInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'You can reactivate your membership anytime to keep your benefits.'**
+  String get reactivateInfo;
+
+  /// No description provided for @waitReactivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait, I want to reactivate →'**
+  String get waitReactivate;
+
   /// No description provided for @profileSettings.
   ///
   /// In en, this message translates to:
@@ -1449,6 +1755,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @appLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'App Language'**
+  String get appLanguage;
 
   /// No description provided for @areYouSureLogout.
   ///
@@ -1663,43 +1975,43 @@ abstract class AppLocalizations {
   /// No description provided for @jobThoughtAndHabitGuide.
   ///
   /// In en, this message translates to:
-  /// **'Thought and Habit Coach'**
+  /// **'Thought and Habit Guide'**
   String get jobThoughtAndHabitGuide;
 
   /// No description provided for @jobFamilyAssistant.
   ///
   /// In en, this message translates to:
-  /// **'Family Coach'**
+  /// **'Family Guide'**
   String get jobFamilyAssistant;
 
   /// No description provided for @jobAdult.
   ///
   /// In en, this message translates to:
-  /// **'Adult Coach'**
+  /// **'Adult Guide'**
   String get jobAdult;
 
   /// No description provided for @jobChild.
   ///
   /// In en, this message translates to:
-  /// **'Child Coach'**
+  /// **'Child Guide'**
   String get jobChild;
 
   /// No description provided for @jobTeenage.
   ///
   /// In en, this message translates to:
-  /// **'Teen Coach'**
+  /// **'Teen Guide'**
   String get jobTeenage;
 
   /// No description provided for @jobPersonal.
   ///
   /// In en, this message translates to:
-  /// **'Personal Coach'**
+  /// **'Personal Guide'**
   String get jobPersonal;
 
   /// No description provided for @jobExamAnxiety.
   ///
   /// In en, this message translates to:
-  /// **'Exam Anxiety Coach'**
+  /// **'Exam Anxiety Guide'**
   String get jobExamAnxiety;
 
   /// No description provided for @noSpecialistsFound.
@@ -1999,109 +2311,109 @@ abstract class AppLocalizations {
   /// No description provided for @explanationFamilyAssistant.
   ///
   /// In en, this message translates to:
-  /// **'A family coach who helps you navigate through family dynamics, resolve conflicts, strengthen parent-child bonds, and build a more harmonious home environment. Whether you\'re dealing with communication breakdowns, boundary issues, or major life transitions like divorce, your coach provides a safe space to explore solutions together.'**
+  /// **'A family guide who helps you navigate through family dynamics, resolve conflicts, strengthen parent-child bonds, and build a more harmonious home environment.'**
   String get explanationFamilyAssistant;
 
   /// No description provided for @explanationAdult.
   ///
   /// In en, this message translates to:
-  /// **'A personal development coach designed for adults who want to take control of their lives. From managing daily stress and building self-confidence to making important career decisions and finding life balance, your coach supports you with practical strategies tailored to your unique challenges and goals.'**
+  /// **'A personal development guide for adults who want to take control of their lives — from managing daily stress and building self-confidence to finding life balance.'**
   String get explanationAdult;
 
   /// No description provided for @explanationChild.
   ///
   /// In en, this message translates to:
-  /// **'A gentle and supportive coach specially trained to help children express their emotions, build social skills, and adapt to school life. Using age-appropriate techniques, your coach helps kids overcome fears, improve focus, and develop healthy friendships in a safe and encouraging environment.'**
+  /// **'A gentle and supportive guide trained to help children express their emotions, build social skills, and adapt to school life using age-appropriate techniques.'**
   String get explanationChild;
 
   /// No description provided for @explanationTeenage.
   ///
   /// In en, this message translates to:
-  /// **'A coach who truly understands the teenage experience. From identity exploration and peer pressure to academic stress and digital wellbeing, your coach helps teens build self-esteem, manage emotions, and plan for the future while maintaining healthy communication with parents.'**
+  /// **'A guide who understands the teenage experience — from identity exploration and peer pressure to academic stress and digital wellbeing.'**
   String get explanationTeenage;
 
   /// No description provided for @explanationPersonal.
   ///
   /// In en, this message translates to:
-  /// **'A compassionate personal coach focused on your inner wellbeing. Whether you\'re struggling with loneliness, anxiety, grief, or simply overthinking, your coach guides you through mindfulness practices, emotional healing techniques, and self-discovery exercises to help you find peace and clarity.'**
+  /// **'A compassionate personal guide focused on inner wellbeing. Guides you through mindfulness, emotional healing, and self-discovery to find peace and clarity.'**
   String get explanationPersonal;
 
   /// No description provided for @explanationExamAnxiety.
   ///
   /// In en, this message translates to:
-  /// **'A specialized coach who helps students conquer exam anxiety and unlock their true academic potential. Through proven study techniques, relaxation methods, and confidence-building exercises, your coach transforms test stress into focused preparation and calm performance.'**
+  /// **'A specialized guide who helps students conquer exam anxiety through proven study techniques, relaxation methods, and confidence-building exercises.'**
   String get explanationExamAnxiety;
 
   /// No description provided for @explanationFamilyAssistant1.
   ///
   /// In en, this message translates to:
-  /// **'A dedicated family coach specializing in resolving deep-rooted family conflicts and rebuilding strained relationships. With expertise in parenting challenges, communication skills, and setting healthy boundaries, this coach helps families navigate difficult transitions like divorce while guiding children through behavioral changes — all within a safe, judgment-free space.'**
+  /// **'A dedicated family guide specializing in resolving deep-rooted family conflicts and rebuilding strained relationships. Helps families navigate difficult transitions like divorce while guiding children through behavioral changes.'**
   String get explanationFamilyAssistant1;
 
   /// No description provided for @explanationFamilyAssistant2.
   ///
   /// In en, this message translates to:
-  /// **'A warm and empathetic family coach focused on strengthening the bonds that matter most. Specializing in effective parenting strategies, open communication, and relationship repair, this coach helps families heal after difficult periods like separation or divorce, while supporting children\'s emotional and behavioral development toward lasting harmony.'**
+  /// **'A warm and empathetic family guide focused on strengthening the bonds that matter most. Helps families heal after difficult periods while supporting children\'s emotional and behavioral development.'**
   String get explanationFamilyAssistant2;
 
   /// No description provided for @explanationAdult1.
   ///
   /// In en, this message translates to:
-  /// **'A results-driven coach for adults seeking meaningful change. With a focus on stress management, achieving life balance, and career guidance, this coach helps you regulate your emotions, make confident decisions, and unlock sustainable personal growth through practical, goal-oriented strategies.'**
+  /// **'A results-driven guide for adults seeking meaningful change. Focuses on stress management, life balance, and career guidance through practical, goal-oriented strategies.'**
   String get explanationAdult1;
 
   /// No description provided for @explanationAdult2.
   ///
   /// In en, this message translates to:
-  /// **'A holistic development coach empowering adults to reach their full potential. From building unshakable self-confidence and managing stress to finding career direction and daily motivation, this coach combines emotional regulation techniques with actionable life strategies to create lasting positive change.'**
+  /// **'A holistic development guide empowering adults to reach their full potential — from building self-confidence and managing stress to finding career direction and daily motivation.'**
   String get explanationAdult2;
 
   /// No description provided for @explanationTeenage1.
   ///
   /// In en, this message translates to:
-  /// **'A coach who deeply understands the unique challenges of adolescence. From navigating identity development and resisting peer pressure to managing academic stress and building healthy digital habits, this coach helps teens strengthen their self-esteem, control anger, plan their future, and communicate openly with their parents.'**
+  /// **'A guide who deeply understands adolescence. Helps teens strengthen self-esteem, control anger, plan their future, and communicate openly with their parents.'**
   String get explanationTeenage1;
 
   /// No description provided for @explanationTeenage2.
   ///
   /// In en, this message translates to:
-  /// **'An empathetic guide through the turbulent teenage years. Specializing in identity exploration, academic pressure, and digital wellbeing, this coach empowers teens to develop resilience against peer influence, manage anger constructively, build long-term goals, and maintain healthy parent-teen relationships.'**
+  /// **'An empathetic guide through the turbulent teenage years. Empowers teens to develop resilience, manage anger constructively, and maintain healthy parent-teen relationships.'**
   String get explanationTeenage2;
 
   /// No description provided for @explanationChild1.
   ///
   /// In en, this message translates to:
-  /// **'A nurturing coach designed to support children through their most formative years. Using gentle, age-appropriate methods, this coach helps kids develop emotional awareness, build social skills, adapt to school life, express themselves freely, overcome fears, form meaningful friendships, improve focus, and develop positive behavioral patterns.'**
+  /// **'A nurturing guide for children\'s most formative years. Helps kids develop emotional awareness, build social skills, adapt to school, overcome fears, and improve focus.'**
   String get explanationChild1;
 
   /// No description provided for @explanationChild2.
   ///
   /// In en, this message translates to:
-  /// **'A caring and patient coach dedicated to helping children thrive. With a focus on emotional intelligence, social development, and school adaptation, this coach creates a safe environment where kids learn to express their feelings, conquer fears, build lasting friendships, strengthen concentration, and receive the behavioral support they need to grow confidently.'**
+  /// **'A caring and patient guide dedicated to helping children thrive — creating a safe environment where kids learn to express feelings, build friendships, and grow confidently.'**
   String get explanationChild2;
 
   /// No description provided for @explanationPersonal1.
   ///
   /// In en, this message translates to:
-  /// **'A deeply compassionate coach focused on your emotional wellbeing and inner peace. Whether you\'re experiencing loneliness, anxiety, grief, or restless nights, this coach guides you through mindfulness practices, emotional healing processes, and self-discovery journeys to help you break free from overthinking and find lasting clarity.'**
+  /// **'A deeply compassionate guide focused on emotional wellbeing. Guides you through mindfulness, emotional healing, and self-discovery to break free from overthinking.'**
   String get explanationPersonal1;
 
   /// No description provided for @explanationPersonal2.
   ///
   /// In en, this message translates to:
-  /// **'A supportive and intuitive personal coach who helps you reconnect with yourself. Specializing in anxiety management, mindfulness techniques, and sleep improvement, this coach gently guides you through patterns of overthinking and emotional distress toward genuine healing and a renewed sense of inner calm.'**
+  /// **'A supportive personal guide who helps you reconnect with yourself. Specializes in anxiety management, mindfulness, and sleep improvement toward genuine inner calm.'**
   String get explanationPersonal2;
 
   /// No description provided for @explanationExamAnxiety1.
   ///
   /// In en, this message translates to:
-  /// **'A focused and methodical coach who transforms exam stress into confident performance. Specializing in time management, handling performance pressure, and building deep concentration, this coach equips students with practical relaxation methods, structured exam preparation techniques, and confidence-building strategies for academic success.'**
+  /// **'A focused guide who transforms exam stress into confident performance. Equips students with time management, relaxation methods, and confidence-building strategies.'**
   String get explanationExamAnxiety1;
 
   /// No description provided for @explanationExamAnxiety2.
   ///
   /// In en, this message translates to:
-  /// **'A specialized academic coach dedicated to helping students overcome test anxiety and study smarter. Through proven study techniques, effective time management, and performance pressure resilience, this coach builds deep concentration skills, structured exam preparation habits, and lasting confidence for every test day.'**
+  /// **'A specialized academic guide dedicated to helping students overcome test anxiety and study smarter through proven techniques and structured exam preparation.'**
   String get explanationExamAnxiety2;
 
   /// No description provided for @filterTitle.
@@ -2113,7 +2425,7 @@ abstract class AppLocalizations {
   /// No description provided for @filterCoachingArea.
   ///
   /// In en, this message translates to:
-  /// **'Coaching Area'**
+  /// **'Guidance Area'**
   String get filterCoachingArea;
 
   /// No description provided for @filterExpertise.
@@ -2125,7 +2437,7 @@ abstract class AppLocalizations {
   /// No description provided for @filterSelectCoachingArea.
   ///
   /// In en, this message translates to:
-  /// **'Select Coaching Area'**
+  /// **'Select Guidance Area'**
   String get filterSelectCoachingArea;
 
   /// No description provided for @filterSave.
@@ -2133,6 +2445,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get filterSave;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get filterClear;
 
   /// No description provided for @coachDetailInformation.
   ///
@@ -2385,6 +2703,546 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delicate melodies to unwind'**
   String get soundSoftPianoSub;
+
+  /// No description provided for @quickMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Message'**
+  String get quickMessage;
+
+  /// No description provided for @chatMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get chatMessage;
+
+  /// No description provided for @chatHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get chatHistory;
+
+  /// No description provided for @noChatHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No chat history yet'**
+  String get noChatHistory;
+
+  /// No description provided for @calling.
+  ///
+  /// In en, this message translates to:
+  /// **'Calling...'**
+  String get calling;
+
+  /// No description provided for @image.
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get image;
+
+  /// No description provided for @coachesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Guides'**
+  String get coachesTitle;
+
+  /// No description provided for @searchAtMindcoach.
+  ///
+  /// In en, this message translates to:
+  /// **'Search at __MINDguide__'**
+  String get searchAtMindcoach;
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found for \"{query}\"'**
+  String noResultsFound(String query);
+
+  /// No description provided for @premiumTryFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Try __MIND_guide__ Premium\nfree for 1 week'**
+  String get premiumTryFree;
+
+  /// No description provided for @premiumUnlimitedAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Get unlimited access and take advantage of opportunities'**
+  String get premiumUnlimitedAccess;
+
+  /// No description provided for @premiumFeatureSkipAds.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Ads'**
+  String get premiumFeatureSkipAds;
+
+  /// No description provided for @premiumFeatureUnlimitedCharacters.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited Character Selection'**
+  String get premiumFeatureUnlimitedCharacters;
+
+  /// No description provided for @premiumFeatureExpandedMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Expanded memory and context'**
+  String get premiumFeatureExpandedMemory;
+
+  /// No description provided for @premiumFeatureAdvancedReasoning.
+  ///
+  /// In en, this message translates to:
+  /// **'With advanced reasoning capabilities'**
+  String get premiumFeatureAdvancedReasoning;
+
+  /// No description provided for @premiumStartTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'Start 1 week free trial'**
+  String get premiumStartTrial;
+
+  /// No description provided for @premiumBillingNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be charged \$8.99/month after your 7 day free trial. You can cancel anytime.'**
+  String get premiumBillingNote;
+
+  /// No description provided for @premiumRestorePurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchase'**
+  String get premiumRestorePurchase;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get termsOfUse;
+
+  /// No description provided for @premiumSaveBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE 17%'**
+  String get premiumSaveBadge;
+
+  /// No description provided for @premiumPlanAnnual.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual'**
+  String get premiumPlanAnnual;
+
+  /// No description provided for @premiumPlanMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get premiumPlanMonthly;
+
+  /// No description provided for @premiumPlanPerYearAfterTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'per year after 7 days trial'**
+  String get premiumPlanPerYearAfterTrial;
+
+  /// No description provided for @goodbyeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We Miss You '**
+  String get goodbyeTitle;
+
+  /// No description provided for @goodbyeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re sorry you deleted your account.\nWe hope to see you again...'**
+  String get goodbyeSubtitle;
+
+  /// No description provided for @goBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get goBack;
+
+  /// No description provided for @profileFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get profileFromGallery;
+
+  /// No description provided for @profileFromCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a Photo'**
+  String get profileFromCamera;
+
+  /// No description provided for @profilePhotoUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile photo updated'**
+  String get profilePhotoUpdated;
+
+  /// No description provided for @logoutDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You are about to log out'**
+  String get logoutDialogTitle;
+
+  /// No description provided for @logoutDialogSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'See you again soon! We\'ll miss your breathing exercises.'**
+  String get logoutDialogSubtitle;
+
+  /// No description provided for @sectionAccountSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'ACCOUNT SETTINGS'**
+  String get sectionAccountSettings;
+
+  /// No description provided for @sectionGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'GENERAL'**
+  String get sectionGeneral;
+
+  /// No description provided for @menuItemPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get menuItemPremium;
+
+  /// No description provided for @menuItemRateUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Us'**
+  String get menuItemRateUs;
+
+  /// No description provided for @premiumBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'PREMIUM'**
+  String get premiumBadge;
+
+  /// No description provided for @premiumStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get premiumStatusActive;
+
+  /// No description provided for @linkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied!'**
+  String get linkCopied;
+
+  /// No description provided for @shareFriend.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Friend'**
+  String get shareFriend;
+
+  /// No description provided for @errorMessageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Message could not be sent'**
+  String get errorMessageFailed;
+
+  /// No description provided for @errorImageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Image could not be sent'**
+  String get errorImageFailed;
+
+  /// No description provided for @errorVoiceFileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice file not found'**
+  String get errorVoiceFileNotFound;
+
+  /// No description provided for @errorVoiceMessageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice message could not be sent'**
+  String get errorVoiceMessageFailed;
+
+  /// No description provided for @errorVoiceNotPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice file could not be played'**
+  String get errorVoiceNotPlayed;
+
+  /// No description provided for @errorVoiceMessageNotPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice message could not be played'**
+  String get errorVoiceMessageNotPlayed;
+
+  /// No description provided for @errorRecordingStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording could not be started'**
+  String get errorRecordingStart;
+
+  /// No description provided for @errorRecordingStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording could not be stopped'**
+  String get errorRecordingStop;
+
+  /// No description provided for @errorMicrophonePermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission required'**
+  String get errorMicrophonePermission;
+
+  /// No description provided for @errorRecordingTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording too short, please record longer'**
+  String get errorRecordingTooShort;
+
+  /// No description provided for @errorAppointmentDateNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment date not found'**
+  String get errorAppointmentDateNotFound;
+
+  /// No description provided for @errorAppointmentExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment time has passed'**
+  String get errorAppointmentExpired;
+
+  /// No description provided for @errorAppointmentNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Session hasn\'t started yet'**
+  String get errorAppointmentNotYet;
+
+  /// No description provided for @errorConsultantNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Consultant not found'**
+  String get errorConsultantNotFound;
+
+  /// No description provided for @errorConsultantsNotLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Consultant list could not be loaded'**
+  String get errorConsultantsNotLoaded;
+
+  /// No description provided for @errorConsultantLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Consultant could not be loaded'**
+  String get errorConsultantLoadFailed;
+
+  /// No description provided for @errorOperationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation failed'**
+  String get errorOperationFailed;
+
+  /// No description provided for @errorPhotoUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile photo could not be uploaded'**
+  String get errorPhotoUpload;
+
+  /// No description provided for @errorGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get errorGeneral;
+
+  /// No description provided for @recordingStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording...'**
+  String get recordingStatus;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'E-mail'**
+  String get email;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'example@email.com'**
+  String get emailHint;
+
+  /// No description provided for @messageOptionalHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your message if you have any.'**
+  String get messageOptionalHint;
+
+  /// No description provided for @findCoachMatchedFor.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} guides matched for {area}'**
+  String findCoachMatchedFor(int count, String area);
+
+  /// No description provided for @findCoachTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find your guide'**
+  String get findCoachTitle;
+
+  /// No description provided for @findCoachSwipeToBrowse.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe to browse - {schedule}'**
+  String findCoachSwipeToBrowse(String schedule);
+
+  /// No description provided for @findCoachYearsExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} yrs experience'**
+  String findCoachYearsExperience(int count);
+
+  /// No description provided for @findCoachSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get findCoachSkip;
+
+  /// No description provided for @findCoachBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get findCoachBook;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a moment for yourself.'**
+  String get splashTagline;
+
+  /// No description provided for @stepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String stepOf(int current, int total);
+
+  /// No description provided for @trialEndedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time\'s up'**
+  String get trialEndedTitle;
+
+  /// No description provided for @trialEndedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the 1-minute trial limit. Sign in to keep talking with your guide.'**
+  String get trialEndedMessage;
+
+  /// No description provided for @trialEndedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue'**
+  String get trialEndedAction;
+
+  /// No description provided for @noUpcomingAppointments.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming appointments'**
+  String get noUpcomingAppointments;
+
+  /// No description provided for @noCompletedAppointments.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed appointments'**
+  String get noCompletedAppointments;
+
+  /// No description provided for @videoCallStatusConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting...'**
+  String get videoCallStatusConnecting;
+
+  /// No description provided for @videoCallStatusListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get videoCallStatusListening;
+
+  /// No description provided for @videoCallStatusMuted.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted'**
+  String get videoCallStatusMuted;
+
+  /// No description provided for @videoCallStatusThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking...'**
+  String get videoCallStatusThinking;
+
+  /// No description provided for @videoCallStatusSpeaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking'**
+  String get videoCallStatusSpeaking;
+
+  /// No description provided for @videoCallStatusError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error'**
+  String get videoCallStatusError;
+
+  /// No description provided for @videoCallEncrypted.
+  ///
+  /// In en, this message translates to:
+  /// **'End-to-end encrypted'**
+  String get videoCallEncrypted;
+
+  /// No description provided for @videoCallTurnCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn Camera'**
+  String get videoCallTurnCamera;
+
+  /// No description provided for @videoCallEndButton.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get videoCallEndButton;
+
+  /// No description provided for @videoCallMute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get videoCallMute;
+
+  /// No description provided for @videoCallEndDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to end the call?'**
+  String get videoCallEndDialogTitle;
+
+  /// No description provided for @videoCallEndDialogCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get videoCallEndDialogCancel;
+
+  /// No description provided for @videoCallEndDialogEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get videoCallEndDialogEnd;
+
+  /// No description provided for @videoCallRateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Conversation'**
+  String get videoCallRateTitle;
+
+  /// No description provided for @videoCallRateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Evaluate the video call'**
+  String get videoCallRateSubtitle;
 }
 
 class _AppLocalizationsDelegate
@@ -2397,8 +3255,20 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'tr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'de',
+    'en',
+    'es',
+    'fr',
+    'hi',
+    'it',
+    'ja',
+    'ko',
+    'pt',
+    'ru',
+    'tr',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2411,8 +3281,26 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'hi':
+      return AppLocalizationsHi();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'ja':
+      return AppLocalizationsJa();
+    case 'ko':
+      return AppLocalizationsKo();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
     case 'tr':
       return AppLocalizationsTr();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

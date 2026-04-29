@@ -1,17 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/Repositories/auth_repositories.dart';
-import 'package:mindcoach/Riverpod/providers/all_providers.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
-import 'package:mindcoach/core/repo/auth_repository.dart';
 import 'package:mindcoach/core/utils/local_db_keys.dart';
 import 'package:mindcoach/models/user_model.dart';
-import 'package:mindcoach/Riverpod/Providers/user_provider.dart';
 
 class AuthService {
   final Ref? ref;
   final LocalDbService _localDbService = LocalDbService();
-  final AuthRepository _authRepository = AuthRepository();
 
   AuthService({this.ref});
 
@@ -35,21 +32,29 @@ class AuthService {
     try {
       debugPrint('🔄 [AUTH-SERVICE] Kullanıcı doğrulanıyor...');
       debugPrint('🔄 [AUTH-SERVICE] Token: ${token.substring(0, 20)}...');
-      
+
       final userModel = await AuthRepositories().verifyUserByToken(token);
       debugPrint('🔄 [AUTH-SERVICE] verifyUserByToken tamamlandı, userModel: ${userModel?.id ?? "null"}');
-      
+
       if (userModel == null) {
         debugPrint('❌ [AUTH-SERVICE] Kullanıcı doğrulama başarısız - userModel null');
         return null;
       }
 
       debugPrint('✅ [AUTH-SERVICE] Kullanıcı doğrulandı: ${userModel.id}');
-      
+
       // Token ile birlikte userModel'i oluştur
-      final userModelWithToken = userModel.copyWith(token: token);
+      var userModelWithToken = userModel.copyWith(token: token);
+
+      // Locally cached username override — sunucu eski veri dönüyorsa bu düzeltir
+      final savedUsername = await _localDbService.getString(key: LocalDbKeys.savedUsername);
+      if (savedUsername != null && savedUsername.isNotEmpty) {
+        userModelWithToken = userModelWithToken.copyWith(username: savedUsername);
+        debugPrint('✅ [AUTH-SERVICE] Cached username uygulandı: $savedUsername');
+      }
+
       debugPrint('✅ [AUTH-SERVICE] UserModel token ile güncellendi');
-      
+
       // UserProvider'a set et
       if (ref != null) {
         ref!.read(AllProviders.userProvider.notifier).setUserModel(userModelWithToken);
@@ -57,7 +62,7 @@ class AuthService {
       } else {
         debugPrint('⚠️ [AUTH-SERVICE] ref null, UserProvider güncellenemedi');
       }
-      
+
       return userModelWithToken;
     } catch (e, stackTrace) {
       debugPrint('❌ [AUTH-SERVICE] Kullanıcı doğrulama hatası: $e');
@@ -82,6 +87,7 @@ class AuthService {
   /// Session'ı temizle
   Future<void> clearSession() async {
     await clearToken();
+    await _localDbService.deleteString(key: LocalDbKeys.savedUsername);
     if (ref != null) {
       ref!.read(AllProviders.userProvider.notifier).setUserModel(null);
       debugPrint('✅ [AUTH-SERVICE] Session temizlendi');

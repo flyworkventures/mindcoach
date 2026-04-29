@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
 import 'package:mindcoach/View/OnboardView/data/onboarding_localizations.dart';
+import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'package:mindcoach/core/routes/page_routes.dart'; // Yönlendirme için eklendi
+import 'package:mindcoach/core/utils/local_db_keys.dart';
 
 import '../../l10n/app_localizations.dart';
 
@@ -224,14 +226,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     int pageCount,
   ) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         if (!isLastPage) {
           _nextPage(
             pageCount,
           ); // Butona basıldığında da manuel gitme sayılıyor, timer sıfırlanır
         } else {
-          // KULLANICI GET STARTED'A BASTI -> Profile Setup (MindCoachOnboarding) Sayfasına Geç
+          // KULLANICI GET STARTED'A BASTI -> Onboarding görüldü olarak işaretle
           _autoTimer?.cancel();
+          await LocalDbService().setBool(
+            key: LocalDbKeys.onboardingSeen,
+            value: true,
+          );
+          if (!mounted) return;
           Navigator.of(context).pushReplacementNamed(PageRoutes.profileSetup);
         }
       },

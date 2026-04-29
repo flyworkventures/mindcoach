@@ -9,96 +9,102 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get relaxingSound => 'Rahatlatıcı Sesler';
+  String get relaxingSound => 'Rahatlatıcı Ses';
 
   @override
   String get seeAll => 'Tümünü Gör';
 
   @override
+  String get online => 'Çevrimiçi';
+
+  @override
+  String get typeAMessage => 'Bir mesaj yazın...';
+
+  @override
   String get premiumHeadlinePart1 => 'Yargılanmadan,\nsadece ';
 
   @override
-  String get premiumHeadlineHighlight => 'anlaşılmak';
+  String get premiumHeadlineHighlight => 'anlaşıldığın';
 
   @override
-  String get premiumHeadlinePart2 => ' için\nbir alan.';
+  String get premiumHeadlinePart2 => ' bir alan.';
 
   @override
   String get premiumSubtitle =>
-      'Binlerce kişi bu adımı attı. Sıra sizde — 3 gün tamamen ücretsiz.';
+      'Binlerce kişi bu adımı attı. Şimdi sıra sende — 3 gün tamamen ücretsiz.';
 
   @override
-  String get premiumFeature1 => '7/24 sınırsız iletişim';
+  String get premiumFeature1 => '7/24 sınırsız erişim';
 
   @override
-  String get premiumFeature2 => 'Öncelikli ve hızlı erişim';
+  String get premiumFeature2 => 'Öncelikli bağlantı';
 
   @override
-  String get premiumFeature3 => 'Gelişmiş AI ile size özel';
+  String get premiumFeature3 => 'Sana özel gelişmiş yapay zeka';
 
   @override
-  String get premiumAnnualDiscount => 'Yıllık alımda %40 indirim';
+  String get premiumAnnualDiscount => 'Yıllık planda %40 indirim';
 
   @override
-  String get premiumCta => 'Başlayın';
+  String get premiumCta => 'Hemen Başla';
 
   @override
-  String get onboardingTitle1 => 'Bunalmış mı hissediyorsunuz?';
+  String get onboardingTitle1 => 'Bunalmış mı hissediyorsun?';
 
   @override
   String get onboardingDesc1 =>
-      'İhtiyacınız olan her an, dakikalar içinde sertifikalı bir koçla konuşun.';
+      'Sertifikalı bir rehberle dakikalar içinde konuş — ne zaman ihtiyacın olursa.';
 
   @override
-  String get onboardingTitle2 => 'Kendi tarzınızda iletişim kurun.';
+  String get onboardingTitle2 => 'Kendi tarzında konuş.';
 
   @override
-  String get onboardingDesc2 => 'Yazılı, sesli veya görüntülü';
+  String get onboardingDesc2 => 'Metin, ses veya video';
 
   @override
-  String get onboardingTitle3 => 'Sizin için en doğru koçu bulun.';
+  String get onboardingTitle3 => 'Senin için doğru rehberi bul.';
 
   @override
   String get onboardingDesc3 =>
-      'Hedeflerinize, programınıza ve tercihlerinize en uygun eşleşmeyi sağlayın.';
+      'Hedeflerine, programına ve tercihlerine göre eşleş.';
 
   @override
-  String get swipeToContinue => 'Devam etmek için kaydırın';
+  String get swipeToContinue => 'Devam etmek için kaydır';
 
   @override
-  String get onboardingTermsPrefix => 'MindCoach\'a kaydolarak ';
+  String get onboardingTermsPrefix => 'MindCoach\'a kaydolarak, ';
 
   @override
-  String get onboardingTermsOfService => 'Hizmet Şartları';
+  String get onboardingTermsOfService => 'Hizmet Şartlarımızı';
 
   @override
   String get onboardingTermsMiddle =>
-      '’nı kabul etmiş olursun. Verilerini nasıl işlediğimizi ';
+      ' kabul etmiş olursunuz. Verilerinizi nasıl işlediğimizi ';
 
   @override
-  String get onboardingPrivacyPolicy => 'Gizlilik Politikası';
+  String get onboardingPrivacyPolicy => 'Gizlilik Politikamız';
 
   @override
   String get onboardingTermsAnd => ' ve ';
 
   @override
-  String get onboardingCookiesPolicy => 'Çerez Politikası';
+  String get onboardingCookiesPolicy => 'Çerez Politikamız';
 
   @override
-  String get onboardingTermsSuffix => '’nda bulabilirsin.';
+  String get onboardingTermsSuffix => ' üzerinden öğrenebilirsiniz.';
 
   @override
   String get nameGenderStepTitle => 'Bize biraz kendinden bahset';
 
   @override
   String get nameGenderStepSubtitle =>
-      'Kısa bir tanım, seni daha iyi tanımamıza yardımcı olur.';
+      'Kısa bir biyografi, diğerlerinin gerçek seni tanımasına yardımcı olur. Eğlenceli ve içten ol.';
 
   @override
-  String get fullName => 'Tam Ad';
+  String get fullName => 'Ad Soyad';
 
   @override
-  String get enterYourFullName => 'Adını ve soyadını gir';
+  String get enterYourFullName => 'Adınızı ve soyadınızı girin';
 
   @override
   String get gender => 'Cinsiyet';
@@ -116,28 +122,28 @@ class AppLocalizationsTr extends AppLocalizations {
   String get getStarted => 'Başla';
 
   @override
-  String get findMyCoaches => 'Koçlarımı Bul';
+  String get findMyCoaches => 'Rehberlerimi Bul';
 
   @override
   String get loginSubtitle =>
-      'Koçunu bulmak ve yolculuğuna başlamak için giriş yap. 2 dakika sürer.';
+      'Rehberini bulmak ve yolculuğuna başlamak için giriş yap. 2 dakika sürer.';
 
   @override
-  String get continueWithGoogle => 'Google ile Devam Et';
+  String get continueWithGoogle => 'Google ile devam et';
 
   @override
-  String get continueWithApple => 'Apple ile Devam Et';
+  String get continueWithApple => 'Apple ile devam et';
 
   @override
   String get dataPrivacyNotice =>
-      'Verileriniz üçüncü taraflarla paylaşılmaz. Hesabınızı istediğiniz zaman silebilirsiniz.';
+      'Verileriniz asla üçüncü taraflarla paylaşılmaz. Hesabınızı istediğiniz zaman silebilirsiniz.';
 
   @override
-  String get approachTitle => 'Koçun sana nasıl yaklaşmalı?';
+  String get approachTitle => 'Rehberin sana nasıl yaklaşmalı?';
 
   @override
   String get approachSubtitle =>
-      'Kişiliğini doğru koçla eşleştirmemize yardımcı olur';
+      'Kişiliğini doğru rehberle eşleştirmemize yardımcı olur';
 
   @override
   String get approachPatient => 'Sabırlı';
@@ -146,19 +152,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get approachSupportive => 'Destekleyici';
 
   @override
-  String get approachConvincing => 'İkna edici';
+  String get approachConvincing => 'İkna Edici';
 
   @override
   String get approachEnergetic => 'Enerjik';
 
   @override
-  String get approachHumorous => 'Esprili';
+  String get approachHumorous => 'Mizahi';
 
   @override
-  String get dobTitle => 'Doğum tarihin nedir?';
+  String get dobTitle => 'Ne zaman doğdun?';
 
   @override
-  String get dobSubtitle => 'Yaşına göre deneyim sürecini kişiselleştiriyoruz.';
+  String get dobSubtitle => 'Deneyimi yaşına göre kişiselleştiriyoruz.';
 
   @override
   String get dobDayLabel => 'Gün';
@@ -170,7 +176,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dobYearLabel => 'Yıl';
 
   @override
-  String get dobErrorInvalid => 'Lütfen geçerli bir doğum tarihi seç.';
+  String get dobErrorInvalid => 'Lütfen geçerli bir doğum tarihi seçin.';
 
   @override
   String get january => 'Ocak';
@@ -248,13 +254,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nameGenderTitle => 'Bize biraz kendinden bahset';
 
   @override
-  String get nameGenderSubtitle => 'Koçun seni daha iyi tanıyabilsin diye';
+  String get nameGenderSubtitle => 'Böylece rehberin gerçek seni tanıyabilir';
 
   @override
-  String get nameGenderFullNameLabel => 'Kullanıcı Adı';
+  String get nameGenderFullNameLabel => 'Ad Soyad';
 
   @override
-  String get nameGenderFullNameHint => 'Tam adını yaz';
+  String get nameGenderFullNameHint => 'Adınızı ve soyadınızı girin';
 
   @override
   String get nameGenderGenderLabel => 'Cinsiyet';
@@ -266,14 +272,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nameGenderFemale => 'Kadın';
 
   @override
-  String get nameGenderPreferNotToSay => 'Belirtmeyi tercih etmiyorum';
+  String get nameGenderPreferNotToSay => 'Belirtmek istemiyorum';
 
   @override
   String get supportAreaTitle => 'Hangi alanda destek almak istersin?';
 
   @override
   String get supportAreaSubtitle =>
-      'Sadece bu alanda uzmanlaşmış koçları göstereceğiz';
+      'Sadece bu alanda uzmanlaşmış rehberleri göstereceğiz';
 
   @override
   String get supportAreaIndividual => 'Bireysel Gelişim';
@@ -288,14 +294,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get supportAreaEducation => 'Eğitim';
 
   @override
-  String get supportAreaPersonalDevelopment => 'Kişisel gelişim';
+  String get supportAreaPersonalDevelopment => 'Kişisel Gelişim';
 
   @override
-  String get availableDaysTitle => 'Hangi günler müsaitsin?';
+  String get availableDaysTitle => 'Hangi günler uygunsun?';
 
   @override
   String get availableDaysSubtitle =>
-      'Sadece müsait olduğun günlerde uygun koçları göstereceğiz';
+      'Böylece sadece senin müsait olduğun zamanlarda boş olan rehberleri gösteririz';
 
   @override
   String get dayMonday => 'Pzt';
@@ -319,17 +325,17 @@ class AppLocalizationsTr extends AppLocalizations {
   String get daySunday => 'Paz';
 
   @override
-  String get meetingTimeTitle => 'Hangi saat aralığı sana en uygun?';
+  String get meetingTimeTitle => 'Hangi saat senin için en uygun?';
 
   @override
   String get meetingTimeSubtitle =>
-      'Uygun saatleri olan koçlar öne çıkarılacak';
+      'Eşleşen saatleri olan rehberler öne çıkarılacaktır';
 
   @override
   String get meetingTimeMorning => 'Sabah';
 
   @override
-  String get meetingTimeAfternoon => 'Öğleden sonra';
+  String get meetingTimeAfternoon => 'Öğleden Sonra';
 
   @override
   String get meetingTimeEvening => 'Akşam';
@@ -350,22 +356,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get meetingTimeFlexibleRange => '';
 
   @override
-  String get successTitle => 'Hesabın oluşturuldu';
+  String get successTitle => 'Hesap oluşturuldu';
 
   @override
   String get successSubtitle =>
-      'Hesabın başarıyla oluşturuldu. Uygulamanın keyfini çıkar.';
+      'Hesabınız başarıyla oluşturuldu. Uygulamanın tadını çıkarın.';
 
   @override
-  String get topicFeelingGood => 'kendini iyi hissetmek';
+  String get topicFeelingGood => 'İyi Hissetmek';
 
   @override
   String appointmentDescription(String name, String topic) {
-    return '$name ile $topic üzerine görüşmen var.';
+    return '$name ile $topic hakkında bir toplantınız var.';
   }
 
   @override
-  String get quickActions => 'Hızlı Eylemler';
+  String get quickActions => 'Hızlı İşlemler';
 
   @override
   String get hi => 'Merhaba';
@@ -374,30 +380,30 @@ class AppLocalizationsTr extends AppLocalizations {
   String get goodMorning => 'Günaydın';
 
   @override
-  String get goodAfternoon => 'İyi Günler';
+  String get goodAfternoon => 'Tünaydın';
 
   @override
   String get goodEvening => 'İyi Akşamlar';
 
   @override
-  String get welcome => 'Hoşgeldin';
+  String get welcome => 'Hoş Geldin';
 
   @override
   String get howAreYouFeelIngToday => 'Bugün nasıl hissediyorsun?';
 
   @override
-  String get getStart => 'Başlayalım';
+  String get getStart => 'Hadi başlayalım';
 
   @override
   String get onboardingQuote1 =>
-      'Kendi kendine koyduğun limitler, sahip olduğun tek limitlerdir.';
+      'Tek sınırınız kendinize koyduğunuz sınırlardır.';
 
   @override
   String get onboardingQuote2 => 'Derin bir nefes al ve yolculuğuna başla.';
 
   @override
   String get onboardingQuote3 =>
-      'Ne kadar sessiz olursan, o kadar çok şey duyabilirsin.';
+      'Ne kadar sessiz olursan, o kadar çok duyabilirsin.';
 
   @override
   String get someoneWantsToTalkToYou => 'Biri seninle konuşmak istiyor.';
@@ -412,7 +418,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get moodBad => 'Kötü';
 
   @override
-  String get moodNeutral => 'Normal';
+  String get moodNeutral => 'Nötr';
 
   @override
   String get moodGood => 'İyi';
@@ -433,7 +439,36 @@ class AppLocalizationsTr extends AppLocalizations {
   String get moodStressed => 'Stresli';
 
   @override
-  String get timeToTrackMood => 'Duygu durumunu takip etme zamanı';
+  String get moodTrackerSubtitle => 'Küçük bir kontrol büyük fark yaratır';
+
+  @override
+  String get moodDescCalm =>
+      'Zihninizde hissettiğiniz bu huzur en büyük gücünüzdür. Bu anın tadını çıkarın ve dengeli kalın.';
+
+  @override
+  String get moodDescHappy =>
+      'Pozitif enerjin bulaşıcı! Neşeni yaymaya ve bu harika hissin tadını çıkarmaya devam et.';
+
+  @override
+  String get moodDescNeutral =>
+      'Sakin bir ruh hali tamamen normaldir. Kendinle bir an için bağlantı kurmayı dene.';
+
+  @override
+  String get moodDescTired =>
+      'Bedenin sana dinlenmeni söylüyor. Bir mola ver ve enerji topla — bunu hak ediyorsun.';
+
+  @override
+  String get moodDescStressed =>
+      'Derin bir nefes al. Yavaşlamak ve işleri adım adım ele almak tamamen normaldir.';
+
+  @override
+  String get todaysSessions => 'Bugünkü seanslar';
+
+  @override
+  String get makeAnAppointment => 'Randevu Al';
+
+  @override
+  String get timeToTrackMood => 'Ruh halini takip etme zamanı';
 
   @override
   String get days => 'Gün';
@@ -448,149 +483,150 @@ class AppLocalizationsTr extends AppLocalizations {
   String get seconds => 'Saniye';
 
   @override
-  String get timeRemainingTitle => 'Bir sonraki görüşmeye kalan süre.';
+  String get timeRemainingTitle =>
+      'Bir sonraki toplantının başlamasına kalan süre.';
 
   @override
-  String get upcomingMeetingTitle => 'Yaklaşan Görüşme';
+  String get upcomingMeetingTitle => 'Yaklaşan Toplantı';
 
   @override
-  String get noUpcomingMeetings => 'Yaklaşan görüşmeniz yok.';
+  String get noUpcomingMeetings => 'Yaklaşan toplantınız yok.';
 
   @override
-  String get takeTheTestNow => 'Şimdi Testi Çöz';
+  String get takeTheTestNow => 'Testi Şimdi Çöz';
 
   @override
   String get testDescription =>
-      'Zihinsel durumunu değerlendir ve kendin hakkında daha fazla bilgi edin.';
+      'Zihinsel durumunuzu değerlendirin ve kendiniz hakkında daha fazla bilgi edinin.';
 
   @override
   String get premiumPlan => 'Premium Plan';
 
   @override
   String get premiumDescription =>
-      'Sohbet robotunuzun kilidini açın ve tüm premium özelliklere erişin.';
+      'Yapay zeka sohbet botunuzun kilidini açın ve tüm premium özelliklere sahip olun.';
 
   @override
   String get upgradePlan => 'Planı Yükselt';
 
   @override
-  String get areYouStressed => 'Stresli misin?';
+  String get areYouStressed => 'Stresli Misin?';
 
   @override
-  String get areYouAnxious => 'Endişeli misin?';
+  String get areYouAnxious => 'Endişeli Misin?';
 
   @override
   String questionsForAdults(int questionNumber) {
-    return 'Yetişkinler için $questionNumber Soru';
+    return 'Yetişkinler İçin $questionNumber Soru';
   }
 
   @override
   String get statusAssessmentTest => 'Durum Değerlendirme Testi';
 
   @override
-  String get stressScaleTest => 'Stres Ölçme Testi';
+  String get stressScaleTest => 'Stres Ölçeği Testi';
 
   @override
-  String get anxietyScaleTest => 'Endişe Ölçme Testi';
+  String get anxietyScaleTest => 'Anksiyete Ölçeği Testi';
 
   @override
   String get continueButton => 'Devam Et';
 
   @override
-  String get testRule1 => 'Lütfen son **bir haftanı** değerlendir.';
+  String get testRule1 => '**Geçen haftanızı** değerlendirin.';
 
   @override
-  String get testRule2 => 'Testi **haftada bir kez** uygulaman önerilir.';
+  String get testRule2 => 'Testi **haftada bir kez** çözmeniz önerilir.';
 
   @override
   String get testRule3 =>
-      'Testi yarıda bırakırsan, daha sonra **kaldığın yerden devam edebilirsin.**';
+      'Testi yarıda bırakırsanız, **kaldığınız yerden devam edebilirsiniz.**';
 
   @override
   String get testDisclaimer =>
-      'Bu testin sonuçları, bireysel ruh sağlığına dair içgörü sağlar ancak bir ruh sağlığı profesyoneliyle görüşerek alınan tanı veya önerilerin yerini tutmaz.';
+      'Bu testin sonuçları bireysel ruh sağlığı hakkında fikir verir ancak bir ruh sağlığı profesyoneli ile görüşülen bir teşhis veya önerinin yerini tutmaz.';
 
   @override
-  String get never => 'Hiçbir zaman';
+  String get never => 'Asla';
 
   @override
-  String get sometimes => 'Bazen / Ara sıra';
+  String get sometimes => 'Bazen ve ara sıra';
 
   @override
-  String get often => 'Oldukça sık';
+  String get often => 'Sıklıkla';
 
   @override
   String get always => 'Her zaman';
 
   @override
-  String get stressQ1 => 'Rahatlamakta ve bırakmakta zorlandım.';
+  String get stressQ1 => 'Rahatlamakta ve oluruna bırakmakta zorlandım.';
 
   @override
-  String get stressQ2 => 'Olaylara aşırı tepki verme eğilimindeyim.';
+  String get stressQ2 => 'Olaylara aşırı tepki verme eğilimindeydim.';
 
   @override
-  String get stressQ3 => 'Kendimi gergin veya kaygılı hissettim.';
+  String get stressQ3 => 'Gergin veya endişeli hissettim.';
 
   @override
   String get stressQ4 => 'Eşyalarımı ve görevlerimi yönetmekte zorlandım.';
 
   @override
   String get stressQ5 =>
-      'Duygularımı yönetmekte zorlandım ve bazen görmezden geldim.';
+      'Zorluk çektim ve zaman zaman duygularımı görmezden geldim.';
 
   @override
   String get stressQ6 => 'Uykuya dalmakta veya uykuda kalmakta zorlandım.';
 
   @override
-  String get stressQ7 => 'Sorumluluklar tarafından bunalmış hissettim.';
+  String get stressQ7 => 'Sorumluluklar altında ezilmiş hissettim.';
 
   @override
   String get stressScaleTitle => 'Stres ölçeği testi';
 
   @override
-  String get yourStressLevelPrefix => 'Stres seviyen: ';
+  String get yourStressLevelPrefix => 'Stres seviyeniz: ';
 
   @override
   String get stressLevelLow => 'Düşük stres';
 
   @override
   String get stressLevelLowDescription =>
-      'Mevcut stres seviyen düşük. Günlük yaşamın zorluklarıyla iyi başa çıkıyorsun.';
+      'Mevcut stres seviyeniz düşük. Günlük zorlukları iyi yönetiyorsunuz.';
 
   @override
   String get stressLevelModerate => 'Orta düzey stres';
 
   @override
   String get stressLevelModerateDescription =>
-      'Stres seviyen orta düzeyde. Yönetilebilir ama dikkat gerektiriyor.';
+      'Stres seviyeniz orta düzeyde. Yönetilebilir, ancak dikkat gerektiriyor.';
 
   @override
   String get stressLevelHigh => 'Yüksek stres';
 
   @override
   String get stressLevelHighDescription =>
-      'Stres seviyen yüksek. Yavaşlaman ve bedenini, zihnini dinlemen gerekiyor.';
+      'Stres seviyeniz yüksek. Yavaşlamalı ve vücudunuzu dinlemelisiniz.';
 
   @override
   String get stressAnalysisIntro =>
-      'Testi tamamladığın için teşekkürler. Sonuçların, günlük hayatında seni zorlayan ve yoran bazı faktörler olabileceğini gösteriyor.';
+      'Testi tamamladığınız için teşekkürler. Sonuçlarınız, günlük yaşamınızda sizi zorlayan ve yorgunluğa neden olabilecek bazı faktörler olduğunu gösteriyor.';
 
   @override
   String get stressAnalysisP1Part1 => 'Bu seviye bir ';
 
   @override
-  String get stressAnalysisP1Bold1 => '\'alarm durumu\' ';
+  String get stressAnalysisP1Bold1 => '\'yüksek alarm\' ';
 
   @override
-  String get stressAnalysisP1Part2 =>
-      'olmasa da bedeninin ve zihninin sana şöyle sesleniyor: ';
+  String get stressAnalysisP1Part2 => 'olmasa da, bedeninizin ve zihninizin, ';
 
   @override
-  String get stressAnalysisP1Bold2 => '\'Lütfen yavaşla ve beni duy.\' ';
+  String get stressAnalysisP1Bold2 =>
+      '\'Yavaşlamana ve beni dinlemene ihtiyacım var\' deme şeklidir.';
 
   @override
   String get stressAnalysisP2Part1 =>
-      'Günümüzün hızlı temposunda orta düzey stres çok yaygın ve ';
+      'Orta düzey stres, günümüzün hızlı tempolu dünyasında çok yaygındır ve ';
 
   @override
   String get stressAnalysisP2Bold1 => 'yönetilebilir. ';
@@ -600,67 +636,73 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get stressAnalysisP2Bold2 =>
-      'tükenmişliğe dönüşmeden önce stresi yönetmek için bir fırsat ';
+      'tükenmişliğe yol açmadan önce stresinizi yönetmek için bir fırsat olarak görebilirsiniz.';
 
   @override
   String get stressAnalysisRemember =>
-      'Unutma, bu test bir farkındalık aracıdır; tıbbi bir tanı değildir. Kendine zaman ayırmak, daha iyi hissetmenin ilk adımıdır.';
+      'Unutmayın, bu test bir farkındalık aracıdır, tıbbi bir teşhis değildir. Kendinize zaman ayırmak, daha iyi hissetme yolunda ilk adımdır.';
+
+  @override
+  String get testResult => 'Test sonucu';
+
+  @override
+  String get mentalTest => 'Zihinsel Test';
 
   @override
   String get backToHome => 'Ana Sayfaya Dön';
 
   @override
-  String get specialistsScreenTitle => 'Mentörler';
+  String get specialistsScreenTitle => 'Mentorlar';
 
   @override
-  String get specialistAuraName => 'Zeynep';
+  String get specialistAuraName => 'Aura';
 
   @override
   String get specialistAuraTitle => 'Bireysel Mentorluk';
 
   @override
   String get specialistAuraDescription =>
-      'Kendine özel yolculuğunda sana eşlik eden bireysel rehberlik.';
+      'Kişisel gelişim yolculuğunuz için kişiselleştirilmiş rehberlik.';
 
   @override
-  String get specialistZenName => 'Özgür';
+  String get specialistZenName => 'Zen';
 
   @override
   String get specialistZenTitle => 'İlişki Danışmanı';
 
   @override
   String get specialistZenDescription =>
-      'Daha sağlıklı ve dengeli ilişkiler kurmana yardımcı olur.';
+      'Sağlıklı ve dengeli ilişkiler kurmanıza yardımcı olur.';
 
   @override
-  String get specialistElaraName => 'Merve';
+  String get specialistElaraName => 'Elara';
 
   @override
-  String get specialistElaraTitle => 'Gelişim Koçu';
+  String get specialistElaraTitle => 'Gelişim Rehberi';
 
   @override
   String get specialistElaraDescription =>
-      'Kişisel gelişimine ve hedeflerine odaklanmanı sağlar.';
+      'Kişisel büyümenizi ve uzun vadeli hedeflerinizi destekler.';
 
   @override
-  String get specialistOrionName => 'Hasan';
+  String get specialistOrionName => 'Orion';
 
   @override
   String get specialistOrionTitle => 'Sosyal Davranış Rehberi';
 
   @override
   String get specialistOrionDescription =>
-      'İletişim becerilerini ve sosyal özgüvenini güçlendirir.';
+      'İletişim becerilerinizi ve sosyal özgüveninizi geliştirir.';
 
   @override
-  String get specialistCyraName => 'Ayşe';
+  String get specialistCyraName => 'Cyra';
 
   @override
   String get specialistCyraTitle => 'Akademik Mentor';
 
   @override
   String get specialistCyraDescription =>
-      'Odaklanma, çalışma düzeni ve akademik planlamada seni destekler.';
+      'Odaklanma, çalışma alışkanlıkları ve akademik planlama konularında yardımcı olur.';
 
   @override
   String chatScreenGreeting(String name) {
@@ -680,7 +722,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String askMentor(String name) {
-    return '$name ile konuş';
+    return '$name\'a Sor';
   }
 
   @override
@@ -697,6 +739,128 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get calendar => 'Takvim';
+
+  @override
+  String get age => 'Yaş';
+
+  @override
+  String get enterYourAge => 'Yaşınızı girin';
+
+  @override
+  String get profileSaved => 'Profil başarıyla kaydedildi';
+
+  @override
+  String get done => 'Tamam';
+
+  @override
+  String get deleteAccountWhyLeaving =>
+      'Gitmeni istemiyoruz ama seni anlıyoruz.';
+
+  @override
+  String get deleteAccountImproveQuestion =>
+      'Mindcoach deneyimini iyileştirmemiz için bize neden ayrılmak istediğini söyler misin?';
+
+  @override
+  String get deleteReasonNotRealistic =>
+      'Yapay zeka karakterlerini gerçekçi bulmadım.';
+
+  @override
+  String get deleteReasonTechnicalIssues =>
+      'Görüntülü sohbetlerde teknik sorunlar yaşıyorum.';
+
+  @override
+  String get deleteReasonPrice => 'Abonelik fiyatları beklentimin üzerinde.';
+
+  @override
+  String get deleteReasonNoCharacters =>
+      'Aradığım tarzda karakterler bulamadım.';
+
+  @override
+  String get deleteReasonShortTry =>
+      'Sadece kısa bir süreliğine denemek istemiştim.';
+
+  @override
+  String get deleteReasonOther => 'Diğer';
+
+  @override
+  String get messageOptionalLabel => 'Mesaj (opsiyonel)';
+
+  @override
+  String get specialOffer => 'Özel teklif';
+
+  @override
+  String get specialOfferSubtitle =>
+      'Gitmeden önce senin için hazırladığımız teklife göz at.';
+
+  @override
+  String get switchTo1MonthPlan => '1 Aylık Plana Geç';
+
+  @override
+  String get monthlyPlanPrice => '\$79/ay, istediğin zaman iptal et';
+
+  @override
+  String get noLongTermCommitment =>
+      'Uzun vadeli taahhüt yok. Topluluğumuzla ay bazında bağlantıda kal.';
+
+  @override
+  String get whatYouKeep => 'Elinde tutacakların:';
+
+  @override
+  String get featureAllCharacters => 'Tüm karakterlere eriş';
+
+  @override
+  String get featureUnlimitedVideoCalls => 'Sınırsız video görüşme';
+
+  @override
+  String get featureUnlimitedCharacterEditing => 'Sınırsız karakter düzenleme';
+
+  @override
+  String get switchToMonthlyPlan => 'Aylık Plana Geç';
+
+  @override
+  String get areYouSure => 'Emin misin?';
+
+  @override
+  String get finalOfferSubtitle =>
+      'Gerçekten gitmeni istemiyoruz. İşte kaybedeceklerin:';
+
+  @override
+  String get featureUnlimitedCharacterAccess => 'Sınırsız karakter erişimi';
+
+  @override
+  String get featureUnlimitedVideoCallAccess =>
+      'Sınırsız video görüşme erişimi';
+
+  @override
+  String get featureUnlimitedCharacterEditingAccess =>
+      'Sınırsız karakter düzenleme erişimi';
+
+  @override
+  String get stayAnd60Off => 'Kal ve 1 ay boyunca %60 indirim kazan';
+
+  @override
+  String get bestOfferPrice =>
+      'Şimdiye kadarki en iyi teklifimiz. Sadece \$27.60/ay';
+
+  @override
+  String get accept60OffAndStay => '%60 İndirimi Kabul Et & Kal';
+
+  @override
+  String get sadToSeeYouGo => 'Gidişini görmek üzücü';
+
+  @override
+  String get membershipCancelledInfo =>
+      'Üyeliğiniz iptal edildi. Mevcut fatura döneminizin sonuna kadar erişiminiz devam eder.';
+
+  @override
+  String get changeYourMind => 'Fikrin değişti mi?';
+
+  @override
+  String get reactivateInfo =>
+      'Avantajlarını korumak için üyeliğini istediğin zaman yeniden aktif edebilirsin.';
+
+  @override
+  String get waitReactivate => 'Dur, yeniden aktifleştirmek istiyorum →';
 
   @override
   String get profileSettings => 'Profil Ayarları';
@@ -726,8 +890,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get save => 'Kaydet';
 
   @override
-  String get areYouSureLogout =>
-      'Profilden çıkış yapmak istediğinizden emin misiniz?';
+  String get appLanguage => 'Uygulama Dili';
+
+  @override
+  String get areYouSureLogout => 'Çıkış yapmak istediğinize emin misiniz?';
 
   @override
   String get deleteProfile => 'Profili Sil';
@@ -739,24 +905,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get delete => 'Sil';
 
   @override
-  String get areYouSureDelete => 'Profili silmek istediğinizden emin misiniz?';
+  String get areYouSureDelete => 'Profili silmek istediğinize emin misiniz?';
 
   @override
   String get deleteNotificationConfirmTitle => 'Bildirimi Sil';
 
   @override
   String get deleteNotificationConfirmMessage =>
-      'Bu bildirimi silmek istediğinizden emin misiniz?';
+      'Bu bildirimi silmek istediğinize emin misiniz?';
 
   @override
-  String get deleteAllNotifications => 'Hepsini Sil';
+  String get deleteAllNotifications => 'Tümünü Sil';
 
   @override
   String get deleteAllNotificationsConfirmTitle => 'Tüm Bildirimleri Sil';
 
   @override
   String get deleteAllNotificationsConfirmMessage =>
-      'Tüm bildirimleri silmek istediğinizden emin misiniz?';
+      'Tüm bildirimleri silmek istediğinize emin misiniz?';
 
   @override
   String get allNotificationsDeleted => 'Tüm bildirimler başarıyla silindi';
@@ -768,20 +934,20 @@ class AppLocalizationsTr extends AppLocalizations {
   String get errorDeletingNotifications => 'Bildirimler silinirken hata oluştu';
 
   @override
-  String get invitePeople => 'Kişileri Davet Et';
+  String get invitePeople => 'İnsanları Davet Et';
 
   @override
   String get copyLinkInviteFriend =>
-      'Arkadaşlarını davet etmek için bağlantıyı kopyala';
+      'Arkadaşlarınızı davet etmek için bağlantıyı kopyalayın';
 
   @override
-  String get share => 'paylaş';
+  String get share => 'Paylaş';
 
   @override
-  String get upcoming => 'Yaklaşanlar';
+  String get upcoming => 'Yaklaşan';
 
   @override
-  String get completed => 'Tamamlananlar';
+  String get completed => 'Tamamlandı';
 
   @override
   String get relativeToday => 'Bugün';
@@ -804,7 +970,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String numberOfQuestions(int currentQuestion, int totalQuestion) {
-    return '$totalQuestion sorudan $currentQuestion. soru';
+    return 'Soru $currentQuestion / $totalQuestion';
   }
 
   @override
@@ -826,46 +992,46 @@ class AppLocalizationsTr extends AppLocalizations {
   String get enterFullNamePrompt => 'Lütfen adınızı ve soyadınızı girin.';
 
   @override
-  String get meetingStarted => 'Görüşme Başladı';
+  String get meetingStarted => 'Toplantı Başladı';
 
   @override
   String get selectedDate => 'Seçilen Tarih';
 
   @override
-  String get newChatStarted => 'Yeni Sohbet Başlatıldı';
+  String get newChatStarted => 'Yeni Sohbet Başladı';
 
   @override
-  String get startNewMeeting => 'Yeni Bir Görüşme Başlat';
+  String get startNewMeeting => 'Yeni bir toplantı başlat';
 
   @override
   String get continueAsGuest => 'Misafir Olarak Devam Et';
 
   @override
-  String get jobThoughtAndHabitGuide => 'Düşünce ve Alışkanlık Koçu';
+  String get jobThoughtAndHabitGuide => 'Düşünce ve Alışkanlık Rehberi';
 
   @override
-  String get jobFamilyAssistant => 'Aile Koçu';
+  String get jobFamilyAssistant => 'Aile Rehberi';
 
   @override
-  String get jobAdult => 'Yetişkin Koçu';
+  String get jobAdult => 'Yetişkin Rehberi';
 
   @override
-  String get jobChild => 'Çocuk Koçu';
+  String get jobChild => 'Çocuk Rehberi';
 
   @override
-  String get jobTeenage => 'Ergen Koçu';
+  String get jobTeenage => 'Genç Rehberi';
 
   @override
-  String get jobPersonal => 'Bireysel Koç';
+  String get jobPersonal => 'Kişisel Rehber';
 
   @override
-  String get jobExamAnxiety => 'Sınav Kaygısı Koçu';
+  String get jobExamAnxiety => 'Sınav Kaygısı Rehberi';
 
   @override
   String get noSpecialistsFound => 'Uzman bulunamadı';
 
   @override
-  String get featureFamilyConflicts => 'Aile İçi Çatışmalar';
+  String get featureFamilyConflicts => 'Aile Çatışmaları';
 
   @override
   String get featureParenting => 'Ebeveynlik';
@@ -874,7 +1040,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get featureCommunication => 'İletişim';
 
   @override
-  String get featureBoundaries => 'Sınır Koyma';
+  String get featureBoundaries => 'Sınırlar';
 
   @override
   String get featureRelationshipRepair => 'İlişki Onarımı';
@@ -901,7 +1067,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get featureCareerGuidance => 'Kariyer Rehberliği';
 
   @override
-  String get featureEmotionalRegulation => 'Duygu Düzenleme';
+  String get featureEmotionalRegulation => 'Duygusal Düzenleme';
 
   @override
   String get featureDecisionMaking => 'Karar Verme';
@@ -934,7 +1100,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get featureFocusAttention => 'Odaklanma ve Dikkat';
 
   @override
-  String get featureBehavioralSupport => 'Davranış Desteği';
+  String get featureBehavioralSupport => 'Davranışsal Destek';
 
   @override
   String get featureIdentityDevelopment => 'Kimlik Gelişimi';
@@ -946,10 +1112,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get featureAcademicStress => 'Akademik Stres';
 
   @override
-  String get featureSelfEsteem => 'Özsaygı';
+  String get featureSelfEsteem => 'Öz Saygı';
 
   @override
-  String get featureDigitalWellbeing => 'Dijital İyilik Hali';
+  String get featureDigitalWellbeing => 'Dijital Refah';
 
   @override
   String get featureAngerManagement => 'Öfke Yönetimi';
@@ -964,7 +1130,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get featureLoneliness => 'Yalnızlık';
 
   @override
-  String get featureAnxietySupport => 'Kaygı Desteği';
+  String get featureAnxietySupport => 'Anksiyete Desteği';
 
   @override
   String get featureGriefProcessing => 'Yas Süreci';
@@ -973,7 +1139,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get featureMindfulness => 'Farkındalık';
 
   @override
-  String get featureSleepImprovement => 'Uyku İyileştirme';
+  String get featureSleepImprovement => 'Uyku Düzeni';
 
   @override
   String get featureOverthinking => 'Aşırı Düşünme';
@@ -1000,100 +1166,103 @@ class AppLocalizationsTr extends AppLocalizations {
   String get featureConcentration => 'Konsantrasyon';
 
   @override
-  String get featureRelaxationMethods => 'Rahatlama Yöntemleri';
+  String get featureRelaxationMethods => 'Gevşeme Yöntemleri';
 
   @override
   String get featureExamPreparation => 'Sınava Hazırlık';
 
   @override
-  String get featureConfidenceBuilding => 'Güven İnşası';
+  String get featureConfidenceBuilding => 'Özgüven Geliştirme';
 
   @override
   String get explanationFamilyAssistant =>
-      'Aile dinamiklerinde yol almanıza, çatışmaları çözmenize, ebeveyn-çocuk bağlarını güçlendirmenize ve daha uyumlu bir ev ortamı oluşturmanıza yardımcı olan bir aile koçu. İletişim kopuklukları, sınır sorunları veya boşanma gibi büyük yaşam geçişleriyle karşı karşıya olsanız da, koçunuz birlikte çözüm üretebileceğiniz güvenli bir alan sunar.';
+      'Aile dinamikleri arasında gezinmenize, çatışmaları çözmenize, ebeveyn-çocuk bağlarını güçlendirmenize ve daha uyumlu bir ev ortamı kurmanıza yardımcı olan bir aile rehberi.';
 
   @override
   String get explanationAdult =>
-      'Hayatının kontrolünü eline almak isteyen yetişkinler için tasarlanmış bir kişisel gelişim koçu. Günlük stresi yönetmekten özgüven inşa etmeye, önemli kariyer kararları almaktan yaşam dengesi bulmaya kadar, koçunuz benzersiz zorluklarınıza ve hedeflerinize özel pratik stratejilerle sizi destekler.';
+      'Günlük stresi yönetmekten, özgüven inşa etmeye ve yaşam dengesini bulmaya kadar hayatının kontrolünü eline almak isteyen yetişkinler için bir kişisel gelişim rehberi.';
 
   @override
   String get explanationChild =>
-      'Çocukların duygularını ifade etmelerine, sosyal beceriler geliştirmelerine ve okul hayatına uyum sağlamalarına yardımcı olmak için özel olarak eğitilmiş nazik ve destekleyici bir koç. Yaşa uygun tekniklerle koçunuz, çocukların korkularını yenmelerine, odaklanmalarını artırmalarına ve güvenli bir ortamda sağlıklı arkadaşlıklar kurmalarına yardımcı olur.';
+      'Çocukların yaşlarına uygun teknikler kullanarak duygularını ifade etmelerine, sosyal beceriler geliştirmelerine ve okul hayatına uyum sağlamalarına yardımcı olmak için eğitilmiş nazik ve destekleyici bir rehber.';
 
   @override
   String get explanationTeenage =>
-      'Ergenlik deneyimini gerçekten anlayan bir koç. Kimlik keşfinden akran baskısına, akademik stresten dijital iyilik haline kadar, koçunuz gençlerin özsaygı geliştirmelerine, duygularını yönetmelerine ve ebeveynleriyle sağlıklı iletişim kurarken geleceği planlamalarına yardımcı olur.';
+      'Kimlik arayışı ve akran baskısından, akademik stres ve dijital refaha kadar gençlik deneyimini anlayan bir rehber.';
 
   @override
   String get explanationPersonal =>
-      'İç dünyanıza odaklanan şefkatli bir bireysel koç. Yalnızlık, kaygı, yas ya da aşırı düşünme ile mücadele ediyor olsanız da, koçunuz farkındalık uygulamaları, duygusal iyileşme teknikleri ve kendini keşfetme egzersizleriyle huzur ve netlik bulmanıza rehberlik eder.';
+      'İçsel huzura odaklanan şefkatli bir kişisel rehber. Huzur ve netlik bulmanız için farkındalık, duygusal iyileşme ve kendini keşfetme konularında size rehberlik eder.';
 
   @override
   String get explanationExamAnxiety =>
-      'Öğrencilerin sınav kaygısını yenmelerine ve gerçek akademik potansiyellerini ortaya çıkarmalarına yardımcı olan uzman bir koç. Kanıtlanmış çalışma teknikleri, rahatlama yöntemleri ve güven inşa eden egzersizlerle koçunuz, sınav stresini odaklanmış hazırlığa ve sakin bir performansa dönüştürür.';
+      'Kanıtlanmış çalışma teknikleri, gevşeme yöntemleri ve özgüven geliştirme egzersizleri ile öğrencilerin sınav kaygısını yenmelerine yardımcı olan uzman bir rehber.';
 
   @override
   String get explanationFamilyAssistant1 =>
-      'Köklü aile içi çatışmaları çözme ve yıpranmış ilişkileri yeniden inşa etme konusunda uzmanlaşmış bir aile koçu. Ebeveynlik zorlukları, iletişim becerileri ve sağlıklı sınırlar koyma konularındaki uzmanlığıyla, boşanma gibi zor geçiş dönemlerinde ailelere rehberlik ederken çocukların davranışsal değişimlerini güvenli ve yargısız bir alanda destekler.';
+      'Derin köklü aile çatışmalarını çözme ve gerilmiş ilişkileri yeniden kurma konusunda uzmanlaşmış özel bir aile rehberi. Boşanma gibi zorlu geçiş süreçlerinde ailelere yol gösterirken, davranışsal değişiklikler yaşayan çocuklara rehberlik eder.';
 
   @override
   String get explanationFamilyAssistant2 =>
-      'En önemli bağları güçlendirmeye odaklanan sıcak ve empatik bir aile koçu. Etkili ebeveynlik stratejileri, açık iletişim ve ilişki onarımı konularında uzmanlaşan bu koç, ayrılık veya boşanma gibi zor dönemlerin ardından ailelerin iyileşmesine yardımcı olurken, çocukların duygusal ve davranışsal gelişimini kalıcı bir uyum için destekler.';
+      'En önemli bağları güçlendirmeye odaklanan sıcak ve empatik bir aile rehberi. Çocukların duygusal ve davranışsal gelişimini desteklerken, zor dönemlerin ardından ailelerin iyileşmesine yardımcı olur.';
 
   @override
   String get explanationAdult1 =>
-      'Anlamlı değişim arayan yetişkinler için sonuç odaklı bir koç. Stres yönetimi, yaşam dengesi kurma ve kariyer rehberliğine odaklanarak, duygularınızı düzenlemenize, özgüvenli kararlar almanıza ve pratik, hedef odaklı stratejilerle sürdürülebilir kişisel gelişim elde etmenize yardımcı olur.';
+      'Anlamlı bir değişim arayan yetişkinler için sonuç odaklı bir rehber. Pratik, hedefe yönelik stratejiler aracılığıyla stres yönetimi, yaşam dengesi ve kariyer rehberliğine odaklanır.';
 
   @override
   String get explanationAdult2 =>
-      'Yetişkinlerin tam potansiyellerine ulaşmalarını sağlayan bütüncül bir gelişim koçu. Sarsılmaz bir özgüven inşa etmekten stres yönetimine, kariyer yönü bulmaktan günlük motivasyona kadar, duygu düzenleme teknikleriyle uygulanabilir yaşam stratejilerini birleştirerek kalıcı pozitif değişim yaratır.';
+      'Özgüven oluşturmaktan ve stresi yönetmekten kariyer yönü ve günlük motivasyon bulmaya kadar, yetişkinleri tam potansiyellerine ulaşmaları için güçlendiren bütünsel bir gelişim rehberi.';
 
   @override
   String get explanationTeenage1 =>
-      'Ergenliğin kendine özgü zorluklarını derinden anlayan bir koç. Kimlik gelişimi ve akran baskısından akademik stres ve sağlıklı dijital alışkanlıklar kurmaya kadar, gençlerin özsaygılarını güçlendirmelerine, öfkelerini kontrol etmelerine, geleceklerini planlamalarına ve ebeveynleriyle açık iletişim kurmalarına yardımcı olur.';
+      'Ergenliği derinden anlayan bir rehber. Gençlerin öz saygılarını güçlendirmelerine, öfkelerini kontrol etmelerine, geleceklerini planlamalarına ve ebeveynleriyle açık bir iletişim kurmalarına yardımcı olur.';
 
   @override
   String get explanationTeenage2 =>
-      'Çalkantılı ergenlik yıllarında empatik bir rehber. Kimlik keşfi, akademik baskı ve dijital iyilik hali konularında uzmanlaşan bu koç, gençleri akran etkisine karşı dayanıklılık geliştirmeye, öfkeyi yapıcı biçimde yönetmeye, uzun vadeli hedefler kurmaya ve sağlıklı ebeveyn-ergen ilişkilerini sürdürmeye yönlendirir.';
+      'Çalkantılı gençlik yıllarında empatik bir rehber. Gençlerin psikolojik dayanıklılık geliştirmelerini, öfkelerini yapıcı bir şekilde yönetmelerini ve sağlıklı ebeveyn-genç ilişkileri sürdürmelerini sağlar.';
 
   @override
   String get explanationChild1 =>
-      'Çocukları en kritik gelişim yıllarında desteklemek için tasarlanmış şefkatli bir koç. Nazik ve yaşa uygun yöntemlerle, çocukların duygusal farkındalık geliştirmelerine, sosyal beceriler kazanmalarına, okula uyum sağlamalarına, kendilerini özgürce ifade etmelerine, korkularını yenmelerine, anlamlı arkadaşlıklar kurmalarına, odaklanmalarını artırmalarına ve olumlu davranış kalıpları geliştirmelerine yardımcı olur.';
+      'Çocukların en biçimlendirici yılları için şefkatli bir rehber. Çocukların duygusal farkındalık geliştirmelerine, sosyal beceriler inşa etmelerine, okula uyum sağlamalarına, korkularını yenmelerine ve odaklanmalarını geliştirmelerine yardımcı olur.';
 
   @override
   String get explanationChild2 =>
-      'Çocukların gelişip büyümesine adanmış özenli ve sabırlı bir koç. Duygusal zeka, sosyal gelişim ve okula uyum odaklı bu koç, çocukların duygularını ifade etmeyi öğrendikleri, korkularını yendikleri, kalıcı arkadaşlıklar kurdukları, konsantrasyonlarını güçlendirdikleri ve özgüvenle büyümek için ihtiyaç duydukları davranış desteğini aldıkları güvenli bir ortam yaratır.';
+      'Çocukların duygularını ifade etmeyi, arkadaşlıklar kurmayı ve güvenle büyümeyi öğrendikleri güvenli bir ortam yaratarak gelişmelerine yardımcı olmaya adanmış ilgili ve sabırlı bir rehber.';
 
   @override
   String get explanationPersonal1 =>
-      'Duygusal iyilik halinize ve iç huzurunuza derinden odaklanan şefkatli bir koç. Yalnızlık, kaygı, yas ya da uykusuz geceler yaşıyor olsanız da, farkındalık uygulamaları, duygusal iyileşme süreçleri ve kendini keşfetme yolculuklarıyla aşırı düşünmeden kurtulmanıza ve kalıcı bir netlik bulmanıza rehberlik eder.';
+      'Duygusal iyi oluşa odaklanan derinden şefkatli bir rehber. Aşırı düşünmekten kurtulmanız için farkındalık, duygusal iyileşme ve kendini keşfetme konularında size rehberlik eder.';
 
   @override
   String get explanationPersonal2 =>
-      'Kendinizle yeniden bağ kurmanıza yardımcı olan destekleyici ve sezgisel bir bireysel koç. Kaygı yönetimi, farkındalık teknikleri ve uyku iyileştirme konularında uzmanlaşan bu koç, aşırı düşünme ve duygusal sıkıntı kalıplarından gerçek iyileşmeye ve yenilenmiş bir iç huzura doğru nazikçe rehberlik eder.';
+      'Kendinizle yeniden bağlantı kurmanıza yardımcı olan destekleyici bir kişisel rehber. Gerçek iç huzuruna ulaşmak için anksiyete yönetimi, farkındalık ve uyku düzeni konularında uzmanlaşmıştır.';
 
   @override
   String get explanationExamAnxiety1 =>
-      'Sınav stresini özgüvenli performansa dönüştüren odaklanmış ve sistematik bir koç. Zaman yönetimi, performans baskısıyla başa çıkma ve derin konsantrasyon geliştirme konularında uzmanlaşan bu koç, öğrencileri pratik rahatlama yöntemleri, yapılandırılmış sınav hazırlık teknikleri ve akademik başarı için güven inşa eden stratejilerle donatır.';
+      'Sınav stresini özgüvenli bir performansa dönüştüren odaklı bir rehber. Öğrencileri zaman yönetimi, gevşeme yöntemleri ve özgüven geliştirme stratejileri ile donatır.';
 
   @override
   String get explanationExamAnxiety2 =>
-      'Öğrencilerin sınav kaygısını yenmelerine ve daha akıllı çalışmalarına adanmış uzman bir akademik koç. Kanıtlanmış çalışma teknikleri, etkili zaman yönetimi ve performans baskısına dayanıklılık yoluyla, derin konsantrasyon becerileri, yapılandırılmış sınav hazırlık alışkanlıkları ve her sınav günü için kalıcı bir özgüven inşa eder.';
+      'Öğrencilerin sınav kaygısını aşmalarına ve kanıtlanmış teknikler ile yapılandırılmış sınav hazırlığı aracılığıyla daha akıllıca çalışmalarına yardımcı olmaya adanmış uzman bir akademik rehber.';
 
   @override
   String get filterTitle => 'Filtrele';
 
   @override
-  String get filterCoachingArea => 'Koçluk Alanı';
+  String get filterCoachingArea => 'Rehberlik Alanı';
 
   @override
   String get filterExpertise => 'Uzmanlık';
 
   @override
-  String get filterSelectCoachingArea => 'Koçluk Alanı Seçin';
+  String get filterSelectCoachingArea => 'Rehberlik Alanı Seç';
 
   @override
   String get filterSave => 'Kaydet';
+
+  @override
+  String get filterClear => 'Temizle';
 
   @override
   String get coachDetailInformation => 'Bilgi';
@@ -1111,34 +1280,34 @@ class AppLocalizationsTr extends AppLocalizations {
   String get coachDetailLanguage => 'Dil';
 
   @override
-  String get coachDetailAvailability => 'Müsaitlik';
+  String get coachDetailAvailability => 'Uygunluk';
 
   @override
   String get coachDetailAppointment => 'Randevu';
 
   @override
-  String get coachDetailStartVideoCall => 'Görüntülü Görüşme Başlat';
+  String get coachDetailStartVideoCall => 'Görüntülü Arama Başlat';
 
   @override
   String get coachDetailOnline => 'Çevrimiçi';
 
   @override
-  String get coachDetailVerified => 'Doğrulanmış';
+  String get coachDetailVerified => 'Doğrulandı';
 
   @override
   String get coachDetailCreateAppointment => 'Randevu oluştur';
 
   @override
-  String get searchSoundHint => 'Ses, ruh hali, atmosfer ara..';
+  String get searchSoundHint => 'Sesleri, ruh hallerini, tınıları ara..';
 
   @override
-  String get featuredForYou => 'Senin İçin Önerilen';
+  String get featuredForYou => 'Senin İçin Önerilenler';
 
   @override
   String get mostPopular => 'En Popüler';
 
   @override
-  String get soundCategoryFocus => 'Odaklanma';
+  String get soundCategoryFocus => 'Odak';
 
   @override
   String get soundCategorySleep => 'Uyku';
@@ -1153,13 +1322,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get soundDeepWorkFlow => 'Derin Çalışma Akışı';
 
   @override
-  String get soundDeepWorkFlowSub => 'Verimliliğinizi artırın';
+  String get soundDeepWorkFlowSub => 'Üretkenliğini artır';
 
   @override
-  String get soundBinauralBeats => 'Binaural Vuruşlar';
+  String get soundBinauralBeats => 'Binaural Ritimler';
 
   @override
-  String get soundBinauralBeatsSub => 'Beyin dalgalarınızı ayarlayın';
+  String get soundBinauralBeatsSub => 'Beyin dalgalarını ayarla';
 
   @override
   String get soundLibraryAmbience => 'Kütüphane Ambiyansı';
@@ -1168,28 +1337,28 @@ class AppLocalizationsTr extends AppLocalizations {
   String get soundLibraryAmbienceSub => 'Sessiz çalışma atmosferi';
 
   @override
-  String get soundRainOnWindow => 'Pencerede Yağmur';
+  String get soundRainOnWindow => 'Cama Vuran Yağmur';
 
   @override
-  String get soundRainOnWindowSub => 'Huzurlu bir uykuya dalın';
+  String get soundRainOnWindowSub => 'Huzurlu bir uykuya dal';
 
   @override
   String get soundOceanWaves => 'Okyanus Dalgaları';
 
   @override
-  String get soundOceanWavesSub => 'Sakinleştirici dalga ritmi';
+  String get soundOceanWavesSub => 'Seni sakinleştirecek ritmik dalgalar';
 
   @override
-  String get soundDeepSpaceDrone => 'Derin Uzay Sesi';
+  String get soundDeepSpaceDrone => 'Derin Uzay Uğultusu';
 
   @override
-  String get soundDeepSpaceDroneSub => 'Kozmik ortam yolculuğu';
+  String get soundDeepSpaceDroneSub => 'Kozmik ambiyans yolculuğu';
 
   @override
   String get soundTibetanBowls => 'Tibet Çanakları';
 
   @override
-  String get soundTibetanBowlsSub => 'Kadim şifa titreşimleri';
+  String get soundTibetanBowlsSub => 'Kadim iyileştirici titreşimler';
 
   @override
   String get soundForestBirds => 'Orman Kuşları';
@@ -1201,23 +1370,311 @@ class AppLocalizationsTr extends AppLocalizations {
   String get soundMorningZen => 'Sabah Zeni';
 
   @override
-  String get soundMorningZenSub => 'Güne bilinçli başlayın';
+  String get soundMorningZenSub => 'Güne bilinçli başla';
 
   @override
-  String get soundFireplaceCrackle => 'Şömine Çıtırtısı';
+  String get soundFireplaceCrackle => 'Şömine Çatırtısı';
 
   @override
-  String get soundFireplaceCrackleSub => 'Sıcak ve huzurlu hisler';
+  String get soundFireplaceCrackleSub => 'Sıcak ve samimi hisler';
 
   @override
-  String get soundGentleStream => 'Hafif Dere Akışı';
+  String get soundGentleStream => 'Hafif Akarsu';
 
   @override
   String get soundGentleStreamSub => 'Akan suyun dinginliği';
 
   @override
-  String get soundSoftPiano => 'Yumuşak Piyano';
+  String get soundSoftPiano => 'Hafif Piyano';
 
   @override
-  String get soundSoftPianoSub => 'Rahatlatıcı zarif melodiler';
+  String get soundSoftPianoSub => 'Rahatlamak için zarif melodiler';
+
+  @override
+  String get quickMessage => 'Hızlı Mesaj';
+
+  @override
+  String get chatMessage => 'Mesaj';
+
+  @override
+  String get chatHistory => 'Geçmiş';
+
+  @override
+  String get noChatHistory => 'Henüz sohbet geçmişi yok';
+
+  @override
+  String get calling => 'Aranıyor...';
+
+  @override
+  String get image => 'Görsel';
+
+  @override
+  String get coachesTitle => 'Rehberler';
+
+  @override
+  String get searchAtMindcoach => 'Mindcoach\'ta Ara';
+
+  @override
+  String noResultsFound(String query) {
+    return '\"$query\" için sonuç bulunamadı';
+  }
+
+  @override
+  String get premiumTryFree => 'Mind Coach Premium\'u\n1 hafta ücretsiz dene';
+
+  @override
+  String get premiumUnlimitedAccess =>
+      'Sınırsız erişim elde et ve fırsatlardan yararlan';
+
+  @override
+  String get premiumFeatureSkipAds => 'Reklamları Atla';
+
+  @override
+  String get premiumFeatureUnlimitedCharacters => 'Sınırsız Karakter Seçimi';
+
+  @override
+  String get premiumFeatureExpandedMemory => 'Genişletilmiş hafıza ve bağlam';
+
+  @override
+  String get premiumFeatureAdvancedReasoning =>
+      'Gelişmiş akıl yürütme yetenekleriyle';
+
+  @override
+  String get premiumStartTrial => '1 haftalık ücretsiz denemeyi başlat';
+
+  @override
+  String get premiumBillingNote =>
+      '7 günlük ücretsiz denemenizin ardından aylık 8.99\$ faturalandırılacaksınız. İstediğiniz zaman iptal edebilirsiniz.';
+
+  @override
+  String get premiumRestorePurchase => 'Satın almayı geri yükle';
+
+  @override
+  String get termsOfUse => 'Kullanım Koşulları';
+
+  @override
+  String get premiumSaveBadge => '%17 TASARRUF ET';
+
+  @override
+  String get premiumPlanAnnual => 'Yıllık';
+
+  @override
+  String get premiumPlanMonthly => 'Aylık';
+
+  @override
+  String get premiumPlanPerYearAfterTrial => '7 günlük denemeden sonra yıllık';
+
+  @override
+  String get goodbyeTitle => 'Seni Özleyeceğiz ';
+
+  @override
+  String get goodbyeSubtitle =>
+      'Hesabını sildiğin için üzgünüz.\nSeni tekrar görmeyi umuyoruz...';
+
+  @override
+  String get goBack => 'Geri Git';
+
+  @override
+  String get profileFromGallery => 'Galeriden Seç';
+
+  @override
+  String get profileFromCamera => 'Fotoğraf Çek';
+
+  @override
+  String get profilePhotoUpdated => 'Profil fotoğrafı güncellendi';
+
+  @override
+  String get logoutDialogTitle => 'Çıkış yapmak üzeresiniz';
+
+  @override
+  String get logoutDialogSubtitle =>
+      'Yakında tekrar görüşmek üzere! Nefes egzersizlerini özleyeceğiz.';
+
+  @override
+  String get sectionAccountSettings => 'HESAP AYARLARI';
+
+  @override
+  String get sectionGeneral => 'GENEL';
+
+  @override
+  String get menuItemPremium => 'Premium';
+
+  @override
+  String get menuItemRateUs => 'Bizi Değerlendir';
+
+  @override
+  String get premiumBadge => 'PREMIUM';
+
+  @override
+  String get premiumStatusActive => 'aktif';
+
+  @override
+  String get linkCopied => 'Bağlantı kopyalandı!';
+
+  @override
+  String get shareFriend => 'Arkadaşınla Paylaş';
+
+  @override
+  String get errorMessageFailed => 'Mesaj gönderilemedi';
+
+  @override
+  String get errorImageFailed => 'Görsel gönderilemedi';
+
+  @override
+  String get errorVoiceFileNotFound => 'Ses dosyası bulunamadı';
+
+  @override
+  String get errorVoiceMessageFailed => 'Sesli mesaj gönderilemedi';
+
+  @override
+  String get errorVoiceNotPlayed => 'Ses dosyası oynatılamadı';
+
+  @override
+  String get errorVoiceMessageNotPlayed => 'Sesli mesaj oynatılamadı';
+
+  @override
+  String get errorRecordingStart => 'Kayıt başlatılamadı';
+
+  @override
+  String get errorRecordingStop => 'Kayıt durdurulamadı';
+
+  @override
+  String get errorMicrophonePermission => 'Mikrofon izni gerekli';
+
+  @override
+  String get errorRecordingTooShort =>
+      'Kayıt çok kısa, lütfen daha uzun kaydedin';
+
+  @override
+  String get errorAppointmentDateNotFound => 'Randevu tarihi bulunamadı';
+
+  @override
+  String get errorAppointmentExpired => 'Randevu saati geçti';
+
+  @override
+  String get errorAppointmentNotYet => 'Oturum henüz başlamadı';
+
+  @override
+  String get errorConsultantNotFound => 'Danışman bulunamadı';
+
+  @override
+  String get errorConsultantsNotLoaded => 'Danışman listesi yüklenemedi';
+
+  @override
+  String get errorConsultantLoadFailed => 'Danışman yüklenemedi';
+
+  @override
+  String get errorOperationFailed => 'İşlem başarısız oldu';
+
+  @override
+  String get errorPhotoUpload => 'Profil fotoğrafı yüklenemedi';
+
+  @override
+  String get errorGeneral => 'Bir hata oluştu';
+
+  @override
+  String get recordingStatus => 'Kaydediliyor...';
+
+  @override
+  String get email => 'E-posta';
+
+  @override
+  String get emailHint => 'ornek@eposta.com';
+
+  @override
+  String get messageOptionalHint => 'Varsa mesajınızı yazın.';
+
+  @override
+  String findCoachMatchedFor(int count, String area) {
+    return '$area için $count rehber eşleşti';
+  }
+
+  @override
+  String get findCoachTitle => 'Rehberini bul';
+
+  @override
+  String findCoachSwipeToBrowse(String schedule) {
+    return 'Göz atmak için kaydır - $schedule';
+  }
+
+  @override
+  String findCoachYearsExperience(int count) {
+    return '$count yıl deneyim';
+  }
+
+  @override
+  String get findCoachSkip => 'Atla';
+
+  @override
+  String get findCoachBook => 'Seç';
+
+  @override
+  String get splashTagline => 'Kendine bir an ayır.';
+
+  @override
+  String stepOf(int current, int total) {
+    return 'Adım $current / $total';
+  }
+
+  @override
+  String get trialEndedTitle => 'Süren doldu';
+
+  @override
+  String get trialEndedMessage =>
+      '1 dakikalık ücretsiz deneme süresi sona erdi. Rehberinle konuşmaya devam etmek için giriş yap.';
+
+  @override
+  String get trialEndedAction => 'Devam etmek için giriş yap';
+
+  @override
+  String get noUpcomingAppointments => 'Yaklaşan randevu yok';
+
+  @override
+  String get noCompletedAppointments => 'Tamamlanan randevu yok';
+
+  @override
+  String get videoCallStatusConnecting => 'Bağlanıyor...';
+
+  @override
+  String get videoCallStatusListening => 'Dinliyor';
+
+  @override
+  String get videoCallStatusMuted => 'Sessizde';
+
+  @override
+  String get videoCallStatusThinking => 'Düşünüyor...';
+
+  @override
+  String get videoCallStatusSpeaking => 'Konuşuyor';
+
+  @override
+  String get videoCallStatusError => 'Bağlantı hatası';
+
+  @override
+  String get videoCallEncrypted => 'Uçtan uca şifreli';
+
+  @override
+  String get videoCallTurnCamera => 'Kamerayı Çevir';
+
+  @override
+  String get videoCallEndButton => 'Bitir';
+
+  @override
+  String get videoCallMute => 'Sustur';
+
+  @override
+  String get videoCallEndDialogTitle =>
+      'Görüşmeyi bitirmek istediğine emin misin?';
+
+  @override
+  String get videoCallEndDialogCancel => 'Vazgeç';
+
+  @override
+  String get videoCallEndDialogEnd => 'Bitir';
+
+  @override
+  String get videoCallRateTitle => 'Görüşmeyi Puanla';
+
+  @override
+  String get videoCallRateSubtitle => 'Görüntülü görüşmeyi değerlendir';
 }

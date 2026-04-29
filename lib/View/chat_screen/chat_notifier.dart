@@ -75,6 +75,10 @@ class ChatState {
 }
 
 class ChatNotifier extends Notifier<ChatState> {
+  bool _isRefreshing = false;
+  DateTime? _lastRefreshAt;
+  static const Duration _minRefreshInterval = Duration(seconds: 20);
+
   @override
   ChatState build() {
 
@@ -275,7 +279,20 @@ class ChatNotifier extends Notifier<ChatState> {
 
 
   Future<void> refreshChats() async {
-    await _loadChats();
+    final now = DateTime.now();
+    final recentlyRefreshed =
+        _lastRefreshAt != null &&
+        now.difference(_lastRefreshAt!) < _minRefreshInterval;
+
+    if (_isRefreshing || recentlyRefreshed) return;
+
+    _isRefreshing = true;
+    try {
+      await _loadChats();
+      _lastRefreshAt = DateTime.now();
+    } finally {
+      _isRefreshing = false;
+    }
   }
 
 
@@ -360,16 +377,29 @@ class ChatNotifier extends Notifier<ChatState> {
     required String lastMessage,
     required DateTime time,
     required bool isFromMe,
+    int? consultantId,
   }) {
     final idx = state.chats.indexWhere((c) => c.specialistId == id);
 
-    if (idx == -1) {
+    // Consultant bilgisini specialistsProvider'dan bul
+    ConsultantModel? _lookupConsultant(int cId) {
+      final specialists = ref.read(specialistsProvider).specialists ?? [];
+      try {
+        final found = specialists.firstWhere((c) => c.id == cId);
+        return found;
+      } catch (_) {
+        return null;
+      }
+    }
 
-      final consultantId = id.index + 1;
-      
+    if (idx == -1) {
+      final cId = consultantId ?? id.index + 1;
+      final consultant = _lookupConsultant(cId);
+
       final newItem = ChatItem(
         specialistId: id,
-        consultantId: consultantId,
+        consultantId: cId,
+        consultant: consultant,
         lastMessage: lastMessage,
         time: time,
         unreadCount: 0,
@@ -379,10 +409,20 @@ class ChatNotifier extends Notifier<ChatState> {
       return;
     }
 
-    final updated = state.chats[idx].copyWith(
+    // Varolan item'ı güncelle — consultant yoksa tekrar dene
+    final existing = state.chats[idx];
+    ConsultantModel? consultant = existing.consultant;
+    if (consultant == null) {
+      consultant = _lookupConsultant(
+        consultantId ?? existing.consultantId,
+      );
+    }
+
+    final updated = existing.copyWith(
       lastMessage: lastMessage,
       time: time,
       isFromMe: isFromMe,
+      consultant: consultant,
     );
 
     final list = [...state.chats]..removeAt(idx);

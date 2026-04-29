@@ -77,10 +77,20 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
 
   /// Mevcut adımın validasyonunun sağlanıp sağlanmadığını kontrol eder.
   bool _isStepValid(dynamic profileState) {
-    if (_currentPage == 0) {
-      return profileState.fullName.trim().isNotEmpty;
+    switch (_currentPage) {
+      case 0:
+        return profileState.fullName.trim().isNotEmpty;
+      case 1:
+        return profileState.supportArea != null;
+      case 2:
+        return profileState.approach != null;
+      case 3:
+        return (profileState.availableDays as List).isNotEmpty;
+      case 4:
+        return profileState.meetingTime != null;
+      default:
+        return true;
     }
-    return true;
   }
 
   @override
@@ -110,56 +120,56 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
                 children: [
                   // -- Üst Bar (Back + Progress + Step) --
                   Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: SizedBox(
-                        height: 28.h,
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: _currentPage == 0 ? null : _goBack,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.arrow_back_ios_new_rounded,
-                                    size: 16,
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: SizedBox(
+                      height: 28.h,
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: _currentPage == 0 ? null : _goBack,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_back_ios_new_rounded,
+                                  size: 16,
+                                  color: _currentPage == 0
+                                      ? const Color(0xFFCACACA)
+                                      : const Color(0xFF96989C),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  l.back,
+                                  style: GoogleFonts.quicksand(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
                                     color: _currentPage == 0
                                         ? const Color(0xFFCACACA)
                                         : const Color(0xFF96989C),
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    l.back,
-                                    style: GoogleFonts.quicksand(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: _currentPage == 0
-                                          ? const Color(0xFFCACACA)
-                                          : const Color(0xFF96989C),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _OnboardingProgressBar(
-                                currentPage: _currentPage,
-                                totalSteps: stepCount,
-                              ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _OnboardingProgressBar(
+                              currentPage: _currentPage,
+                              totalSteps: stepCount,
                             ),
-                            const SizedBox(width: 12),
-                            Text(
-                              "Step ${_currentPage + 1} of $stepCount",
-                              style: GoogleFonts.quicksand(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF21BC87),
-                              ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            l.stepOf(_currentPage + 1, stepCount),
+                            style: GoogleFonts.quicksand(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF21BC87),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
 
                   // -- İçerik (PageView) --
                   Expanded(
@@ -256,41 +266,27 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
 
                   // -- Alt Buton --
                   Padding(
-                      padding: EdgeInsets.only(
-                        top: 12,
-                        bottom: MediaQuery.of(context).padding.bottom,
-                      ),
-                      child: _BottomPrimaryButton(
-                        isLast: _currentPage == stepCount - 1,
-                        isEnabled: canProceed,
-                        onPressed: () async {
-                          if (!canProceed) return;
-
-                          if (_currentPage == stepCount - 1) {
-                            // Kullanici zaten giris yapmissa direkt profili tamamla
-                            final user = ref.read(AllProviders.userProvider);
-                            if (user != null && user.token != null) {
-                              await ref
-                                  .read(AllControllers.profileSetupProvider.notifier)
-                                  .completeProfile();
-                              if (mounted) {
-                                navigatorKey.currentState?.pushNamedAndRemoveUntil(
-                                  PageRoutes.navbar,
-                                  (route) => false,
-                                );
-                              }
-                            } else {
-                              // Giris yapilmamis → Login sayfasina yonlendir
-                              navigatorKey.currentState
-                                  ?.pushReplacementNamed(PageRoutes.login);
-                            }
-                            return;
-                          }
-
-                          _goNext();
-                        },
-                      ),
+                    padding: EdgeInsets.only(
+                      top: 12,
+                      bottom: MediaQuery.of(context).padding.bottom,
                     ),
+                    child: _BottomPrimaryButton(
+                      isLast: _currentPage == stepCount - 1,
+                      isEnabled: canProceed,
+                      onPressed: () async {
+                        if (!canProceed) return;
+
+                        if (_currentPage == stepCount - 1) {
+                          navigatorKey.currentState?.pushNamed(
+                            PageRoutes.findCoach,
+                          );
+                          return;
+                        }
+
+                        _goNext();
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -405,7 +401,10 @@ class _BottomPrimaryButton extends StatelessWidget {
               const SizedBox(width: 8),
               SvgPicture.asset(
                 'assets/icons/ic_rightArrow.svg',
-                color: isLast ? Colors.white : const Color(0xFF21BC87),
+                colorFilter: ColorFilter.mode(
+                  isLast ? Colors.white : const Color(0xFF21BC87),
+                  BlendMode.srcIn,
+                ),
               ),
             ],
           ],

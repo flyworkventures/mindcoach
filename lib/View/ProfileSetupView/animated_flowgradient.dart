@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -109,38 +108,6 @@ class _AnimatedFlowBackgroundState extends State<AnimatedFlowBackground>
           ),
         );
       },
-    );
-  }
-
-  Widget _blob(
-    double t,
-    Alignment base,
-    double size,
-    Color color,
-    double speedX,
-    double speedY,
-  ) {
-    final dx = sin(t * speedX) * 0.30;
-    final dy = cos(t * speedY) * 0.30;
-
-    return Align(
-      alignment: Alignment(base.x + dx, base.y + dy),
-      child: Container(
-        width: size,
-        height: size * 0.9,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(size),
-          gradient: RadialGradient(
-            center: const Alignment(-0.3, -0.4),
-            radius: 1.1,
-            colors: [
-              color.withValues(alpha: 0.90),
-              color.withValues(alpha: 0.45),
-              color.withValues(alpha: 0.0),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

@@ -229,8 +229,8 @@ class TestQuestionScreen extends ConsumerWidget {
                           width: 1,
                         ),
                       ),
-                      child: const Text(
-                        'Back', // Veya l10n.back
+                      child: Text(
+                        l10n.back,
                         style: TextStyle(
                           fontFamily: 'Geist',
                           fontSize: 18,
@@ -273,8 +273,8 @@ class TestQuestionScreen extends ConsumerWidget {
                             : const Color(0xFF21BC87).withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Text(
-                        'Continue', // Veya l10n.continueButton
+                      child: Text(
+                        l10n.continueButton,
                         style: TextStyle(
                           fontFamily: 'Geist',
                           fontSize: 18,

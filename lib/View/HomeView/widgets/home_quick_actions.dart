@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -105,7 +106,7 @@ class _QuickActionCoachTile extends ConsumerWidget {
                         width: 1,
                       ),
                       image: DecorationImage(
-                        image: NetworkImage(coach.photoURL),
+                        image: CachedNetworkImageProvider(coach.photoURL),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -155,29 +156,7 @@ class _QuickActionCoachTile extends ConsumerWidget {
             ),
 
             // Sağ tarafı kapsayan Row (Rating ve Ok ikonu)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Rating
-                if (coach.rating > 0) ...[
-                  SvgPicture.asset("assets/icons/ic_start.svg"),
-                  const SizedBox(width: 3),
-                  Text(
-                    coach.rating.toStringAsFixed(2),
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF21BC87),
-                    ),
-                  ),
-                ],
-                const SizedBox(width: 8),
-
-                // Arrow
-                SvgPicture.asset("assets/icons/ic_quick.svg"),
-              ],
-            ),
+            SvgPicture.asset("assets/icons/ic_quick.svg"),
           ],
         ),
       ),

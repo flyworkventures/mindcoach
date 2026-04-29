@@ -174,8 +174,8 @@ class TestIntroScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   alignment: Alignment.center,
-                  child: const Text(
-                    'Continue', // veya l10n.continueButton
+                  child: Text(
+                    l10n.continueButton,
                     style: TextStyle(
                       fontFamily: 'Geist',
                       fontSize: 16,

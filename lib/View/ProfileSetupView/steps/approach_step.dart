@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../constants/approach_strings.dart';
 
 class ApproachStep extends StatelessWidget {
-  final ApproachType selectedApproach;
+  final ApproachType? selectedApproach;
   final ValueChanged<ApproachType> onApproachChanged;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;

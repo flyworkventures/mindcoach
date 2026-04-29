@@ -6,9 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
-import 'package:mindcoach/Riverpod/Providers/user_provider.dart';
 
-import '../../Riverpod/providers/all_providers.dart';
+import '../../Riverpod/Providers/all_providers.dart';
 
 class StreamCallRepo {
   final WidgetRef? ref;
@@ -20,15 +19,17 @@ class StreamCallRepo {
     required File audioFile,
   }) async {
     try {
-      final url = Uri.parse("${AppConstants.baseURL}${AppConstants.videoCallURL}");
+      final url = Uri.parse(
+        "${AppConstants.baseURL}${AppConstants.videoCallURL}",
+      );
       final request = http.MultipartRequest('POST', url);
-      
+
       final token = ref?.read(AllProviders.userProvider)?.token ?? "";
       request.headers['Authorization'] = 'Bearer $token';
- 
+
       final fileExtension = audioFile.path.split('.').last.toLowerCase();
-      String mimeType = 'audio/mp4'; 
-      
+      String mimeType = 'audio/mp4';
+
       if (fileExtension == 'm4a') {
         mimeType = 'audio/mp4';
       } else if (fileExtension == 'mp3') {
@@ -40,26 +41,29 @@ class StreamCallRepo {
       } else if (fileExtension == 'aac') {
         mimeType = 'audio/aac';
       }
-      
+
       request.files.add(
         await http.MultipartFile.fromPath(
-          'audio', 
+          'audio',
           audioFile.path,
           filename: audioFile.path.split('/').last,
           contentType: MediaType.parse(mimeType),
         ),
       );
-      
-      log("📤 [STREAM-CALL] Audio MIME type: $mimeType, extension: $fileExtension");
-      
+
+      log(
+        "📤 [STREAM-CALL] Audio MIME type: $mimeType, extension: $fileExtension",
+      );
 
       request.fields['consultantId'] = consultantId.toString();
-      
-      log("📤 [STREAM-CALL] Audio gönderiliyor: ${audioFile.path}, consultantId: $consultantId");
-      
+
+      log(
+        "📤 [STREAM-CALL] Audio gönderiliyor: ${audioFile.path}, consultantId: $consultantId",
+      );
+
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
-      
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json['success'] == true) {
@@ -81,4 +85,3 @@ class StreamCallRepo {
     }
   }
 }
-

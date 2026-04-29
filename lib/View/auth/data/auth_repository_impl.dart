@@ -1,5 +1,4 @@
 import '../domain/auth_repository.dart';
-import '../domain/social_login_provider.dart';
 import 'datasource/auth_remote_datasource.dart';
 
 
@@ -24,7 +23,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
 
   @override
-  Future<void> deleteAccount() => _remote.deleteAccount();
+  Future<void> deleteAccount({
+    String? deleteReason,
+    String? deleteMessage,
+  }) => _remote.deleteAccount(
+    deleteReason: deleteReason,
+    deleteMessage: deleteMessage,
+  );
 
   @override
   Future<bool> isLoggedIn() => _remote.isLoggedIn();

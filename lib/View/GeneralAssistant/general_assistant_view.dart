@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,6 +11,7 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/locale_font_scaler.dart';
+import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 import 'package:mindcoach/core/utils/time_format_utils.dart';
 import 'package:mindcoach/Riverpod/Controllers/general_assistant_view_controller.dart';
@@ -230,7 +232,7 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
                   shape: BoxShape.circle,
                   color: Colors.grey.shade300,
                   image: DecorationImage(
-                    image: NetworkImage(
+                    image: CachedNetworkImageProvider(
                       ref.read(AllProviders.userProvider)?.profilePhotoUrl ?? AppConstants.defaultPpUrl,
                     ),
                     fit: BoxFit.cover,
@@ -392,7 +394,7 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
                           ),
                         ),
                       ),
-                      Text("Image", maxLines: 1, style: GoogleFonts.poppins()),
+                      Text(context.l10n.image, maxLines: 1, style: GoogleFonts.poppins()),
                     ],
                   ),
                   IconButton(
@@ -432,7 +434,7 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
                       controller: _messageController,
                       style: GoogleFonts.quicksand(fontSize: 14.w),
                       decoration: InputDecoration(
-                        hintText: 'Mesajınızı yazın...',
+                        hintText: context.l10n.typeAMessage,
                         hintStyle: GoogleFonts.quicksand(
                           fontSize: 12.w,
                           fontWeight: FontWeight.w500,
@@ -635,7 +637,7 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Mesaj gönderilemedi: ${e.toString()}'),
+          content: Text(context.l10n.errorMessageFailed),
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.red,
         ),
@@ -664,7 +666,7 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Ses kaydı başlatılamadı: ${e.toString()}'),
+              content: Text(context.l10n.errorRecordingStart),
               backgroundColor: Colors.red,
             ),
           );
@@ -690,7 +692,7 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Ses kaydı durdurulamadı: ${e.toString()}'),
+              content: Text(context.l10n.errorRecordingStop),
               backgroundColor: Colors.red,
             ),
           );
@@ -711,8 +713,8 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
       if (!await file.exists()) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Ses dosyası bulunamadı'),
+            SnackBar(
+              content: Text(context.l10n.errorVoiceFileNotFound),
               backgroundColor: Colors.red,
             ),
           );
@@ -727,7 +729,7 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Sesli mesaj gönderilemedi: ${e.toString()}'),
+            content: Text(context.l10n.errorVoiceMessageFailed),
             duration: const Duration(seconds: 3),
             backgroundColor: Colors.red,
           ),
@@ -770,7 +772,7 @@ class _GeneralAssistantViewState extends ConsumerState<GeneralAssistantView> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Resim gönderilemedi: ${e.toString()}'),
+          content: Text(context.l10n.errorImageFailed),
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.red,
         ),

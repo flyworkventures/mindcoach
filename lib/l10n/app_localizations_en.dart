@@ -15,6 +15,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seeAll => 'See All';
 
   @override
+  String get online => 'Online';
+
+  @override
+  String get typeAMessage => 'Type a message...';
+
+  @override
   String get premiumHeadlinePart1 => 'A space just to be ';
 
   @override
@@ -47,7 +53,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingDesc1 =>
-      'Talk to a certified coach in minutes — whenever you need it.';
+      'Talk to a certified guide in minutes — whenever you need it.';
 
   @override
   String get onboardingTitle2 => 'Talk your way.';
@@ -56,7 +62,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingDesc2 => 'Text, voice, or video';
 
   @override
-  String get onboardingTitle3 => 'Find the right coach for you.';
+  String get onboardingTitle3 => 'Find the right guide for you.';
 
   @override
   String get onboardingDesc3 =>
@@ -67,7 +73,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingTermsPrefix =>
-      'By signing up for MindCoach, you agree to our ';
+      'By signing up for __MINDguide2__, you agree to our ';
 
   @override
   String get onboardingTermsOfService => 'Terms of Service';
@@ -117,11 +123,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getStarted => 'Get Started';
 
   @override
-  String get findMyCoaches => 'Find My Coaches';
+  String get findMyCoaches => 'Find My Guides';
 
   @override
   String get loginSubtitle =>
-      'Sign in to find your coach and start your journey. Takes 2 minutes.';
+      'Sign in to find your guide and start your journey. Takes 2 minutes.';
 
   @override
   String get continueWithGoogle => 'Continue with Google';
@@ -134,11 +140,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your data is never shared with third parties. You can delete your account at any time.';
 
   @override
-  String get approachTitle => 'How should your coach approach you?';
+  String get approachTitle => 'How should your guide approach you?';
 
   @override
   String get approachSubtitle =>
-      'Helps us match your personality to the right coach';
+      'Helps us match your personality to the right guide';
 
   @override
   String get approachPatient => 'Patient';
@@ -249,7 +255,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nameGenderTitle => 'Tell us a bit about yourself';
 
   @override
-  String get nameGenderSubtitle => 'So your coach can get to know the real you';
+  String get nameGenderSubtitle => 'So your guide can get to know the real you';
 
   @override
   String get nameGenderFullNameLabel => 'Full Name';
@@ -274,7 +280,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportAreaSubtitle =>
-      'We\'ll only show coaches who specialise in this';
+      'We\'ll only show guides who specialise in this';
 
   @override
   String get supportAreaIndividual => 'Individual Growth';
@@ -296,7 +302,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get availableDaysSubtitle =>
-      'So we only show coaches free when you are';
+      'So we only show guides free when you are';
 
   @override
   String get dayMonday => 'Mon';
@@ -324,7 +330,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get meetingTimeSubtitle =>
-      'Coaches with matching slots will be highlighted';
+      'Guides with matching slots will be highlighted';
 
   @override
   String get meetingTimeMorning => 'Morning';
@@ -432,6 +438,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moodStressed => 'Stressed';
+
+  @override
+  String get moodTrackerSubtitle => 'A small check-in goes a long way';
+
+  @override
+  String get moodDescCalm =>
+      'This peace in your mind is your greatest strength. Enjoy this moment and stay balanced.';
+
+  @override
+  String get moodDescHappy =>
+      'Your positive energy is contagious! Keep spreading joy and embracing this wonderful feeling.';
+
+  @override
+  String get moodDescNeutral =>
+      'A steady state of mind is perfectly fine. Take a moment to check in with yourself.';
+
+  @override
+  String get moodDescTired =>
+      'Your body is telling you to rest. Take a break and recharge — you deserve it.';
+
+  @override
+  String get moodDescStressed =>
+      'Take a deep breath. Remember, it\'s okay to slow down and take things one step at a time.';
+
+  @override
+  String get todaysSessions => 'Today\'s sessions';
+
+  @override
+  String get makeAnAppointment => 'Make an Appointment';
 
   @override
   String get timeToTrackMood => 'It\'s time to track your mood';
@@ -612,6 +647,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Remember, this test is an awareness tool, not a medical diagnosis. Taking time for yourself is the first step toward feeling better.';
 
   @override
+  String get testResult => 'Test result';
+
+  @override
+  String get mentalTest => 'Mental Test';
+
+  @override
   String get backToHome => 'Back to Home';
 
   @override
@@ -641,7 +682,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get specialistElaraName => 'Elara';
 
   @override
-  String get specialistElaraTitle => 'Development Coach';
+  String get specialistElaraTitle => 'Development Guide';
 
   @override
   String get specialistElaraDescription =>
@@ -704,6 +745,127 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calendar => 'Calendar';
 
   @override
+  String get age => 'Age';
+
+  @override
+  String get enterYourAge => 'Enter your age';
+
+  @override
+  String get profileSaved => 'Profile saved successfully';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get deleteAccountWhyLeaving =>
+      'We don\'t want you to go, but we understand.';
+
+  @override
+  String get deleteAccountImproveQuestion =>
+      'To help us improve the __MINDguide__ experience, could you tell us why you\'re leaving?';
+
+  @override
+  String get deleteReasonNotRealistic =>
+      'I didn\'t find the AI characters realistic.';
+
+  @override
+  String get deleteReasonTechnicalIssues =>
+      'I\'m experiencing technical issues with video chats.';
+
+  @override
+  String get deleteReasonPrice =>
+      'The subscription prices are above my expectations.';
+
+  @override
+  String get deleteReasonNoCharacters =>
+      'I couldn\'t find the type of characters I was looking for.';
+
+  @override
+  String get deleteReasonShortTry =>
+      'I just wanted to try it for a short while.';
+
+  @override
+  String get deleteReasonOther => 'Other';
+
+  @override
+  String get messageOptionalLabel => 'Message (optional)';
+
+  @override
+  String get specialOffer => 'Special offer';
+
+  @override
+  String get specialOfferSubtitle =>
+      'Before you go, take a look at the offer we\'ve prepared for you.';
+
+  @override
+  String get switchTo1MonthPlan => 'Switch to 1-Month Plan';
+
+  @override
+  String get monthlyPlanPrice => '\$79/month, cancel anytime';
+
+  @override
+  String get noLongTermCommitment =>
+      'No long-term commitment. Stay connected with our community on a month-to-month basis.';
+
+  @override
+  String get whatYouKeep => 'What you\'ll keep:';
+
+  @override
+  String get featureAllCharacters => 'Access all characters';
+
+  @override
+  String get featureUnlimitedVideoCalls => 'Unlimited video calls';
+
+  @override
+  String get featureUnlimitedCharacterEditing => 'Unlimited character editing';
+
+  @override
+  String get switchToMonthlyPlan => 'Switch to Monthly Plan';
+
+  @override
+  String get areYouSure => 'Are you sure?';
+
+  @override
+  String get finalOfferSubtitle =>
+      'We really don\'t want to see you go. Here\'s what you\'ll lose:';
+
+  @override
+  String get featureUnlimitedCharacterAccess => 'Unlimited character access';
+
+  @override
+  String get featureUnlimitedVideoCallAccess => 'Unlimited video call access';
+
+  @override
+  String get featureUnlimitedCharacterEditingAccess =>
+      'Unlimited character editing access';
+
+  @override
+  String get stayAnd60Off => 'Stay and get 60% off for 1 month';
+
+  @override
+  String get bestOfferPrice => 'Our best offer ever. Just \$27.60/month';
+
+  @override
+  String get accept60OffAndStay => 'Accept 60% Off & Stay';
+
+  @override
+  String get sadToSeeYouGo => 'We\'re sad to see you go';
+
+  @override
+  String get membershipCancelledInfo =>
+      'Your membership has been cancelled. You\'ll have access until the end of your current billing period.';
+
+  @override
+  String get changeYourMind => 'Change your mind?';
+
+  @override
+  String get reactivateInfo =>
+      'You can reactivate your membership anytime to keep your benefits.';
+
+  @override
+  String get waitReactivate => 'Wait, I want to reactivate →';
+
+  @override
   String get profileSettings => 'Profile Settings';
 
   @override
@@ -729,6 +891,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get appLanguage => 'App Language';
 
   @override
   String get areYouSureLogout => 'Are you sure you want to logout?';
@@ -845,25 +1010,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueAsGuest => 'Continue as Guest';
 
   @override
-  String get jobThoughtAndHabitGuide => 'Thought and Habit Coach';
+  String get jobThoughtAndHabitGuide => 'Thought and Habit Guide';
 
   @override
-  String get jobFamilyAssistant => 'Family Coach';
+  String get jobFamilyAssistant => 'Family Guide';
 
   @override
-  String get jobAdult => 'Adult Coach';
+  String get jobAdult => 'Adult Guide';
 
   @override
-  String get jobChild => 'Child Coach';
+  String get jobChild => 'Child Guide';
 
   @override
-  String get jobTeenage => 'Teen Coach';
+  String get jobTeenage => 'Teen Guide';
 
   @override
-  String get jobPersonal => 'Personal Coach';
+  String get jobPersonal => 'Personal Guide';
 
   @override
-  String get jobExamAnxiety => 'Exam Anxiety Coach';
+  String get jobExamAnxiety => 'Exam Anxiety Guide';
 
   @override
   String get noSpecialistsFound => 'No specialists found';
@@ -1014,90 +1179,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get explanationFamilyAssistant =>
-      'A family coach who helps you navigate through family dynamics, resolve conflicts, strengthen parent-child bonds, and build a more harmonious home environment. Whether you\'re dealing with communication breakdowns, boundary issues, or major life transitions like divorce, your coach provides a safe space to explore solutions together.';
+      'A family guide who helps you navigate through family dynamics, resolve conflicts, strengthen parent-child bonds, and build a more harmonious home environment.';
 
   @override
   String get explanationAdult =>
-      'A personal development coach designed for adults who want to take control of their lives. From managing daily stress and building self-confidence to making important career decisions and finding life balance, your coach supports you with practical strategies tailored to your unique challenges and goals.';
+      'A personal development guide for adults who want to take control of their lives — from managing daily stress and building self-confidence to finding life balance.';
 
   @override
   String get explanationChild =>
-      'A gentle and supportive coach specially trained to help children express their emotions, build social skills, and adapt to school life. Using age-appropriate techniques, your coach helps kids overcome fears, improve focus, and develop healthy friendships in a safe and encouraging environment.';
+      'A gentle and supportive guide trained to help children express their emotions, build social skills, and adapt to school life using age-appropriate techniques.';
 
   @override
   String get explanationTeenage =>
-      'A coach who truly understands the teenage experience. From identity exploration and peer pressure to academic stress and digital wellbeing, your coach helps teens build self-esteem, manage emotions, and plan for the future while maintaining healthy communication with parents.';
+      'A guide who understands the teenage experience — from identity exploration and peer pressure to academic stress and digital wellbeing.';
 
   @override
   String get explanationPersonal =>
-      'A compassionate personal coach focused on your inner wellbeing. Whether you\'re struggling with loneliness, anxiety, grief, or simply overthinking, your coach guides you through mindfulness practices, emotional healing techniques, and self-discovery exercises to help you find peace and clarity.';
+      'A compassionate personal guide focused on inner wellbeing. Guides you through mindfulness, emotional healing, and self-discovery to find peace and clarity.';
 
   @override
   String get explanationExamAnxiety =>
-      'A specialized coach who helps students conquer exam anxiety and unlock their true academic potential. Through proven study techniques, relaxation methods, and confidence-building exercises, your coach transforms test stress into focused preparation and calm performance.';
+      'A specialized guide who helps students conquer exam anxiety through proven study techniques, relaxation methods, and confidence-building exercises.';
 
   @override
   String get explanationFamilyAssistant1 =>
-      'A dedicated family coach specializing in resolving deep-rooted family conflicts and rebuilding strained relationships. With expertise in parenting challenges, communication skills, and setting healthy boundaries, this coach helps families navigate difficult transitions like divorce while guiding children through behavioral changes — all within a safe, judgment-free space.';
+      'A dedicated family guide specializing in resolving deep-rooted family conflicts and rebuilding strained relationships. Helps families navigate difficult transitions like divorce while guiding children through behavioral changes.';
 
   @override
   String get explanationFamilyAssistant2 =>
-      'A warm and empathetic family coach focused on strengthening the bonds that matter most. Specializing in effective parenting strategies, open communication, and relationship repair, this coach helps families heal after difficult periods like separation or divorce, while supporting children\'s emotional and behavioral development toward lasting harmony.';
+      'A warm and empathetic family guide focused on strengthening the bonds that matter most. Helps families heal after difficult periods while supporting children\'s emotional and behavioral development.';
 
   @override
   String get explanationAdult1 =>
-      'A results-driven coach for adults seeking meaningful change. With a focus on stress management, achieving life balance, and career guidance, this coach helps you regulate your emotions, make confident decisions, and unlock sustainable personal growth through practical, goal-oriented strategies.';
+      'A results-driven guide for adults seeking meaningful change. Focuses on stress management, life balance, and career guidance through practical, goal-oriented strategies.';
 
   @override
   String get explanationAdult2 =>
-      'A holistic development coach empowering adults to reach their full potential. From building unshakable self-confidence and managing stress to finding career direction and daily motivation, this coach combines emotional regulation techniques with actionable life strategies to create lasting positive change.';
+      'A holistic development guide empowering adults to reach their full potential — from building self-confidence and managing stress to finding career direction and daily motivation.';
 
   @override
   String get explanationTeenage1 =>
-      'A coach who deeply understands the unique challenges of adolescence. From navigating identity development and resisting peer pressure to managing academic stress and building healthy digital habits, this coach helps teens strengthen their self-esteem, control anger, plan their future, and communicate openly with their parents.';
+      'A guide who deeply understands adolescence. Helps teens strengthen self-esteem, control anger, plan their future, and communicate openly with their parents.';
 
   @override
   String get explanationTeenage2 =>
-      'An empathetic guide through the turbulent teenage years. Specializing in identity exploration, academic pressure, and digital wellbeing, this coach empowers teens to develop resilience against peer influence, manage anger constructively, build long-term goals, and maintain healthy parent-teen relationships.';
+      'An empathetic guide through the turbulent teenage years. Empowers teens to develop resilience, manage anger constructively, and maintain healthy parent-teen relationships.';
 
   @override
   String get explanationChild1 =>
-      'A nurturing coach designed to support children through their most formative years. Using gentle, age-appropriate methods, this coach helps kids develop emotional awareness, build social skills, adapt to school life, express themselves freely, overcome fears, form meaningful friendships, improve focus, and develop positive behavioral patterns.';
+      'A nurturing guide for children\'s most formative years. Helps kids develop emotional awareness, build social skills, adapt to school, overcome fears, and improve focus.';
 
   @override
   String get explanationChild2 =>
-      'A caring and patient coach dedicated to helping children thrive. With a focus on emotional intelligence, social development, and school adaptation, this coach creates a safe environment where kids learn to express their feelings, conquer fears, build lasting friendships, strengthen concentration, and receive the behavioral support they need to grow confidently.';
+      'A caring and patient guide dedicated to helping children thrive — creating a safe environment where kids learn to express feelings, build friendships, and grow confidently.';
 
   @override
   String get explanationPersonal1 =>
-      'A deeply compassionate coach focused on your emotional wellbeing and inner peace. Whether you\'re experiencing loneliness, anxiety, grief, or restless nights, this coach guides you through mindfulness practices, emotional healing processes, and self-discovery journeys to help you break free from overthinking and find lasting clarity.';
+      'A deeply compassionate guide focused on emotional wellbeing. Guides you through mindfulness, emotional healing, and self-discovery to break free from overthinking.';
 
   @override
   String get explanationPersonal2 =>
-      'A supportive and intuitive personal coach who helps you reconnect with yourself. Specializing in anxiety management, mindfulness techniques, and sleep improvement, this coach gently guides you through patterns of overthinking and emotional distress toward genuine healing and a renewed sense of inner calm.';
+      'A supportive personal guide who helps you reconnect with yourself. Specializes in anxiety management, mindfulness, and sleep improvement toward genuine inner calm.';
 
   @override
   String get explanationExamAnxiety1 =>
-      'A focused and methodical coach who transforms exam stress into confident performance. Specializing in time management, handling performance pressure, and building deep concentration, this coach equips students with practical relaxation methods, structured exam preparation techniques, and confidence-building strategies for academic success.';
+      'A focused guide who transforms exam stress into confident performance. Equips students with time management, relaxation methods, and confidence-building strategies.';
 
   @override
   String get explanationExamAnxiety2 =>
-      'A specialized academic coach dedicated to helping students overcome test anxiety and study smarter. Through proven study techniques, effective time management, and performance pressure resilience, this coach builds deep concentration skills, structured exam preparation habits, and lasting confidence for every test day.';
+      'A specialized academic guide dedicated to helping students overcome test anxiety and study smarter through proven techniques and structured exam preparation.';
 
   @override
   String get filterTitle => 'Filter';
 
   @override
-  String get filterCoachingArea => 'Coaching Area';
+  String get filterCoachingArea => 'Guidance Area';
 
   @override
   String get filterExpertise => 'Expertise';
 
   @override
-  String get filterSelectCoachingArea => 'Select Coaching Area';
+  String get filterSelectCoachingArea => 'Select Guidance Area';
 
   @override
   String get filterSave => 'Save';
+
+  @override
+  String get filterClear => 'Clear';
 
   @override
   String get coachDetailInformation => 'Information';
@@ -1224,4 +1392,293 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get soundSoftPianoSub => 'Delicate melodies to unwind';
+
+  @override
+  String get quickMessage => 'Quick Message';
+
+  @override
+  String get chatMessage => 'Message';
+
+  @override
+  String get chatHistory => 'History';
+
+  @override
+  String get noChatHistory => 'No chat history yet';
+
+  @override
+  String get calling => 'Calling...';
+
+  @override
+  String get image => 'Image';
+
+  @override
+  String get coachesTitle => 'Guides';
+
+  @override
+  String get searchAtMindcoach => 'Search at __MINDguide__';
+
+  @override
+  String noResultsFound(String query) {
+    return 'No results found for \"$query\"';
+  }
+
+  @override
+  String get premiumTryFree => 'Try __MIND_guide__ Premium\nfree for 1 week';
+
+  @override
+  String get premiumUnlimitedAccess =>
+      'Get unlimited access and take advantage of opportunities';
+
+  @override
+  String get premiumFeatureSkipAds => 'Skip Ads';
+
+  @override
+  String get premiumFeatureUnlimitedCharacters =>
+      'Unlimited Character Selection';
+
+  @override
+  String get premiumFeatureExpandedMemory => 'Expanded memory and context';
+
+  @override
+  String get premiumFeatureAdvancedReasoning =>
+      'With advanced reasoning capabilities';
+
+  @override
+  String get premiumStartTrial => 'Start 1 week free trial';
+
+  @override
+  String get premiumBillingNote =>
+      'You\'ll be charged \$8.99/month after your 7 day free trial. You can cancel anytime.';
+
+  @override
+  String get premiumRestorePurchase => 'Restore purchase';
+
+  @override
+  String get termsOfUse => 'Terms of Use';
+
+  @override
+  String get premiumSaveBadge => 'SAVE 17%';
+
+  @override
+  String get premiumPlanAnnual => 'Annual';
+
+  @override
+  String get premiumPlanMonthly => 'Monthly';
+
+  @override
+  String get premiumPlanPerYearAfterTrial => 'per year after 7 days trial';
+
+  @override
+  String get goodbyeTitle => 'We Miss You ';
+
+  @override
+  String get goodbyeSubtitle =>
+      'We\'re sorry you deleted your account.\nWe hope to see you again...';
+
+  @override
+  String get goBack => 'Go Back';
+
+  @override
+  String get profileFromGallery => 'Choose from Gallery';
+
+  @override
+  String get profileFromCamera => 'Take a Photo';
+
+  @override
+  String get profilePhotoUpdated => 'Profile photo updated';
+
+  @override
+  String get logoutDialogTitle => 'You are about to log out';
+
+  @override
+  String get logoutDialogSubtitle =>
+      'See you again soon! We\'ll miss your breathing exercises.';
+
+  @override
+  String get sectionAccountSettings => 'ACCOUNT SETTINGS';
+
+  @override
+  String get sectionGeneral => 'GENERAL';
+
+  @override
+  String get menuItemPremium => 'Premium';
+
+  @override
+  String get menuItemRateUs => 'Rate Us';
+
+  @override
+  String get premiumBadge => 'PREMIUM';
+
+  @override
+  String get premiumStatusActive => 'active';
+
+  @override
+  String get linkCopied => 'Link copied!';
+
+  @override
+  String get shareFriend => 'Share Friend';
+
+  @override
+  String get errorMessageFailed => 'Message could not be sent';
+
+  @override
+  String get errorImageFailed => 'Image could not be sent';
+
+  @override
+  String get errorVoiceFileNotFound => 'Voice file not found';
+
+  @override
+  String get errorVoiceMessageFailed => 'Voice message could not be sent';
+
+  @override
+  String get errorVoiceNotPlayed => 'Voice file could not be played';
+
+  @override
+  String get errorVoiceMessageNotPlayed => 'Voice message could not be played';
+
+  @override
+  String get errorRecordingStart => 'Recording could not be started';
+
+  @override
+  String get errorRecordingStop => 'Recording could not be stopped';
+
+  @override
+  String get errorMicrophonePermission => 'Microphone permission required';
+
+  @override
+  String get errorRecordingTooShort =>
+      'Recording too short, please record longer';
+
+  @override
+  String get errorAppointmentDateNotFound => 'Appointment date not found';
+
+  @override
+  String get errorAppointmentExpired => 'Appointment time has passed';
+
+  @override
+  String get errorAppointmentNotYet => 'Session hasn\'t started yet';
+
+  @override
+  String get errorConsultantNotFound => 'Consultant not found';
+
+  @override
+  String get errorConsultantsNotLoaded => 'Consultant list could not be loaded';
+
+  @override
+  String get errorConsultantLoadFailed => 'Consultant could not be loaded';
+
+  @override
+  String get errorOperationFailed => 'Operation failed';
+
+  @override
+  String get errorPhotoUpload => 'Profile photo could not be uploaded';
+
+  @override
+  String get errorGeneral => 'An error occurred';
+
+  @override
+  String get recordingStatus => 'Recording...';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get emailHint => 'example@email.com';
+
+  @override
+  String get messageOptionalHint => 'Write your message if you have any.';
+
+  @override
+  String findCoachMatchedFor(int count, String area) {
+    return '$count guides matched for $area';
+  }
+
+  @override
+  String get findCoachTitle => 'Find your guide';
+
+  @override
+  String findCoachSwipeToBrowse(String schedule) {
+    return 'Swipe to browse - $schedule';
+  }
+
+  @override
+  String findCoachYearsExperience(int count) {
+    return '$count yrs experience';
+  }
+
+  @override
+  String get findCoachSkip => 'Skip';
+
+  @override
+  String get findCoachBook => 'Book';
+
+  @override
+  String get splashTagline => 'Take a moment for yourself.';
+
+  @override
+  String stepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get trialEndedTitle => 'Time\'s up';
+
+  @override
+  String get trialEndedMessage =>
+      'You\'ve reached the 1-minute trial limit. Sign in to keep talking with your guide.';
+
+  @override
+  String get trialEndedAction => 'Sign in to continue';
+
+  @override
+  String get noUpcomingAppointments => 'No upcoming appointments';
+
+  @override
+  String get noCompletedAppointments => 'No completed appointments';
+
+  @override
+  String get videoCallStatusConnecting => 'Connecting...';
+
+  @override
+  String get videoCallStatusListening => 'Listening';
+
+  @override
+  String get videoCallStatusMuted => 'Muted';
+
+  @override
+  String get videoCallStatusThinking => 'Thinking...';
+
+  @override
+  String get videoCallStatusSpeaking => 'Speaking';
+
+  @override
+  String get videoCallStatusError => 'Connection error';
+
+  @override
+  String get videoCallEncrypted => 'End-to-end encrypted';
+
+  @override
+  String get videoCallTurnCamera => 'Turn Camera';
+
+  @override
+  String get videoCallEndButton => 'End';
+
+  @override
+  String get videoCallMute => 'Mute';
+
+  @override
+  String get videoCallEndDialogTitle =>
+      'Are you sure you want to end the call?';
+
+  @override
+  String get videoCallEndDialogCancel => 'Cancel';
+
+  @override
+  String get videoCallEndDialogEnd => 'End';
+
+  @override
+  String get videoCallRateTitle => 'Rate Conversation';
+
+  @override
+  String get videoCallRateSubtitle => 'Evaluate the video call';
 }

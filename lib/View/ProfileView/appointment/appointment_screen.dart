@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
+import 'package:mindcoach/core/widgets/app_back_button.dart';
 
 import '../../../core/utils/context_l10n_extensions.dart';
-
 import '../../appointments/appointment_ui.dart';
-import '../../appointments/appointments_ui_provider.dart';
 import '../../appointments/appointments_notifier.dart';
-
+import '../../appointments/appointments_ui_provider.dart';
 
 /// ROOT: Tabbar + üst bar
 class AppointmentsScreen extends StatefulWidget {
@@ -19,141 +16,129 @@ class AppointmentsScreen extends StatefulWidget {
   State<AppointmentsScreen> createState() => _AppointmentsScreenState();
 }
 
-class _AppointmentsScreenState extends State<AppointmentsScreen> {
+class _AppointmentsScreenState extends State<AppointmentsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    // 2 Sekmemiz var. vsync için "with SingleTickerProviderStateMixin" eklendi.
+    _tabController = TabController(length: 2, vsync: this);
+
+    // Swipe yapıldığında (ekran kaydırıldığında) butonların rengini güncellemek için:
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return DefaultTabController(
-      length: 2, // Upcoming + Completed
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment(-0.9, -1.0),
-              end: Alignment(1.0, 0.9),
-              colors: [
-                Color(0xFFFBFCFF),
-                Color(0xFFF9FAFF),
-              ],
-            ),
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+
+    return Scaffold(
+      backgroundColor: Colors.white, // Figma'ya göre temiz beyaz arkaplan
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 1. ÜST BAR (Geri ikonu ve Başlık)
+              Row(
                 children: [
-                  // ÜST BAR
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          width: 34,
-                          height: 34,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                              color: const Color(0xFFC4C4C4),
-                              width: 1,
-                            ),
-                          ),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/svg/arrow_back.svg',
-                              width: 18,
-                              height: 18,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.black,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        l10n.appointments,
-                        style: GoogleFonts.quicksand(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          height: 1.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 8.h),
-
-                  // TABBAR
-                  _TabBarHeader(),
-
-                  SizedBox(height: 16.h),
-
-                  // TAB BODY
-                  const Expanded(
-                    child: TabBarView(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4.0),
-                          child: UpcomingAppointmentsTab(),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4.0),
-                          child: CompletedAppointmentsTab(),
-                        ),
-                      ],
+                  AppBackButton(),
+                  const SizedBox(width: 8),
+                  Text(
+                    l10n.appointments, // Veya "Past Appointment"
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400, // Medium
+                      color: Colors.black,
                     ),
                   ),
                 ],
               ),
-            ),
+
+              SizedBox(height: 24.h),
+
+              // 2. CUSTOM TABBAR (Hap Şeklinde Butonlar)
+              Row(
+                children: [
+                  _buildTabButton(
+                    text: l10n.upcoming,
+                    isActive: _tabController.index == 0,
+                    onTap: () {
+                      _tabController.animateTo(0);
+                      setState(() {});
+                    },
+                  ),
+                  const SizedBox(width: 10), // Figma Gap: 10px
+                  _buildTabButton(
+                    text: l10n.completed,
+                    isActive: _tabController.index == 1,
+                    onTap: () {
+                      _tabController.animateTo(1);
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 24.h),
+
+              // 3. TAB BODY (Listelerin Göründüğü Yer)
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: const [
+                    UpcomingAppointmentsTab(),
+                    CompletedAppointmentsTab(),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
-}
 
-class _TabBarHeader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
-    final baseStyle = GoogleFonts.quicksand(
-      fontSize: 17,
-      fontWeight: FontWeight.w700,
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Textler
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8, top:12),
-          child: TabBar(
-            isScrollable: true,
-            labelColor: Colors.black,
-            tabAlignment: TabAlignment.start,
-            labelPadding: EdgeInsets.only(right: 24),
-
-            unselectedLabelColor: const Color(0xFFC0C0C0),
-            labelStyle: baseStyle,
-            unselectedLabelStyle: baseStyle,
-            indicator: const UnderlineTabIndicator(
-              borderSide: BorderSide(color: Colors.black, width: 2),
-            ),
-            indicatorSize: TabBarIndicatorSize.label,
-            tabs: [
-              Tab(text: l10n.upcoming),
-              Tab(text: l10n.completed),
-            ],
+  // Özel kapsül sekme butonu tasarımı
+  Widget _buildTabButton({
+    required String text,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isActive
+              ? const Color(0xFF21BC87) // Aktif yeşil
+              : const Color(0xFF898989).withValues(alpha: 0.10), // İnaktif gri
+          borderRadius: BorderRadius.circular(9999), // Tam yuvarlak
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: isActive ? Colors.white : const Color(0xFF737373),
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -167,42 +152,29 @@ class UpcomingAppointmentsTab extends ConsumerWidget {
     final items = ref.watch(upcomingAppointmentsProvider);
     final appointmentsState = ref.watch(appointmentsProvider);
 
-    // Loading state: appointments map boşsa ve henüz yükleniyorsa
-    if (appointmentsState.appointments.isEmpty) {
+    // Empty state - Fontlar Geist olarak güncellendi
+    if (appointmentsState.appointments.isEmpty || items.isEmpty) {
       return Center(
         child: Text(
-          'No upcoming appointments',
-          style: GoogleFonts.quicksand(
+          context.l10n.noUpcomingAppointments,
+          style: const TextStyle(
+            fontFamily: 'Geist',
             fontSize: 16,
-            color: const Color(0xFF9F9F9F),
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF9F9F9F),
           ),
         ),
       );
     }
 
-    // Empty state
-    if (items.isEmpty) {
-      return Center(
-        child: Text(
-          'No upcoming appointments',
-          style: GoogleFonts.quicksand(
-            fontSize: 16,
-            color: const Color(0xFF9F9F9F),
-          ),
-        ),
-      );
-    }else{
-         return ListView.separated(
+    return ListView.builder(
+      padding: EdgeInsets.zero, // Fazladan boşlukları temizler
       itemCount: items.length,
-      separatorBuilder: (_, __) => SizedBox(height: 12.h),
       itemBuilder: (context, index) {
         final item = items[index];
         return AppointmentCardUi(item: item);
       },
     );
-    }
-
- 
   }
 }
 
@@ -212,34 +184,33 @@ class CompletedAppointmentsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items = ref.watch(completedAppointmentsProvider).where((e)=> e.isCompleted == true).toList();
-    final appointmentsState = ref.watch(appointmentsProvider);
+    final items = ref
+        .watch(completedAppointmentsProvider)
+        .where((e) => e.isCompleted == true)
+        .toList();
 
-    // Loading state: appointments map boşsa ve henüz yükleniyorsa
-
-
-    // Empty state
+    // Empty state - Fontlar Geist olarak güncellendi
     if (items.isEmpty) {
       return Center(
         child: Text(
-          'No completed appointments',
-          style: GoogleFonts.quicksand(
+          context.l10n.noCompletedAppointments,
+          style: const TextStyle(
+            fontFamily: 'Geist',
             fontSize: 16,
-            color: const Color(0xFF9F9F9F),
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF9F9F9F),
           ),
         ),
       );
-    }else{
-      return ListView.separated(
+    }
+
+    return ListView.builder(
+      padding: EdgeInsets.zero, // Fazladan boşlukları temizler
       itemCount: items.length,
-      separatorBuilder: (_, __) => SizedBox(height: 12.h),
       itemBuilder: (context, index) {
         final item = items[index];
         return AppointmentCardUi(item: item);
       },
     );
-    }
-
-
   }
 }

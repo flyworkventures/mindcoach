@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,9 +19,8 @@ class SpecialistsScreen extends ConsumerStatefulWidget {
 }
 
 class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
-  Set<String> _selectedJobFilters = {};
+  FilterResult _activeFilter = const FilterResult();
 
-  // 1. Arama için gerekli değişkenler eklendi
   String _searchQuery = '';
   late TextEditingController _searchController;
 
@@ -37,54 +37,55 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
   }
 
   List<String> _getAvailableJobs(List<ConsultantModel>? specialists) {
-    if (specialists == null || specialists.isEmpty) {
-      return [
-        'Developmental Coach',
-        'Family Coach',
-        'Relationship Coach',
-        'Individual Coach',
-        'Educational Coach',
-      ];
-    }
+    if (specialists == null || specialists.isEmpty) return [];
     return specialists.map((s) => s.job).toSet().toList();
+  }
+
+  List<String> _getAvailableFeatures(List<ConsultantModel>? specialists) {
+    if (specialists == null || specialists.isEmpty) return [];
+    final all = specialists
+        .expand((s) => s.features.map((f) => f.toString()))
+        .toSet()
+        .toList();
+    all.sort();
+    return all;
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(specialistsProvider);
 
-    // 2. Seçilen filtrelere VE arama metnine göre listeyi ayır
+    // Seçilen filtrelere VE arama metnine göre listeyi ayır
     final filteredSpecialists = state.specialists?.where((specialist) {
-      // Job (Kategori) Filtresi
+      // Job (Koçluk alanı) filtresi
       final matchesJob =
-          _selectedJobFilters.isEmpty ||
-          _selectedJobFilters.contains(specialist.job);
+          _activeFilter.job == null || specialist.job == _activeFilter.job;
 
-      // Search (Arama) Filtresi
+      // Feature (Uzmanlık) filtresi
+      final matchesFeature =
+          _activeFilter.feature == null ||
+          specialist.features
+              .map((f) => f.toString())
+              .contains(_activeFilter.feature);
+
+      // Arama filtresi
       bool matchesSearch = true;
       if (_searchQuery.isNotEmpty) {
         final query = _searchQuery.toLowerCase();
-
-        // Uzmanın ismini al (Karttaki mantığın aynısı)
         final specialistName =
             (specialist.names[context.langCode] as String? ??
                     specialist.names['en'] as String? ??
                     specialist.names.values.first.toString())
                 .toLowerCase();
-
-        // Meslek adını da aramaya dahil ediyoruz (Opsiyonel, daha iyi UX için)
         final jobTitle = JobConvert(
           specialist.job,
           context,
         ).call().toLowerCase();
-
-        // İsimde veya meslek adında aranan kelime geçiyor mu?
         matchesSearch =
             specialistName.contains(query) || jobTitle.contains(query);
       }
 
-      // Hem kategoriye uymalı hem de aramaya uymalı
-      return matchesJob && matchesSearch;
+      return matchesJob && matchesFeature && matchesSearch;
     }).toList();
 
     // Figma'daki gibi kategori bazlı göstermek için gruplama yapıyoruz
@@ -114,9 +115,9 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Coaches',
-                    style: TextStyle(
+                  Text(
+                    context.l10n.coachesTitle,
+                    style: const TextStyle(
                       fontFamily: 'Geist',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -126,17 +127,15 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      final availableJobs = _getAvailableJobs(
-                        state.specialists,
-                      );
                       await SpecialistsFilterSheet.show(
                         context,
-                        initial: _selectedJobFilters,
-                        availableJobs: availableJobs,
-                        onSave: (selectedJobs) {
-                          setState(() {
-                            _selectedJobFilters = selectedJobs;
-                          });
+                        initial: _activeFilter,
+                        availableJobs: _getAvailableJobs(state.specialists),
+                        availableFeatures: _getAvailableFeatures(
+                          state.specialists,
+                        ),
+                        onSave: (result) {
+                          setState(() => _activeFilter = result);
                         },
                       );
                     },
@@ -192,8 +191,8 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
                             _searchQuery = value; // 4. Arama metni güncellendi
                           });
                         },
-                        decoration: const InputDecoration(
-                          hintText: 'Search at Mindcoach',
+                        decoration: InputDecoration(
+                          hintText: context.l10n.searchAtMindcoach,
                           border: InputBorder.none,
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
@@ -215,7 +214,36 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
                 ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              // Aktif filtre chip'leri
+              if (!_activeFilter.isEmpty) ...[
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    if (_activeFilter.job != null)
+                      _FilterChip(
+                        label: JobConvert(_activeFilter.job!, context).call(),
+                        onRemove: () => setState(
+                          () => _activeFilter = FilterResult(
+                            feature: _activeFilter.feature,
+                          ),
+                        ),
+                      ),
+                    if (_activeFilter.feature != null)
+                      _FilterChip(
+                        label: FeatureConvert(
+                          context,
+                        ).call(_activeFilter.feature!),
+                        onRemove: () => setState(
+                          () => _activeFilter = FilterResult(
+                            job: _activeFilter.job,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+              ],
 
               // LISTE
               Expanded(
@@ -230,7 +258,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
                             : Text(
                                 // Arama yapıldığında ve sonuç bulunamadığında gösterilecek metin
                                 _searchQuery.isNotEmpty
-                                    ? 'No results found for "$_searchQuery"'
+                                    ? context.l10n.noResultsFound(_searchQuery)
                                     : context.l10n.noSpecialistsFound,
                                 style: const TextStyle(
                                   fontFamily: 'Geist',
@@ -324,38 +352,42 @@ class _SpecialistCard extends ConsumerWidget {
           border: Border.all(
             color: Colors.black.withValues(alpha: 0.05),
           ), // Inner border
-          boxShadow: [
-            BoxShadow(
-              color: const Color(
-                0xFFB6BECA,
-              ).withValues(alpha: 0.75), // Shadow #B6BECA 75%
-              offset: const Offset(0, 2),
-              blurRadius: 4,
-              spreadRadius: 0,
-            ),
-          ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(10), // Figma: Padding 10px
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // FOTOĞRAF (Yuvarlak köşe ile)
-              // ÇÖZÜM
-             // FOTOĞRAF (Yuvarlak köşe ile) - Dinamik SVG / PNG kontrolü
+              // FOTOĞRAF (Yuvarlak köşe ile) - Dinamik SVG / PNG kontrolü
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: SizedBox(
+                  child: Container(
                     width: double.infinity,
+                    // Figma'daki arka plan gradyanı burada tanımlanıyor
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFFF6F6F6), // Üstteki açık gri
+                          Color.fromARGB(
+                            255,
+                            49,
+                            43,
+                            43,
+                          ), // Alttaki koyu siyahımsı renk
+                        ],
+                      ),
+                    ),
                     child: Builder(
                       builder: (context) {
                         final url = item.photoURL;
                         final isSvg = url.toLowerCase().endsWith('.svg');
 
-                        Widget fallbackIcon() => Container(
-                          color: const Color(0xFFF5F5F5),
-                          child: const Icon(
+                        // Hata durumunda çıkacak ikon
+                        Widget fallbackIcon() => const Center(
+                          child: Icon(
                             Icons.person,
                             size: 40,
                             color: Color(0xFF96989C),
@@ -366,13 +398,16 @@ class _SpecialistCard extends ConsumerWidget {
                           return SvgPicture.network(
                             url,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => fallbackIcon(),
+                            alignment: const Alignment(0.0, -0.8),
+                            errorBuilder: (_, _, _) => fallbackIcon(),
                           );
                         } else {
-                          return Image.network(
-                            url,
+                          return CachedNetworkImage(
+                            imageUrl: url,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => fallbackIcon(),
+                            alignment: Alignment.topCenter,
+                            errorWidget: (_, _, _) => fallbackIcon(),
+                            placeholder: (_, _) => const SizedBox.shrink(),
                           );
                         }
                       },
@@ -414,23 +449,6 @@ class _SpecialistCard extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (item.rating > 0) ...[
-                    const Icon(
-                      Icons.star_rounded,
-                      size: 14,
-                      color: Color(0xFFFFC107),
-                    ),
-                    const SizedBox(width: 2),
-                    Text(
-                      item.rating.toStringAsFixed(1),
-                      style: const TextStyle(
-                        fontFamily: 'Geist',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF737373),
-                      ),
-                    ),
-                  ],
                 ],
               ),
               const SizedBox(height: 10),
@@ -577,8 +595,51 @@ class _SpecialistCard extends ConsumerWidget {
     );
 
     if (isExpanded) {
-      return tagWidget; // Yazı sığsın diye ana row expand edilecek şekilde ayarlandı
+      return tagWidget;
     }
     return tagWidget;
+  }
+}
+
+// ── Aktif filtre chip'i (X ile kaldırılabilir) ──
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final VoidCallback onRemove;
+
+  const _FilterChip({required this.label, required this.onRemove});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: const Color(0xFF21BC87).withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFF21BC87), width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'Geist',
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF21BC87),
+            ),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: onRemove,
+            child: const Icon(
+              Icons.close_rounded,
+              size: 14,
+              color: Color(0xFF21BC87),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

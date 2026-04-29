@@ -86,7 +86,7 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
                   ),
                   const SizedBox(width: 16),
                   Text(
-                    flowState.testName ?? 'Mental Test',
+                    flowState.testName ?? l10n.mentalTest,
                     style: const TextStyle(
                       fontFamily: 'Geist',
                       fontSize: 14,
@@ -101,9 +101,9 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
             const SizedBox(height: 16),
 
             // --- TITLE ---
-            const Text(
-              'Test result',
-              style: TextStyle(
+            Text(
+              l10n.testResult,
+              style: const TextStyle(
                 fontFamily: 'Geist',
                 fontSize: 16,
                 fontWeight: FontWeight.w600, // SemiBold
@@ -179,8 +179,8 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   alignment: Alignment.center,
-                  child: const Text(
-                    'Back to Home', // veya l10n.backToHome
+                  child: Text(
+                    l10n.backToHome,
                     style: TextStyle(
                       fontFamily: 'Geist',
                       fontSize: 16,

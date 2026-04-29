@@ -1,15 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:developer' as developer;
 
-import '../../core/global_constants/month_strings.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+
 import '../../core/utils/context_l10n_extensions.dart';
 import '../../core/utils/job_convert.dart';
-import '../../core/utils/screen_size_extensions.dart';
-import '../../core/utils/time_format_utils.dart';
 import '../specialists_screen/specialists_notifier.dart';
 import 'appointments_ui_provider.dart';
+
+const Color _kLightGreyText = Color(0xFF96989C);
 
 class AppointmentCardUi extends ConsumerWidget {
   final AppointmentUiItem item;
@@ -18,230 +20,203 @@ class AppointmentCardUi extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Dil kodunu al
     final langCode = context.langCode;
-    
-    // Consultant bilgisini al (dil bazlı isim için)
     final consultantId = item.info.consultantId;
     final consultantJob = item.info.job ?? '';
-    String consultantDisplayName = item.info.specialistName; // Fallback
-    String photoURL = '';
-    
-    // Consultant bilgisini ref'ten al (eğer consultantId varsa)
+    String consultantDisplayName = item.info.specialistName;
+    String photoURL = item.avatarAsset;
+
     if (consultantId != null) {
       try {
         final consultantsState = ref.watch(specialistsProvider);
         final consultants = consultantsState.specialists;
-        
-        // Eğer consultants listesi boşsa, provider henüz yükleniyor demektir
-        // Widget rebuild olacak ve consultants yüklendiğinde otomatik güncellenecek
-        if (consultants == null || consultants.isEmpty) {
-          // Log sadece ilk birkaç kez göster (spam'i önlemek için)
-          // State değiştiğinde widget rebuild olacak
-        } else {
-          try {
-            final consultant = consultants.firstWhere(
-              (c) => c.id == consultantId,
-              orElse: () => consultants.first, // Fallback: ilk consultant
-            );
-            // Dil koduna göre ismi al (en, tr, de)
-            consultantDisplayName = consultant.names[langCode] as String? ?? 
-                                     consultant.names['en'] as String? ?? 
-                                     consultant.names.values.first.toString();
-            photoURL = consultant.photoURL;
-          } catch (e) {
-            // Consultant bulunamadı, fallback kullan
-            developer.log("⚠️ Consultant bulunamadı (ID: $consultantId): $e");
-          }
+
+        if (consultants != null && consultants.isNotEmpty) {
+          final consultant = consultants.firstWhere(
+            (c) => c.id == consultantId,
+            orElse: () => consultants.first,
+          );
+          consultantDisplayName =
+              consultant.names[langCode] as String? ??
+              consultant.names['en'] as String? ??
+              consultant.names.values.first.toString();
+          photoURL = consultant.photoURL.isNotEmpty
+              ? consultant.photoURL
+              : photoURL;
         }
       } catch (e) {
-        // Provider hatası, fallback kullan
-        developer.log("⚠️ SpecialistsProvider hatası: $e");
+        developer.log("⚠️ Provider hatası: $e");
       }
     }
-    
-    // Eğer photoURL boşsa, avatarAsset'i kullan (fallback)
-    if (photoURL.isEmpty) {
-      photoURL = item.avatarAsset;
-    }
-    
-    // Tarih ve saat bilgisi
+
     final appointmentDateTime = item.info.appointmentDateTime ?? item.dateTime;
-    final monthLabel = MonthStrings.name(context, appointmentDateTime.month);
-    final formattedTime = TimeFormatUtils.formatTime(context, appointmentDateTime);
-    final dateTimeText = '$monthLabel ${appointmentDateTime.day} | $formattedTime';
-    
-    // Status bilgisi (pending de scheduled olarak göster)
-    final status = item.info.status ?? 'scheduled';
-    final statusText = _getStatusText(context, status == 'pending' ? 'scheduled' : status);
-    
-    // Stil sabitleri
-    const Color _kLightGreyText = Color(0xFFA6A6A6);
+    final isCompleted =
+        (item.info.status ?? 'scheduled').toLowerCase() == 'completed';
+
+    final localeTag = Localizations.localeOf(context).toLanguageTag();
+    final String dateTimeText = isCompleted
+        ? DateFormat(
+            'd MMM',
+            localeTag,
+          ).format(appointmentDateTime).toUpperCase()
+        : DateFormat('HH:mm').format(appointmentDateTime);
+
+    final String iconAsset = isCompleted
+        ? 'assets/icons/ic_calendar.svg'
+        : 'assets/icons/ic_clock.svg';
+
+    final List<Color> themeColors = [
+      const Color(0xFF21BC87),
+      const Color(0xFFA855F7),
+      const Color.fromARGB(255, 144, 11, 25),
+    ];
+    final int colorIndex =
+        (consultantId?.hashCode ?? item.info.hashCode).abs() %
+        themeColors.length;
+    final Color selectedColor = themeColors[colorIndex];
 
     return Container(
-      width: 327.w,
-      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(bottom: 12.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(16),
+        // Figma'daki %5 Siyah Border
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
       ),
-      child: Row(
-        children: [
-          // Sol tarafta: Koç fotoğrafı
-          Container(
-            width: 68.w,
-            height: 68.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: const Color(0xFF2BD383),
-                width: 3,
+      // Border'ın içinden renk taşmaması için 1 piksel küçük kavisle kırpıyoruz
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: IntrinsicHeight(
+          // İçeriğin yüksekliğine göre şeridin uzamasını sağlar
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 1. SOL İNCE RENKLİ ŞERİT
+              Container(
+                width: 6, // Figma'daki gibi zarif ve ince
+                color: selectedColor,
               ),
-            ),
-            child: ClipOval(
-              child: photoURL.isNotEmpty && photoURL.startsWith('http')
-                  ? Image.network(
-                      photoURL,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: Icon(Icons.person, size: 40.w, color: Colors.grey[600]),
-                        );
-                      },
-                    )
-                  : photoURL.isNotEmpty && !photoURL.startsWith('http')
-                      ? Image.asset(
-                          photoURL,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[300],
-                              child: Icon(Icons.person, size: 40.w, color: Colors.grey[600]),
-                            );
-                          },
-                        )
-                      : Container(
-                          color: Colors.grey[300],
-                          child: Icon(Icons.person, size: 40.w, color: Colors.grey[600]),
+
+              // 2. ANA İÇERİK ALANI
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0), // Kartın iç boşluğu
+                  child: Row(
+                    children: [
+                      // Avatar
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE2E2E2), 
+                          borderRadius: BorderRadius.circular(12),
+                          image: photoURL.startsWith('http')
+                              ? DecorationImage(
+                                  image: CachedNetworkImageProvider(photoURL),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
                         ),
-            ),
+                        child: !photoURL.startsWith('http')
+                            ? Icon(Icons.person, color: Colors.grey[400])
+                            : null,
+                      ),
+                      const SizedBox(width: 12),
+
+                      // İsim ve Görev (Orta Kısım)
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              consultantDisplayName,
+                              style: const TextStyle(
+                                fontFamily: 'Geist',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600, // SemiBold
+                                color: Colors.black,
+                                height: 1.2,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            if (consultantJob.isNotEmpty)
+                              Text(
+                                JobConvert(consultantJob, context).call(),
+                                style: const TextStyle(
+                                  fontFamily: 'Geist',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500, // Medium
+                                  color: _kLightGreyText,
+                                  height: 1.2,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(width: 8),
+
+                      // 3. SAĞ TARAF: SAAT/TARİH KAPSÜLÜ
+                      Container(
+                        // Figma'dan attığın birebir boşluk değerleri
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isCompleted
+                              ? const Color(0xFFF5F5F5) // Geçmiş için gri zemin
+                              : selectedColor.withOpacity(
+                                  0.1,
+                                ), // Yaklaşan için renkli şeffaf zemin
+                          borderRadius: BorderRadius.circular(
+                            9999,
+                          ), // Tam yuvarlak köşeler
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              iconAsset,
+                              width: 16,
+                              height: 16,
+                              colorFilter: ColorFilter.mode(
+                                isCompleted ? _kLightGreyText : selectedColor,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 6,
+                            ), // İkon ve yazı arası boşluk
+                            Text(
+                              dateTimeText,
+                              style: TextStyle(
+                                fontFamily: 'Geist',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600, // SemiBold
+                                color: isCompleted
+                                    ? _kLightGreyText
+                                    : selectedColor,
+                                height:
+                                    1.0, // Kapsülün içinde tam ortalanması için
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          // Sağ tarafta: Koç görevi, isim, tarih/saat, durum
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Koç görevi (üstte)
-                if (consultantJob.isNotEmpty)
-                  Text(
-                    () {
-                      try {
-                        return JobConvert(consultantJob, context).call();
-                      } catch (e) {
-                        debugPrint("⚠️ JobConvert hatası: $e");
-                        return consultantJob;
-                      }
-                    }(),
-                    style: GoogleFonts.quicksand(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      height: 24.h / 17.h,
-                      color: Colors.black,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                if (consultantJob.isNotEmpty) const SizedBox(height: 2),
-                // Koç ismi (görevin altında)
-                Text(
-                  consultantDisplayName,
-                  style: GoogleFonts.quicksand(
-                    fontSize: consultantJob.isNotEmpty ? 14 : 17,
-                    fontWeight: FontWeight.w500,
-                    height: consultantJob.isNotEmpty ? 20.h / 14.h : 24.h / 17.h,
-                    color: consultantJob.isNotEmpty ? _kLightGreyText : Colors.black,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                // Tarih ve saat
-                Text(
-                  dateTimeText,
-                  style: GoogleFonts.quicksand(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    height: 18.h / 12.h,
-                    color: _kLightGreyText,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                // Durum
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(status),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text(
-                    statusText,
-                    style: GoogleFonts.quicksand(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
-  }
-
-  /// Status metnini döndürür
-  String _getStatusText(BuildContext context, String status) {
-    switch (status.toLowerCase()) {
-      case 'scheduled':
-      case 'pending':
-        return 'Planlandı';
-      case 'completed':
-        return 'Tamamlandı';
-      case 'cancelled':
-        return 'İptal Edildi';
-      default:
-        return status;
-    }
-  }
-
-  /// Status rengini döndürür
-  Color _getStatusColor(String status) {
-    final normalizedStatus = status.toLowerCase();
-    switch (normalizedStatus) {
-      case 'scheduled':
-      case 'pending':
-        return const Color(0xFF2BD383); // Yeşil
-      case 'completed':
-        return const Color(0xFF7B7B7B); // Gri
-      case 'cancelled':
-        return Colors.red;
-      default:
-        return const Color(0xFFA6A6A6);
-    }
   }
 }

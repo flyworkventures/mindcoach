@@ -3,7 +3,9 @@ import 'package:mindcoach/l10n/app_localizations.dart';
 
 class  AppConstants {
   static const String defaultPpUrl = "https://mindcoach.b-cdn.net/1024x1024.jpg"; 
-  static const String baseURL  = "https://mind.fly-work.com"; //https://mind.fly-work.com
+  static const String baseURL = "http://localhost:3011";
+  // Realtime WebSocket sunucusu — port 3001 (REALTIME_WS_PORT)
+  static const String wsBaseURL = "ws://localhost:3001";
   static const String onesignalId = "b3ba2ab4-03a9-45dc-a303-f0a92d7d1410";
   static const String googleAuth = "/auth/google";
   static const String facebookAuth = "/auth/facebook";
@@ -36,6 +38,7 @@ class  AppConstants {
   
   // Video Call endpoint
   static const String videoCallURL = "/video-call";
+  static const String videoCallRateURL = "/video-call/rate";
   
   // Notification endpoints
   static const String getNotificationsURL = "/notifications";

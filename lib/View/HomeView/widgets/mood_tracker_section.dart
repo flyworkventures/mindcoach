@@ -1,9 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_confetti/flutter_confetti.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/l10n/app_localizations.dart';
 
@@ -23,9 +19,6 @@ class _MoodTrackerSectionState extends ConsumerState<MoodTrackerSection> {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final state = ref.watch(homeProvider);
-
-    if (state.hasTodayMood) return const SizedBox.shrink();
 
     return Padding(
       // Dışarıdan ekran kenarlarına olan boşluk (Figma dışında kalan genel ekran boşluğu)
@@ -45,9 +38,9 @@ class _MoodTrackerSectionState extends ConsumerState<MoodTrackerSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Title
-            const Text(
-              'How are you feeling today?',
-              style: TextStyle(
+            Text(
+              l.howAreYouFeelIngToday,
+              style: const TextStyle(
                 fontFamily: 'Geist',
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -55,9 +48,9 @@ class _MoodTrackerSectionState extends ConsumerState<MoodTrackerSection> {
               ),
             ),
             const SizedBox(height: 4), // Metinler arası ufak boşluk
-            const Text(
-              'A small check-in goes a long way',
-              style: TextStyle(
+            Text(
+              l.moodTrackerSubtitle,
+              style: const TextStyle(
                 fontFamily: 'Geist',
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -93,7 +86,7 @@ class _MoodTrackerSectionState extends ConsumerState<MoodTrackerSection> {
               ),
               const SizedBox(height: 16),
               Text(
-                _getMoodTitle(_selectedMoodCode!),
+                _getMoodTitle(l, _selectedMoodCode!),
                 style: const TextStyle(
                   fontFamily: 'Geist',
                   fontSize: 16,
@@ -104,7 +97,7 @@ class _MoodTrackerSectionState extends ConsumerState<MoodTrackerSection> {
               ),
               const SizedBox(height: 4),
               Text(
-                _getMoodDescription(_selectedMoodCode!),
+                _getMoodDescription(l, _selectedMoodCode!),
                 style: const TextStyle(
                   fontFamily: 'Geist',
                   fontSize: 12,
@@ -123,60 +116,38 @@ class _MoodTrackerSectionState extends ConsumerState<MoodTrackerSection> {
   void _onMoodTap(FeelItem item, BuildContext context) async {
     setState(() => _selectedMoodCode = item.code);
 
-    const options = ConfettiOptions(
-      spread: 660,
-      ticks: 50,
-      y: 0.6,
-      gravity: -5,
-      decay: 0.94,
-      startVelocity: 30,
-    );
-
-    void shoot() {
-      Confetti.launch(
-        context,
-        options: options.copyWith(particleCount: 20),
-        particleBuilder: (index) =>
-            Emoji(emoji: item.icon, textStyle: GoogleFonts.notoColorEmoji()),
-      );
-    }
-
-    Timer(Duration.zero, shoot);
-    Timer(const Duration(milliseconds: 200), shoot);
-    Timer(const Duration(milliseconds: 400), shoot);
-
     await ref.read(homeProvider.notifier).setMood(item.mood);
   }
 
-  String _getMoodTitle(String code) {
+  String _getMoodTitle(AppLocalizations l, String code) {
     switch (code) {
       case 'calm':
-        return 'Calm';
+        return l.moodCalm;
       case 'happy':
-        return 'Happy';
+        return l.moodHappy;
       case 'neutral':
-        return 'Neutral';
+        return l.moodNeutral;
       case 'tired':
-        return 'Tired';
+        return l.moodTired;
       case 'stressed':
-        return 'Stressed';
+        return l.moodStressed;
       default:
         return code;
     }
   }
 
-  String _getMoodDescription(String code) {
+  String _getMoodDescription(AppLocalizations l, String code) {
     switch (code) {
       case 'calm':
-        return 'This peace in your mind is your greatest strength. Enjoy this moment and stay balanced.';
+        return l.moodDescCalm;
       case 'happy':
-        return 'Your positive energy is contagious! Keep spreading joy and embracing this wonderful feeling.';
+        return l.moodDescHappy;
       case 'neutral':
-        return 'A steady state of mind is perfectly fine. Take a moment to check in with yourself.';
+        return l.moodDescNeutral;
       case 'tired':
-        return 'Your body is telling you to rest. Take a break and recharge — you deserve it.';
+        return l.moodDescTired;
       case 'stressed':
-        return 'Take a deep breath. Remember, it\'s okay to slow down and take things one step at a time.';
+        return l.moodDescStressed;
       default:
         return '';
     }

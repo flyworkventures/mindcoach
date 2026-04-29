@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -140,7 +141,12 @@ class _SpecialistRow extends StatelessWidget {
                 border: Border.all(color: const Color(0xFF2BD383), width: 2),
               ),
               child: ClipOval(
-                child: Image.network(avatar, fit: BoxFit.cover),
+                child: CachedNetworkImage(
+                  imageUrl: avatar,
+                  fit: BoxFit.cover,
+                  placeholder: (_, __) => const SizedBox.shrink(),
+                  errorWidget: (_, __, ___) => const Icon(Icons.person),
+                ),
               ),
             ),
             SizedBox(width: 12.w),

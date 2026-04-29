@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/Services/NotificationsService/local_notification_service.dart';
 import 'package:mindcoach/Services/NotificationsService/notification_service.dart';
 import 'package:mindcoach/Services/RevenueCatService/revenuecat_service.dart';
+import 'package:rive/rive.dart';
 
 import 'app/my_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await RiveNative.init();
 
   await RevenuecatService().initializeRevenueCat();
   try {

@@ -8,6 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_inappwebview_windows
   flutter_localization
   flutter_secure_storage_windows
+  permission_handler_windows
   record_windows
   rive_native
   url_launcher_windows

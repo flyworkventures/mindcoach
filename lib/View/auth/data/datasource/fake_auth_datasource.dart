@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'dart:developer' as developer;
 import '../../../../core/utils/app_constants.dart';
-import '../../../../core/repo/auth_repository.dart';
 import '../../../../Http/http_service.dart';
 import '../../../../core/utils/local_db_keys.dart';
-import '../../../../Riverpod/providers/user_provider.dart';
-import '../../../../models/user_model.dart';
-import '../../domain/social_login_provider.dart';
 import '../local/fake_user_db.dart';
 import 'auth_remote_datasource.dart';
 
@@ -23,7 +18,10 @@ class FakeAuthDataSource implements AuthRemoteDataSource {
 
 
   @override
-  Future<void> deleteAccount() async {
+  Future<void> deleteAccount({
+    String? deleteReason,
+    String? deleteMessage,
+  }) async {
     developer.log('🗑️ [DELETE-ACCOUNT] Delete account başlatılıyor...');
     
     try {
@@ -33,6 +31,12 @@ class FakeAuthDataSource implements AuthRemoteDataSource {
       
       final response = await httpService.delete(
         path: AppConstants.deleteAccountURL,
+        body: {
+          if (deleteReason != null && deleteReason.trim().isNotEmpty)
+            'deleteReason': deleteReason.trim(),
+          if (deleteMessage != null && deleteMessage.trim().isNotEmpty)
+            'deleteMessage': deleteMessage.trim(),
+        },
       );
       
       developer.log('🗑️ [DELETE-ACCOUNT] API yanıtı: ${response.statusCode}');

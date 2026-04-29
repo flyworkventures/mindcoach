@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:mindcoach/View/LoginView/login_view.dart';
 import 'package:mindcoach/View/ProfileSettingsView/profile_settings.dart';
 import 'package:mindcoach/View/ProfileSetupView/profile_setup_view.dart';
+import 'package:mindcoach/View/ProfileSetupView/steps/find_coach_step.dart';
 import 'package:mindcoach/View/ProfileView/appointment/appointment_screen.dart';
 import 'package:mindcoach/View/ProfileView/faq/faq_screen.dart';
+import 'package:mindcoach/View/ProfileView/language/language_selection_screen.dart';
 import 'package:mindcoach/View/ProfileView/notifications/notifications_screen.dart';
 import 'package:mindcoach/View/ProfileView/premium/premium_screen.dart';
 import 'package:mindcoach/View/ProfileView/presentation/goodbye_screen.dart';
 import 'package:mindcoach/View/ProfileView/presentation/invite_screen.dart';
-import 'package:mindcoach/View/VideoCallView/video_call_view.dart';
 import 'package:mindcoach/View/chat_screen/conversation/conversation_page.dart';
-import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_screen.dart';
-import 'package:mindcoach/View/relaxing_sound/relaxing_sound_screen.dart';
-import 'package:mindcoach/View/specialists_screen/specialist_detail_screen.dart';
+import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_realtime_screen.dart';
+import 'package:mindcoach/View/chat_screen/conversation/voice_call/voice_call_view.dart';
 import 'package:mindcoach/View/mental_tests/test_intro_screen.dart';
 import 'package:mindcoach/View/mental_tests/test_question_screen.dart';
 import 'package:mindcoach/View/mental_tests/test_result_screen.dart';
+import 'package:mindcoach/View/relaxing_sound/relaxing_sound_screen.dart';
+import 'package:mindcoach/View/specialists_screen/specialist_detail_screen.dart';
 import 'package:mindcoach/app/navbar_shell.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 
@@ -26,6 +28,7 @@ class AppRouter {
   static Map<String, WidgetBuilder> routes = {
     PageRoutes.onboarding: (_) => const OnboardingScreen(),
     PageRoutes.profileSetup: (_) => const MindCoachOnboarding(),
+    PageRoutes.findCoach: (_) => const FindCoachScreen(),
     PageRoutes.login: (_) => const LoginView(),
     PageRoutes.navbar: (_) => const BottomNavBar(),
 
@@ -36,8 +39,11 @@ class AppRouter {
     PageRoutes.appointments: (_) => const AppointmentsScreen(),
     PageRoutes.notifications: (_) => const NotificationsScreen(),
     PageRoutes.premimum: (_) => const PremiumScreen(),
-    PageRoutes.videoCallView: (_) => VideoCallView(),
+    PageRoutes.videoCallView: (_) => const Scaffold(
+      body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+    ),
     PageRoutes.relaxingSoundScreen: (_) => const RelaxingSoundScreen(),
+    PageRoutes.languageSelection: (_) => const LanguageSelectionScreen(),
 
     PageRoutes.conversationScreen: (context) {
       final args = ModalRoute.of(context)?.settings.arguments;
@@ -49,7 +55,28 @@ class AppRouter {
       return ConversationScreen(specialistId: args);
     },
 
-    PageRoutes.videoCall: (_) => const VideoCallScreen(),
+    PageRoutes.videoCall: (context) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is! ConsultantModel) {
+        return const Scaffold(
+          body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+        );
+      }
+      return VideoCallRealtimeScreen(specialist: args);
+    },
+
+    /// YENİ EKLENEN: Voice Call Route
+    PageRoutes.voiceCallView: (context) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is! ConsultantModel) {
+        return const Scaffold(
+          body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+        );
+      }
+      return VoiceCallScreen(
+        specialist: args,
+      ); // Class adınız VoiceCallView ise onu kullanın
+    },
 
     PageRoutes.specialistDetail: (context) {
       final args = ModalRoute.of(context)?.settings.arguments;
@@ -91,6 +118,8 @@ class AppRouter {
 
       case PageRoutes.profileSetup:
         return _page(const MindCoachOnboarding(), settings);
+      case PageRoutes.findCoach:
+        return _page(const FindCoachScreen(), settings);
 
       case PageRoutes.login:
         return _page(const LoginView(), settings);
@@ -120,25 +149,58 @@ class AppRouter {
       case PageRoutes.premimum:
         return _page(const PremiumScreen(), settings);
 
-      /// CHAT
+      /// CHAT & CALLS
       case PageRoutes.conversationScreen:
-        // ConsultantModel bekleniyor
         final args = settings.arguments;
-
         if (args is! ConsultantModel) {
-          // Eğer ConsultantModel değilse, fallback oluştur
           return _page(
-            Scaffold(
+            const Scaffold(
               body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
             ),
             settings,
           );
         }
-
         return _page(ConversationScreen(specialistId: args), settings);
 
       case PageRoutes.videoCall:
-        return _page(const VideoCallScreen(), settings);
+        final args = settings.arguments;
+        if (args is! ConsultantModel) {
+          return _page(
+            const Scaffold(
+              body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+            ),
+            settings,
+          );
+        }
+        return _page(VideoCallRealtimeScreen(specialist: args), settings);
+
+      case PageRoutes.videoCallView:
+        return _page(
+          const Scaffold(
+            body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+          ),
+          settings,
+        );
+
+      /// YENİ EKLENEN: Voice Call Route
+      case PageRoutes.voiceCallView:
+        final args = settings.arguments;
+        if (args is! ConsultantModel) {
+          return _page(
+            const Scaffold(
+              body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
+            ),
+            settings,
+          );
+        }
+        return _page(
+          VoiceCallScreen(specialist: args),
+          settings,
+        ); // Class adınız VoiceCallView ise onu kullanın
+
+      /// LANGUAGE SELECTION
+      case PageRoutes.languageSelection:
+        return _page(const LanguageSelectionScreen(), settings);
 
       /// RELAXING SOUND
       case PageRoutes.relaxingSoundScreen:
@@ -201,8 +263,6 @@ class AppRouter {
 
   static Map<int, int> _parseResultsMap(dynamic args) {
     if (args is Map<int, int>) return args;
-
-    // Map<dynamic,dynamic> -> Map<int,int> dönüşümü (güvenli)
     if (args is Map) {
       final out = <int, int>{};
       args.forEach((k, v) {
@@ -212,7 +272,6 @@ class AppRouter {
       });
       return out;
     }
-
     return <int, int>{};
   }
 }

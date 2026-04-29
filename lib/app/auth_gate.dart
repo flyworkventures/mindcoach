@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/View/LoginView/login_view.dart';
 import 'package:mindcoach/View/splash/splash.dart';
 import 'package:mindcoach/app/navbar_shell.dart';
 
@@ -81,9 +82,8 @@ class AuthGateState extends ConsumerState<AuthGate> {
         return const BottomNavBar();
 
       case AppStatus.unauthenticated:
-        debugPrint('📱 [AUTH-GATE] OnboardingScreen gösteriliyor (unauthenticated)');
-        // TODO: LoginScreen
-        return const OnboardingScreen();
+        debugPrint('📱 [AUTH-GATE] LoginView gösteriliyor (unauthenticated)');
+        return const LoginView();
       case AppStatus.splash:
         debugPrint('📱 [AUTH-GATE] Splash gösteriliyor');
         // TODO: LoginScreen

@@ -8,6 +8,7 @@ import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/View/OnboardView/presentation/widgets/onboarding_terms_text.dart';
 import 'package:mindcoach/View/auth/domain/social_login_provider.dart';
 import 'package:mindcoach/app/my_app.dart';
+import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
@@ -61,18 +62,27 @@ class _LoginViewState extends ConsumerState<LoginView> {
         return;
       }
 
-      // 4. Onboarding sorularindaki cevaplari backend'e gonder
+      // 4. Onboarding sirasinda local storage'a yazilan profile setup verisini
+      //    Riverpod state'ine yukle (uygulama yeniden acildiginda da kaybolmasin
+      //    diye persist edildi).
+      await ref
+          .read(AllControllers.profileSetupProvider.notifier)
+          .hydrateFromLocalIfNeeded();
+
+      // 5. Onboarding sorularindaki cevaplari backend'e gonder
       debugPrint('[LoginView] Profil tamamlaniyor...');
       final profileState = ref.read(AllControllers.profileSetupProvider);
       debugPrint('[LoginView] ProfileState: '
           'fullName="${profileState.fullName}", '
           'gender=${profileState.gender}, '
-          'supportArea=${profileState.supportArea}');
+          'supportArea=${profileState.supportArea}, '
+          'meetingTime=${profileState.meetingTime}, '
+          'days=${profileState.availableDays.map((e) => e.name).toList()}');
 
       await _completeProfileWithStoredData();
       debugPrint('[LoginView] Profil tamamlandi → navbar');
 
-      // 5. Anasayfaya yonlendir
+      // 6. Anasayfaya yonlendir
       _navigateToNavbar();
     } catch (e, st) {
       debugPrint('[LoginView] Login hatasi: $e');
@@ -91,6 +101,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
   void _navigateToNavbar() {
     if (!mounted) return;
+    ref.read(bottomNavProvider.notifier).reset();
     navigatorKey.currentState?.pushNamedAndRemoveUntil(
       PageRoutes.navbar,
       (route) => false,

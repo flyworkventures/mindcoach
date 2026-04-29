@@ -13,7 +13,7 @@ class SupportAreaStep extends StatelessWidget {
     required this.subtitleStyle,
   });
 
-  final SupportArea selectedSupportArea;
+  final SupportArea? selectedSupportArea;
   final ValueChanged<SupportArea> onSupportAreaChanged;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;

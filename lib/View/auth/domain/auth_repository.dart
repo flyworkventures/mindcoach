@@ -1,5 +1,4 @@
 // features/auth/domain/auth_repository.dart
-import 'package:mindcoach/View/auth/domain/social_login_provider.dart';
 
 /// Auth domain sözleşmesi.
 ///
@@ -11,6 +10,9 @@ import 'package:mindcoach/View/auth/domain/social_login_provider.dart';
 abstract class AuthRepository {
 
   Future<void> logout();
-  Future<void> deleteAccount();
+  Future<void> deleteAccount({
+    String? deleteReason,
+    String? deleteMessage,
+  });
   Future<bool> isLoggedIn();
 }

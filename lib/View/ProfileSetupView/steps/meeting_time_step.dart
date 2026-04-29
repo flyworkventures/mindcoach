@@ -13,7 +13,7 @@ class MeetingTimeStep extends StatelessWidget {
     required this.subtitleStyle,
   });
 
-  final MeetingTime selectedTime;
+  final MeetingTime? selectedTime;
   final ValueChanged<MeetingTime> onTimeChanged;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;

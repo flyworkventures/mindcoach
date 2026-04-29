@@ -1,16 +1,16 @@
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../specialists_screen/constants/specialists_strings.dart';
-import '../../../specialists_screen/specialists_notifier.dart';
 import '../../../../core/routes/page_routes.dart';
+import '../../../../core/utils/context_l10n_extensions.dart';
+import '../../../../core/utils/job_convert.dart';
 import '../../../../core/utils/time_format_utils.dart';
-import '../../../../core/widgets/top_toast.dart';
 import '../../../../models/consultant_model.dart';
-
+import '../../../specialists_screen/specialists_notifier.dart';
 import '../../chat_notifier.dart';
 import '../../constants/chat_strings.dart';
 
@@ -22,198 +22,487 @@ class ChatScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
+  List<ConsultantModel> _quickMessageCoaches = [];
+
   @override
   void initState() {
     super.initState();
-    // Ekran açıldığında chat listesini yükle
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         ref.read(chatProvider.notifier).refreshChats();
+        _pickRandomCoaches();
       }
+    });
+  }
+
+  void _pickRandomCoaches() {
+    final specialists = ref.read(specialistsProvider).specialists ?? [];
+    if (specialists.isEmpty) return;
+
+    final shuffled = List<ConsultantModel>.from(specialists)..shuffle(Random());
+    setState(() {
+      _quickMessageCoaches = shuffled.take(2).toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final chatState = ref.watch(chatProvider);
-    final currentUserName = chatState.currentUserName;
 
-    // Error durumu
-    if (chatState.error != null) {
-      return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment(-0.90, -1.0),
-              end: Alignment(1.0, 1.0),
-              colors: [Color(0xFFFBFCFF), Color(0xFFF9FAFF)],
-            ),
-          ),
-          child: SafeArea(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    chatState.error!,
-                    style: GoogleFonts.quicksand(
-                      fontSize: 16,
-                      color: Colors.red,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(chatProvider.notifier).refreshChats();
-                    },
-                    child: const Text('Yeniden Dene'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
+    // Quick message koçları henüz yüklenmediyse tekrar dene
+    if (_quickMessageCoaches.isEmpty) {
+      final specialists = ref.watch(specialistsProvider).specialists ?? [];
+      if (specialists.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _quickMessageCoaches.isEmpty) _pickRandomCoaches();
+        });
+      }
     }
 
     final uiChats = chatState.chats
         .map(
           (c) => _ChatItem(
-        id: c.specialistId,
-        consultantId: c.consultantId,
-        consultant: c.consultant,
-        name: _getNameForChat(context, c),
-        lastMessage: c.lastMessage,
-        time: c.time,
-        unreadCount: c.unreadCount,
-        isFromMe: c.isFromMe,
-        avatarPath: _getAvatarPathForChat(c),
-      ),
-    )
+            id: c.specialistId,
+            consultantId: c.consultantId,
+            consultant: c.consultant,
+            name: _getNameForChat(context, c),
+            lastMessage: c.lastMessage,
+            time: c.time,
+            unreadCount: c.unreadCount,
+            isFromMe: c.isFromMe,
+            avatarPath: _getAvatarPathForChat(c),
+          ),
+        )
         .toList();
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment(-0.90, -1.0),
-                end: Alignment(1.0, 1.0),
-                colors: [Color(0xFFFBFCFF), Color(0xFFF9FAFF)],
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 24),
+
+              // ── Quick Message ──
+              Text(
+                l.quickMessage,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                  height: 24 / 18,
+                ),
               ),
-            ),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 16),
+
+              // Quick message coach cards — 2 columns
+              if (_quickMessageCoaches.isNotEmpty)
+                Row(
                   children: [
-                    const SizedBox(height: 24),
+                    for (int i = 0; i < _quickMessageCoaches.length; i++) ...[
+                      if (i > 0) const SizedBox(width: 10),
+                      Expanded(
+                        child: _QuickMessageCard(
+                          coach: _quickMessageCoaches[i],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              const SizedBox(height: 28),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: Text(
-                          ChatStrings.greeting(context, currentUserName),
-                          style: GoogleFonts.quicksand(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w500,
-                            height: 24 / 32,
-                            color: Colors.black,
-                          ),
-                        )),
-                       
-                      ],
-                    ),
+              // ── History ──
+              Text(
+                l.chatHistory,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                  height: 24 / 18,
+                ),
+              ),
+              const SizedBox(height: 16),
 
-                    const SizedBox(height: 24),
-
-                    Text(
-                      ChatStrings.screenTitle(context),
-                      style: GoogleFonts.quicksand(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        height: 24 / 20,
-                        color: Colors.black,
+              if (chatState.isLoading && uiChats.isEmpty)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: CircularProgressIndicator(color: Color(0xFF21BC87)),
+                  ),
+                )
+              else if (uiChats.isEmpty)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Text(
+                      l.noChatHistory,
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 14,
+                        color: Color(0xFF96989C),
                       ),
                     ),
+                  ),
+                )
+              else
+                ...uiChats.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  _ChatItem chat = entry.value;
 
-                    const SizedBox(height: 16),
+                  return Column(
+                    children: [
+                      _HistoryChatTile(item: chat),
+                      // Son elemanın altına çizgi koymamak için kontrol
+                      if (index != uiChats.length - 1)
+                        Padding(
+                          // Figma'daki Padding (Top 8, Bottom 8, Left 1, Right 1)
+                          padding: const EdgeInsets.fromLTRB(1, 4, 1, 4),
+                          child: const Divider(
+                            height: 0, // Figma: 0px height
+                            thickness: 1, // Figma: 0.5px border
+                            color: Color(
+                              0x1A000000,
+                            ), // Figma: %10 Siyah (#000000)
+                          ),
+                        ),
+                    ],
+                  );
+                }),
 
-                    Expanded(
-                      child: chatState.isLoading && uiChats.isEmpty
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : uiChats.isEmpty
-                              ? Center(
-                                  child: Text(
-                                    'Henüz sohbet yok',
-                                    style: GoogleFonts.quicksand(
-                                      fontSize: 16,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                )
-                              : ListView.separated(
-                                  padding: const EdgeInsets.only(bottom: 96),
-                                  itemCount: uiChats.length,
-                                  separatorBuilder: (_, __) => const SizedBox(height: 16),
-                                  itemBuilder: (context, index) {
-                                    final chat = uiChats[index];
-                                    return _ChatCard(item: chat);
-                                  },
-                                ),
+              const SizedBox(height: 32),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Quick Message Card ──
+// Figma: 195x248 fixed, radius 16, border 1px #000000 5%, padding 10, gap 10
+
+class _QuickMessageCard extends ConsumerWidget {
+  final ConsultantModel coach;
+
+  const _QuickMessageCard({required this.coach});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final langCode = context.langCode;
+
+    final name =
+        coach.names[langCode] as String? ??
+        coach.names['en'] as String? ??
+        coach.names.values.first.toString();
+
+    final jobTitle = JobConvert(coach.job, context).call();
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          PageRoutes.conversationScreen,
+          arguments: coach,
+        );
+      },
+      child: Container(
+        height: 248,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Photo
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFFF6F6F6), // Üstteki açık gri
+                        Color.fromARGB(
+                          255,
+                          49,
+                          43,
+                          43,
+                        ), // Alttaki koyu siyahımsı renk
+                      ],
+                    ),
+                  ),
+                  width: double.infinity,
+                  child: _coachImage(coach.photoURL),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Name — Geist 600, 20px
+            Text(
+              name,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+                height: 28 / 20,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+
+            // Job — Geist 400, 12px, #96989C
+            Text(
+              jobTitle,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF96989C),
+                height: 16 / 12,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 10),
+
+            // Message button — fill width, height 34, radius 8, #21BC87
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  PageRoutes.conversationScreen,
+                  arguments: coach,
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF21BC87),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset("assets/icons/ic_buble.svg"),
+                    const SizedBox(width: 4),
+                    Text(
+                      l.chatMessage,
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-          ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  Widget _coachImage(String url) {
+    final isSvg = url.toLowerCase().endsWith('.svg');
 
-/*
-          Positioned(
-            right: 24.w,
-            bottom: 8.h + 2 * kBottomNavigationBarHeight,
-            child: GestureDetector(
-              onTap: () {
-                NewChatSheet.show(context);
-              },
-              child: Container(
-                width: 65,
-                height: 65,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFF2BD383), Color(0xFF11998E)],
-                  ),
-                ),
-                child: Center(
-                  child: Transform.translate(
-                    offset: const Offset(0, 3),
-                    child: SvgPicture.asset(
-                      'assets/svg/chat_symbol.svg',
-                      width: 30,
-                      height: 30,
-                    ),
-                  ),
-                ),
+    Widget fallback() => Container(
+      color: const Color(0xFFF5F5F5),
+      child: const Icon(Icons.person, size: 40, color: Color(0xFF96989C)),
+    );
+
+    if (isSvg) {
+      return SvgPicture.network(
+        url,
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => fallback(),
+      );
+    }
+    return CachedNetworkImage(
+      imageUrl: url,
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      errorWidget: (_, _, _) => fallback(),
+      placeholder: (_, _) => const SizedBox.shrink(),
+    );
+  }
+}
+
+// ── History Chat Tile ──
+
+class _HistoryChatTile extends ConsumerWidget {
+  final _ChatItem item;
+
+  const _HistoryChatTile({required this.item});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      onTap: () {
+        ref.read(chatProvider.notifier).markChatRead(item.id);
+
+        final consultantModel = _resolveConsultant(ref, item);
+        Navigator.pushNamed(
+          context,
+          PageRoutes.conversationScreen,
+          arguments: consultantModel,
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          children: [
+            // Avatar — circular, 48x48, green border
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFF21BC87), width: 2),
+              ),
+              child: ClipOval(
+                child: item.avatarPath.startsWith('http')
+                    ? CachedNetworkImage(
+                        imageUrl: item.avatarPath,
+                        fit: BoxFit.cover,
+                        errorWidget: (_, _, _) => Image.asset(
+                          'assets/images/profile_avatar.jpeg',
+                          fit: BoxFit.cover,
+                        ),
+                        placeholder: (_, _) => const SizedBox.shrink(),
+                      )
+                    : Image.asset(item.avatarPath, fit: BoxFit.cover),
               ),
             ),
+            const SizedBox(width: 12),
+
+            // Name + Last message
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                      height: 20 / 15,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  _LastMessageText(item: item),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+
+            // Time
+            Text(
+              TimeFormatUtils.formatTime(context, item.time),
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 11,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF96989C),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ConsultantModel _resolveConsultant(WidgetRef ref, _ChatItem item) {
+    if (item.consultant != null) return item.consultant!;
+
+    final specialists = ref.read(specialistsProvider).specialists ?? [];
+    final found = specialists.where((c) => c.id == item.consultantId);
+    if (found.isNotEmpty) return found.first;
+
+    return ConsultantModel(
+      id: item.consultantId,
+      names: {'tr': item.name, 'en': item.name},
+      mainPrompt: '',
+      photoURL: item.avatarPath.startsWith('http') ? item.avatarPath : '',
+      creadtedDate: '',
+      explanation: '',
+      features: [],
+      job: '',
+    );
+  }
+}
+
+// ── Last Message Text ──
+
+class _LastMessageText extends StatelessWidget {
+  final _ChatItem item;
+  const _LastMessageText({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    const style = TextStyle(
+      fontFamily: 'Geist',
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+      color: Color(0xFF96989C),
+      height: 16 / 12,
+    );
+
+    final msg = item.lastMessage.trim();
+    if (msg.isEmpty) {
+      return Text(
+        context.l10n.noChatHistory,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: style.copyWith(fontStyle: FontStyle.italic),
+      );
+    }
+
+    if (!item.isFromMe) {
+      return Text(
+        msg,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: style,
+      );
+    }
+
+    return RichText(
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: ChatStrings.youPrefix(context),
+            style: style.copyWith(fontWeight: FontWeight.w600),
           ),
-          */
+          TextSpan(text: msg, style: style),
         ],
       ),
     );
   }
 }
+
+// ── Data Models & Helpers ──
 
 class _ChatItem {
   final SpecialistId id;
@@ -239,320 +528,47 @@ class _ChatItem {
   });
 }
 
-class _ChatCard extends ConsumerWidget {
-  final _ChatItem item;
-
-  const _ChatCard({required this.item});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    const double cardRadius = 24.0;
-    const borderColor = Color(0xFFDEDEDE);
-
-    return InkWell(
-      onTap: () {
-        ref.read(chatProvider.notifier).markChatRead(item.id);
-
-        // ConsultantModel'i hazırla
-        ConsultantModel consultantModel;
-        
-        // Önce item'dan consultant'ı al
-        if (item.consultant != null) {
-          consultantModel = item.consultant!;
-        } else {
-          // Eğer consultant yoksa, consultants listesinden bul
-          final specialistsState = ref.read(specialistsProvider);
-          final consultants = specialistsState.specialists ?? [];
-          
-          final foundConsultant = consultants.firstWhere(
-            (c) => c.id == item.consultantId,
-            orElse: () => ConsultantModel(
-              id: -1,
-              names: {},
-              mainPrompt: '',
-              photoURL: '',
-              creadtedDate: '',
-              explanation: '',
-              features: [],
-              job: '',
-            ),
-          );
-          
-          // Eğer consultant bulunduysa kullan, yoksa fallback oluştur
-          if (foundConsultant.id != -1) {
-            consultantModel = foundConsultant;
-          } else {
-            // Fallback: Minimal ConsultantModel oluştur
-            consultantModel = ConsultantModel(
-              id: item.consultantId,
-              names: {'tr': item.name, 'en': item.name}, // Mevcut name'i kullan
-              mainPrompt: '',
-              photoURL: item.avatarPath.startsWith('http') ? item.avatarPath : '',
-              creadtedDate: '',
-              explanation: '',
-              features: [],
-              job: '',
-            );
-          }
-        }
-
-        Navigator.pushNamed(
-          context,
-          PageRoutes.conversationScreen,
-          arguments: consultantModel,
-        );
-      },
-      borderRadius: BorderRadius.circular(cardRadius),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(cardRadius),
-        child: Container(
-          height: 93,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(cardRadius),
-            border: Border.all(color: borderColor, width: 1),
-          ),
-          child: Slidable(
-            key: ValueKey(item.id),
-            endActionPane: ActionPane(
-              motion: const ScrollMotion(),
-              extentRatio: 0.3,
-              children: [
-                CustomSlidableAction(
-                  onPressed: (context) async {
-                    try {
-                      await ref.read(chatProvider.notifier).deleteChat(item.id);
-                      showTopToast(
-                        context,
-                        ChatStrings.deleteToast(context, item.name),
-                      );
-                    } catch (e) {
-                      // Hata durumunda kullanıcıya bilgi ver
-                      showTopToast(
-                        context,
-                        'Sohbet silinirken bir hata oluştu',
-                      );
-                    }
-                  },
-                  backgroundColor: const Color(0xFFFE4A49),
-                  child: SvgPicture.asset(
-                    'assets/svg/delete.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 61,
-                    height: 61,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color(0xFF2BD383),
-                        width: 3,
-                      ),
-                    ),
-                    child: ClipOval(
-                      child: item.avatarPath.startsWith('http')
-                          ? Image.network(
-                              item.avatarPath,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Image.asset(
-                                  'assets/images/profile_avatar.jpeg',
-                                  fit: BoxFit.cover,
-                                );
-                              },
-                            )
-                          : Image.asset(
-                              item.avatarPath,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          item.name,
-                          style: GoogleFonts.quicksand(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            height: 24 / 17,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        _LastMessageText(item: item),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        TimeFormatUtils.formatTime(context, item.time),
-                        style: GoogleFonts.quicksand(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                          height: 18 / 10,
-                          color: const Color(0xFF2BD383),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      if (item.unreadCount > 0)
-                        Container(
-                          width: 22,
-                          height: 22,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF2BD383),
-                            shape: BoxShape.circle,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            item.unreadCount.toString(),
-                            style: GoogleFonts.quicksand(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LastMessageText extends StatelessWidget {
-  final _ChatItem item;
-
-  const _LastMessageText({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    final baseStyle = GoogleFonts.quicksand(
-      fontSize: 12,
-      fontWeight: FontWeight.w500,
-      height: 18 / 12,
-      color: Colors.black87,
-    );
-
-    // Son mesaj boşsa veya null ise placeholder göster
-    final lastMessage = item.lastMessage.trim();
-    if (lastMessage.isEmpty) {
-      return Text(
-        'Henüz mesaj yok',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: baseStyle.copyWith(
-          color: Colors.grey,
-          fontStyle: FontStyle.italic,
-        ),
-      );
-    }
-
-    if (!item.isFromMe) {
-      return Text(
-        lastMessage,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: baseStyle,
-      );
-    }
-
-    return RichText(
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: ChatStrings.youPrefix(context),
-            style: baseStyle.copyWith(fontWeight: FontWeight.w700),
-          ),
-          TextSpan(text: lastMessage, style: baseStyle),
-        ],
-      ),
-    );
-  }
-}
-
 String _getNameForChat(BuildContext context, ChatItem chatItem) {
-  // Önce consultant bilgilerini kullan
   if (chatItem.consultant != null) {
     final names = chatItem.consultant!.names;
-    final locale = Localizations.localeOf(context);
-    final langCode = locale.languageCode;
-    
-    // Önce mevcut dil kodunu dene (tr, en)
+    final langCode = Localizations.localeOf(context).languageCode;
+
     if (names.containsKey(langCode) && names[langCode] is String) {
       return names[langCode] as String;
     }
-    
-    // Fallback: tr veya en
     if (names.containsKey('tr') && names['tr'] is String) {
       return names['tr'] as String;
     }
     if (names.containsKey('en') && names['en'] is String) {
       return names['en'] as String;
     }
-    
-    // İlk bulunan string değeri kullan
     for (final value in names.values) {
-      if (value is String && value.isNotEmpty) {
-        return value;
-      }
+      if (value is String && value.isNotEmpty) return value;
     }
   }
-  
-  // Consultant yoksa SpecialistId'ye göre fallback
-  return _nameFor(context, chatItem.specialistId);
+
+  return _nameForFallback(chatItem.specialistId);
 }
 
 String _getAvatarPathForChat(ChatItem chatItem) {
-  // Önce consultant'ın photoURL'ini kullan
-  if (chatItem.consultant != null && 
-      chatItem.consultant!.photoURL.isNotEmpty) {
+  if (chatItem.consultant != null && chatItem.consultant!.photoURL.isNotEmpty) {
     return chatItem.consultant!.photoURL;
   }
-  
-  // Consultant yoksa SpecialistId'ye göre fallback
   return _avatarPathFor(chatItem.specialistId);
 }
 
-String _nameFor(BuildContext context, SpecialistId id) {
+String _nameForFallback(SpecialistId id) {
   switch (id) {
     case SpecialistId.aura:
-      return SpecialistsStrings.auraName(context);
+      return 'Aura';
     case SpecialistId.zen:
-      return SpecialistsStrings.zenName(context);
+      return 'Zen';
     case SpecialistId.elara:
-      return SpecialistsStrings.elaraName(context);
+      return 'Elara';
     case SpecialistId.orion:
-      return SpecialistsStrings.orionName(context);
+      return 'Orion';
     case SpecialistId.cyra:
-      return SpecialistsStrings.cyraName(context);
+      return 'Cyra';
   }
 }
 

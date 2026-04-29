@@ -151,12 +151,14 @@ class HttpService {
 
   Future<http.Response> delete({
     required String path,
+    dynamic body,
     Map<String, String>? headers,
   }) async {
     final h = headers ?? await _getHeaders();
     log("DELETE request: $path");
     http.Response response = await http.delete(
       Uri.parse("$baseUrl$path"),
+      body: body == null ? null : jsonEncode(body),
       headers: h,
     );
     if (response.statusCode == 200) {

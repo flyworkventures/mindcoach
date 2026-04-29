@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:in_app_notification/in_app_notification.dart';
-import 'package:mindcoach/Riverpod/providers/all_providers.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'package:mindcoach/Utils/logger.dart';
@@ -87,9 +87,24 @@ class AuthProvider extends StateNotifier{
           break;
           
         case SocialLoginProvider.guest:
-          // Misafir girişi için body yok
+          // Cihaza özgü sabit guest ID — her zaman aynı hesaba döner
+          String? savedGuestId = await localDbService.getString(key: LocalDbKeys.guestDeviceId);
+          if (savedGuestId == null || savedGuestId.isEmpty) {
+            // İlk kez: rastgele ama kalıcı bir ID oluştur
+            final ts = DateTime.now().millisecondsSinceEpoch;
+            final rand = ts.toRadixString(36) +
+                ts.hashCode.abs().toRadixString(36);
+            savedGuestId = 'guest_device_$rand';
+            await localDbService.setString(
+              key: LocalDbKeys.guestDeviceId,
+              value: savedGuestId,
+            );
+            debugPrint('🆕 [GUEST] Yeni cihaz ID oluşturuldu: $savedGuestId');
+          } else {
+            debugPrint('♻️ [GUEST] Mevcut cihaz ID kullanılıyor: $savedGuestId');
+          }
           apiPath = AppConstants.guestAuth;
-          body = null;
+          body = {'deviceId': savedGuestId};
           // Guest login için token göndermemeli (Authorization header'ı olmamalı)
           break;
       }

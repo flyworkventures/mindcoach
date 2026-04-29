@@ -1,5 +1,3 @@
-import '../../domain/social_login_provider.dart';
-
 /// AuthRemoteDataSource
 /// ------------------------------------------------------------
 /// Auth işlemleri için dış dünya ile konuşan soyut katmandır.
@@ -19,8 +17,9 @@ import '../../domain/social_login_provider.dart';
 /// UI ve feature katmanları bu değişimden etkilenmez.
 
 abstract class AuthRemoteDataSource {
- 
-
-  Future<void> deleteAccount();
+  Future<void> deleteAccount({
+    String? deleteReason,
+    String? deleteMessage,
+  });
   Future<bool> isLoggedIn();
 }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -291,15 +292,14 @@ class _AppointmentCard extends ConsumerWidget {
               ),
               child: ClipOval(
                 child: photoURL.isNotEmpty
-                    ? Image.network(
-                        photoURL,
+                    ? CachedNetworkImage(
+                        imageUrl: photoURL,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: Icon(Icons.person, size: 40.w, color: Colors.grey[600]),
-                          );
-                        },
+                        placeholder: (_, __) => const SizedBox.shrink(),
+                        errorWidget: (_, __, ___) => Container(
+                          color: Colors.grey[300],
+                          child: Icon(Icons.person, size: 40.w, color: Colors.grey[600]),
+                        ),
                       )
                     : Container(
                         color: Colors.grey[300],

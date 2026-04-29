@@ -1,0 +1,1708 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for French (`fr`).
+class AppLocalizationsFr extends AppLocalizations {
+  AppLocalizationsFr([String locale = 'fr']) : super(locale);
+
+  @override
+  String get relaxingSound => 'Son relaxant';
+
+  @override
+  String get seeAll => 'Voir tout';
+
+  @override
+  String get online => 'En ligne';
+
+  @override
+  String get typeAMessage => 'Tapez un message...';
+
+  @override
+  String get premiumHeadlinePart1 => 'Un espace juste pour être ';
+
+  @override
+  String get premiumHeadlineHighlight => 'compris';
+
+  @override
+  String get premiumHeadlinePart2 => ',\nsans jugement.';
+
+  @override
+  String get premiumSubtitle =>
+      'Des milliers de personnes ont franchi le pas. À votre tour — 3 jours totalement gratuits.';
+
+  @override
+  String get premiumFeature1 => 'Accès illimité 24/7';
+
+  @override
+  String get premiumFeature2 => 'Connexion prioritaire';
+
+  @override
+  String get premiumFeature3 => 'IA avancée sur mesure pour vous';
+
+  @override
+  String get premiumAnnualDiscount => '-40 % sur le forfait annuel';
+
+  @override
+  String get premiumCta => 'Commencer';
+
+  @override
+  String get onboardingTitle1 => 'Vous vous sentez dépassé(e) ?';
+
+  @override
+  String get onboardingDesc1 =>
+      'Parlez à un guide certifié en quelques minutes — quand vous en avez besoin.';
+
+  @override
+  String get onboardingTitle2 => 'Parlez à votre façon.';
+
+  @override
+  String get onboardingDesc2 => 'Texte, voix ou vidéo';
+
+  @override
+  String get onboardingTitle3 => 'Trouvez le guide qu\'il vous faut.';
+
+  @override
+  String get onboardingDesc3 =>
+      'Soyez mis en relation en fonction de vos objectifs, de votre emploi du temps et de vos préférences.';
+
+  @override
+  String get swipeToContinue => 'Balayez pour continuer';
+
+  @override
+  String get onboardingTermsPrefix =>
+      'En vous inscrivant à __MINDguide2__, vous acceptez nos ';
+
+  @override
+  String get onboardingTermsOfService => 'Conditions d\'utilisation';
+
+  @override
+  String get onboardingTermsMiddle =>
+      '. Découvrez comment nous traitons vos données dans notre ';
+
+  @override
+  String get onboardingPrivacyPolicy => 'Politique de confidentialité';
+
+  @override
+  String get onboardingTermsAnd => ' et notre ';
+
+  @override
+  String get onboardingCookiesPolicy => 'Politique relative aux cookies';
+
+  @override
+  String get onboardingTermsSuffix => '.';
+
+  @override
+  String get nameGenderStepTitle => 'Parlez-nous un peu de vous';
+
+  @override
+  String get nameGenderStepSubtitle =>
+      'Une courte biographie aide les autres à connaître le vrai vous. Restez amusant et authentique.';
+
+  @override
+  String get fullName => 'Nom complet';
+
+  @override
+  String get enterYourFullName => 'Entrez votre nom complet';
+
+  @override
+  String get gender => 'Genre';
+
+  @override
+  String get male => 'Homme';
+
+  @override
+  String get female => 'Femme';
+
+  @override
+  String get next => 'Suivant';
+
+  @override
+  String get getStarted => 'Commencer';
+
+  @override
+  String get findMyCoaches => 'Trouver mes guides';
+
+  @override
+  String get loginSubtitle =>
+      'Connectez-vous pour trouver votre guide et commencer votre parcours. Cela prend 2 minutes.';
+
+  @override
+  String get continueWithGoogle => 'Continuer avec Google';
+
+  @override
+  String get continueWithApple => 'Continuer avec Apple';
+
+  @override
+  String get dataPrivacyNotice =>
+      'Vos données ne sont jamais partagées avec des tiers. Vous pouvez supprimer votre compte à tout moment.';
+
+  @override
+  String get approachTitle => 'Comment votre guide doit-il vous aborder ?';
+
+  @override
+  String get approachSubtitle =>
+      'Nous aide à faire correspondre votre personnalité au bon guide';
+
+  @override
+  String get approachPatient => 'Patient';
+
+  @override
+  String get approachSupportive => 'Soutenant';
+
+  @override
+  String get approachConvincing => 'Convaincant';
+
+  @override
+  String get approachEnergetic => 'Énergique';
+
+  @override
+  String get approachHumorous => 'Plein d\'humour';
+
+  @override
+  String get dobTitle => 'Quand êtes-vous né(e) ?';
+
+  @override
+  String get dobSubtitle =>
+      'Nous personnalisons l\'expérience en fonction de votre âge.';
+
+  @override
+  String get dobDayLabel => 'Jour';
+
+  @override
+  String get dobMonthLabel => 'Mois';
+
+  @override
+  String get dobYearLabel => 'Année';
+
+  @override
+  String get dobErrorInvalid =>
+      'Veuillez sélectionner une date de naissance valide.';
+
+  @override
+  String get january => 'Janvier';
+
+  @override
+  String get february => 'Février';
+
+  @override
+  String get march => 'Mars';
+
+  @override
+  String get april => 'Avril';
+
+  @override
+  String get may => 'Mai';
+
+  @override
+  String get june => 'Juin';
+
+  @override
+  String get july => 'Juillet';
+
+  @override
+  String get august => 'Août';
+
+  @override
+  String get september => 'Septembre';
+
+  @override
+  String get october => 'Octobre';
+
+  @override
+  String get november => 'Novembre';
+
+  @override
+  String get december => 'Décembre';
+
+  @override
+  String get januaryShort => 'Jan';
+
+  @override
+  String get februaryShort => 'Fév';
+
+  @override
+  String get marchShort => 'Mar';
+
+  @override
+  String get aprilShort => 'Avr';
+
+  @override
+  String get mayShort => 'Mai';
+
+  @override
+  String get juneShort => 'Juin';
+
+  @override
+  String get julyShort => 'Juil';
+
+  @override
+  String get augustShort => 'Aoû';
+
+  @override
+  String get septemberShort => 'Sep';
+
+  @override
+  String get octoberShort => 'Oct';
+
+  @override
+  String get novemberShort => 'Nov';
+
+  @override
+  String get decemberShort => 'Déc';
+
+  @override
+  String get nameGenderTitle => 'Parlez-nous un peu de vous';
+
+  @override
+  String get nameGenderSubtitle =>
+      'Pour que votre guide puisse connaître le vrai vous';
+
+  @override
+  String get nameGenderFullNameLabel => 'Nom complet';
+
+  @override
+  String get nameGenderFullNameHint => 'Entrez votre nom complet';
+
+  @override
+  String get nameGenderGenderLabel => 'Genre';
+
+  @override
+  String get nameGenderMale => 'Homme';
+
+  @override
+  String get nameGenderFemale => 'Femme';
+
+  @override
+  String get nameGenderPreferNotToSay => 'Préfère ne pas le dire';
+
+  @override
+  String get supportAreaTitle =>
+      'Dans quel domaine aimeriez-vous être accompagné(e) ?';
+
+  @override
+  String get supportAreaSubtitle =>
+      'Nous ne montrerons que les guides spécialisés dans ce domaine';
+
+  @override
+  String get supportAreaIndividual => 'Croissance individuelle';
+
+  @override
+  String get supportAreaFamily => 'Famille';
+
+  @override
+  String get supportAreaCareer => 'Carrière';
+
+  @override
+  String get supportAreaEducation => 'Éducation';
+
+  @override
+  String get supportAreaPersonalDevelopment => 'Développement personnel';
+
+  @override
+  String get availableDaysTitle => 'Quels jours êtes-vous disponible ?';
+
+  @override
+  String get availableDaysSubtitle =>
+      'Pour ne vous montrer que les guides libres quand vous l\'êtes';
+
+  @override
+  String get dayMonday => 'Lun';
+
+  @override
+  String get dayTuesday => 'Mar';
+
+  @override
+  String get dayWednesday => 'Mer';
+
+  @override
+  String get dayThursday => 'Jeu';
+
+  @override
+  String get dayFriday => 'Ven';
+
+  @override
+  String get daySaturday => 'Sam';
+
+  @override
+  String get daySunday => 'Dim';
+
+  @override
+  String get meetingTimeTitle => 'Quelle heure vous convient le mieux ?';
+
+  @override
+  String get meetingTimeSubtitle =>
+      'Les guides avec des créneaux correspondants seront mis en évidence';
+
+  @override
+  String get meetingTimeMorning => 'Matin';
+
+  @override
+  String get meetingTimeAfternoon => 'Après-midi';
+
+  @override
+  String get meetingTimeEvening => 'Soir';
+
+  @override
+  String get meetingTimeFlexible => 'Flexible';
+
+  @override
+  String get meetingTimeMorningRange => '08:00 - 12:00';
+
+  @override
+  String get meetingTimeAfternoonRange => '12:00 - 16:00';
+
+  @override
+  String get meetingTimeEveningRange => '16:00 - 21:00';
+
+  @override
+  String get meetingTimeFlexibleRange => '';
+
+  @override
+  String get successTitle => 'Le compte a été créé';
+
+  @override
+  String get successSubtitle =>
+      'Votre compte a été créé avec succès. Profitez de l\'application.';
+
+  @override
+  String get topicFeelingGood => 'Se sentir bien';
+
+  @override
+  String appointmentDescription(String name, String topic) {
+    return 'Vous avez une réunion avec $name concernant $topic.';
+  }
+
+  @override
+  String get quickActions => 'Actions rapides';
+
+  @override
+  String get hi => 'Salut';
+
+  @override
+  String get goodMorning => 'Bonjour';
+
+  @override
+  String get goodAfternoon => 'Bon après-midi';
+
+  @override
+  String get goodEvening => 'Bonsoir';
+
+  @override
+  String get welcome => 'Bienvenue';
+
+  @override
+  String get howAreYouFeelIngToday => 'Comment vous sentez-vous aujourd\'hui ?';
+
+  @override
+  String get getStart => 'Commençons';
+
+  @override
+  String get onboardingQuote1 =>
+      'Vos seules limites sont celles que vous vous fixez.';
+
+  @override
+  String get onboardingQuote2 =>
+      'Prenez une grande inspiration et commencez votre parcours.';
+
+  @override
+  String get onboardingQuote3 =>
+      'Plus vous devenez silencieux, plus vous êtes capable d\'entendre.';
+
+  @override
+  String get someoneWantsToTalkToYou => 'Quelqu\'un veut vous parler.';
+
+  @override
+  String get startTalking => 'Commencer à parler';
+
+  @override
+  String get moodTerrible => 'Terrible';
+
+  @override
+  String get moodBad => 'Mauvais';
+
+  @override
+  String get moodNeutral => 'Neutre';
+
+  @override
+  String get moodGood => 'Bon';
+
+  @override
+  String get moodGreat => 'Super';
+
+  @override
+  String get moodCalm => 'Calme';
+
+  @override
+  String get moodHappy => 'Heureux';
+
+  @override
+  String get moodTired => 'Fatigué';
+
+  @override
+  String get moodStressed => 'Stressé';
+
+  @override
+  String get moodTrackerSubtitle => 'Un petit check-in peut changer beaucoup';
+
+  @override
+  String get moodDescCalm =>
+      'Cette paix dans votre esprit est votre plus grande force. Profitez de ce moment et restez équilibré.';
+
+  @override
+  String get moodDescHappy =>
+      'Votre énergie positive est contagieuse ! Continuez à répandre la joie et à savourer ce merveilleux sentiment.';
+
+  @override
+  String get moodDescNeutral =>
+      'Un état d\'esprit stable est tout à fait normal. Prenez un moment pour vous reconnecter avec vous-même.';
+
+  @override
+  String get moodDescTired =>
+      'Votre corps vous dit de vous reposer. Faites une pause et rechargez-vous — vous le méritez.';
+
+  @override
+  String get moodDescStressed =>
+      'Respirez profondément. Rappelez-vous qu\'il est normal de ralentir et d\'avancer pas à pas.';
+
+  @override
+  String get todaysSessions => 'Séances d\'aujourd\'hui';
+
+  @override
+  String get makeAnAppointment => 'Prendre rendez-vous';
+
+  @override
+  String get timeToTrackMood => 'Il est temps de suivre votre humeur';
+
+  @override
+  String get days => 'Jours';
+
+  @override
+  String get hours => 'Heures';
+
+  @override
+  String get minutes => 'Minutes';
+
+  @override
+  String get seconds => 'Secondes';
+
+  @override
+  String get timeRemainingTitle =>
+      'Temps restant avant le début de la prochaine réunion.';
+
+  @override
+  String get upcomingMeetingTitle => 'Réunion à venir';
+
+  @override
+  String get noUpcomingMeetings => 'Vous n\'avez aucune réunion à venir.';
+
+  @override
+  String get takeTheTestNow => 'Faire le test maintenant';
+
+  @override
+  String get testDescription =>
+      'Évaluez votre état mental et apprenez-en plus sur vous-même.';
+
+  @override
+  String get premiumPlan => 'Forfait Premium';
+
+  @override
+  String get premiumDescription =>
+      'Débloquez votre chatbot IA et obtenez toutes les fonctionnalités premium.';
+
+  @override
+  String get upgradePlan => 'Améliorer le forfait';
+
+  @override
+  String get areYouStressed => 'Êtes-vous stressé(e) ?';
+
+  @override
+  String get areYouAnxious => 'Êtes-vous anxieux(se) ?';
+
+  @override
+  String questionsForAdults(int questionNumber) {
+    return '$questionNumber Questions pour adultes';
+  }
+
+  @override
+  String get statusAssessmentTest => 'Test d\'évaluation de l\'état';
+
+  @override
+  String get stressScaleTest => 'Test de l\'échelle de stress';
+
+  @override
+  String get anxietyScaleTest => 'Test de l\'échelle d\'anxiété';
+
+  @override
+  String get continueButton => 'Continuer';
+
+  @override
+  String get testRule1 => 'Évaluez votre **semaine dernière**.';
+
+  @override
+  String get testRule2 =>
+      'Il est recommandé de faire le test **une fois par semaine**.';
+
+  @override
+  String get testRule3 =>
+      'Si vous arrêtez le test en cours de route, **vous pouvez reprendre là où vous vous étiez arrêté.**';
+
+  @override
+  String get testDisclaimer =>
+      'Les résultats de ce test donnent un aperçu de la santé mentale individuelle, mais ne remplacent pas un diagnostic ou une recommandation discutés avec un professionnel de la santé mentale.';
+
+  @override
+  String get never => 'Jamais';
+
+  @override
+  String get sometimes => 'Parfois et occasionnellement';
+
+  @override
+  String get often => 'Assez souvent';
+
+  @override
+  String get always => 'Toujours';
+
+  @override
+  String get stressQ1 => 'J\'ai eu du mal à me détendre et à lâcher prise.';
+
+  @override
+  String get stressQ2 => 'J\'ai eu tendance à surréagir aux événements.';
+
+  @override
+  String get stressQ3 => 'Je me suis senti(e) nerveux(se) ou anxieux(se).';
+
+  @override
+  String get stressQ4 =>
+      'J\'ai eu des difficultés à gérer mes affaires et mes tâches.';
+
+  @override
+  String get stressQ5 =>
+      'J\'ai eu des difficultés et j\'ai parfois ignoré mes sentiments.';
+
+  @override
+  String get stressQ6 =>
+      'J\'ai eu du mal à m\'endormir ou à rester endormi(e).';
+
+  @override
+  String get stressQ7 =>
+      'Je me suis senti(e) submergé(e) par les responsabilités.';
+
+  @override
+  String get stressScaleTitle => 'Test de l\'échelle de stress';
+
+  @override
+  String get yourStressLevelPrefix => 'Votre niveau de stress : ';
+
+  @override
+  String get stressLevelLow => 'Stress faible';
+
+  @override
+  String get stressLevelLowDescription =>
+      'Votre niveau de stress actuel est faible. Vous gérez bien les défis quotidiens.';
+
+  @override
+  String get stressLevelModerate => 'Stress modéré';
+
+  @override
+  String get stressLevelModerateDescription =>
+      'Votre niveau de stress est modéré. Il est gérable, mais nécessite une attention particulière.';
+
+  @override
+  String get stressLevelHigh => 'Stress élevé';
+
+  @override
+  String get stressLevelHighDescription =>
+      'Votre niveau de stress est élevé. Vous devez ralentir et écouter votre corps.';
+
+  @override
+  String get stressAnalysisIntro =>
+      'Merci d\'avoir complété le test. Vos résultats indiquent qu\'il y a des facteurs dans votre vie quotidienne qui peuvent vous mettre au défi et causer de la fatigue.';
+
+  @override
+  String get stressAnalysisP1Part1 => 'Bien que ce niveau ne soit pas une ';
+
+  @override
+  String get stressAnalysisP1Bold1 => '\'alerte rouge\', ';
+
+  @override
+  String get stressAnalysisP1Part2 =>
+      'c\'est la façon dont votre corps et votre esprit disent, ';
+
+  @override
+  String get stressAnalysisP1Bold2 =>
+      '\'J\'ai besoin que tu ralentisses et que tu m\'écoutes.\'';
+
+  @override
+  String get stressAnalysisP2Part1 =>
+      'Le stress modéré est très courant dans le monde trépidant d\'aujourd\'hui, et il est ';
+
+  @override
+  String get stressAnalysisP2Bold1 => 'gérable. ';
+
+  @override
+  String get stressAnalysisP2Part2 =>
+      'Vous pouvez voir ce résultat comme une opportunité de ';
+
+  @override
+  String get stressAnalysisP2Bold2 =>
+      'gérer votre stress avant qu\'il ne conduise à un burn-out.';
+
+  @override
+  String get stressAnalysisRemember =>
+      'N\'oubliez pas que ce test est un outil de sensibilisation, et non un diagnostic médical. Prendre du temps pour vous est la première étape pour vous sentir mieux.';
+
+  @override
+  String get testResult => 'Résultat du test';
+
+  @override
+  String get mentalTest => 'Test mental';
+
+  @override
+  String get backToHome => 'Retour à l\'accueil';
+
+  @override
+  String get specialistsScreenTitle => 'Mentors';
+
+  @override
+  String get specialistAuraName => 'Aura';
+
+  @override
+  String get specialistAuraTitle => 'Mentorat individuel';
+
+  @override
+  String get specialistAuraDescription =>
+      'Des conseils personnalisés pour votre parcours de développement personnel.';
+
+  @override
+  String get specialistZenName => 'Zen';
+
+  @override
+  String get specialistZenTitle => 'Conseiller relationnel';
+
+  @override
+  String get specialistZenDescription =>
+      'Vous aide à construire des relations saines et équilibrées.';
+
+  @override
+  String get specialistElaraName => 'Elara';
+
+  @override
+  String get specialistElaraTitle => 'Guide en développement';
+
+  @override
+  String get specialistElaraDescription =>
+      'Soutient votre croissance personnelle et vos objectifs à long terme.';
+
+  @override
+  String get specialistOrionName => 'Orion';
+
+  @override
+  String get specialistOrionTitle => 'Guide de comportement social';
+
+  @override
+  String get specialistOrionDescription =>
+      'Amélioration de vos compétences en communication et de votre confiance sociale.';
+
+  @override
+  String get specialistCyraName => 'Cyra';
+
+  @override
+  String get specialistCyraTitle => 'Mentor académique';
+
+  @override
+  String get specialistCyraDescription =>
+      'Aide à la concentration, aux habitudes d\'étude et à la planification académique.';
+
+  @override
+  String chatScreenGreeting(String name) {
+    return 'Bonjour, $name';
+  }
+
+  @override
+  String get chatScreenTitle => 'Discussions';
+
+  @override
+  String get chatLastFromYouPrefix => 'Vous : ';
+
+  @override
+  String chatDeleteToast(String name) {
+    return 'La discussion avec $name a été supprimée.';
+  }
+
+  @override
+  String askMentor(String name) {
+    return 'Demander à, $name';
+  }
+
+  @override
+  String get gallery => 'Galerie';
+
+  @override
+  String get camera => 'Caméra';
+
+  @override
+  String get document => 'Document';
+
+  @override
+  String get free => 'GRATUIT';
+
+  @override
+  String get calendar => 'Calendrier';
+
+  @override
+  String get age => 'Âge';
+
+  @override
+  String get enterYourAge => 'Entrez votre âge';
+
+  @override
+  String get profileSaved => 'Profil enregistré avec succès';
+
+  @override
+  String get done => 'Terminé';
+
+  @override
+  String get deleteAccountWhyLeaving =>
+      'Nous ne voulons pas que vous partiez, mais nous vous comprenons.';
+
+  @override
+  String get deleteAccountImproveQuestion =>
+      'Pour améliorer l\'expérience __MINDguide__, pourriez-vous nous dire pourquoi vous partez ?';
+
+  @override
+  String get deleteReasonNotRealistic =>
+      'Je n\'ai pas trouvé les personnages IA réalistes.';
+
+  @override
+  String get deleteReasonTechnicalIssues =>
+      'Je rencontre des problèmes techniques avec les vidéos.';
+
+  @override
+  String get deleteReasonPrice =>
+      'Les prix d\'abonnement dépassent mes attentes.';
+
+  @override
+  String get deleteReasonNoCharacters =>
+      'Je n\'ai pas trouvé les types de personnages que je cherchais.';
+
+  @override
+  String get deleteReasonShortTry =>
+      'Je voulais juste l\'essayer pendant une courte période.';
+
+  @override
+  String get deleteReasonOther => 'Autre';
+
+  @override
+  String get messageOptionalLabel => 'Message (facultatif)';
+
+  @override
+  String get specialOffer => 'Offre spéciale';
+
+  @override
+  String get specialOfferSubtitle =>
+      'Avant de partir, jetez un œil à l\'offre que nous avons préparée pour vous.';
+
+  @override
+  String get switchTo1MonthPlan => 'Passer au plan 1 mois';
+
+  @override
+  String get monthlyPlanPrice => '\$79/mois, annulez à tout moment';
+
+  @override
+  String get noLongTermCommitment =>
+      'Aucun engagement à long terme. Restez connecté avec notre communauté mois par mois.';
+
+  @override
+  String get whatYouKeep => 'Ce que vous gardez :';
+
+  @override
+  String get featureAllCharacters => 'Accéder à tous les personnages';
+
+  @override
+  String get featureUnlimitedVideoCalls => 'Appels vidéo illimités';
+
+  @override
+  String get featureUnlimitedCharacterEditing =>
+      'Modification de personnages illimitée';
+
+  @override
+  String get switchToMonthlyPlan => 'Passer au plan mensuel';
+
+  @override
+  String get areYouSure => 'Êtes-vous sûr ?';
+
+  @override
+  String get finalOfferSubtitle =>
+      'Nous ne voulons vraiment pas vous voir partir. Voici ce que vous perdrez :';
+
+  @override
+  String get featureUnlimitedCharacterAccess =>
+      'Accès illimité aux personnages';
+
+  @override
+  String get featureUnlimitedVideoCallAccess =>
+      'Accès illimité aux appels vidéo';
+
+  @override
+  String get featureUnlimitedCharacterEditingAccess =>
+      'Accès illimité à la modification de personnages';
+
+  @override
+  String get stayAnd60Off =>
+      'Restez et bénéficiez de 60% de réduction pendant 1 mois';
+
+  @override
+  String get bestOfferPrice => 'Notre meilleure offre. Seulement \$27.60/mois';
+
+  @override
+  String get accept60OffAndStay => 'Accepter 60% de réduction et rester';
+
+  @override
+  String get sadToSeeYouGo => 'Triste de vous voir partir';
+
+  @override
+  String get membershipCancelledInfo =>
+      'Votre abonnement a été annulé. Vous aurez accès jusqu\'à la fin de votre période de facturation actuelle.';
+
+  @override
+  String get changeYourMind => 'Vous avez changé d\'avis ?';
+
+  @override
+  String get reactivateInfo =>
+      'Vous pouvez réactiver votre abonnement à tout moment pour conserver vos avantages.';
+
+  @override
+  String get waitReactivate => 'Attendez, je veux réactiver →';
+
+  @override
+  String get profileSettings => 'Paramètres du profil';
+
+  @override
+  String get shareWithFriends => 'Partager avec des amis';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get appointments => 'Réunions';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get phoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get logout => 'Déconnexion';
+
+  @override
+  String get deleteAccount => 'Supprimer le compte';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String get appLanguage => 'Langue de l\'application';
+
+  @override
+  String get areYouSureLogout =>
+      'Êtes-vous sûr(e) de vouloir vous déconnecter ?';
+
+  @override
+  String get deleteProfile => 'Supprimer le profil';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get delete => 'Supprimer';
+
+  @override
+  String get areYouSureDelete =>
+      'Êtes-vous sûr(e) de vouloir supprimer le profil ?';
+
+  @override
+  String get deleteNotificationConfirmTitle => 'Supprimer la notification';
+
+  @override
+  String get deleteNotificationConfirmMessage =>
+      'Êtes-vous sûr(e) de vouloir supprimer cette notification ?';
+
+  @override
+  String get deleteAllNotifications => 'Tout supprimer';
+
+  @override
+  String get deleteAllNotificationsConfirmTitle =>
+      'Supprimer toutes les notifications';
+
+  @override
+  String get deleteAllNotificationsConfirmMessage =>
+      'Êtes-vous sûr(e) de vouloir supprimer toutes les notifications ?';
+
+  @override
+  String get allNotificationsDeleted =>
+      'Toutes les notifications ont été supprimées avec succès';
+
+  @override
+  String get noNotificationsToDelete => 'Aucune notification à supprimer';
+
+  @override
+  String get errorDeletingNotifications =>
+      'Erreur lors de la suppression des notifications';
+
+  @override
+  String get invitePeople => 'Inviter des personnes';
+
+  @override
+  String get copyLinkInviteFriend => 'Copiez le lien pour inviter vos amis';
+
+  @override
+  String get share => 'Partager';
+
+  @override
+  String get upcoming => 'À venir';
+
+  @override
+  String get completed => 'Terminé';
+
+  @override
+  String get relativeToday => 'Aujourd\'hui';
+
+  @override
+  String get relativeTomorrow => 'Demain';
+
+  @override
+  String get relativeYesterday => 'Hier';
+
+  @override
+  String relativeDaysAgo(int count) {
+    return 'Il y a $count jours';
+  }
+
+  @override
+  String relativeWeeksAgo(int count) {
+    return 'Il y a $count semaines';
+  }
+
+  @override
+  String numberOfQuestions(int currentQuestion, int totalQuestion) {
+    return 'Question $currentQuestion sur $totalQuestion';
+  }
+
+  @override
+  String get english => 'Anglais';
+
+  @override
+  String get turkish => 'Turc';
+
+  @override
+  String get german => 'Allemand';
+
+  @override
+  String get language => 'Langue';
+
+  @override
+  String get back => 'Retour';
+
+  @override
+  String get enterFullNamePrompt => 'Veuillez entrer votre nom complet.';
+
+  @override
+  String get meetingStarted => 'La réunion a commencé';
+
+  @override
+  String get selectedDate => 'Date sélectionnée';
+
+  @override
+  String get newChatStarted => 'Nouvelle discussion commencée';
+
+  @override
+  String get startNewMeeting => 'Démarrer une nouvelle réunion';
+
+  @override
+  String get continueAsGuest => 'Continuer en tant qu\'invité';
+
+  @override
+  String get jobThoughtAndHabitGuide => 'Guide en pensées et habitudes';
+
+  @override
+  String get jobFamilyAssistant => 'Guide familial';
+
+  @override
+  String get jobAdult => 'Guide pour adultes';
+
+  @override
+  String get jobChild => 'Guide pour enfants';
+
+  @override
+  String get jobTeenage => 'Guide pour adolescents';
+
+  @override
+  String get jobPersonal => 'Guide personnel';
+
+  @override
+  String get jobExamAnxiety => 'Guide en anxiété des examens';
+
+  @override
+  String get noSpecialistsFound => 'Aucun spécialiste trouvé';
+
+  @override
+  String get featureFamilyConflicts => 'Conflits familiaux';
+
+  @override
+  String get featureParenting => 'Parentalité';
+
+  @override
+  String get featureCommunication => 'Communication';
+
+  @override
+  String get featureBoundaries => 'Limites';
+
+  @override
+  String get featureRelationshipRepair => 'Réparation de relations';
+
+  @override
+  String get featureDivorceSupport => 'Soutien au divorce';
+
+  @override
+  String get featureChildBehavior => 'Comportement de l\'enfant';
+
+  @override
+  String get featureFamilyHarmony => 'Harmonie familiale';
+
+  @override
+  String get featureStressManagement => 'Gestion du stress';
+
+  @override
+  String get featureSelfConfidence => 'Confiance en soi';
+
+  @override
+  String get featureLifeBalance => 'Équilibre de vie';
+
+  @override
+  String get featureCareerGuidance => 'Orientation professionnelle';
+
+  @override
+  String get featureEmotionalRegulation => 'Régulation émotionnelle';
+
+  @override
+  String get featureDecisionMaking => 'Prise de décision';
+
+  @override
+  String get featureMotivation => 'Motivation';
+
+  @override
+  String get featurePersonalGrowth => 'Croissance personnelle';
+
+  @override
+  String get featureEmotionalAwareness => 'Sensibilisation émotionnelle';
+
+  @override
+  String get featureSocialSkills => 'Compétences sociales';
+
+  @override
+  String get featureSchoolAdaptation => 'Adaptation scolaire';
+
+  @override
+  String get featureSelfExpression => 'Expression de soi';
+
+  @override
+  String get featureFearManagement => 'Gestion de la peur';
+
+  @override
+  String get featureFriendshipBuilding => 'Création d\'amitiés';
+
+  @override
+  String get featureFocusAttention => 'Concentration et attention';
+
+  @override
+  String get featureBehavioralSupport => 'Soutien comportemental';
+
+  @override
+  String get featureIdentityDevelopment => 'Développement de l\'identité';
+
+  @override
+  String get featurePeerPressure => 'Pression des pairs';
+
+  @override
+  String get featureAcademicStress => 'Stress académique';
+
+  @override
+  String get featureSelfEsteem => 'Estime de soi';
+
+  @override
+  String get featureDigitalWellbeing => 'Bien-être numérique';
+
+  @override
+  String get featureAngerManagement => 'Gestion de la colère';
+
+  @override
+  String get featureFuturePlanning => 'Planification de l\'avenir';
+
+  @override
+  String get featureParentCommunication => 'Communication parentale';
+
+  @override
+  String get featureLoneliness => 'Solitude';
+
+  @override
+  String get featureAnxietySupport => 'Soutien à l\'anxiété';
+
+  @override
+  String get featureGriefProcessing => 'Processus de deuil';
+
+  @override
+  String get featureMindfulness => 'Pleine conscience';
+
+  @override
+  String get featureSleepImprovement => 'Amélioration du sommeil';
+
+  @override
+  String get featureOverthinking => 'Réflexion excessive';
+
+  @override
+  String get featureSelfDiscovery => 'Découverte de soi';
+
+  @override
+  String get featureEmotionalHealing => 'Guérison émotionnelle';
+
+  @override
+  String get featureTestAnxiety => 'Anxiété des examens';
+
+  @override
+  String get featureStudyTechniques => 'Techniques d\'étude';
+
+  @override
+  String get featureTimeManagement => 'Gestion du temps';
+
+  @override
+  String get featurePerformancePressure => 'Pression de la performance';
+
+  @override
+  String get featureConcentration => 'Concentration';
+
+  @override
+  String get featureRelaxationMethods => 'Méthodes de relaxation';
+
+  @override
+  String get featureExamPreparation => 'Préparation aux examens';
+
+  @override
+  String get featureConfidenceBuilding => 'Renforcement de la confiance';
+
+  @override
+  String get explanationFamilyAssistant =>
+      'Un guide familial qui vous aide à naviguer à travers les dynamiques familiales, à résoudre les conflits, à renforcer les liens parents-enfants et à construire un environnement familial plus harmonieux.';
+
+  @override
+  String get explanationAdult =>
+      'Un guide en développement personnel pour les adultes qui veulent prendre le contrôle de leur vie — de la gestion du stress quotidien au renforcement de la confiance en soi, en passant par la recherche de l\'équilibre de vie.';
+
+  @override
+  String get explanationChild =>
+      'Un guide doux et soutenant, formé pour aider les enfants à exprimer leurs émotions, à développer des compétences sociales et à s\'adapter à la vie scolaire en utilisant des techniques adaptées à leur âge.';
+
+  @override
+  String get explanationTeenage =>
+      'Un guide qui comprend l\'expérience de l\'adolescence — de l\'exploration de l\'identité et de la pression des pairs au stress académique et au bien-être numérique.';
+
+  @override
+  String get explanationPersonal =>
+      'Un guide personnel compatissant axé sur le bien-être intérieur. Vous guide à travers la pleine conscience, la guérison émotionnelle et la découverte de soi pour trouver la paix et la clarté.';
+
+  @override
+  String get explanationExamAnxiety =>
+      'Un guide spécialisé qui aide les étudiants à vaincre l\'anxiété des examens grâce à des techniques d\'étude éprouvées, des méthodes de relaxation et des exercices de renforcement de la confiance.';
+
+  @override
+  String get explanationFamilyAssistant1 =>
+      'Un guide familial dévoué, spécialisé dans la résolution des conflits familiaux profondément enracinés et la reconstruction de relations tendues. Aide les familles à traverser des transitions difficiles comme le divorce tout en guidant les enfants à travers des changements de comportement.';
+
+  @override
+  String get explanationFamilyAssistant2 =>
+      'Un guide familial chaleureux et empathique, concentré sur le renforcement des liens qui comptent le plus. Aide les familles à guérir après des périodes difficiles tout en soutenant le développement émotionnel et comportemental des enfants.';
+
+  @override
+  String get explanationAdult1 =>
+      'Un guide axé sur les résultats pour les adultes en quête de changements significatifs. Se concentre sur la gestion du stress, l\'équilibre de vie et l\'orientation professionnelle grâce à des stratégies pratiques et orientées vers des objectifs.';
+
+  @override
+  String get explanationAdult2 =>
+      'Un guide en développement holistique permettant aux adultes d\'atteindre leur plein potentiel — de la construction de la confiance en soi et de la gestion du stress à la recherche d\'une orientation de carrière et d\'une motivation quotidienne.';
+
+  @override
+  String get explanationTeenage1 =>
+      'Un guide qui comprend profondément l\'adolescence. Aide les adolescents à renforcer leur estime de soi, à contrôler leur colère, à planifier leur avenir et à communiquer ouvertement avec leurs parents.';
+
+  @override
+  String get explanationTeenage2 =>
+      'Un guide empathique à travers les années turbulentes de l\'adolescence. Permet aux adolescents de développer leur résilience, de gérer la colère de manière constructive et de maintenir des relations saines entre parents et adolescents.';
+
+  @override
+  String get explanationChild1 =>
+      'Un guide bienveillant pour les années les plus formatrices des enfants. Aide les enfants à développer une conscience émotionnelle, à acquérir des compétences sociales, à s\'adapter à l\'école, à surmonter leurs peurs et à améliorer leur concentration.';
+
+  @override
+  String get explanationChild2 =>
+      'Un guide attentionné et patient, dédié à aider les enfants à s\'épanouir — en créant un environnement sûr où les enfants apprennent à exprimer leurs sentiments, à nouer des amitiés et à grandir avec confiance.';
+
+  @override
+  String get explanationPersonal1 =>
+      'Un guide profondément compatissant axé sur le bien-être émotionnel. Vous guide à travers la pleine conscience, la guérison émotionnelle et la découverte de soi pour vous libérer des pensées excessives.';
+
+  @override
+  String get explanationPersonal2 =>
+      'Un guide personnel soutenant qui vous aide à vous reconnecter avec vous-même. Spécialisé dans la gestion de l\'anxiété, la pleine conscience et l\'amélioration du sommeil vers un véritable calme intérieur.';
+
+  @override
+  String get explanationExamAnxiety1 =>
+      'Un guide concentré qui transforme le stress des examens en performances confiantes. Dote les étudiants de stratégies de gestion du temps, de méthodes de relaxation et de renforcement de la confiance.';
+
+  @override
+  String get explanationExamAnxiety2 =>
+      'Un guide académique spécialisé dédié à aider les étudiants à surmonter l\'anxiété des tests et à étudier plus intelligemment grâce à des techniques éprouvées et une préparation structurée aux examens.';
+
+  @override
+  String get filterTitle => 'Filtrer';
+
+  @override
+  String get filterCoachingArea => 'Domaine de guidage';
+
+  @override
+  String get filterExpertise => 'Expertise';
+
+  @override
+  String get filterSelectCoachingArea => 'Sélectionner un domaine de guidage';
+
+  @override
+  String get filterSave => 'Enregistrer';
+
+  @override
+  String get filterClear => 'Clear';
+
+  @override
+  String get coachDetailInformation => 'Informations';
+
+  @override
+  String get coachDetailUnlimitedMemory => 'Illimité';
+
+  @override
+  String get coachDetailMemory => 'Mémoire';
+
+  @override
+  String get coachDetailMultilingual => 'Multilingue';
+
+  @override
+  String get coachDetailLanguage => 'Langue';
+
+  @override
+  String get coachDetailAvailability => 'Disponibilité';
+
+  @override
+  String get coachDetailAppointment => 'Rendez-vous';
+
+  @override
+  String get coachDetailStartVideoCall => 'Démarrer un appel vidéo';
+
+  @override
+  String get coachDetailOnline => 'En ligne';
+
+  @override
+  String get coachDetailVerified => 'Vérifié';
+
+  @override
+  String get coachDetailCreateAppointment => 'Créer un rendez-vous';
+
+  @override
+  String get searchSoundHint => 'Rechercher des sons, des ambiances...';
+
+  @override
+  String get featuredForYou => 'Recommandé pour vous';
+
+  @override
+  String get mostPopular => 'Les plus populaires';
+
+  @override
+  String get soundCategoryFocus => 'Concentration';
+
+  @override
+  String get soundCategorySleep => 'Sommeil';
+
+  @override
+  String get soundCategoryMeditation => 'Méditation';
+
+  @override
+  String get soundCategoryRelax => 'Relaxation';
+
+  @override
+  String get soundDeepWorkFlow => 'Flux de travail profond';
+
+  @override
+  String get soundDeepWorkFlowSub => 'Améliorez votre productivité';
+
+  @override
+  String get soundBinauralBeats => 'Battements binauraux';
+
+  @override
+  String get soundBinauralBeatsSub => 'Ajustez vos ondes cérébrales';
+
+  @override
+  String get soundLibraryAmbience => 'Ambiance de bibliothèque';
+
+  @override
+  String get soundLibraryAmbienceSub => 'Atmosphère d\'étude calme';
+
+  @override
+  String get soundRainOnWindow => 'Pluie sur la fenêtre';
+
+  @override
+  String get soundRainOnWindowSub =>
+      'Laissez-vous dériver vers un sommeil paisible';
+
+  @override
+  String get soundOceanWaves => 'Vagues de l\'océan';
+
+  @override
+  String get soundOceanWavesSub => 'Vagues rythmiques pour vous calmer';
+
+  @override
+  String get soundDeepSpaceDrone => 'Bourdonnement de l\'espace lointain';
+
+  @override
+  String get soundDeepSpaceDroneSub => 'Voyage ambiant cosmique';
+
+  @override
+  String get soundTibetanBowls => 'Bols tibétains';
+
+  @override
+  String get soundTibetanBowlsSub => 'Anciennes vibrations de guérison';
+
+  @override
+  String get soundForestBirds => 'Oiseaux de la forêt';
+
+  @override
+  String get soundForestBirdsSub => 'Mélodie matinale de la nature';
+
+  @override
+  String get soundMorningZen => 'Zen matinal';
+
+  @override
+  String get soundMorningZenSub =>
+      'Commencez votre journée en pleine conscience';
+
+  @override
+  String get soundFireplaceCrackle => 'Crépitement de cheminée';
+
+  @override
+  String get soundFireplaceCrackleSub => 'Ambiance chaleureuse et confortable';
+
+  @override
+  String get soundGentleStream => 'Doux ruisseau';
+
+  @override
+  String get soundGentleStreamSub => 'Sérénité de l\'eau qui coule';
+
+  @override
+  String get soundSoftPiano => 'Piano doux';
+
+  @override
+  String get soundSoftPianoSub => 'Mélodies délicates pour se détendre';
+
+  @override
+  String get quickMessage => 'Message rapide';
+
+  @override
+  String get chatMessage => 'Message';
+
+  @override
+  String get chatHistory => 'Historique';
+
+  @override
+  String get noChatHistory => 'Aucun historique de discussion pour le moment';
+
+  @override
+  String get calling => 'Appel en cours...';
+
+  @override
+  String get image => 'Image';
+
+  @override
+  String get coachesTitle => 'Guides';
+
+  @override
+  String get searchAtMindcoach => 'Rechercher sur __MINDguide__';
+
+  @override
+  String noResultsFound(String query) {
+    return 'Aucun résultat trouvé pour \"$query\"';
+  }
+
+  @override
+  String get premiumTryFree =>
+      'Essayez __MIND_guide__ Premium\ngratuitement pendant 1 semaine';
+
+  @override
+  String get premiumUnlimitedAccess =>
+      'Obtenez un accès illimité et profitez des opportunités';
+
+  @override
+  String get premiumFeatureSkipAds => 'Passer les publicités';
+
+  @override
+  String get premiumFeatureUnlimitedCharacters =>
+      'Sélection de personnages illimitée';
+
+  @override
+  String get premiumFeatureExpandedMemory => 'Mémoire et contexte étendus';
+
+  @override
+  String get premiumFeatureAdvancedReasoning =>
+      'Avec des capacités de raisonnement avancées';
+
+  @override
+  String get premiumStartTrial => 'Commencer l\'essai gratuit d\'une semaine';
+
+  @override
+  String get premiumBillingNote =>
+      'Vous serez facturé 8,99 \$/mois après votre essai gratuit de 7 jours. Vous pouvez annuler à tout moment.';
+
+  @override
+  String get premiumRestorePurchase => 'Restaurer l\'achat';
+
+  @override
+  String get termsOfUse => 'Conditions d\'utilisation';
+
+  @override
+  String get premiumSaveBadge => 'ÉCONOMISEZ 17 %';
+
+  @override
+  String get premiumPlanAnnual => 'Annuel';
+
+  @override
+  String get premiumPlanMonthly => 'Mensuel';
+
+  @override
+  String get premiumPlanPerYearAfterTrial => 'par an après 7 jours d\'essai';
+
+  @override
+  String get goodbyeTitle => 'Vous allez nous manquer ';
+
+  @override
+  String get goodbyeSubtitle =>
+      'Nous sommes désolés que vous ayez supprimé votre compte.\nNous espérons vous revoir...';
+
+  @override
+  String get goBack => 'Retour';
+
+  @override
+  String get profileFromGallery => 'Choisir dans la galerie';
+
+  @override
+  String get profileFromCamera => 'Prendre une photo';
+
+  @override
+  String get profilePhotoUpdated => 'Photo de profil mise à jour';
+
+  @override
+  String get logoutDialogTitle => 'Vous êtes sur le point de vous déconnecter';
+
+  @override
+  String get logoutDialogSubtitle =>
+      'À bientôt ! Vos exercices de respiration vont nous manquer.';
+
+  @override
+  String get sectionAccountSettings => 'PARAMÈTRES DU COMPTE';
+
+  @override
+  String get sectionGeneral => 'GÉNÉRAL';
+
+  @override
+  String get menuItemPremium => 'Premium';
+
+  @override
+  String get menuItemRateUs => 'Nous évaluer';
+
+  @override
+  String get premiumBadge => 'PREMIUM';
+
+  @override
+  String get premiumStatusActive => 'actif';
+
+  @override
+  String get linkCopied => 'Lien copié !';
+
+  @override
+  String get shareFriend => 'Partager avec un ami';
+
+  @override
+  String get errorMessageFailed => 'Le message n\'a pas pu être envoyé';
+
+  @override
+  String get errorImageFailed => 'L\'image n\'a pas pu être envoyée';
+
+  @override
+  String get errorVoiceFileNotFound => 'Fichier vocal introuvable';
+
+  @override
+  String get errorVoiceMessageFailed =>
+      'Le message vocal n\'a pas pu être envoyé';
+
+  @override
+  String get errorVoiceNotPlayed => 'Le fichier vocal n\'a pas pu être lu';
+
+  @override
+  String get errorVoiceMessageNotPlayed =>
+      'Le message vocal n\'a pas pu être lu';
+
+  @override
+  String get errorRecordingStart => 'L\'enregistrement n\'a pas pu démarrer';
+
+  @override
+  String get errorRecordingStop => 'L\'enregistrement n\'a pas pu être arrêté';
+
+  @override
+  String get errorMicrophonePermission => 'Autorisation du microphone requise';
+
+  @override
+  String get errorRecordingTooShort =>
+      'Enregistrement trop court, veuillez enregistrer plus longtemps';
+
+  @override
+  String get errorAppointmentDateNotFound => 'Date du rendez-vous introuvable';
+
+  @override
+  String get errorAppointmentExpired => 'L\'heure du rendez-vous est passée';
+
+  @override
+  String get errorAppointmentNotYet => 'La session n\'a pas encore commencé';
+
+  @override
+  String get errorConsultantNotFound => 'Consultant introuvable';
+
+  @override
+  String get errorConsultantsNotLoaded =>
+      'La liste des consultants n\'a pas pu être chargée';
+
+  @override
+  String get errorConsultantLoadFailed =>
+      'Le consultant n\'a pas pu être chargé';
+
+  @override
+  String get errorOperationFailed => 'L\'opération a échoué';
+
+  @override
+  String get errorPhotoUpload =>
+      'La photo de profil n\'a pas pu être téléchargée';
+
+  @override
+  String get errorGeneral => 'Une erreur s\'est produite';
+
+  @override
+  String get recordingStatus => 'Enregistrement...';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get emailHint => 'exemple@email.com';
+
+  @override
+  String get messageOptionalHint => 'Écrivez votre message si vous en avez un.';
+
+  @override
+  String findCoachMatchedFor(int count, String area) {
+    return '$count guides trouvés pour $area';
+  }
+
+  @override
+  String get findCoachTitle => 'Trouvez votre guide';
+
+  @override
+  String findCoachSwipeToBrowse(String schedule) {
+    return 'Balayez pour parcourir - $schedule';
+  }
+
+  @override
+  String findCoachYearsExperience(int count) {
+    return '$count ans d\'expérience';
+  }
+
+  @override
+  String get findCoachSkip => 'Passer';
+
+  @override
+  String get findCoachBook => 'Réserver';
+
+  @override
+  String get splashTagline => 'Prends un moment pour toi.';
+
+  @override
+  String stepOf(int current, int total) {
+    return 'Étape $current sur $total';
+  }
+
+  @override
+  String get trialEndedTitle => 'Temps écoulé';
+
+  @override
+  String get trialEndedMessage =>
+      'Vous avez atteint la limite d\'essai d\'une minute. Connectez-vous pour continuer à discuter avec votre guide.';
+
+  @override
+  String get trialEndedAction => 'Se connecter pour continuer';
+
+  @override
+  String get noUpcomingAppointments => 'Aucun rendez-vous à venir';
+
+  @override
+  String get noCompletedAppointments => 'Aucun rendez-vous terminé';
+
+  @override
+  String get videoCallStatusConnecting => 'Connexion...';
+
+  @override
+  String get videoCallStatusListening => 'À l\'écoute';
+
+  @override
+  String get videoCallStatusMuted => 'Muet';
+
+  @override
+  String get videoCallStatusThinking => 'Réflexion...';
+
+  @override
+  String get videoCallStatusSpeaking => 'Parle';
+
+  @override
+  String get videoCallStatusError => 'Erreur de connexion';
+
+  @override
+  String get videoCallEncrypted => 'Chiffré de bout en bout';
+
+  @override
+  String get videoCallTurnCamera => 'Changer de caméra';
+
+  @override
+  String get videoCallEndButton => 'Terminer';
+
+  @override
+  String get videoCallMute => 'Couper le micro';
+
+  @override
+  String get videoCallEndDialogTitle =>
+      'Voulez-vous vraiment terminer l\'appel ?';
+
+  @override
+  String get videoCallEndDialogCancel => 'Annuler';
+
+  @override
+  String get videoCallEndDialogEnd => 'Terminer';
+
+  @override
+  String get videoCallRateTitle => 'Noter la conversation';
+
+  @override
+  String get videoCallRateSubtitle => 'Évaluez l\'appel vidéo';
+}

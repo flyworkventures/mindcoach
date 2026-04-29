@@ -19,23 +19,7 @@ class AppBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap ?? () => Navigator.of(context).pop(),
-      child: Container(
-        width: 34,
-        height: 34,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(color: borderColor, width: 1),
-        ),
-        child: Center(
-          child: SvgPicture.asset(
-            'assets/svg/arrow_back.svg',
-            width: 18,
-            height: 18,
-            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-          ),
-        ),
-      ),
+      child: Center(child: SvgPicture.asset('assets/icons/ic_bakc.svg')),
     );
   }
 }

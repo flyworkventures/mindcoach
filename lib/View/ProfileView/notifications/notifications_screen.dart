@@ -442,7 +442,7 @@ class _NotificationCard extends StatelessWidget {
       final date = DateTime.parse(dateString).toLocal();
       final now = DateTime.now();
 
-      // Aynı gün içindeyse saati göster (Figma: "18:00")
+      // Aynı gün içindeyse saati göster (Figma: "16:00")
       if (date.year == now.year &&
           date.month == now.month &&
           date.day == now.day) {
@@ -463,32 +463,112 @@ class _NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // API'den veya metadata'dan appointment olup olmadığını belirle
-    final bool isAppointment = notification.type == 'appointment';
+    final metaType = notification.metadata['type'] as String? ?? '';
+    final bool isAppointment =
+        metaType == 'appointment' ||
+        metaType == 'appointment_cancelled' ||
+        metaType == 'appointment_reactivated';
 
+    // ----------------------------------------------------
+    // RANDEVU (APPOINTMENT) BİLDİRİMİ İÇİN ÖZEL TASARIM
+    // ----------------------------------------------------
+    if (isAppointment) {
+      return Container(
+        padding: const EdgeInsets.all(10), // Figma Padding: 10px
+        decoration: BoxDecoration(
+          color: const Color(0xFF21BC87).withValues(alpha: 0.10), // %10 Yeşil
+          borderRadius: BorderRadius.circular(16), // Figma Radius: 16px
+          border: Border.all(
+            color: const Color(0xFF21BC87), // 1px Yeşil Border
+            width: 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    notification
+                        .title, // "🗓️ Your appointment will start in 30 min."
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700, // Bold
+                      color: Colors.black,
+                      height: 18 / 14, // Figma Line Height: 18px
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                if (notification.sentTime != null)
+                  Text(
+                    _formatDate(notification.sentTime),
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF96989C),
+                    ),
+                  ),
+              ],
+            ),
+
+            // Eğer backend'den fazladan bir açıklama da geliyorsa (opsiyonel)
+            if (notification.subtitle.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                notification.subtitle,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF96989C),
+                  height: 1.2,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+
+            const SizedBox(height: 10), // Figma Gap: 10px
+
+            GestureDetector(
+              onTap: () {
+                // TODO: Randevu detaylarına yönlendir
+              },
+              child: const Text(
+                'Click to view appointment details',
+                style: TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500, // Medium
+                  color: Color(0xFF21BC87), // Primary Color
+                  decoration: TextDecoration.underline,
+                  decorationColor: Color(0xFF21BC87),
+                  height: 14 / 12, // Figma Line Height: 14px
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // ----------------------------------------------------
+    // STANDART (DİĞER) BİLDİRİMLER İÇİN TASARIM
+    // ----------------------------------------------------
     return Container(
-      padding: const EdgeInsets.all(12), // Figma Padding: 10px / 12px
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isAppointment
-            ? const Color(0xFF21BC87).withValues(alpha: 0.10)
-            : Colors.white,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isAppointment
-              ? const Color(0xFF21BC87)
-              : Colors.black.withValues(alpha: 0.05),
+          color: Colors.black.withValues(alpha: 0.05),
           width: 1,
         ),
-        boxShadow: isAppointment
-            ? [
-                BoxShadow(
-                  color: const Color(0xFF2BD383).withValues(alpha: 0.20),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                  spreadRadius: 0,
-                ),
-              ]
-            : [],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,7 +584,7 @@ class _NotificationCard extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     color: Colors.black,
-                    height: 1.28, // Line height 18px / Size 14px
+                    height: 1.28,
                   ),
                 ),
               ),
@@ -522,39 +602,19 @@ class _NotificationCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          Text(
-            notification.subtitle,
-            style: const TextStyle(
-              fontFamily: 'Geist',
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFF96989C),
-              height: 1.2,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-
-          // Sadece randevulara özel tıklanabilir link (Figma Card 3)
-          if (isAppointment) ...[
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {
-                // TODO: Randevu detaylarına yönlendir
-              },
-              child: const Text(
-                'Click to view appointment details', // Localize edebilirsin
-                style: TextStyle(
-                  fontFamily: 'Geist',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF21BC87),
-                  decoration: TextDecoration.underline,
-                  decorationColor: Color(0xFF21BC87),
-                ),
+          if (notification.subtitle.isNotEmpty)
+            Text(
+              notification.subtitle,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF96989C),
+                height: 1.2,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-          ],
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcoach/View/OnboardView/onboarding_page.dart';
+import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 
 class GoodbyeScreen extends StatelessWidget {
@@ -27,7 +28,7 @@ class GoodbyeScreen extends StatelessWidget {
               children: [
                 const Spacer(),
                 Text(
-                  'We Miss You :(',
+                  context.l10n.goodbyeTitle,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.quicksand(
                     fontSize: 36,
@@ -37,8 +38,7 @@ class GoodbyeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  "We're sorry you deleted your account.\n"
-                      "We hope to see you again...",
+                  context.l10n.goodbyeSubtitle,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.quicksand(
                     fontSize: 16,
@@ -58,10 +58,10 @@ class GoodbyeScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(30),
-                  
+
                     ),
                     child: Center(
-                      child: Text("Go Back",style: GoogleFonts.poppins(color: Colors.white),),
+                      child: Text(context.l10n.goBack, style: GoogleFonts.poppins(color: Colors.white)),
                     ),
                   ),
                 )

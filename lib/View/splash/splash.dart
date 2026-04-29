@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'package:mindcoach/Services/NotificationsService/notification_service.dart';
 import 'package:mindcoach/Services/NotificationsService/periodic_notification_scheduler.dart';
 import 'package:mindcoach/Services/RevenueCatService/revenuecat_service.dart';
+import 'package:mindcoach/View/LoginView/login_view.dart';
 import 'package:mindcoach/View/OnboardView/onboarding_page.dart';
 import 'package:mindcoach/View/ProfileSetupView/profile_setup_view.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
 import 'package:mindcoach/app/navbar_shell.dart';
 import 'package:mindcoach/core/services/auth_service.dart';
+import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
+import 'package:mindcoach/core/utils/local_db_keys.dart';
 
 import '../../Services/NotificationsService/local_notification_service.dart';
 
@@ -84,6 +88,9 @@ class _SplashState extends ConsumerState<Splash>
       case _SplashRoute.profileSetup:
         _navigateToProfileSetup();
         break;
+      case _SplashRoute.login:
+        _navigateToLogin();
+        break;
       case _SplashRoute.onboarding:
         _navigateToOnboarding();
         break;
@@ -134,10 +141,20 @@ class _SplashState extends ConsumerState<Splash>
           return _SplashRoute.profileSetup;
         }
       } else {
-        debugPrint(
-          ' Session geçersiz veya token yok - Onboarding\'e yönlendiriliyor',
-        );
-        return _SplashRoute.onboarding;
+        // Onboarding daha önce görüldü mü kontrol et
+        final onboardingSeen =
+            await LocalDbService().getBool(key: LocalDbKeys.onboardingSeen) ??
+            false;
+
+        if (onboardingSeen) {
+          debugPrint(
+            ' Onboarding daha önce görüldü - Login\'e yönlendiriliyor',
+          );
+          return _SplashRoute.login;
+        } else {
+          debugPrint(' İlk açılış - Onboarding\'e yönlendiriliyor');
+          return _SplashRoute.onboarding;
+        }
       }
     } catch (e) {
       debugPrint(' Hata: $e');
@@ -216,6 +233,13 @@ class _SplashState extends ConsumerState<Splash>
     );
   }
 
+  void _navigateToLogin() {
+    if (!mounted) return;
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginView()));
+  }
+
   void _navigateToOnboarding() {
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
@@ -277,14 +301,14 @@ class _SplashState extends ConsumerState<Splash>
                 ),
               ),
 
-              // ── "Take a moment for yourself." text ──
+              // ── Localized splash tagline ──
               Positioned(
                 bottom: MediaQuery.of(context).padding.bottom,
                 left: 0,
                 right: 0,
                 child: Center(
                   child: Text(
-                    'Take a moment for yourself.',
+                    context.l10n.splashTagline,
                     style: GoogleFonts.quicksand(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -301,4 +325,4 @@ class _SplashState extends ConsumerState<Splash>
   }
 }
 
-enum _SplashRoute { authenticated, profileSetup, onboarding }
+enum _SplashRoute { authenticated, profileSetup, login, onboarding }

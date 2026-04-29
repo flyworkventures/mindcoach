@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
 /// Bildirim kuyruğu için model
@@ -12,6 +10,8 @@ class _NotificationItem {
   final Duration duration;
   final VoidCallback? onTap;
   final bool isAppointment;
+  final String? photoUrl;
+  final bool isMissed;
 
   _NotificationItem({
     required this.title,
@@ -19,6 +19,8 @@ class _NotificationItem {
     required this.duration,
     this.onTap,
     required this.isAppointment,
+    this.photoUrl,
+    this.isMissed = false,
   });
 }
 
@@ -42,6 +44,8 @@ class InAppNotificationService {
       notificationCard = _AppointmentNotificationCard(
         title: notification.title,
         subtitle: notification.subtitle,
+        photoUrl: notification.photoUrl,
+        isMissed: notification.isMissed,
       );
     } else {
       notificationCard = _WelcomeNotificationCard(
@@ -91,8 +95,10 @@ class InAppNotificationService {
     BuildContext context, {
     required String title,
     required String subtitle,
-    Duration duration = const Duration(seconds: 4),
+    Duration duration = const Duration(seconds: 5),
     VoidCallback? onTap,
+    String? photoUrl,
+    bool isMissed = false,
   }) {
     _notificationQueue.add(_NotificationItem(
       title: title,
@@ -100,8 +106,10 @@ class InAppNotificationService {
       duration: duration,
       onTap: onTap,
       isAppointment: true,
+      photoUrl: photoUrl,
+      isMissed: isMissed,
     ));
-    
+
     _showNextNotification(context);
   }
 
@@ -124,77 +132,136 @@ class InAppNotificationService {
 class _AppointmentNotificationCard extends StatelessWidget {
   final String title;
   final String subtitle;
+  final String? photoUrl;
+  final bool isMissed;
 
   const _AppointmentNotificationCard({
     required this.title,
     required this.subtitle,
+    this.photoUrl,
+    this.isMissed = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 1,
-      margin: EdgeInsets.only(top: 20,right: 15,left: 15),
-      shape: RoundedRectangleBorder(
-        
-        borderRadius: BorderRadius.circular(20)
+    return Container(
+      margin: const EdgeInsets.only(top: 16, left: 14, right: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        child: Row(
-          children: [
-            // Icon
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.calendar_today,
-                color: Colors.blue,
-                size: 28,
-              ),
-            ),
-            const SizedBox(width: 12),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(18),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          child: Row(
+            children: [
+              // Sol: koç fotoğrafı (varsa)
+              if (photoUrl != null && photoUrl!.isNotEmpty) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    photoUrl!,
+                    width: 52,
+                    height: 52,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => _placeholderIcon(),
+                  ),
+                ),
+                const SizedBox(width: 12),
+              ],
 
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style:  GoogleFonts.quicksand(
-                      color: Color(0xff2BD383),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              // Orta: başlık + alt yazı
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        height: 1.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    
-                    style: GoogleFonts.quicksand(
-                      color: Colors.black.withOpacity(0.9),
-                      fontSize: 14,
-                      decoration: TextDecoration.underline
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF21BC87),
+                        decoration: TextDecoration.underline,
+                        decorationColor: Color(0xFF21BC87),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Icon(CupertinoIcons.arrow_right,color: Colors.black,)
-          ],
+              const SizedBox(width: 10),
+
+              // Sağ: ikon
+              if (isMissed)
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFEDED),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Color(0xFFE53935),
+                    size: 20,
+                  ),
+                )
+              else
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE8FBF4),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_forward_rounded,
+                    color: Color(0xFF21BC87),
+                    size: 20,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _placeholderIcon() {
+    return Container(
+      width: 52,
+      height: 52,
+      decoration: BoxDecoration(
+        color: const Color(0xFFE8FBF4),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Icon(Icons.calendar_today_rounded,
+          color: Color(0xFF21BC87), size: 24),
     );
   }
 }

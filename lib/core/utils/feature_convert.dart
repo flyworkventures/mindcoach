@@ -123,9 +123,10 @@ class FeatureConvert {
         // Bilinmeyen key → snake_case'i Title Case'e çevir
         return key
             .split('_')
-            .map((w) => w.isNotEmpty
-                ? '${w[0].toUpperCase()}${w.substring(1)}'
-                : '')
+            .map(
+              (w) =>
+                  w.isNotEmpty ? '${w[0].toUpperCase()}${w.substring(1)}' : '',
+            )
             .join(' ');
     }
   }

@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../Services/NotificationsService/in_app_notification_service.dart';
 import '../View/HomeView/home_screen.dart';
 import '../View/calendar_screen/calendar_screen.dart';
+import '../View/chat_screen/chat_notifier.dart';
 import '../View/chat_screen/presentation/pages/chat_screen.dart';
 import '../View/profile_screen/presentation/profile_screen.dart';
 import '../View/specialists_screen/specialists_screen.dart';
@@ -24,25 +25,29 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
     with WidgetsBindingObserver {
   final Set<int> _shownNotificationIds = {};
   Timer? _notificationTimer;
+  Timer? _chatRefreshTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    // Initial load
+    // İlk yükleme
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshNotifications();
     });
 
-    // Set up periodic notification check (every 30 seconds)
+    // Bildirim: her 30 saniyede bir kontrol
     _startNotificationTimer();
+    // Chat: her 60 saniyede bir yenile
+    _startChatRefreshTimer();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _notificationTimer?.cancel();
+    _chatRefreshTimer?.cancel();
     super.dispose();
   }
 
@@ -50,17 +55,39 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    // When app comes to foreground, refresh notifications
+    // Uygulama ön plana gelince bildirim + chat yenile
     if (state == AppLifecycleState.resumed) {
       _refreshNotifications();
+      try {
+        ref.read(chatProvider.notifier).refreshChats();
+      } catch (e) {
+        debugPrint('Chat yenileme hatası (lifecycle): $e');
+      }
     }
   }
 
   void _startNotificationTimer() {
     _notificationTimer?.cancel();
-    _notificationTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    _notificationTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
       if (mounted) {
-        //   _refreshNotifications();
+        _refreshNotifications();
+      }
+    });
+  }
+
+  void _startChatRefreshTimer() {
+    _chatRefreshTimer?.cancel();
+    _chatRefreshTimer = Timer.periodic(const Duration(seconds: 60), (timer) {
+      if (mounted) {
+        try {
+          // Chat API çağrılarını azaltmak için yalnızca Chat tab'ındayken yenile.
+          final selectedIndex = ref.read(bottomNavProvider);
+          if (selectedIndex == 3) {
+            ref.read(chatProvider.notifier).refreshChats();
+          }
+        } catch (e) {
+          debugPrint('Chat yenileme hatası: $e');
+        }
       }
     });
   }
@@ -117,12 +144,26 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
             continue;
           }
 
+          // metadata'dan ek bilgileri çek
+          final photoUrl =
+              notification.metadata['photoUrl'] as String? ??
+              notification.metadata['consultantPhotoUrl'] as String?;
+          final appointmentType =
+              notification.metadata['appointmentType'] as String? ?? '';
+          final isMissed =
+              appointmentType == 'missed' ||
+              notification.title.toLowerCase().contains('not attend') ||
+              notification.title.toLowerCase().contains('katılmadın') ||
+              notification.title.toLowerCase().contains('katılmadınız');
+
           // Show the notification
           InAppNotificationService.showAppointmentNotification(
             context,
             title: notification.title,
             subtitle: notification.subtitle,
-            duration: const Duration(seconds: 4),
+            duration: const Duration(seconds: 5),
+            photoUrl: photoUrl,
+            isMissed: isMissed,
           );
           _shownNotificationIds.add(notification.id);
           newNotificationsShown++;
@@ -142,7 +183,7 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
     SpecialistsScreen(),
     CalendarScreen(),
     ChatScreen(),
-    ProfileScreen(),
+    ProfileView(),
   ];
 
   static const List<String> _iconAssets = [

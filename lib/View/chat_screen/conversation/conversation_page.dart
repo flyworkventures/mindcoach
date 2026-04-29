@@ -3,34 +3,26 @@ import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mindcoach/View/chat_screen/constants/chat_strings.dart';
-import 'package:mindcoach/View/chat_screen/constants/conversation_strings.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
-import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
-import 'package:mindcoach/core/utils/locale_font_scaler.dart';
-import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 import 'package:mindcoach/models/message_model.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shimmer/shimmer.dart';
 
-import '../../../Riverpod/providers/all_providers.dart';
+import 'package:mindcoach/Services/rive_preload_service.dart';
+
 import '../notifiers/conversation_notifier.dart';
 
-// Stil bilgileri için kullanılan sabitler
-const Color _kAppbarGreen = Color(0xFF11998E);
-const Color _kAppbarLightGreen = Color(0xFF38EF7D);
-const Color _kGreetingStart = Color(0xFF2BD383);
-const Color _kGreetingEnd = Color(0xFF11998E);
-const Color _kFreeBorder = Color(0xFF686868);
-const Color _kFreeText = Color(0xFF5A5A5A);
-const Color _kInputShadow = Color(0x40000000);
+// Global AudioPlayer controller - aynı anda sadece bir ses oynatılabilir
+final _globalAudioPlayer = audio_players.AudioPlayer();
+String? _currentlyPlayingMessageId;
 
 class ConversationScreen extends ConsumerStatefulWidget {
   final ConsultantModel specialistId;
@@ -41,18 +33,14 @@ class ConversationScreen extends ConsumerStatefulWidget {
   ConsumerState<ConversationScreen> createState() => _ConversationScreenState();
 }
 
-// Global AudioPlayer controller - aynı anda sadece bir ses oynatılabilir
-final _globalAudioPlayer = audio_players.AudioPlayer();
-String? _currentlyPlayingMessageId;
-
 class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   final TextEditingController _messageController = TextEditingController();
   bool _isMenuOpen = false;
-  String? _lastProcessedImagePath; // İşlenen son resmin path'ini tutar
-  bool _isSendingImage = false; // Resim gönderilirken flag
-  Timer? _recordingTimer; // Kayıt süresi için timer
-  Timer? _messagesStreamTimer; // Mesajları periyodik çekmek için timer
-  RecorderController? _recorderController; // Ses kaydı için controller
+  String? _lastProcessedImagePath;
+  bool _isSendingImage = false;
+  Timer? _recordingTimer;
+  Timer? _replyPollTimer;
+  RecorderController? _recorderController;
 
   @override
   void initState() {
@@ -64,11 +52,14 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       ..sampleRate = 44100
       ..bitRate = 128000;
 
-    debugPrint(" RecorderController initialize edildi");
+    // Görüntülü arama için Rive dosyasını arka planda ön yükle (normalize edilmiş URL ile cache anahtarı tek).
+    RivePreloadService.instance.preload(widget.specialistId.url3d);
 
     Future.microtask(() async {
       if (!mounted) return;
       try {
+        // Önce eski konuşma mesajlarını temizle (A→B geçişinde yanlış mesaj görünmesin)
+        ref.read(conversationsProvider.notifier).clearMessages(widget.specialistId.id);
         ref.read(conversationsProvider.notifier).clearSelectedImage();
         _lastProcessedImagePath = null;
         if (mounted) {
@@ -81,25 +72,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       }
     });
 
-    _messagesStreamTimer = Timer.periodic(const Duration(milliseconds: 500), (
-      _,
-    ) {
-      if (mounted) {
-        ref
-            .read(conversationsProvider.notifier)
-            .getMessages(widget.specialistId.id);
-      } else {
-        _messagesStreamTimer?.cancel();
-        _messagesStreamTimer = null;
-      }
-    });
   }
 
   @override
   void dispose() {
     _messageController.dispose();
     _recordingTimer?.cancel();
-    _messagesStreamTimer?.cancel();
+    _replyPollTimer?.cancel();
     _recorderController?.dispose();
 
     if (mounted) {
@@ -124,11 +103,19 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     }
   }
 
+  String _coachName() {
+    final langCode = ref.read(localeProvider.notifier).getLanguageCode();
+    final names = widget.specialistId.names;
+    return names[langCode] as String? ??
+        names['en'] as String? ??
+        names.values.first.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<MessageModel> allMessages = ref
-        .watch(conversationsProvider)
-        .messages;
+    final conversationState = ref.watch(conversationsProvider);
+    final List<MessageModel> allMessages = conversationState.messages;
+    final bool isLoadingMessages = conversationState.isLoadingMessages;
 
     final selectedImage = ref.watch(
       conversationsProvider.select((state) => state.selectedImage),
@@ -168,185 +155,523 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         return dateB.compareTo(dateA);
       });
 
+    final isWaiting = messages.isNotEmpty && messages.first.sender == 'user';
+
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFFBFCFF), Color(0xFFF9FAFF)],
-            stops: [0.075, 1.0133],
-          ),
-        ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  _buildCustomAppBar(context),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                _buildAppBar(context),
+                const Divider(height: 1, color: Color(0xFF96989C)),
 
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 25.w,
-                        vertical: 10.h,
-                      ),
-                      width: 339.w,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24.w),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x40000000),
-                            offset: Offset(0, 2),
-                            blurRadius: 4,
-                            spreadRadius: 0,
+                // ── Messages ──
+                Expanded(
+                  child: (isLoadingMessages && messages.isEmpty)
+                      ? const _ConversationShimmer()
+                      : ListView.builder(
+                          physics: const ClampingScrollPhysics(),
+                          reverse: true,
+                          itemCount: messages.length + (isWaiting ? 1 : 0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          if (messages.isEmpty)
-                            Center(child: _buildGreetingContent()),
-
-                          ListView.builder(
-                            physics: const ClampingScrollPhysics(),
-                            reverse: true,
-                            itemCount: messages.length,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 14.w,
-                              vertical: 14.h,
-                            ),
-                            itemBuilder: (context, index) {
-                              final m = messages[index];
-                              return _MessageBubble(message: m);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  _buildInputArea(
-                    widget.specialistId.names[ref
-                        .read(localeProvider.notifier)
-                        .getLanguageCode()],
-                    selectedImage,
-                  ),
-                ],
-              ),
-
-              if (_isMenuOpen) ...[
-                Positioned.fill(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () => setState(() => _isMenuOpen = false),
-                    child: const SizedBox.expand(),
-                  ),
+                          itemBuilder: (context, index) {
+                            // Typing indicator at top (index 0 in reversed list)
+                            if (isWaiting && index == 0) {
+                              return _TypingIndicator(
+                                photoURL: widget.specialistId.photoURL,
+                              );
+                            }
+                            final msgIndex = isWaiting ? index - 1 : index;
+                            final m = messages[msgIndex];
+                            return _MessageBubble(
+                              message: m,
+                              coachPhotoURL: widget.specialistId.photoURL,
+                            );
+                          },
+                        ),
                 ),
-                _buildAttachmentMenu(context),
+
+                // ── Input Area ──
+                _buildInputArea(selectedImage, isRecording),
               ],
+            ),
+
+            if (_isMenuOpen) ...[
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => setState(() => _isMenuOpen = false),
+                  child: const SizedBox.expand(),
+                ),
+              ),
+              _buildAttachmentMenu(context),
             ],
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildCustomAppBar(BuildContext context) {
-    final l10n = context.l10n;
+  // ── App Bar ──
+  Widget _buildAppBar(BuildContext context) {
+    final l = context.l10n;
+    final name = _coachName();
+    final photoURL = widget.specialistId.photoURL;
 
     return Padding(
-      padding: EdgeInsets.only(
-        top: 15.h,
-        bottom: 10.h,
-        left: 16.w,
-        right: 16.w,
-      ),
-      child: SizedBox(
-        height: 40.h,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned(
-              left: 0,
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: SvgPicture.asset(
-                  'assets/svg/arrow_back.svg',
-                  width: 10.w,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          // Back button
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: SvgPicture.asset('assets/icons/ic_bakc.svg'),
+          ),
+          const SizedBox(width: 12),
 
-            Center(
-              child: Text(
-                'MindCoach',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 22.w,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.1 * 20.w,
-                  height: 1.0,
-                  foreground: Paint()
-                    ..shader = const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [_kAppbarGreen, _kAppbarLightGreen],
-                      stops: [0.369, 2.0276],
-                    ).createShader(Rect.fromLTWH(0, 0, 350.w, 50.h)),
-                ),
-              ),
+          // Coach avatar — circular, green border
+          Container(
+            width: 43,
+            height: 43,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFF21BC87), width: 2),
             ),
-
-            Positioned(
-              right: 0,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IntrinsicWidth(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(27.w),
-                        border: Border.all(color: _kFreeBorder, width: 1.w),
+            child: ClipOval(
+              child: photoURL.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: photoURL,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => const SizedBox.shrink(),
+                      errorWidget: (_, __, ___) => Image.asset(
+                        'assets/images/profile_avatar.jpeg',
+                        fit: BoxFit.cover,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 2.h,
-                        ),
-                        child: Text(
-                          l10n.free,
-                          style: GoogleFonts.quicksand(
-                            fontSize: 10.w,
-                            fontWeight: FontWeight.w500,
-                            height: 1.0,
-                            color: _kFreeText,
+                    )
+                  : Image.asset(
+                      'assets/images/profile_avatar.jpeg',
+                      fit: BoxFit.cover,
+                    ),
+            ),
+          ),
+          const SizedBox(width: 10),
+
+          // Name + Online
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                    height: 20 / 16,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFF2BD383),
+                        borderRadius: BorderRadius.circular(9999),
+                      ),
+                      height: 4,
+                      width: 4,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      l.online,
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                        height: 16 / 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // Video call
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                PageRoutes.videoCall,
+                arguments: widget.specialistId,
+              );
+            },
+            child: SvgPicture.asset('assets/icons/ic_video.svg'),
+          ),
+          const SizedBox(width: 16),
+
+          // Phone call
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                PageRoutes.voiceCallView,
+                arguments: widget.specialistId,
+              );
+            },
+            child: SvgPicture.asset('assets/icons/ic_call.svg'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Input Area ──
+  Widget _buildInputArea(XFile? selectedImage, bool isRecording) {
+    final l = context.l10n;
+    final hasText = _messageController.text.trim().isNotEmpty;
+    final hasImage = ref.watch(conversationsProvider).selectedImage != null;
+    final recordingDuration = ref.watch(
+      conversationsProvider.select((state) => state.recordingDuration),
+    );
+    final canSend = hasText || hasImage;
+
+    // Figma'daki tatlı yeşil tonu
+    const primaryGreen = Color(0xFF61D28A);
+    // Figma'daki %5 opacity border rengi
+    final borderColor = Colors.black.withOpacity(0.05);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: const BoxDecoration(color: Colors.white),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Recording indicator (Mevcut kodun, aynen korundu)
+          if (isRecording)
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _formatDuration(recordingDuration),
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (_recorderController != null)
+                    Expanded(
+                      child: SizedBox(
+                        height: 30,
+                        child: AudioWaveforms(
+                          size: const Size(double.infinity, 30),
+                          recorderController: _recorderController!,
+                          waveStyle: const WaveStyle(
+                            waveColor: Colors.grey,
+                            extendWaveform: true,
+                            showMiddleLine: false,
+                            waveThickness: 2.0,
                           ),
                         ),
                       ),
                     ),
+                  IconButton(
+                    onPressed: () async {
+                      if (mounted) {
+                        await ref
+                            .read(conversationsProvider.notifier)
+                            .cancelRecording();
+                        if (_recorderController != null) {
+                          await _recorderController!.stop();
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.close, color: Colors.red, size: 20),
                   ),
-                  Container(
-                    width: 38.w,
-                    height: 38.h,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey.shade300,
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          ref
-                                  .read(AllProviders.userProvider)
-                                  ?.profilePhotoUrl ??
-                              AppConstants.defaultPpUrl,
-                        ),
-                        fit: BoxFit.cover,
+                ],
+              ),
+            ),
+
+          // Image preview (Mevcut kodun, aynen korundu)
+          if (hasImage && !isRecording)
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              height: 50,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.horizontal(
+                      left: Radius.circular(12),
+                    ),
+                    child: Image.file(
+                      File(
+                        ref.watch(conversationsProvider).selectedImage!.path,
                       ),
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    "Image",
+                    style: TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      ref
+                          .read(conversationsProvider.notifier)
+                          .clearSelectedImage();
+                      setState(() {
+                        _lastProcessedImagePath = null;
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      size: 18,
+                      color: Colors.black54,
                     ),
                   ),
                 ],
+              ),
+            ),
+
+          // --- YENİ FİGMA TASARIMI: Main input row ---
+          Row(
+            children: [
+              // 1. Sol "+" Butonu (Figma: 48x48, Beyaz arka plan, %5 siyah border, Yeşil İkon)
+              GestureDetector(
+                onTap: _toggleMenu,
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: borderColor, width: 1),
+                  ),
+                  child: const Icon(Icons.add, color: primaryGreen, size: 28),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              // 2. Birleştirilmiş Text Field ve Gönder/Mikrofon Butonu
+              Expanded(
+                child: Container(
+                  height: 48, // Figma'daki yükseklik
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(
+                      24,
+                    ), // 9999px radius karşılığı
+                    border: Border.all(color: borderColor, width: 1),
+                  ),
+                  // Figma padding: Left 16, Top 3, Bottom 3, Right 3 (sağ buton için)
+                  padding: const EdgeInsets.only(left: 16, top: 3, bottom: 3),
+                  child: Row(
+                    children: [
+                      // Text field
+                      Expanded(
+                        child: TextField(
+                          cursorColor: primaryGreen,
+                          controller: _messageController,
+                          style: const TextStyle(
+                            fontFamily: 'Geist',
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: l.typeAMessage,
+                            hintStyle: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            isDense: true,
+                          ),
+                          onChanged: (_) => setState(() {}),
+                          onSubmitted: (_) {
+                            if (canSend) _sendMessage();
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+
+                      // Sağ Buton (Send veya Microphone)
+                      GestureDetector(
+                        onTap: () async {
+                          if (_isSendingImage) return;
+
+                          if (canSend) {
+                            _sendMessage();
+                          } else if (isRecording) {
+                            _sendVoiceMessageFromRecording();
+                          } else {
+                            await _startRecording();
+                          }
+                        },
+                        onLongPressStart: (canSend || isRecording)
+                            ? null
+                            : (_) async {
+                                await _startRecording();
+                              },
+                        onLongPressEnd: canSend
+                            ? null
+                            : (_) async {
+                                if (isRecording &&
+                                    _recorderController != null) {
+                                  await _stopAndSendRecording();
+                                }
+                              },
+                        child: Container(
+                          width: 42,
+                          height:
+                              42, // Dıştaki 48px, padding 3px alt-üst olunca burası tam 42px kalıyor
+                          decoration: BoxDecoration(
+                            // Kayıt anındayken kullanıcının anlaması için kırmızıya dönmesi güzel bir UX katar
+                            color: isRecording ? Colors.red : primaryGreen,
+                            shape: BoxShape.circle,
+                          ),
+                          child: _isSendingImage
+                              ? const Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                              : canSend
+                              ? SvgPicture.asset(
+                                  'assets/icons/ic_send.svg',
+                                  width: 20,
+                                  height: 20,
+                                  fit: BoxFit.scaleDown,
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/ic_mic.svg',
+                                  ),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Attachment Menu ──
+  Widget _buildAttachmentMenu(BuildContext context) {
+    final l = context.l10n;
+    return Positioned(
+      bottom: 70,
+      left: 16,
+      child: Container(
+        width: 120,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildMenuItem(l.camera, 'assets/svg/camera_icon.svg', () async {
+              _toggleMenu();
+              await ref
+                  .read(conversationsProvider.notifier)
+                  .pickImageFromCamera();
+            }),
+            const Divider(height: 1, color: Color(0xFFF0F0F0)),
+            _buildMenuItem(l.gallery, 'assets/svg/gallery_icon.svg', () async {
+              _toggleMenu();
+              await ref.read(conversationsProvider.notifier).pickImage();
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem(String title, String svgPath, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              svgPath,
+              width: 20,
+              colorFilter: const ColorFilter.mode(
+                Colors.black54,
+                BlendMode.srcIn,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 13,
+                color: Colors.black87,
               ),
             ),
           ],
@@ -355,364 +680,63 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     );
   }
 
-  Widget _buildInputArea(String mentorName, XFile? selectedImage) {
-    final hasText = _messageController.text.trim().isNotEmpty;
-    var hasImage = ref.watch(conversationsProvider).selectedImage != null;
-    final isRecording = ref.watch(
-      conversationsProvider.select((state) => state.isRecording),
-    );
-    final recordingDuration = ref.watch(
-      conversationsProvider.select((state) => state.recordingDuration),
-    );
-    final canSend = hasText || hasImage;
+  // ── Send / Record methods ──
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 8.h),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (isRecording)
-            Container(
-              margin: EdgeInsets.only(bottom: 8.h),
-              width: 339.w,
-              constraints: BoxConstraints(maxHeight: 100.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.w),
-                boxShadow: const [
-                  BoxShadow(
-                    color: _kInputShadow,
-                    offset: Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 8.h,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 12.w,
-                                  height: 12.h,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: Text(
-                                    _formatDuration(recordingDuration),
-                                    style: GoogleFonts.quicksand(
-                                      fontSize: 14.w,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+  int? _latestMessageId(List<MessageModel> messages) {
+    if (messages.isEmpty) return null;
+    final sorted = List<MessageModel>.from(messages)
+      ..sort((a, b) {
+        final aTime = _parseSentTime(a.sentTime);
+        final bTime = _parseSentTime(b.sentTime);
+        return bTime.compareTo(aTime);
+      });
+    return sorted.first.messageId;
+  }
 
-                  if (_recorderController != null)
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 8.h),
-                        child: SizedBox(
-                          height: 40.h,
-                          width: double.infinity,
-                          child: AudioWaveforms(
-                            size: Size(315.w, 40.h),
-                            recorderController: _recorderController!,
-                            waveStyle: WaveStyle(
-                              waveColor: Colors.grey,
-                              extendWaveform: true,
-                              showMiddleLine: false,
-                              waveThickness: 2.0,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.w),
-                              color: Colors.transparent,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+  bool _hasAssistantReplyAfter(int? previousTopMessageId) {
+    final messages = ref.read(conversationsProvider).messages;
+    if (messages.isEmpty) return false;
+    final sorted = List<MessageModel>.from(messages)
+      ..sort((a, b) {
+        final aTime = _parseSentTime(a.sentTime);
+        final bTime = _parseSentTime(b.sentTime);
+        return bTime.compareTo(aTime);
+      });
+    final newest = sorted.first;
+    if (previousTopMessageId == newest.messageId) return false;
+    return newest.sender != 'user';
+  }
 
-                  if (_recorderController != null)
-                    Expanded(
-                      child: IconButton(
-                        onPressed: () async {
-                          // Kayıt iptal et
-                          if (mounted) {
-                            await ref
-                                .read(conversationsProvider.notifier)
-                                .cancelRecording();
-                            if (_recorderController != null) {
-                              await _recorderController!.stop();
-                            }
-                          }
-                        },
-                        icon: Icon(Icons.close, color: Colors.red, size: 20.w),
-                      ),
-                    ),
-                ],
-              ),
-            ),
+  void _startReplyPolling({required int? previousTopMessageId}) {
+    _replyPollTimer?.cancel();
+    int ticks = 0;
+    const maxTicks = 15; // ~15 sn içinde cevap bekle
 
-          if (hasImage && !isRecording)
-            Container(
-              margin: EdgeInsets.only(bottom: 8.h),
-              width: 339.w,
-              height: 50.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(40.w),
-                boxShadow: const [
-                  BoxShadow(
-                    color: _kInputShadow,
-                    offset: Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(40.w),
-                          child: Image.file(
-                            File(
-                              ref
-                                  .watch(conversationsProvider)
-                                  .selectedImage!
-                                  .path,
-                            ),
-                            width: 50.w,
-                            height: 50.h,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+    _replyPollTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
 
-                      Text("Image", maxLines: 1, style: GoogleFonts.poppins()),
-                    ],
-                  ),
+      ticks++;
+      try {
+        await ref
+            .read(conversationsProvider.notifier)
+            .getMessages(widget.specialistId.id);
+      } catch (_) {
+        // Hata olursa polling devam etsin, max süre sonunda duracak.
+      }
 
-                  IconButton(
-                    onPressed: () {
-                      ref
-                          .read(conversationsProvider.notifier)
-                          .clearSelectedImage();
-
-                      setState(() {
-                        _lastProcessedImagePath = null;
-                      });
-                    },
-                    icon: Container(
-                      padding: EdgeInsets.all(4.w),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.close, color: Colors.white, size: 16.w),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-          Container(
-            width: 339.w,
-            constraints: BoxConstraints(maxHeight: 80.h),
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24.w),
-              boxShadow: const [
-                BoxShadow(
-                  color: _kInputShadow,
-                  offset: Offset(0, 2),
-                  blurRadius: 4,
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: TextField(
-                      controller: _messageController,
-                      style: GoogleFonts.quicksand(fontSize: 14.w),
-                      decoration: InputDecoration(
-                        hintText: ConversationStrings.askMentor(
-                          context,
-                          mentorName,
-                        ),
-                        hintStyle: GoogleFonts.quicksand(
-                          fontSize: 12.w,
-                          fontWeight: FontWeight.w500,
-                          height: 18.h / 12.w,
-                          color: Colors.black,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      onChanged: (text) {
-                        setState(() {});
-                      },
-                      onSubmitted: (text) {
-                        if (canSend) {
-                          _sendMessage();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      onPressed: _toggleMenu,
-                      icon: SvgPicture.asset(
-                        'assets/svg/add_icon.svg',
-                        width: 18.w,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.black54,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-
-                    if (canSend || isRecording)
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        onPressed: _isSendingImage
-                            ? null
-                            : (isRecording
-                                  ? _sendVoiceMessageFromRecording
-                                  : _sendMessage),
-                        icon: Container(
-                          padding: EdgeInsets.all(8.w),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF2BD383),
-                            shape: BoxShape.circle,
-                          ),
-                          child: _isSendingImage
-                              ? SizedBox(
-                                  width: 16.w,
-                                  height: 16.h,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                  ),
-                                )
-                              : Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                  size: 16.w,
-                                ),
-                        ),
-                      ),
-
-                    Flexible(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              if (!isRecording) {
-                                await _startRecording();
-                              }
-                            },
-                            onLongPressStart: (details) async {
-                              if (!isRecording) {
-                                await _startRecording();
-                              }
-                            },
-                            onLongPressEnd: (details) async {
-                              debugPrint(
-                                "🎤 onLongPressEnd tetiklendi, isRecording: $isRecording",
-                              );
-                              if (isRecording && _recorderController != null) {
-                                await _stopAndSendRecording();
-                              }
-                            },
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                              onPressed: null,
-                              icon: SvgPicture.asset(
-                                'assets/svg/microphone.svg',
-                                width: 14.w,
-                                colorFilter: ColorFilter.mode(
-                                  isRecording ? Colors.red : Colors.black54,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          IconButton(
-                            padding: EdgeInsets.zero,
-                            constraints: BoxConstraints(),
-                            onPressed: () {
-                              //     ref.read(conversationsProvider.notifier).startVideoCall(widget.specialistId,null);
-                              Navigator.pushNamed(
-                                context,
-                                PageRoutes.videoCallView,
-                              );
-                            },
-                            icon: SvgPicture.asset(
-                              'assets/svg/video_call.svg',
-                              width: 22.w,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+      if (_hasAssistantReplyAfter(previousTopMessageId) || ticks >= maxTicks) {
+        timer.cancel();
+      }
+    });
   }
 
   Future<void> _sendMessage() async {
+    final previousTopMessageId = _latestMessageId(
+      ref.read(conversationsProvider).messages,
+    );
     final hasText = _messageController.text.trim().isNotEmpty;
     final selectedImage = ref.watch(
       conversationsProvider.select((state) => state.selectedImage),
@@ -744,13 +768,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             .read(conversationsProvider.notifier)
             .sendMessage(id: widget.specialistId.id, text: trimmed)
             .then((_) {
-              Future.delayed(const Duration(milliseconds: 500), () {
-                if (mounted) {
-                  ref
-                      .read(conversationsProvider.notifier)
-                      .getMessages(widget.specialistId.id);
-                }
-              });
+              if (mounted) {
+                _startReplyPolling(previousTopMessageId: previousTopMessageId);
+              }
             })
             .catchError((e) {
               debugPrint("❌ Mesaj gönderme hatası: $e");
@@ -763,7 +783,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Mesaj gönderilemedi: ${e.toString()}'),
+          content: Text(context.l10n.errorMessageFailed),
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.red,
         ),
@@ -771,102 +791,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     }
   }
 
-  Widget _buildAttachmentMenu(BuildContext context) {
-    final l10n = context.l10n;
-    return Positioned(
-      bottom: 74.h,
-      left: 20.w,
-      child: Container(
-        width: 107.w,
-        height: 99.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(13.w),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.15),
-              blurRadius: 8,
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            _buildMenuItem(l10n.camera, 'assets/svg/camera_icon.svg', () async {
-              _toggleMenu();
-              await ref
-                  .read(conversationsProvider.notifier)
-                  .pickImageFromCamera();
-            }),
-            _buildMenuItem(
-              l10n.gallery,
-              'assets/svg/gallery_icon.svg',
-              () async {
-                _toggleMenu();
-                await ref.read(conversationsProvider.notifier).pickImage();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMenuItem(String title, String svgPath, VoidCallback onTap) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                svgPath,
-                width: 20.w,
-                colorFilter: const ColorFilter.mode(
-                  Colors.black54,
-                  BlendMode.srcIn,
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                title,
-                style: GoogleFonts.quicksand(
-                  fontSize: LocaleFontScaler.scale(context, 13),
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGreetingContent() {
-    return Center(
-      child: Text(
-        ChatStrings.greeting(
-          context,
-          ref.read(AllProviders.userProvider)?.username ?? "Mindcoach",
-        ),
-        textAlign: TextAlign.center,
-        style: GoogleFonts.quicksand(
-          fontSize: 48.w,
-          fontWeight: FontWeight.w700,
-          letterSpacing: -0.1 * 48.w,
-          height: 1.0,
-          foreground: Paint()
-            ..shader = const LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [_kGreetingStart, _kGreetingEnd],
-            ).createShader(Rect.fromLTWH(0, 0, 300.w, 50.h)),
-        ),
-      ),
-    );
-  }
-
   Future<void> _sendVoiceMessage(String audioPath) async {
+    final previousTopMessageId = _latestMessageId(
+      ref.read(conversationsProvider).messages,
+    );
     try {
       final file = File(audioPath);
       if (!await file.exists()) {
@@ -889,19 +817,15 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             message: null,
           )
           .then((_) {
-            Future.delayed(const Duration(milliseconds: 500), () {
-              if (mounted) {
-                ref
-                    .read(conversationsProvider.notifier)
-                    .getMessages(widget.specialistId.id);
-              }
-            });
+            if (mounted) {
+              _startReplyPolling(previousTopMessageId: previousTopMessageId);
+            }
           })
           .catchError((e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Sesli mesaj gönderilemedi: ${e.toString()}'),
+                  content: Text(context.l10n.errorVoiceMessageFailed),
                   duration: const Duration(seconds: 3),
                   backgroundColor: Colors.red,
                 ),
@@ -921,7 +845,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     }
   }
 
-  /// Kayıt başlat (onTap ve onLongPressStart için ortak metod)
   Future<void> _startRecording() async {
     _recorderController ??= RecorderController()
       ..androidEncoder = AndroidEncoder.aac
@@ -934,21 +857,16 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       try {
         final path =
             '${(await getTemporaryDirectory()).path}/voice_message_${DateTime.now().millisecondsSinceEpoch}.m4a';
-        debugPrint(" Kayıt başlatılıyor: $path");
-
-        // State'i önce güncelle
         await ref
             .read(conversationsProvider.notifier)
             .startRecordingWithPath(path);
-
-        // Sonra kaydı başlat
         await _recorderController!.record(path: path);
-      } catch (e, stackTrace) {
+      } catch (e) {
         await ref.read(conversationsProvider.notifier).cancelRecording();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Ses kaydı başlatılamadı: ${e.toString()}'),
+              content: Text(context.l10n.errorRecordingStart),
               backgroundColor: Colors.red,
             ),
           );
@@ -957,61 +875,25 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     }
   }
 
-  /// Kayıt durdur ve gönder (onLongPressEnd ve gönder butonu için)
   Future<void> _stopAndSendRecording() async {
     final isRecording = ref.read(conversationsProvider).isRecording;
     if (isRecording && _recorderController != null) {
       try {
-        debugPrint("RecorderController durduruluyor...");
-
         final path = await _recorderController!.stop();
-        debugPrint(" RecorderController durduruldu, path: $path");
-
         if (path != null && path.isNotEmpty) {
           ref.read(conversationsProvider.notifier).updateRecordingPath(path);
-
           await ref.read(conversationsProvider.notifier).stopRecording();
-
-          // Dosya var mı kontrol et
           final file = File(path);
           if (await file.exists() && mounted) {
-            debugPrint(" Sesli mesaj gönderiliyor: $path");
             await _sendVoiceMessage(path);
           } else {
-            debugPrint("Ses dosyası bulunamadı: $path");
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Ses dosyası bulunamadı'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
+            await ref.read(conversationsProvider.notifier).cancelRecording();
           }
         } else {
-          debugPrint(" Path null veya boş: $path");
           await ref.read(conversationsProvider.notifier).cancelRecording();
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Ses kaydı bulunamadı'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
         }
-      } catch (e, stackTrace) {
-        debugPrint(" Kayıt durdurma hatası: $e");
-        debugPrint(" Stack trace: $stackTrace");
+      } catch (e) {
         await ref.read(conversationsProvider.notifier).cancelRecording();
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Ses kaydı durdurulamadı: ${e.toString()}'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
       }
     }
   }
@@ -1030,14 +912,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   }
 
   DateTime _parseSentTime(dynamic sentTime) {
-    if (sentTime == null) {
-      return DateTime(1970);
-    }
-
-    if (sentTime is DateTime) {
-      return sentTime;
-    }
-
+    if (sentTime == null) return DateTime(1970);
+    if (sentTime is DateTime) return sentTime;
     if (sentTime is String) {
       try {
         return DateTime.parse(sentTime);
@@ -1045,14 +921,14 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         return DateTime(1970);
       }
     }
-
     return DateTime(1970);
   }
 
   Future<void> _handleImageSelected(XFile image) async {
-    if (image.path == _lastProcessedImagePath || _isSendingImage) {
-      return;
-    }
+    final previousTopMessageId = _latestMessageId(
+      ref.read(conversationsProvider).messages,
+    );
+    if (image.path == _lastProcessedImagePath || _isSendingImage) return;
 
     setState(() {
       _lastProcessedImagePath = image.path;
@@ -1063,7 +939,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
     try {
       final file = File(image.path);
-
       final messageText = _messageController.text.trim();
 
       ref
@@ -1074,19 +949,15 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             message: messageText.isNotEmpty ? messageText : null,
           )
           .then((_) {
-            Future.delayed(const Duration(milliseconds: 500), () {
-              if (mounted) {
-                ref
-                    .read(conversationsProvider.notifier)
-                    .getMessages(widget.specialistId.id);
-              }
-            });
+            if (mounted) {
+              _startReplyPolling(previousTopMessageId: previousTopMessageId);
+            }
           })
           .catchError((e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Resim gönderilemedi: ${e.toString()}'),
+                  content: Text(context.l10n.errorImageFailed),
                   duration: const Duration(seconds: 3),
                   backgroundColor: Colors.red,
                 ),
@@ -1095,7 +966,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           });
 
       _messageController.clear();
-
       ref.read(conversationsProvider.notifier).clearSelectedImage();
 
       if (mounted) {
@@ -1123,9 +993,207 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   }
 }
 
+// ── Typing Indicator ──
+
+class _ConversationShimmer extends StatelessWidget {
+  const _ConversationShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      reverse: true,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      children: const [
+        _ShimmerBubble(isMe: false, widthFactor: 0.58),
+        _ShimmerBubble(isMe: true, widthFactor: 0.38),
+        _ShimmerBubble(isMe: false, widthFactor: 0.72),
+        _ShimmerBubble(isMe: true, widthFactor: 0.46),
+        _ShimmerBubble(isMe: false, widthFactor: 0.63),
+      ],
+    );
+  }
+}
+
+class _ShimmerBubble extends StatelessWidget {
+  final bool isMe;
+  final double widthFactor;
+  const _ShimmerBubble({required this.isMe, required this.widthFactor});
+
+  @override
+  Widget build(BuildContext context) {
+    final bubble = Shimmer.fromColors(
+      baseColor: const Color(0xFFEDEDED),
+      highlightColor: const Color(0xFFF8F8F8),
+      child: Container(
+        width: MediaQuery.of(context).size.width * widthFactor,
+        height: 46,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(isMe ? 16 : 0),
+            topRight: Radius.circular(isMe ? 0 : 16),
+            bottomLeft: const Radius.circular(16),
+            bottomRight: const Radius.circular(16),
+          ),
+        ),
+      ),
+    );
+
+    if (isMe) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Align(alignment: Alignment.centerRight, child: bubble),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const _CoachAvatar(photoURL: '', size: 28),
+          const SizedBox(width: 8),
+          Flexible(child: Align(alignment: Alignment.centerLeft, child: bubble)),
+        ],
+      ),
+    );
+  }
+}
+
+class _TypingIndicator extends StatefulWidget {
+  final String photoURL;
+  const _TypingIndicator({required this.photoURL});
+
+  @override
+  State<_TypingIndicator> createState() => _TypingIndicatorState();
+}
+
+class _TypingIndicatorState extends State<_TypingIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          // Coach avatar
+          _CoachAvatar(photoURL: widget.photoURL, size: 28),
+          const SizedBox(width: 8),
+
+          // Typing bubble
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.05),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.zero,
+                topRight: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+              ),
+            ),
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, _) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(3, (i) {
+                    final delay = i * 0.2;
+                    final t = (_controller.value - delay) % 1.0;
+                    final opacity = (t < 0.5)
+                        ? (0.3 + 0.7 * (t / 0.5))
+                        : (1.0 - 0.7 * ((t - 0.5) / 0.5));
+                    return Padding(
+                      padding: EdgeInsets.only(right: i < 2 ? 4 : 0),
+                      child: Opacity(
+                        opacity: opacity.clamp(0.3, 1.0),
+                        child: Container(
+                          width: 7,
+                          height: 7,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF96989C),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Coach Avatar ──
+
+class _CoachAvatar extends StatelessWidget {
+  final String photoURL;
+  final double size;
+  const _CoachAvatar({required this.photoURL, this.size = 28});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: const BoxDecoration(shape: BoxShape.circle),
+      child: ClipOval(
+        child: photoURL.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: photoURL,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => const SizedBox.shrink(),
+                errorWidget: (_, __, ___) => Container(
+                  color: const Color(0xFFF5F5F5),
+                  child: Icon(
+                    Icons.person,
+                    size: size * 0.6,
+                    color: const Color(0xFF96989C),
+                  ),
+                ),
+              )
+            : Container(
+                color: const Color(0xFFF5F5F5),
+                child: Icon(
+                  Icons.person,
+                  size: size * 0.6,
+                  color: const Color(0xFF96989C),
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+// ── Message Bubble ──
+
 class _MessageBubble extends StatefulWidget {
-  const _MessageBubble({required this.message});
+  const _MessageBubble({required this.message, required this.coachPhotoURL});
   final MessageModel message;
+  final String coachPhotoURL;
 
   @override
   State<_MessageBubble> createState() => _MessageBubbleState();
@@ -1139,7 +1207,6 @@ class _MessageBubbleState extends State<_MessageBubble> {
   @override
   void initState() {
     super.initState();
-
     _loadAudioDuration();
 
     _globalAudioPlayer.onPlayerStateChanged.listen((state) {
@@ -1191,7 +1258,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
 
         int attempts = 0;
         while (!durationLoaded && attempts < 20 && mounted) {
-          await Future.delayed(Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 100));
           attempts++;
         }
 
@@ -1202,7 +1269,6 @@ class _MessageBubbleState extends State<_MessageBubble> {
           setState(() {
             _duration = loadedDuration!;
           });
-          debugPrint(" Ses süresi yüklendi: ${_duration.inSeconds}s");
         }
       } catch (e) {
         debugPrint(" Ses süresi okunamadı: $e");
@@ -1242,18 +1308,16 @@ class _MessageBubbleState extends State<_MessageBubble> {
             await _globalAudioPlayer.setSource(
               audio_players.UrlSource(widget.message.voiceURL!),
             );
-
             await _globalAudioPlayer.resume();
             setState(() {
               _isPlaying = true;
             });
           } catch (e) {
-            debugPrint("Ses oynatma hatası: $e");
             _currentlyPlayingMessageId = null;
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Ses dosyası oynatılamadı'),
+                  content: Text(context.l10n.errorVoiceNotPlayed),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -1262,213 +1326,16 @@ class _MessageBubbleState extends State<_MessageBubble> {
         }
       }
     } catch (e) {
-      debugPrint(" Sesli mesaj oynatma hatası: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Sesli mesaj oynatılamadı: ${e.toString()}'),
+            content: Text(context.l10n.errorVoiceMessageNotPlayed),
             duration: const Duration(seconds: 3),
             backgroundColor: Colors.red,
           ),
         );
       }
     }
-  }
-
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return '$minutes:$seconds';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isMe = widget.message.sender == "user";
-    final hasImage =
-        widget.message.isFile == true &&
-        widget.message.fileURL != null &&
-        widget.message.fileURL!.isNotEmpty;
-    final hasVoice =
-        widget.message.isVoiceMessage == true &&
-        widget.message.voiceURL != null &&
-        widget.message.voiceURL!.isNotEmpty;
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
-      child: Align(
-        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 260.w),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-            decoration: BoxDecoration(
-              color: isMe ? const Color(0xFF2BD383) : const Color(0xFFF2F3F5),
-              borderRadius: BorderRadius.circular(16.w),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (hasImage)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.w),
-                    child: Image.network(
-                      widget.message.fileURL!,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          height: 150.h,
-                          color: Colors.grey[300],
-                          child: Icon(
-                            Icons.broken_image,
-                            color: Colors.grey[600],
-                          ),
-                        );
-                      },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          height: 150.h,
-                          color: Colors.grey[200],
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-
-                if (hasVoice) ...[
-                  if (hasImage) SizedBox(height: 8.h),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        onPressed: _togglePlayPause,
-                        icon: Icon(
-                          _isPlaying ? Icons.pause : Icons.play_arrow,
-                          color: isMe ? Colors.white : Colors.black87,
-                          size: 24.w,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            StreamBuilder<Duration>(
-                              stream: _isPlaying
-                                  ? Stream.periodic(
-                                      Duration(milliseconds: 100),
-                                      (_) {
-                                        return Duration.zero;
-                                      },
-                                    )
-                                  : Stream.value(Duration.zero),
-                              builder: (context, snapshot) {
-                                return SizedBox(
-                                  height: 30.h,
-                                  width: double.infinity,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: List.generate(15, (index) {
-                                      final random =
-                                          (index * 7 +
-                                              DateTime.now()
-                                                  .millisecondsSinceEpoch) %
-                                          10;
-                                      return Flexible(
-                                        child: AnimatedContainer(
-                                          duration: Duration(milliseconds: 100),
-                                          width: 2.5
-                                              .w, // 3.w'den 2.5.w'ye düşürüldü
-                                          height: _isPlaying
-                                              ? (index % 3 == 0
-                                                    ? 20.h + random
-                                                    : (index % 2 == 0
-                                                          ? 12.h + (random ~/ 2)
-                                                          : 8.h +
-                                                                (random ~/ 3)))
-                                              : (index % 3 == 0
-                                                    ? 20.h
-                                                    : (index % 2 == 0
-                                                          ? 12.h
-                                                          : 8.h)),
-                                          decoration: BoxDecoration(
-                                            color: isMe
-                                                ? Colors.white70
-                                                : Colors.black54,
-                                            borderRadius: BorderRadius.circular(
-                                              2.w,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                                  ),
-                                );
-                              },
-                            ),
-                            SizedBox(height: 4.h),
-
-                            Text(
-                              _duration != Duration.zero
-                                  ? _formatDuration(_duration)
-                                  : '--:--',
-                              style: GoogleFonts.quicksand(
-                                fontSize: 11.w,
-                                fontWeight: FontWeight.w500,
-                                color: isMe ? Colors.white70 : Colors.black54,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-
-                if (widget.message.message.isNotEmpty && !hasVoice) ...[
-                  if (hasImage) SizedBox(height: 8.h),
-                  Text(
-                    widget.message.message,
-                    style: GoogleFonts.quicksand(
-                      fontSize: 14.w,
-                      fontWeight: FontWeight.w600,
-                      color: isMe ? Colors.white : Colors.black87,
-                      height: 1.3,
-                    ),
-                  ),
-                ],
-
-                SizedBox(height: 4.h),
-                Text(
-                  _formatMessageTime(widget.message.sentTime),
-                  style: GoogleFonts.quicksand(
-                    fontSize: 10.w,
-                    fontWeight: FontWeight.w400,
-                    color: isMe ? Colors.white70 : Colors.black54,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   String _formatMessageTime(dynamic sentTime) {
@@ -1488,27 +1355,202 @@ class _MessageBubbleState extends State<_MessageBubble> {
       final today = DateTime(now.year, now.month, now.day);
       final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
+      final hour = dateTime.hour.toString().padLeft(2, '0');
+      final minute = dateTime.minute.toString().padLeft(2, '0');
+
       if (messageDate == today) {
-        // Bugün: Sadece saat göster
-        final hour = dateTime.hour.toString().padLeft(2, '0');
-        final minute = dateTime.minute.toString().padLeft(2, '0');
         return '$hour:$minute';
-      } else if (messageDate == today.subtract(Duration(days: 1))) {
-        // Dün: "Dün HH:mm"
-        final hour = dateTime.hour.toString().padLeft(2, '0');
-        final minute = dateTime.minute.toString().padLeft(2, '0');
+      } else if (messageDate == today.subtract(const Duration(days: 1))) {
         return 'Dün $hour:$minute';
       } else {
-        // Daha eski: "DD.MM.YYYY HH:mm"
         final day = dateTime.day.toString().padLeft(2, '0');
         final month = dateTime.month.toString().padLeft(2, '0');
-        final year = dateTime.year;
-        final hour = dateTime.hour.toString().padLeft(2, '0');
-        final minute = dateTime.minute.toString().padLeft(2, '0');
-        return '$day.$month.$year $hour:$minute';
+        return '$day.$month.${dateTime.year} $hour:$minute';
       }
     } catch (e) {
       return '';
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMe = widget.message.sender == "user";
+    final hasImage =
+        widget.message.isFile == true &&
+        widget.message.fileURL != null &&
+        widget.message.fileURL!.isNotEmpty;
+    final hasVoice =
+        widget.message.isVoiceMessage == true &&
+        widget.message.voiceURL != null &&
+        widget.message.voiceURL!.isNotEmpty;
+
+    if (isMe) {
+      return _buildUserBubble(hasImage, hasVoice);
+    }
+    return _buildCoachBubble(hasImage, hasVoice);
+  }
+
+  Widget _buildUserBubble(bool hasImage, bool hasVoice) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.72,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF21BC87),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.zero,
+                bottomRight: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+              ),
+            ),
+            child: _buildBubbleContent(
+              isMe: true,
+              hasImage: hasImage,
+              hasVoice: hasVoice,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCoachBubble(bool hasImage, bool hasVoice) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          _CoachAvatar(photoURL: widget.coachPhotoURL, size: 28),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.72,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2),
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.zero,
+                      topRight: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                      bottomLeft: Radius.circular(16),
+                    ),
+                  ),
+                  child: _buildBubbleContent(
+                    isMe: false,
+                    hasImage: hasImage,
+                    hasVoice: hasVoice,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBubbleContent({
+    required bool isMe,
+    required bool hasImage,
+    required bool hasVoice,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (hasImage)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: CachedNetworkImage(
+              imageUrl: widget.message.fileURL!,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => const SizedBox.shrink(),
+              errorWidget: (_, __, ___) => Container(
+                height: 150,
+                color: Colors.grey[300],
+                child: Icon(Icons.broken_image, color: Colors.grey[600]),
+              ),
+            ),
+          ),
+
+        if (hasVoice) ...[
+          if (hasImage) const SizedBox(height: 8),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: _togglePlayPause,
+                child: Icon(
+                  _isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: isMe ? Colors.white : Colors.black87,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 24,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: List.generate(15, (index) {
+                          return Flexible(
+                            child: Container(
+                              width: 2.5,
+                              height: index % 3 == 0
+                                  ? 20.0
+                                  : (index % 2 == 0 ? 12.0 : 8.0),
+                              decoration: BoxDecoration(
+                                color: isMe
+                                    ? Colors.white70
+                                    : Color(0xFF96989C),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+
+        if (widget.message.message.isNotEmpty && !hasVoice) ...[
+          if (hasImage) const SizedBox(height: 8),
+          Text(
+            widget.message.message,
+            style: TextStyle(
+              fontFamily: 'Geist',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: isMe ? Colors.white : Color(0xFF96989C),
+            ),
+          ),
+        ],
+      ],
+    );
   }
 }

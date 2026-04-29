@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mindcoach/core/global_constants/month_strings.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
+import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../core/models/appointment_info.dart';
@@ -92,7 +94,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               const SizedBox(height: 24),
 
               // 2. HAFTALIK ŞERİT (Weekly Timeline)
-              _buildWeeklyTimelineRow(),
+              _buildWeeklyTimelineRow(context),
               const SizedBox(height: 24),
 
               // 3. Takvim Görünümü (TableCalendar)
@@ -100,9 +102,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               const SizedBox(height: 32),
 
               // 4. "Today's sessions" Başlığı
-              const Text(
-                "Today's sessions",
-                style: TextStyle(
+              Text(
+                context.l10n.todaysSessions,
+                style: const TextStyle(
                   fontFamily: 'Geist',
                   fontSize: 14,
                   fontWeight: FontWeight.w600, // SemiBold
@@ -151,7 +153,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       context,
       _focusedDay.month,
     ).toUpperCase();
-    final dayLabel = DateFormat('EEEE').format(_focusedDay); // 'Friday'
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final dayLabel = DateFormat('EEEE', locale).format(_focusedDay);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -241,8 +244,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   // --- HAFTALIK ŞERİT WIDGET'I ---
-  Widget _buildWeeklyTimelineRow() {
+  Widget _buildWeeklyTimelineRow(BuildContext context) {
     final weekDays = _getCurrentWeekDays(_focusedDay);
+    final locale = Localizations.localeOf(context).toLanguageTag();
     final today = DateTime(
       DateTime.now().year,
       DateTime.now().month,
@@ -260,9 +264,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         final isPast = currentDate.isBefore(today);
         final hasEvent = _getAppointmentsForDay(currentDate).isNotEmpty;
 
-        final dayName = DateFormat(
-          'EEE',
-        ).format(date).toUpperCase(); // MON, TUE...
+        final dayName = DateFormat('EEE', locale).format(date).toUpperCase();
         final dayNumber = '${date.day}';
 
         // --- SEÇİLİ GÜN (Yeşil Kapsül) ---
@@ -302,8 +304,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   // Olay varsa altındaki beyaz nokta
                   if (hasEvent)
                     Container(
-                      width: 4,
-                      height: 4,
+                      width: 6,
+                      height: 6,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -356,8 +358,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 // Olay varsa altındaki yeşil nokta
                 if (hasEvent)
                   Container(
-                    width: 4,
-                    height: 4,
+                    width: 6,
+                    height: 6,
                     decoration: const BoxDecoration(
                       color: _kPrimaryGreen,
                       shape: BoxShape.circle,
@@ -422,8 +424,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 4),
-                  width: 4,
-                  height: 4,
+                  width: 6,
+                  height: 6,
                   decoration: const BoxDecoration(
                     color: _kPrimaryGreen,
                     shape: BoxShape.circle,
@@ -529,99 +531,134 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         DateTime(date.year, date.month, date.day, 9, 0);
     final formattedTime = DateFormat('HH:mm').format(appointmentDateTime);
 
+    // 1. İstenen 3 rengi bir listeye tanımlıyoruz
+    final List<Color> themeColors = [
+      const Color(0xFF21BC87), // Yeşil
+      const Color(0xFFA855F7), // Mor
+      const Color.fromARGB(255, 144, 11, 25), // Koyu Kırmızı / Bordo
+    ];
+
+    // 2. Rastgele ama scroll esnasında değişmeyecek sabit bir indeks oluşturuyoruz
+    final int colorIndex =
+        (consultantId?.hashCode ?? info.hashCode).abs() % themeColors.length;
+    final Color selectedColor = themeColors[colorIndex];
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
-      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16), // Figma: Radius 16px
-        border: Border.all(
-          color: Colors.black.withValues(alpha: 0.05), // Çok hafif kenarlık
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(
-              0xFFB6BECA,
-            ).withValues(alpha: 0.3), // Hafif gölge
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Sol taraf resim
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
-                image: NetworkImage(photoURL),
-                fit: BoxFit.cover,
-              ),
+      // Sol taraftaki şeridin köşelerinin ana kartla uyumlu kavis alması için ClipRRect kullanıyoruz
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Stack(
+          children: [
+            // Sol kenardaki dinamik renkli şerit
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 6, // Şerit kalınlığı
+              child: Container(color: selectedColor),
             ),
-          ),
-          const SizedBox(width: 12),
 
-          // Orta taraf isim ve görev
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  consultantDisplayName,
-                  style: const TextStyle(
-                    fontFamily: 'Geist',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600, // SemiBold
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                if (consultantJob.isNotEmpty)
-                  Text(
-                    JobConvert(consultantJob, context).call(),
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: _kLightGreyText,
+            // Ana İçerik
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Sol şeridin içeriğin üzerine binmesini engellemek için şerit kalınlığı kadar ekstra boşluk bırakıyoruz
+                  const SizedBox(width: 8),
+
+                  // Sol taraf resim
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 130, 200, 166),
+                      borderRadius: BorderRadius.circular(12),
+                      image: photoURL.isNotEmpty
+                          ? DecorationImage(
+                              image: CachedNetworkImageProvider(photoURL),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
                     ),
                   ),
-              ],
-            ),
-          ),
+                  const SizedBox(width: 12),
 
-          // Sağ taraf Saat (Yeşil Kapsül)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: _kPrimaryGreen.withValues(alpha: 0.1), // %10 saydam yeşil
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.access_time_rounded,
-                  size: 14,
-                  color: _kPrimaryGreen,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  formattedTime,
-                  style: const TextStyle(
-                    fontFamily: 'Geist',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: _kPrimaryGreen,
+                  // Orta taraf isim ve görev
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          consultantDisplayName,
+                          style: const TextStyle(
+                            fontFamily: 'Geist',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        if (consultantJob.isNotEmpty)
+                          Text(
+                            JobConvert(consultantJob, context).call(),
+                            style: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: _kLightGreyText,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+
+                  // Sağ taraf Saat (Dinamik Renkli Kapsül)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: selectedColor.withValues(
+                        alpha: 0.1,
+                      ), // Seçilen rengin %10 saydam hali
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/icons/ic_clock.svg",
+                          // İkonun da kapsülle aynı renkte olması için colorFilter uygulandı
+                          colorFilter: ColorFilter.mode(
+                            selectedColor,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          formattedTime,
+                          style: TextStyle(
+                            fontFamily: 'Geist',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: selectedColor, // Seçilen metin rengi
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -631,7 +668,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     return GestureDetector(
       // GestureDetector dışarıya alındı
       onTap: () {
-        // Yeni randevu ekranına yönlendirme
+        // Bottom nav içinde koçlar sekmesine geç
+        ref.read(bottomNavProvider.notifier).setTab(1);
       },
       child: Container(
         width: double.infinity,
@@ -642,12 +680,16 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.add_circle_outline, color: _kPrimaryGreen, size: 20),
-            SizedBox(width: 8),
+          children: [
+            const Icon(
+              Icons.add_circle_outline,
+              color: _kPrimaryGreen,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
             Text(
-              'Make an Appointment',
-              style: TextStyle(
+              context.l10n.makeAnAppointment,
+              style: const TextStyle(
                 fontFamily: 'Geist',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,

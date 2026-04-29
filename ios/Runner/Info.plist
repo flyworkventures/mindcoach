@@ -47,7 +47,7 @@
 			<true/>
 		</dict>
 		<key>NSCameraUsageDescription</key>
-		<string>The camera is used to take photos that you can upload and share inside the app.</string>
+		<string>The camera shows your preview during video calls with coaches in Mindcoach.</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>Your microphone is used to record and send voice messages within the app.</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>

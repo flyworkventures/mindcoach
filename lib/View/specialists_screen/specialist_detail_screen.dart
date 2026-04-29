@@ -1,6 +1,13 @@
+import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mindcoach/View/appointments/appointments_notifier.dart';
+import 'package:mindcoach/core/repo/consultant_repo.dart';
+import 'package:mindcoach/core/models/appointment_info.dart';
+import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/explanation_convert.dart';
 import 'package:mindcoach/core/utils/feature_convert.dart';
@@ -10,7 +17,16 @@ import 'package:mindcoach/models/consultant_model.dart';
 class SpecialistDetailScreen extends ConsumerStatefulWidget {
   final ConsultantModel specialist;
 
-  const SpecialistDetailScreen({super.key, required this.specialist});
+  /// Onboarding sirasinda (login olmadan) acildiginda true olur.
+  /// Bu durumda 1 dakikalik konusma/inceleme limiti baslar; sure dolunca
+  /// kullaniciya dialog gosterilip login ekranina yonlendirilir.
+  final bool isTrial;
+
+  const SpecialistDetailScreen({
+    super.key,
+    required this.specialist,
+    this.isTrial = false,
+  });
 
   @override
   ConsumerState<SpecialistDetailScreen> createState() =>
@@ -20,13 +36,131 @@ class SpecialistDetailScreen extends ConsumerStatefulWidget {
 class _SpecialistDetailScreenState
     extends ConsumerState<SpecialistDetailScreen> {
   int? _selectedSlotIndex;
+  late ConsultantModel _specialist;
+
+  Timer? _trialTimer;
+  bool _trialDialogShown = false;
+  static const Duration _trialDuration = Duration(minutes: 1);
+
+  @override
+  void initState() {
+    super.initState();
+    _specialist = widget.specialist;
+  }
+
+  @override
+  void didUpdateWidget(covariant SpecialistDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.specialist.id != widget.specialist.id) {
+      _specialist = widget.specialist;
+    }
+  }
+
+  Future<void> _refreshSpecialist() async {
+    try {
+      final repo = ConsultantRepo(null);
+      final list = await repo.getAllConsultant() ?? [];
+      final updated = list.where((c) => c.id == _specialist.id).toList();
+      if (!mounted || updated.isEmpty) return;
+      setState(() {
+        _specialist = updated.first;
+      });
+    } catch (_) {
+      // Refresh başarısız olsa da mevcut detay ekranı çalışmaya devam etsin.
+    }
+  }
+
+  void _startTrialTimerIfNeeded() {
+    if (!widget.isTrial) return;
+    if (_trialTimer?.isActive ?? false) return;
+    _trialTimer = Timer(_trialDuration, _onTrialExpired);
+  }
+
+  @override
+  void dispose() {
+    _trialTimer?.cancel();
+    _trialTimer = null;
+    super.dispose();
+  }
+
+  Future<void> _onTrialExpired() async {
+    if (!mounted || _trialDialogShown) return;
+    _trialDialogShown = true;
+    final l10n = context.l10n;
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(
+              l10n.trialEndedTitle,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
+            content: Text(
+              l10n.trialEndedMessage,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF555555),
+                height: 1.4,
+              ),
+            ),
+            actions: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF21BC87),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(
+                    l10n.trialEndedAction,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (!mounted) return;
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).pushNamedAndRemoveUntil(PageRoutes.login, (route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final appointmentsState = ref.watch(appointmentsProvider);
     final l10n = context.l10n;
     final langCode = context.langCode;
-    final specialist = widget.specialist;
-    final topPadding = MediaQuery.of(context).padding.top;
+    final specialist = _specialist;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     final specialistName =
@@ -42,32 +176,41 @@ class _SpecialistDetailScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        top: true,
+        top: false,
+        bottom:
+            false, // Alt bar için SafeArea'yı kapattık, custom padding kullanıyoruz
         child: Column(
           children: [
-            // Scrollable area
+            SizedBox(height: kTextTabBarHeight),
             Expanded(
               child: SingleChildScrollView(
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ======== TOP HERO SECTION ========
-                    // Photo right, content left — stacked
                     SizedBox(
-                      height: 420,
+                      height: 350,
                       child: Stack(
                         children: [
-                          // Coach photo — right aligned, clipped
-                          // Coach photo — right aligned, clipped
+                          // Coach photo
                           Positioned(
-                            top: 20,
-                            right: -20,
+                            top: 0,
+                            right: -30,
                             bottom: 0,
-                            width: MediaQuery.of(context).size.width * 0.6,
+                            width: MediaQuery.of(context).size.width * 0.7,
                             child: Builder(
                               builder: (context) {
-                                final url = specialist.photoURL;
+                                final originalUrl = specialist.photoURL;
+
+                                String url = originalUrl;
+                                final dotIndex = originalUrl.lastIndexOf('.');
+
+                                if (dotIndex != -1) {
+                                  url =
+                                      '${originalUrl.substring(0, dotIndex)}_detail${originalUrl.substring(dotIndex)}';
+                                }
+
                                 final isSvg = url.toLowerCase().endsWith(
                                   '.svg',
                                 );
@@ -89,11 +232,13 @@ class _SpecialistDetailScreenState
                                     errorBuilder: (_, _, _) => fallbackIcon(),
                                   );
                                 } else {
-                                  return Image.network(
-                                    url,
+                                  return CachedNetworkImage(
+                                    imageUrl: url,
                                     fit: BoxFit.cover,
                                     alignment: Alignment.topCenter,
-                                    errorBuilder: (_, _, _) => fallbackIcon(),
+                                    placeholder: (_, _) =>
+                                        const SizedBox.shrink(),
+                                    errorWidget: (_, _, _) => fallbackIcon(),
                                   );
                                 }
                               },
@@ -102,31 +247,27 @@ class _SpecialistDetailScreenState
 
                           // Left content overlay
                           Positioned(
-                            top: 20,
+                            top: 0,
                             left: 0,
                             right: 0,
                             bottom: 0,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.only(left: 16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const SizedBox(height: 8),
-
                                   // < Back
                                   GestureDetector(
                                     onTap: () => Navigator.pop(context),
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          Icons.chevron_left,
-                                          size: 24,
-                                          color: Colors.black,
+                                        SvgPicture.asset(
+                                          "assets/icons/ic_bakc.svg",
                                         ),
                                         SizedBox(width: 2),
                                         Text(
-                                          'Back',
+                                          context.l10n.back,
                                           style: TextStyle(
                                             fontFamily: 'Geist',
                                             fontSize: 16,
@@ -142,13 +283,10 @@ class _SpecialistDetailScreenState
                                   // Badges: Verified + Rating + Online
                                   Row(
                                     children: [
-                                      // Verified badge
                                       SvgPicture.asset(
                                         "assets/icons/ic_coach_detail_tick.svg",
                                       ),
                                       const SizedBox(width: 4),
-
-                                      // Rating pill
                                       if (specialist.rating > 0)
                                         Container(
                                           padding: const EdgeInsets.symmetric(
@@ -157,7 +295,7 @@ class _SpecialistDetailScreenState
                                           ),
                                           decoration: BoxDecoration(
                                             color: const Color(
-                                              0xFFFFC107,
+                                              0xFFFFCC00,
                                             ).withValues(alpha: 0.15),
                                             borderRadius: BorderRadius.circular(
                                               20,
@@ -177,15 +315,13 @@ class _SpecialistDetailScreenState
                                                   fontFamily: 'Geist',
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
-                                                  color: Color(0xFF333333),
+                                                  color: Color(0xFFFFCC00),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
                                       const SizedBox(width: 4),
-
-                                      // Online pill
                                       Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 10,
@@ -228,7 +364,7 @@ class _SpecialistDetailScreenState
                                   ),
                                   const SizedBox(height: 16),
 
-                                  // Coach Name — big green
+                                  // Coach Name
                                   Text(
                                     specialistName,
                                     style: const TextStyle(
@@ -252,16 +388,16 @@ class _SpecialistDetailScreenState
                                       height: 20 / 14,
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 12),
 
-                                  // Feature tags — only left ~55% so they don't overlap photo
+                                  // Feature tags
                                   SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width *
                                         0.50,
                                     child: Wrap(
-                                      spacing: 6,
-                                      runSpacing: 8,
+                                      spacing: 4,
+                                      runSpacing: 6,
                                       children: specialist.features
                                           .map(
                                             (f) => _buildFeatureChip(
@@ -279,13 +415,33 @@ class _SpecialistDetailScreenState
                       ),
                     ),
 
-                    // ======== INFORMATION SECTION ========
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                    // ======== INFORMATION SECTION (UPDATED CONTAINER) ========
+                    Container(
+                      width: double.infinity,
+                      // Figma'daki 16px padding ve alt taraftan buton boşluğu bırakıldı
+                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(
+                              alpha: 0.10,
+                            ), // #000000 %10 Gölge
+                            blurRadius: 10,
+                            offset: const Offset(
+                              0,
+                              -4,
+                            ), // Y ekseninde -4 yukarı doğru
+                          ),
+                        ],
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Information heading
                           const Text(
                             'Information',
                             style: TextStyle(
@@ -298,7 +454,6 @@ class _SpecialistDetailScreenState
                           ),
                           const SizedBox(height: 12),
 
-                          // Explanation text
                           _buildExplanationText(explanation, jobTitle),
                           const SizedBox(height: 24),
 
@@ -307,23 +462,32 @@ class _SpecialistDetailScreenState
                             children: [
                               Expanded(
                                 child: _buildInfoCard(
-                                  icon: Icons.all_inclusive,
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/ic_memory.svg",
+                                    height: 26,
+                                    width: 26,
+                                    fit: BoxFit.scaleDown,
+                                  ),
                                   title: l10n.coachDetailUnlimitedMemory,
                                   subtitle: l10n.coachDetailMemory,
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 10), // Gap: 10px
                               Expanded(
                                 child: _buildInfoCard(
-                                  icon: Icons.translate_rounded,
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/ic_lang.svg",
+                                  ),
                                   title: l10n.coachDetailMultilingual,
                                   subtitle: l10n.coachDetailLanguage,
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 10), // Gap: 10px
                               Expanded(
                                 child: _buildInfoCard(
-                                  icon: Icons.access_time_rounded,
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/ic_aval.svg",
+                                  ),
                                   title: '08:00 - 18:00',
                                   subtitle: l10n.coachDetailAvailability,
                                 ),
@@ -332,24 +496,31 @@ class _SpecialistDetailScreenState
                           ),
                           const SizedBox(height: 28),
 
-                          // ======== APPOINTMENT SECTION ========
-                          Text(
-                            l10n.coachDetailAppointment,
-                            style: const TextStyle(
-                              fontFamily: 'Geist',
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                              height: 24 / 18,
+                          if (!widget.isTrial) ...[
+                            // ======== APPOINTMENT SECTION ========
+                            Text(
+                              l10n.coachDetailAppointment,
+                              style: const TextStyle(
+                                fontFamily: 'Geist',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                height: 24 / 18,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
+                            const SizedBox(height: 16),
 
-                          // Appointment card
-                          _buildAppointmentCard(),
+                            // Appointment card
+                            _buildAppointmentCard(
+                              _bookedTimeSlotsForCoachToday(
+                                appointmentsState.appointments,
+                                specialist.id,
+                              ),
+                            ),
+                          ],
 
-                          // Bottom padding for floating button
-                          SizedBox(height: 80 + bottomPadding),
+                          // Alt Navigation Bar çakışmasını engellemek için boşluk
+                          SizedBox(height: 100 + bottomPadding),
                         ],
                       ),
                     ),
@@ -362,54 +533,35 @@ class _SpecialistDetailScreenState
       ),
 
       // ======== BOTTOM BAR ========
+      extendBody:
+          true, // Alt barın arkasına sayfanın akmasını engelle/isteğe bağlı
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 12,
-          bottom: bottomPadding + 12,
+          left: 16,
+          right: 16,
+          top: 16,
+          bottom: bottomPadding > 0 ? bottomPadding : 16,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 12,
+              color: Colors.black.withValues(alpha: 0.10),
+              blurRadius: 10,
               offset: const Offset(0, -4),
             ),
           ],
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Chat icon
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/conversation_page',
-                  arguments: specialist,
-                );
-              },
-              child: Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFE2E2E2)),
-                ),
-                child: const Icon(
-                  Icons.chat_bubble_outline_rounded,
-                  color: Color(0xFF21BC87),
-                  size: 24,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-
-            // Start Video Call button
-            Expanded(
-              child: GestureDetector(
+            if (!widget.isTrial) ...[
+              // Chat icon
+              GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(
                     context,
@@ -418,25 +570,60 @@ class _SpecialistDetailScreenState
                   );
                 },
                 child: Container(
-                  height: 52,
+                  width: 60,
+                  height: 54,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFE2E2E2)),
+                  ),
+                  child: SvgPicture.asset(
+                    "assets/icons/ic_message.svg",
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+            ],
+
+            // Start Video Call button
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  _startTrialTimerIfNeeded();
+                  Navigator.pushNamed(
+                    context,
+                    PageRoutes.videoCall,
+                    arguments: specialist,
+                  ).then((_) {
+                    _refreshSpecialist();
+                  });
+                },
+                child: Container(
+                  height: 54, // Fixed (54px)
+                  padding: const EdgeInsets.all(10), // Padding: 10px
                   decoration: BoxDecoration(
                     color: const Color(0xFF21BC87),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16), // Radius: 16px
+                    boxShadow: [
+                      BoxShadow(
+                        // Drop shadow: X: 0, Y: 0, Blur: 10, #21BC87
+                        color: const Color(0xFF21BC87),
+                        blurRadius: 10,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.videocam_rounded,
-                        color: Colors.white,
-                        size: 22,
-                      ),
-                      const SizedBox(width: 10),
+                      SvgPicture.asset("assets/icons/ic_record.svg"),
+                      const SizedBox(width: 10), // Gap: 10px
                       Text(
                         l10n.coachDetailStartVideoCall,
                         style: const TextStyle(
                           fontFamily: 'Geist',
-                          fontSize: 15,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
@@ -467,8 +654,8 @@ class _SpecialistDetailScreenState
         label,
         style: const TextStyle(
           fontFamily: 'Geist',
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
           color: Color(0xFF555555),
           height: 14 / 11,
         ),
@@ -477,7 +664,6 @@ class _SpecialistDetailScreenState
   }
 
   Widget _buildExplanationText(String explanation, String jobTitle) {
-    // Bold the job title within the explanation
     final escapedJob = RegExp.escape(jobTitle);
     final regex = RegExp(escapedJob, caseSensitive: false);
     final match = regex.firstMatch(explanation);
@@ -523,26 +709,25 @@ class _SpecialistDetailScreenState
   }
 
   Widget _buildInfoCard({
-    required IconData icon,
+    required Widget icon,
     required String title,
     required String subtitle,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF898989).withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE8E8E8)),
       ),
       child: Column(
         children: [
-          Icon(icon, size: 24, color: const Color(0xFF333333)),
+          icon,
           const SizedBox(height: 10),
           Text(
             title,
             style: const TextStyle(
               fontFamily: 'Geist',
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Color(0xFF333333),
             ),
@@ -553,7 +738,7 @@ class _SpecialistDetailScreenState
             subtitle,
             style: const TextStyle(
               fontFamily: 'Geist',
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: FontWeight.w400,
               color: Color(0xFF96989C),
             ),
@@ -564,7 +749,35 @@ class _SpecialistDetailScreenState
     );
   }
 
-  Widget _buildAppointmentCard() {
+  Set<String> _bookedTimeSlotsForCoachToday(
+    Map<DateTime, List<AppointmentInfo>> appointments,
+    int consultantId,
+  ) {
+    final today = DateTime.now();
+    final todayDate = DateTime(today.year, today.month, today.day);
+    final bookedSlots = <String>{};
+
+    for (final entry in appointments.entries) {
+      final keyDate = DateTime(entry.key.year, entry.key.month, entry.key.day);
+      if (keyDate != todayDate) continue;
+
+      for (final info in entry.value) {
+        if (info.consultantId != consultantId) continue;
+        if ((info.status ?? '').toLowerCase() == 'cancelled') continue;
+
+        final dt = info.appointmentDateTime;
+        if (dt == null) continue;
+
+        final hour = dt.hour.toString().padLeft(2, '0');
+        final minute = dt.minute.toString().padLeft(2, '0');
+        bookedSlots.add('$hour:$minute');
+      }
+    }
+
+    return bookedSlots;
+  }
+
+  Widget _buildAppointmentCard(Set<String> bookedSlots) {
     final now = DateTime.now();
     const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const monthNames = [
@@ -582,98 +795,119 @@ class _SpecialistDetailScreenState
       'Dec',
     ];
 
+    // Varsayılan slotlar; DB'de aynı saatte ilgili koçun randevusu varsa pasif/soluk gösterilir.
     final slots = [
-      '08:00',
-      '09:40',
-      '10:00',
-      '12:00',
-      '14:00',
-      '14:30',
-      '15:30',
-      '16:00',
-      '16:30',
-      '17:00',
-      '17:30',
-      '18:00',
+      {'time': '08:00'},
+      {'time': '09:40'},
+      {'time': '10:00'},
+      {'time': '12:00'},
+      {'time': '14:00'},
+      {'time': '14:30'},
+      {'time': '15:30'},
+      {'time': '16:00'},
+      {'time': '16:30'},
+      {'time': '17:00'},
+      {'time': '17:30'},
+      {'time': '18:00'},
     ];
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFF0F0F0)),
+        color: const Color(0xFFF4F5F6), // Tasarımdaki hafif gri arka plan
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Date row
-          Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFE8E8E8)),
+          Padding(
+            padding: const EdgeInsets.only(left: 4.0),
+            child: Row(
+              children: [
+                SvgPicture.asset("assets/icons/ic_cal.svg"),
+                const SizedBox(width: 8),
+                Text(
+                  '${now.day} ${monthNames[now.month - 1]}, ${dayNames[now.weekday - 1]}day',
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.calendar_today_rounded,
-                  size: 16,
-                  color: Color(0xFF333333),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                '${now.day} ${monthNames[now.month - 1]}, ${dayNames[now.weekday - 1]}day',
-                style: const TextStyle(
-                  fontFamily: 'Geist',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 16),
 
           // Time slots
           Wrap(
-            spacing: 8,
-            runSpacing: 10,
+            spacing: 8, // Figma Gap: 10px
+            runSpacing: 8,
             children: List.generate(slots.length, (index) {
+              final slot = slots[index];
+              final time = slot['time'] as String;
+              final isAvailable = !bookedSlots.contains(time);
               final isSelected = _selectedSlotIndex == index;
+
+              // Duruma göre renk atamaları
+              Color borderColor;
+              Color textColor;
+              Color backgroundColor;
+
+              if (!isAvailable) {
+                // Pasif (Dolmuş/Geçmiş) Saatler
+                borderColor = Colors.black.withValues(alpha: 0.05);
+                textColor = Colors.black.withValues(alpha: 0.20);
+                backgroundColor = Colors.transparent;
+              } else if (isSelected) {
+                // Seçili Saat
+                borderColor = const Color(0xFF21BC87);
+                textColor = const Color(0xFF21BC87);
+                backgroundColor = const Color(
+                  0xFF21BC87,
+                ).withValues(alpha: 0.10);
+              } else {
+                // Seçilebilir Aktif Saatler
+                borderColor = Colors.black.withValues(
+                  alpha: 0.20,
+                ); // Figma #000000 20%
+                textColor = Colors.black;
+                backgroundColor = Colors.transparent;
+              }
+
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedSlotIndex = isSelected ? null : index;
-                  });
-                },
+                onTap: isAvailable
+                    ? () {
+                        setState(() {
+                          _selectedSlotIndex = isSelected ? null : index;
+                        });
+                      }
+                    : null, // Pasif butonlara tıklanmasını engeller
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 8,
+                    horizontal: 8, // Figma Left/Right 10px
+                    vertical: 4, // Figma Top/Bottom 4px
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF21BC87) : Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.circular(
+                      999,
+                    ), // Tam oval (Pill shape)
                     border: Border.all(
-                      color: isSelected
-                          ? const Color(0xFF21BC87)
-                          : const Color(0xFFE2E2E2),
+                      color: borderColor,
+                      width: 1, // Figma Border 1px
                     ),
                   ),
                   child: Text(
-                    slots[index],
+                    time,
                     style: TextStyle(
                       fontFamily: 'Geist',
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: isSelected
-                          ? Colors.white
-                          : const Color(0xFF555555),
+                      color: textColor,
                     ),
                   ),
                 ),

@@ -1,63 +1,59 @@
 {
   "@@locale": "de",
-"relaxingSound": "Entspannende Klänge",
+  "relaxingSound": "Entspannender Sound",
   "seeAll": "Alle ansehen",
-  "premiumHeadlinePart1": "Ein Raum, um ohne Vorurteile ",
+  "online": "Online",
+  "typeAMessage": "Schreibe eine Nachricht...",
+  "premiumHeadlinePart1": "Ein Raum, nur um ",
   "premiumHeadlineHighlight": "verstanden",
-  "premiumHeadlinePart2": " zu werden.",
-  "premiumSubtitle": "Tausende haben diesen Schritt bereits gewagt. Jetzt bist du an der Reihe — 3 Tage völlig kostenlos.",
+  "premiumHeadlinePart2": " zu werden,\nohne Urteil.",
+  "premiumSubtitle": "Tausende haben diesen Schritt gewagt. Jetzt bist du an der Reihe — 3 Tage völlig kostenlos.",
   "premiumFeature1": "24/7 unbegrenzter Zugang",
-  "premiumFeature2": "Vorrangiger und schneller Zugriff",
-  "premiumFeature3": "Speziell auf dich zugeschnittene KI",
+  "premiumFeature2": "Bevorzugte Verbindung",
+  "premiumFeature3": "Auf dich zugeschnittene, fortschrittliche KI",
   "premiumAnnualDiscount": "40% Rabatt auf das Jahresabo",
   "premiumCta": "Loslegen",
-"onboardingTitle1": "Fühlen Sie sich überfordert?",
-  "onboardingDesc1": "Sprechen Sie in wenigen Minuten mit einem zertifizierten Coach — wann immer Sie es brauchen.",
-  "onboardingTitle2": "Kommunizieren Sie auf Ihre Art.",
+  "onboardingTitle1": "Fühlst du dich überfordert?",
+  "onboardingDesc1": "Sprich in wenigen Minuten mit einem zertifizierten Begleiter — wann immer du es brauchst.",
+  "onboardingTitle2": "Sprich auf deine Art.",
   "onboardingDesc2": "Text, Sprache oder Video",
-  "onboardingTitle3": "Finden Sie den richtigen Coach für sich.",
-  "onboardingDesc3": "Lassen Sie sich basierend auf Ihren Zielen, Ihrem Zeitplan und Ihren Vorlieben zuordnen.",
-  "swipeToContinue": "Zum Fortfahren wischen",
-  "onboardingTermsPrefix": "Mit der Registrierung stimmen Sie unseren ",
+  "onboardingTitle3": "Finde den richtigen Begleiter für dich.",
+  "onboardingDesc3": "Lass dich basierend auf deinen Zielen, deinem Zeitplan und deinen Vorlieben zuordnen.",
+  "swipeToContinue": "Wischen, um fortzufahren",
+  "onboardingTermsPrefix": "Mit der Anmeldung bei __MINDBegleiter2__ stimmst du unseren ",
   "onboardingTermsOfService": "Nutzungsbedingungen",
-  "onboardingTermsMiddle": " zu. Mehr über die Verarbeitung Ihrer Daten erfahren Sie in unserer ",
+  "onboardingTermsMiddle": " zu. Erfahre, wie wir deine Daten in unserer ",
   "onboardingPrivacyPolicy": "Datenschutzrichtlinie",
-  "onboardingTermsAnd": " und unserer ",
+  "onboardingTermsAnd": " und ",
   "onboardingCookiesPolicy": "Cookie-Richtlinie",
-  "onboardingTermsSuffix": ".",
-
+  "onboardingTermsSuffix": " verarbeiten.",
   "nameGenderStepTitle": "Erzähl uns ein wenig über dich",
-  "nameGenderStepSubtitle": "Eine kurze Beschreibung hilft uns, dich besser kennenzulernen. Locker und ehrlich reicht völlig.",
+  "nameGenderStepSubtitle": "Eine kurze Bio hilft anderen, den echten dich kennenzulernen. Halt es lustig und authentisch.",
   "fullName": "Vollständiger Name",
   "enterYourFullName": "Gib deinen vollständigen Namen ein",
   "gender": "Geschlecht",
   "male": "Männlich",
   "female": "Weiblich",
-
   "next": "Weiter",
   "getStarted": "Loslegen",
-  "findMyCoaches": "Meine Coaches finden",
-
-  "loginSubtitle": "Melde dich an, um deinen Coach zu finden und deine Reise zu starten. Dauert 2 Minuten.",
+  "findMyCoaches": "Meine Begleiter finden",
+  "loginSubtitle": "Melde dich an, um deinen Begleiter zu finden und deine Reise zu beginnen. Dauert 2 Minuten.",
   "continueWithGoogle": "Weiter mit Google",
   "continueWithApple": "Weiter mit Apple",
   "dataPrivacyNotice": "Deine Daten werden niemals an Dritte weitergegeben. Du kannst dein Konto jederzeit löschen.",
-
-  "approachTitle": "Wie soll dein Coach auf dich zugehen?",
-  "approachSubtitle": "Hilft uns, deine Persönlichkeit zum richtigen Coach zu matchen",
+  "approachTitle": "Wie sollte dein Begleiter auf dich zugehen?",
+  "approachSubtitle": "Hilft uns, deine Persönlichkeit mit dem richtigen Begleiter abzugleichen",
   "approachPatient": "Geduldig",
   "approachSupportive": "Unterstützend",
   "approachConvincing": "Überzeugend",
-  "approachEnergetic": "Energiegeladen",
+  "approachEnergetic": "Energisch",
   "approachHumorous": "Humorvoll",
-
-  "dobTitle": "Wann bist du geboren?",
-  "dobSubtitle": "Wir personalisieren den Erlebnisprozess basierend auf deinem Alter.",
+  "dobTitle": "Wann wurdest du geboren?",
+  "dobSubtitle": "Wir personalisieren das Erlebnis basierend auf deinem Alter.",
   "dobDayLabel": "Tag",
   "dobMonthLabel": "Monat",
   "dobYearLabel": "Jahr",
-  "dobErrorInvalid": "Bitte wähle ein gültiges Geburtsdatum.",
-
+  "dobErrorInvalid": "Bitte wähle ein gültiges Geburtsdatum aus.",
   "january": "Januar",
   "february": "Februar",
   "march": "März",
@@ -70,10 +66,9 @@
   "october": "Oktober",
   "november": "November",
   "december": "Dezember",
-
   "januaryShort": "Jan",
   "februaryShort": "Feb",
-  "marchShort": "Mrz",
+  "marchShort": "Mär",
   "aprilShort": "Apr",
   "mayShort": "Mai",
   "juneShort": "Jun",
@@ -83,26 +78,23 @@
   "octoberShort": "Okt",
   "novemberShort": "Nov",
   "decemberShort": "Dez",
-
   "nameGenderTitle": "Erzähl uns ein wenig über dich",
-  "nameGenderSubtitle": "Damit dein Coach dich besser kennenlernen kann",
+  "nameGenderSubtitle": "Damit dein Begleiter den wahren dich kennenlernen kann",
   "nameGenderFullNameLabel": "Vollständiger Name",
   "nameGenderFullNameHint": "Gib deinen vollständigen Namen ein",
   "nameGenderGenderLabel": "Geschlecht",
   "nameGenderMale": "Männlich",
   "nameGenderFemale": "Weiblich",
-  "nameGenderPreferNotToSay": "Keine Angabe",
-
+  "nameGenderPreferNotToSay": "Möchte ich nicht sagen",
   "supportAreaTitle": "In welchem Bereich möchtest du Unterstützung?",
-  "supportAreaSubtitle": "Wir zeigen nur Coaches, die sich darauf spezialisiert haben",
-  "supportAreaIndividual": "Persönliches Wachstum",
+  "supportAreaSubtitle": "Wir zeigen nur Begleiter an, die sich darauf spezialisiert haben",
+  "supportAreaIndividual": "Individuelles Wachstum",
   "supportAreaFamily": "Familie",
   "supportAreaCareer": "Karriere",
   "supportAreaEducation": "Bildung",
   "supportAreaPersonalDevelopment": "Persönliche Entwicklung",
-
   "availableDaysTitle": "An welchen Tagen bist du verfügbar?",
-  "availableDaysSubtitle": "Wir zeigen nur Coaches, die dann frei sind",
+  "availableDaysSubtitle": "Damit wir nur Begleiter anzeigen, die frei sind, wenn du es bist",
   "dayMonday": "Mo",
   "dayTuesday": "Di",
   "dayWednesday": "Mi",
@@ -110,48 +102,43 @@
   "dayFriday": "Fr",
   "daySaturday": "Sa",
   "daySunday": "So",
-
-  "meetingTimeTitle": "Welche Uhrzeit passt dir am besten?",
-  "meetingTimeSubtitle": "Coaches mit passenden Zeiten werden hervorgehoben",
-  "meetingTimeMorning": "Morgens",
-  "meetingTimeAfternoon": "Nachmittags",
-  "meetingTimeEvening": "Abends",
+  "meetingTimeTitle": "Welche Zeit passt am besten zu dir?",
+  "meetingTimeSubtitle": "Begleiter mit passenden Terminen werden hervorgehoben",
+  "meetingTimeMorning": "Morgen",
+  "meetingTimeAfternoon": "Nachmittag",
+  "meetingTimeEvening": "Abend",
   "meetingTimeFlexible": "Flexibel",
   "meetingTimeMorningRange": "08:00 - 12:00",
   "meetingTimeAfternoonRange": "12:00 - 16:00",
   "meetingTimeEveningRange": "16:00 - 21:00",
   "meetingTimeFlexibleRange": "",
-
-  "successTitle": "Dein Konto wurde erstellt",
+  "successTitle": "Konto wurde erstellt",
   "successSubtitle": "Dein Konto wurde erfolgreich erstellt. Viel Spaß mit der App.",
-
-  "topicFeelingGood": "Wohlbefinden",
-  "appointmentDescription": "Du hast ein Gespräch mit {name} zum Thema {topic}.",
+  "topicFeelingGood": "Gut fühlen",
+  "appointmentDescription": "Du hast ein Meeting mit {name} über {topic}.",
   "@appointmentDescription": {
     "placeholders": {
-      "name": { "type": "String" },
-      "topic": { "type": "String" }
+      "name": {
+        "type": "String"
+      },
+      "topic": {
+        "type": "String"
+      }
     }
   },
-
-  "quickActions": "Schnellzugriff",
-
+  "quickActions": "Schnellaktionen",
   "hi": "Hallo",
   "goodMorning": "Guten Morgen",
   "goodAfternoon": "Guten Tag",
   "goodEvening": "Guten Abend",
-
   "welcome": "Willkommen",
   "howAreYouFeelIngToday": "Wie fühlst du dich heute?",
-  "getStart": "Lass uns beginnen",
-
+  "getStart": "Lass uns anfangen",
   "onboardingQuote1": "Deine einzigen Grenzen sind die, die du dir selbst setzt.",
   "onboardingQuote2": "Atme tief durch und beginne deine Reise.",
   "onboardingQuote3": "Je ruhiger du wirst, desto mehr kannst du hören.",
-
   "someoneWantsToTalkToYou": "Jemand möchte mit dir sprechen.",
-  "startTalking": "Starten",
-
+  "startTalking": "Gespräch beginnen",
   "moodTerrible": "Schrecklich",
   "moodBad": "Schlecht",
   "moodNeutral": "Neutral",
@@ -161,277 +148,234 @@
   "moodHappy": "Glücklich",
   "moodTired": "Müde",
   "moodStressed": "Gestresst",
-
   "timeToTrackMood": "Es ist Zeit, deine Stimmung zu verfolgen",
-
   "days": "Tage",
   "hours": "Stunden",
   "minutes": "Minuten",
   "seconds": "Sekunden",
-
-  "timeRemainingTitle": "Verbleibende Zeit bis zum Beginn des nächsten Gesprächs.",
-  "upcomingMeetingTitle": "Bevorstehendes Gespräch",
-  "noUpcomingMeetings": "Du hast keine bevorstehenden Gespräche.",
-
-  "takeTheTestNow": "Mach den Test jetzt",
-  "testDescription": "Bewerte deinen mentalen Zustand und erfahre mehr über dich selbst.",
-
+  "timeRemainingTitle": "Verbleibende Zeit bis zum Beginn des nächsten Meetings.",
+  "upcomingMeetingTitle": "Anstehendes Meeting",
+  "noUpcomingMeetings": "Du hast keine anstehenden Meetings.",
+  "takeTheTestNow": "Jetzt den Test machen",
+  "testDescription": "Beurteile deinen mentalen Zustand und lerne mehr über dich selbst.",
   "premiumPlan": "Premium-Plan",
-  "premiumDescription": "Schalte deinen KI-Chatbot frei und erhalte alle Premium-Funktionen.",
-
-  "upgradePlan": "Plan upgraden",
+  "premiumDescription": "Schalte deinen KI-Chatbot frei & erhalte alle Premium-Funktionen.",
+  "upgradePlan": "Plan hochstufen",
   "areYouStressed": "Bist du gestresst?",
   "areYouAnxious": "Bist du ängstlich?",
-
   "questionsForAdults": "{questionNumber} Fragen für Erwachsene",
   "@questionsForAdults": {
-    "description": "Zeigt die Anzahl der Fragen für den Erwachsenenmodus an.",
+    "description": "Shows the number of questions for adult mode.",
     "placeholders": {
-      "questionNumber": { "type": "int" }
+      "questionNumber": {
+        "type": "int"
+      }
     }
   },
-
-  "statusAssessmentTest": "Zustandsbewertungstest",
-  "stressScaleTest": "Stress-Skala Test",
-  "anxietyScaleTest": "Angst-Skala Test",
-
+  "statusAssessmentTest": "Status-Bewertungstest",
+  "stressScaleTest": "Streskala-Test",
+  "anxietyScaleTest": "Angstskala-Test",
   "continueButton": "Weiter",
   "@continueButton": {
-    "description": "Primärer Schaltflächentext, um den Mentaltest zu starten"
+    "description": "Primary button label to start the mental test"
   },
-
   "testRule1": "Bewerte deine **letzte Woche**.",
-  "@testRule1": {
-    "description": "Erste Regel: Bewerte deine letzte Woche, fetter Teil zwischen **"
-  },
-
-  "testRule2": "Es wird empfohlen, den Test **einmal pro Woche** durchzuführen.",
-  "@testRule2": {
-    "description": "Zweite Regel: Empfohlene Häufigkeit des Tests"
-  },
-
-  "testRule3": "Wenn du den Test mittendrin abbrichst, **kannst du dort weitermachen, wo du aufgehört hast.**",
-  "@testRule3": {
-    "description": "Dritte Regel: Der Benutzer kann später fortfahren"
-  },
-
-  "testDisclaimer": "Die Ergebnisse dieses Tests geben Aufschluss über die individuelle psychische Verfassung, ersetzen jedoch keine Diagnose oder Empfehlung, die mit einem psychologischen Fachpersonal besprochen wurde.",
-  "@testDisclaimer": {
-    "description": "Rechtlicher/medizinischer Haftungsausschluss für psychologische Tests"
-  },
-
+  "testRule2": "Es wird empfohlen, den Test **einmal pro Woche** zu machen.",
+  "testRule3": "Wenn du den Test auf halbem Weg abbrichst, **kannst du dort weitermachen, wo du aufgehört hast.**",
+  "testDisclaimer": "Die Ergebnisse dieses Tests geben Einblick in die individuelle psychische Gesundheit, ersetzen jedoch keine Diagnose oder Empfehlung eines Fachmanns für psychische Gesundheit.",
   "never": "Niemals",
   "sometimes": "Manchmal und gelegentlich",
   "often": "Ziemlich oft",
   "always": "Immer",
-
-  "stressQ1": "Es fiel mir schwer, mich zu entspannen und loszulassen.",
-  "stressQ2": "Ich neigte dazu, auf Situationen überzureagieren.",
-  "stressQ3": "Ich fühlte mich angespannt oder ängstlich.",
-  "stressQ4": "Ich hatte Mühe, meine Sachen und Aufgaben zu organisieren.",
-  "stressQ5": "Es fiel mir schwer, meine Gefühle zu kontrollieren, und ich habe sie manchmal ignoriert.",
-  "stressQ6": "Ich hatte Schwierigkeiten ein- oder durchzuschlafen.",
-  "stressQ7": "Ich fühlte mich von Verantwortlichkeiten überwältigt.",
-
-  "backToHome": "Zurück zur Startseite",
-
-  "stressScaleTitle": "Stress-Skala-Test",
-  "yourStressLevelPrefix": "Dein Stress-Level: ",
-
+  "stressQ1": "Ich hatte Mühe, mich zu entspannen und loszulassen.",
+  "stressQ2": "Ich neigte dazu, auf Ereignisse überzureagieren.",
+  "stressQ3": "Ich fühlte mich nervös oder ängstlich.",
+  "stressQ4": "Ich hatte Schwierigkeiten, meine Dinge und Aufgaben zu erledigen.",
+  "stressQ5": "Ich hatte Schwierigkeiten und ignorierte gelegentlich meine Gefühle.",
+  "stressQ6": "Ich hatte Probleme beim Einschlafen oder Durchschlafen.",
+  "stressQ7": "Ich fühlte mich von Verantwortlichkeiten überfordert.",
+  "stressScaleTitle": "Streskala-Test",
+  "yourStressLevelPrefix": "Dein Stresslevel: ",
   "stressLevelLow": "Niedriger Stress",
-  "stressLevelLowDescription": "Dein aktuelles Stress-Level ist niedrig. Du bewältigst alltägliche Herausforderungen gut.",
+  "stressLevelLowDescription": "Dein aktuelles Stresslevel ist niedrig. Du bewältigst tägliche Herausforderungen gut.",
   "stressLevelModerate": "Mäßiger Stress",
-  "stressLevelModerateDescription": "Dein Stress-Level ist mäßig. Es ist handhabbar, erfordert aber Aufmerksamkeit.",
+  "stressLevelModerateDescription": "Dein Stresslevel ist mäßig. Es ist überschaubar, erfordert jedoch Aufmerksamkeit.",
   "stressLevelHigh": "Hoher Stress",
-  "stressLevelHighDescription": "Dein Stress-Level ist hoch. Du musst langsamer machen und auf deinen Körper hören.",
-
-  "stressAnalysisIntro": "Vielen Dank für die Durchführung des Tests. Deine Ergebnisse deuten darauf hin, dass es in deinem Alltag einige Faktoren gibt, die dich herausfordern und Müdigkeit verursachen können.",
-
-  "stressAnalysisP1Part1": "Auch wenn dieses Level kein ",
-  "stressAnalysisP1Bold1": "'Hochalarm' ",
-  "stressAnalysisP1Part2": "ist, so ist es doch die Art und Weise, wie dein Körper und dein Geist sagen: ",
+  "stressLevelHighDescription": "Dein Stresslevel ist hoch. Du musst langsamer machen und auf deinen Körper hören.",
+  "stressAnalysisIntro": "Danke, dass du den Test abgeschlossen hast. Deine Ergebnisse deuten darauf hin, dass es in deinem täglichen Leben einige Faktoren gibt, die dich möglicherweise herausfordern und Müdigkeit verursachen.",
+  "stressAnalysisP1Part1": "Obwohl dieses Level kein ",
+  "stressAnalysisP1Bold1": "'hoher Alarm' ist, ",
+  "stressAnalysisP1Part2": "ist es die Art und Weise deines Körpers und Geistes zu sagen: ",
   "stressAnalysisP1Bold2": "'Ich brauche dich, um langsamer zu machen und mir zuzuhören.'",
-
-  "stressAnalysisP2Part1": "Mäßiger Stress ist in der heutigen schnelllebigen Welt sehr verbreitet und ",
-  "stressAnalysisP2Bold1": "handhabbar. ",
+  "stressAnalysisP2Part1": "Mäßiger Stress ist in der heutigen schnelllebigen Welt sehr verbreitet und er ist ",
+  "stressAnalysisP2Bold1": "bewältigbar. ",
   "stressAnalysisP2Part2": "Du kannst dieses Ergebnis als Gelegenheit sehen, ",
-  "stressAnalysisP2Bold2": "deinen Stress zu bewältigen, bevor er zum Burnout führt.",
-
-  "stressAnalysisRemember": "Denke daran, dieser Test ist ein Sensibilisierungswerkzeug und keine medizinische Diagnose. Dir Zeit für dich selbst zu nehmen, ist der erste Schritt zu einem besseren Gefühl.",
-
+  "stressAnalysisP2Bold2": "deinen Stress zu bewältigen, bevor es zu einem Burnout kommt.",
+  "stressAnalysisRemember": "Denk daran, dieser Test ist ein Bewusstseinsinstrument, keine medizinische Diagnose. Sich Zeit für sich selbst zu nehmen, ist der erste Schritt, um sich besser zu fühlen.",
+  "backToHome": "Zurück zur Startseite",
   "specialistsScreenTitle": "Mentoren",
-
-  "specialistAuraName": "Lina",
+  "specialistAuraName": "Aura",
   "specialistAuraTitle": "Individuelles Mentoring",
-  "specialistAuraDescription": "Persönliche Begleitung auf deinem Entwicklungsweg.",
-
-  "specialistZenName": "Jonas",
+  "specialistAuraDescription": "Personalisierte Anleitung für deine Reise des Selbstwachstums.",
+  "specialistZenName": "Zen",
   "specialistZenTitle": "Beziehungsberater",
-  "specialistZenDescription": "Unterstützt dich beim Aufbau gesunder und ausgeglichener Beziehungen.",
-
-  "specialistElaraName": "Mira",
-  "specialistElaraTitle": "Entwicklungscoach",
-  "specialistElaraDescription": "Begleitet dich bei deinen Zielen und persönlichem Wachstum.",
-
-  "specialistOrionName": "Felix",
-  "specialistOrionTitle": "Sozialverhaltens-Coach",
-  "specialistOrionDescription": "Stärkt Kommunikation und Selbstvertrauen im sozialen Umfeld.",
-
-  "specialistCyraName": "Sofia",
-  "specialistCyraTitle": "Akademische Mentorin",
-  "specialistCyraDescription": "Hilft dir bei Lernroutinen, Fokus und Studienplanung.",
-
+  "specialistZenDescription": "Hilft dir, gesunde und ausgewogene Beziehungen aufzubauen.",
+  "specialistElaraName": "Elara",
+  "specialistElaraTitle": "Entwicklungsbegleiter",
+  "specialistElaraDescription": "Unterstützt dein persönliches Wachstum und deine langfristigen Ziele.",
+  "specialistOrionName": "Orion",
+  "specialistOrionTitle": "Leitfaden für soziales Verhalten",
+  "specialistOrionDescription": "Verbesserung deiner Kommunikationsfähigkeiten und deines sozialen Selbstvertrauens.",
+  "specialistCyraName": "Cyra",
+  "specialistCyraTitle": "Akademischer Mentor",
+  "specialistCyraDescription": "Hilft bei Fokus, Lerngewohnheiten und akademischer Planung.",
   "chatScreenGreeting": "Hallo, {name}",
   "@chatScreenGreeting": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
-  "chatScreenTitle": "Unterhaltungen",
+  "chatScreenTitle": "Chats",
   "chatLastFromYouPrefix": "Du: ",
-
-  "chatDeleteToast": "Der Chat mit {name} wurde gelöscht.",
+  "chatDeleteToast": "Chat mit {name} wurde gelöscht.",
   "@chatDeleteToast": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
-  "askMentor": "Frage {name}",
+  "askMentor": "Frag, {name}",
   "@askMentor": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "gallery": "Galerie",
   "camera": "Kamera",
   "document": "Dokument",
   "free": "KOSTENLOS",
   "calendar": "Kalender",
-
   "profileSettings": "Profileinstellungen",
   "shareWithFriends": "Mit Freunden teilen",
   "notifications": "Benachrichtigungen",
-  "appointments": "Gespräche",
+  "appointments": "Meetings",
   "faq": "FAQ",
-
   "phoneNumber": "Telefonnummer",
   "logout": "Abmelden",
   "deleteAccount": "Konto löschen",
   "save": "Speichern",
-  "areYouSureLogout": "Möchtest du dich wirklich abmelden?",
-
+  "areYouSureLogout": "Bist du sicher, dass du dich abmelden möchtest?",
   "deleteProfile": "Profil löschen",
   "cancel": "Abbrechen",
   "delete": "Löschen",
   "areYouSureDelete": "Bist du sicher, dass du das Profil löschen möchtest?",
-
-  "invitePeople": "Leute einladen",
+  "deleteNotificationConfirmTitle": "Benachrichtigung löschen",
+  "deleteNotificationConfirmMessage": "Bist du sicher, dass du diese Benachrichtigung löschen möchtest?",
+  "deleteAllNotifications": "Alle löschen",
+  "deleteAllNotificationsConfirmTitle": "Alle Benachrichtigungen löschen",
+  "deleteAllNotificationsConfirmMessage": "Bist du sicher, dass du alle Benachrichtigungen löschen möchtest?",
+  "allNotificationsDeleted": "Alle Benachrichtigungen erfolgreich gelöscht",
+  "noNotificationsToDelete": "Keine Benachrichtigungen zum Löschen",
+  "errorDeletingNotifications": "Fehler beim Löschen der Benachrichtigungen",
+  "invitePeople": "Personen einladen",
   "copyLinkInviteFriend": "Kopiere den Link, um deine Freunde einzuladen",
   "share": "Teilen",
-
-  "upcoming": "Bevorstehend",
+  "upcoming": "Anstehend",
   "completed": "Abgeschlossen",
-
   "relativeToday": "Heute",
   "relativeTomorrow": "Morgen",
   "relativeYesterday": "Gestern",
-
-  "relativeDaysAgo": "vor {count} Tagen",
+  "relativeDaysAgo": "Vor {count} Tagen",
   "@relativeDaysAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
-  "relativeWeeksAgo": "vor {count} Wochen",
+  "relativeWeeksAgo": "Vor {count} Wochen",
   "@relativeWeeksAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
+  "numberOfQuestions": "Frage {currentQuestion} von {totalQuestion}",
+  "@numberOfQuestions": {
+    "placeholders": {
+      "currentQuestion": {
+        "type": "int"
+      },
+      "totalQuestion": {
+        "type": "int"
+      }
+    }
+  },
   "english": "Englisch",
   "turkish": "Türkisch",
   "german": "Deutsch",
   "language": "Sprache",
-
   "back": "Zurück",
-
-  "numberOfQuestions": "Frage {currentQuestion} von {totalQuestion}",
-  "@numberOfQuestions": {
-    "placeholders": {
-      "currentQuestion": { "type": "int" },
-      "totalQuestion": { "type": "int" }
-    }
-  },
-
   "enterFullNamePrompt": "Bitte gib deinen vollständigen Namen ein.",
-  "meetingStarted": "Gespräch gestartet",
+  "meetingStarted": "Meeting gestartet",
   "selectedDate": "Ausgewähltes Datum",
-
   "newChatStarted": "Neuer Chat gestartet",
-  "startNewMeeting": "Starte ein neues Gespräch",
-
+  "startNewMeeting": "Neues Meeting starten",
   "continueAsGuest": "Als Gast fortfahren",
-
-  "jobThoughtAndHabitGuide": "Gedanken- und Gewohnheits-Coach",
-  "jobFamilyAssistant": "Familien-Coach",
-  "jobAdult": "Erwachsenen-Coach",
-  "jobChild": "Kinder-Coach",
-  "jobTeenage": "Jugend-Coach",
-  "jobPersonal": "Persönlicher Coach",
-  "jobExamAnxiety": "Prüfungsangst-Coach",
-
+  "jobThoughtAndHabitGuide": "Gedanken- und Gewohnheitsbegleiter",
+  "jobFamilyAssistant": "Familienbegleiter",
+  "jobAdult": "Erwachsenenbegleiter",
+  "jobChild": "Kinderbegleiter",
+  "jobTeenage": "Teenager-Begleiter",
+  "jobPersonal": "Persönlicher Begleiter",
+  "jobExamAnxiety": "Prüfungsangst-Begleiter",
   "noSpecialistsFound": "Keine Spezialisten gefunden",
-
   "featureFamilyConflicts": "Familienkonflikte",
   "featureParenting": "Erziehung",
   "featureCommunication": "Kommunikation",
-  "featureBoundaries": "Grenzen setzen",
+  "featureBoundaries": "Grenzen",
   "featureRelationshipRepair": "Beziehungsreparatur",
   "featureDivorceSupport": "Scheidungsunterstützung",
   "featureChildBehavior": "Kinderverhalten",
   "featureFamilyHarmony": "Familienharmonie",
-
   "featureStressManagement": "Stressbewältigung",
   "featureSelfConfidence": "Selbstvertrauen",
   "featureLifeBalance": "Lebensbalance",
   "featureCareerGuidance": "Karriereberatung",
-  "featureEmotionalRegulation": "Emotionsregulierung",
+  "featureEmotionalRegulation": "Emotionsregulation",
   "featureDecisionMaking": "Entscheidungsfindung",
   "featureMotivation": "Motivation",
   "featurePersonalGrowth": "Persönliches Wachstum",
-
-  "featureEmotionalAwareness": "Emotionales Bewusstsein",
+  "featureEmotionalAwareness": "Emotionale Wahrnehmung",
   "featureSocialSkills": "Soziale Fähigkeiten",
   "featureSchoolAdaptation": "Schulanpassung",
   "featureSelfExpression": "Selbstausdruck",
   "featureFearManagement": "Angstbewältigung",
   "featureFriendshipBuilding": "Freundschaften aufbauen",
-  "featureFocusAttention": "Fokus und Aufmerksamkeit",
+  "featureFocusAttention": "Fokus & Aufmerksamkeit",
   "featureBehavioralSupport": "Verhaltensunterstützung",
-
   "featureIdentityDevelopment": "Identitätsentwicklung",
-  "featurePeerPressure": "Gruppendruck",
+  "featurePeerPressure": "Gruppenzwang",
   "featureAcademicStress": "Akademischer Stress",
   "featureSelfEsteem": "Selbstwertgefühl",
   "featureDigitalWellbeing": "Digitales Wohlbefinden",
-  "featureAngerManagement": "Wutbewältigung",
+  "featureAngerManagement": "Aggressionsbewältigung",
   "featureFuturePlanning": "Zukunftsplanung",
   "featureParentCommunication": "Elternkommunikation",
-
   "featureLoneliness": "Einsamkeit",
   "featureAnxietySupport": "Angstunterstützung",
-  "featureGriefProcessing": "Trauerverarbeitung",
+  "featureGriefProcessing": "Trauerbewältigung",
   "featureMindfulness": "Achtsamkeit",
   "featureSleepImprovement": "Schlafverbesserung",
   "featureOverthinking": "Überdenken",
   "featureSelfDiscovery": "Selbstfindung",
   "featureEmotionalHealing": "Emotionale Heilung",
-
   "featureTestAnxiety": "Prüfungsangst",
   "featureStudyTechniques": "Lerntechniken",
   "featureTimeManagement": "Zeitmanagement",
@@ -439,37 +383,33 @@
   "featureConcentration": "Konzentration",
   "featureRelaxationMethods": "Entspannungsmethoden",
   "featureExamPreparation": "Prüfungsvorbereitung",
-  "featureConfidenceBuilding": "Selbstvertrauen aufbauen",
-
-  "explanationFamilyAssistant": "Ein Familien-Coach, der Ihnen hilft, Familiendynamiken zu navigieren, Konflikte zu lösen, Eltern-Kind-Bindungen zu stärken und ein harmonischeres Zuhause zu schaffen. Ob Kommunikationsprobleme, Grenzfragen oder große Lebensübergänge wie Scheidung – Ihr Coach bietet einen sicheren Raum, um gemeinsam Lösungen zu finden.",
-  "explanationAdult": "Ein Coach für persönliche Entwicklung, der für Erwachsene konzipiert ist, die ihr Leben in die Hand nehmen wollen. Von der Stressbewältigung über den Aufbau von Selbstvertrauen bis hin zu wichtigen Karriereentscheidungen und der Suche nach Lebensbalance – Ihr Coach unterstützt Sie mit praktischen Strategien, die auf Ihre einzigartigen Herausforderungen zugeschnitten sind.",
-  "explanationChild": "Ein einfühlsamer und unterstützender Coach, der speziell dafür ausgebildet ist, Kindern zu helfen, ihre Emotionen auszudrücken, soziale Fähigkeiten aufzubauen und sich an das Schulleben anzupassen. Mit altersgerechten Techniken hilft Ihr Coach Kindern, Ängste zu überwinden, die Konzentration zu verbessern und gesunde Freundschaften in einer sicheren Umgebung aufzubauen.",
-  "explanationTeenage": "Ein Coach, der die Erfahrungen von Teenagern wirklich versteht. Von Identitätsfindung und Gruppendruck über akademischen Stress bis hin zu digitalem Wohlbefinden – Ihr Coach hilft Jugendlichen, Selbstwertgefühl aufzubauen, Emotionen zu bewältigen und die Zukunft zu planen, während sie eine gesunde Kommunikation mit den Eltern pflegen.",
-  "explanationPersonal": "Ein mitfühlender persönlicher Coach, der sich auf Ihr inneres Wohlbefinden konzentriert. Ob Sie mit Einsamkeit, Angst, Trauer oder einfach nur Überdenken kämpfen – Ihr Coach führt Sie durch Achtsamkeitsübungen, emotionale Heilungstechniken und Selbstfindungsübungen, um Frieden und Klarheit zu finden.",
-  "explanationExamAnxiety": "Ein spezialisierter Coach, der Schülern hilft, Prüfungsangst zu überwinden und ihr wahres akademisches Potenzial freizusetzen. Durch bewährte Lerntechniken, Entspannungsmethoden und vertrauensbildende Übungen verwandelt Ihr Coach Prüfungsstress in fokussierte Vorbereitung und ruhige Leistung.",
-
-  "explanationFamilyAssistant1": "Ein engagierter Familien-Coach, der sich auf die Lösung tief verwurzelter Familienkonflikte und den Wiederaufbau belasteter Beziehungen spezialisiert hat. Mit Expertise in Erziehungsherausforderungen, Kommunikationsfähigkeiten und dem Setzen gesunder Grenzen begleitet dieser Coach Familien durch schwierige Übergänge wie Scheidung und unterstützt Kinder bei Verhaltensänderungen — in einem sicheren, wertfreien Raum.",
-  "explanationFamilyAssistant2": "Ein warmherziger und einfühlsamer Familien-Coach, der sich auf die Stärkung der wichtigsten Bindungen konzentriert. Spezialisiert auf effektive Erziehungsstrategien, offene Kommunikation und Beziehungsreparatur hilft dieser Coach Familien, nach schwierigen Phasen wie Trennung oder Scheidung zu heilen und die emotionale sowie Verhaltensentwicklung der Kinder für dauerhafte Harmonie zu fördern.",
-  "explanationAdult1": "Ein ergebnisorientierter Coach für Erwachsene, die bedeutsame Veränderungen suchen. Mit Fokus auf Stressbewältigung, Lebensbalance und Karriereberatung hilft dieser Coach Ihnen, Ihre Emotionen zu regulieren, selbstbewusste Entscheidungen zu treffen und durch praktische, zielorientierte Strategien nachhaltiges persönliches Wachstum zu erreichen.",
-  "explanationAdult2": "Ein ganzheitlicher Entwicklungscoach, der Erwachsene befähigt, ihr volles Potenzial auszuschöpfen. Vom Aufbau unerschütterlichen Selbstvertrauens und Stressbewältigung über Karriereorientierung bis hin zu täglicher Motivation vereint dieser Coach Emotionsregulierungstechniken mit umsetzbaren Lebensstrategien für dauerhafte positive Veränderung.",
-  "explanationTeenage1": "Ein Coach, der die einzigartigen Herausforderungen der Adoleszenz zutiefst versteht. Von Identitätsentwicklung und Widerstand gegen Gruppendruck über akademischen Stress bis hin zu gesunden digitalen Gewohnheiten hilft dieser Coach Teenagern, ihr Selbstwertgefühl zu stärken, Wut zu kontrollieren, ihre Zukunft zu planen und offen mit ihren Eltern zu kommunizieren.",
-  "explanationTeenage2": "Ein einfühlsamer Wegbegleiter durch die turbulenten Jugendjahre. Spezialisiert auf Identitätsfindung, akademischen Druck und digitales Wohlbefinden befähigt dieser Coach Jugendliche, Widerstandskraft gegen Gruppeneinfluss zu entwickeln, Wut konstruktiv zu bewältigen, langfristige Ziele aufzubauen und gesunde Eltern-Teenager-Beziehungen zu pflegen.",
-  "explanationChild1": "Ein fürsorglicher Coach, der Kinder in ihren prägendsten Jahren unterstützt. Mit sanften, altersgerechten Methoden hilft dieser Coach Kindern, emotionales Bewusstsein zu entwickeln, soziale Fähigkeiten aufzubauen, sich an das Schulleben anzupassen, sich frei auszudrücken, Ängste zu überwinden, bedeutungsvolle Freundschaften zu schließen, die Konzentration zu verbessern und positive Verhaltensmuster zu entwickeln.",
-  "explanationChild2": "Ein liebevoller und geduldiger Coach, der sich dem Gedeihen von Kindern widmet. Mit Fokus auf emotionale Intelligenz, soziale Entwicklung und Schulanpassung schafft dieser Coach eine sichere Umgebung, in der Kinder lernen, ihre Gefühle auszudrücken, Ängste zu überwinden, dauerhafte Freundschaften aufzubauen, ihre Konzentration zu stärken und die Verhaltensunterstützung zu erhalten, die sie für selbstbewusstes Wachstum brauchen.",
-  "explanationPersonal1": "Ein zutiefst mitfühlender Coach, der sich auf Ihr emotionales Wohlbefinden und Ihren inneren Frieden konzentriert. Ob Sie Einsamkeit, Angst, Trauer oder schlaflose Nächte erleben — dieser Coach führt Sie durch Achtsamkeitspraktiken, emotionale Heilungsprozesse und Selbstfindungsreisen, um sich vom Überdenken zu befreien und dauerhafte Klarheit zu finden.",
-  "explanationPersonal2": "Ein unterstützender und intuitiver persönlicher Coach, der Ihnen hilft, sich wieder mit sich selbst zu verbinden. Spezialisiert auf Angstbewältigung, Achtsamkeitstechniken und Schlafverbesserung führt dieser Coach Sie sanft durch Muster des Überdenkens und emotionaler Belastung hin zu echtem Heilen und einem erneuerten Gefühl innerer Ruhe.",
-  "explanationExamAnxiety1": "Ein fokussierter und methodischer Coach, der Prüfungsstress in selbstbewusste Leistung verwandelt. Spezialisiert auf Zeitmanagement, Umgang mit Leistungsdruck und Aufbau tiefer Konzentration stattet dieser Coach Schüler mit praktischen Entspannungsmethoden, strukturierten Prüfungsvorbereitungstechniken und vertrauensbildenden Strategien für akademischen Erfolg aus.",
-  "explanationExamAnxiety2": "Ein spezialisierter akademischer Coach, der Schülern hilft, Prüfungsangst zu überwinden und klüger zu lernen. Durch bewährte Lerntechniken, effektives Zeitmanagement und Resilienz gegen Leistungsdruck baut dieser Coach tiefe Konzentrationsfähigkeiten, strukturierte Prüfungsvorbereitungsgewohnheiten und dauerhaftes Selbstvertrauen für jeden Prüfungstag auf.",
-
+  "featureConfidenceBuilding": "Vertrauensaufbau",
+  "explanationFamilyAssistant": "Ein Familienbegleiter, der dir hilft, familiäre Dynamiken zu navigieren, Konflikte zu lösen, Eltern-Kind-Bindungen zu stärken und ein harmonischeres Zuhause aufzubauen.",
+  "explanationAdult": "Ein Begleiter für persönliche Entwicklung für Erwachsene, die die Kontrolle über ihr Leben übernehmen wollen — von der Bewältigung des Alltagsstresses und dem Aufbau von Selbstvertrauen bis zur Findung der Lebensbalance.",
+  "explanationChild": "Ein sanfter und unterstützender Begleiter, der darauf trainiert ist, Kindern zu helfen, ihre Emotionen auszudrücken, soziale Fähigkeiten aufzubauen und sich mit altersgerechten Techniken an das Schulleben anzupassen.",
+  "explanationTeenage": "Ein Begleiter, der die Erfahrung von Teenagern versteht — von der Identitätsfindung und dem Gruppenzwang bis hin zu akademischem Stress und digitalem Wohlbefinden.",
+  "explanationPersonal": "Ein mitfühlender persönlicher Begleiter, der sich auf das innere Wohlbefinden konzentriert. Führt dich durch Achtsamkeit, emotionale Heilung und Selbstfindung, um Frieden und Klarheit zu finden.",
+  "explanationExamAnxiety": "Ein spezialisierter Begleiter, der Schülern hilft, Prüfungsangst durch bewährte Lerntechniken, Entspannungsmethoden und vertrauensbildende Übungen zu überwinden.",
+  "explanationFamilyAssistant1": "Ein engagierter Familienbegleiter, der sich auf die Lösung tief verwurzelter Familienkonflikte und den Wiederaufbau belasteter Beziehungen spezialisiert hat. Hilft Familien, schwierige Übergänge wie Scheidung zu meistern, und begleitet Kinder durch Verhaltensänderungen.",
+  "explanationFamilyAssistant2": "Ein herzlicher und einfühlsamer Familienbegleiter, der sich auf die Stärkung der wichtigsten Bindungen konzentriert. Hilft Familien bei der Heilung nach schwierigen Zeiten und unterstützt gleichzeitig die emotionale und verhaltensbezogene Entwicklung von Kindern.",
+  "explanationAdult1": "Ein ergebnisorientierter Begleiter für Erwachsene, die sinnvolle Veränderungen suchen. Konzentriert sich auf Stressbewältigung, Lebensbalance und Karriereberatung durch praktische, zielorientierte Strategien.",
+  "explanationAdult2": "Ein ganzheitlicher Entwicklungsbegleiter, der Erwachsene dabei unterstützt, ihr volles Potenzial auszuschöpfen — vom Aufbau von Selbstvertrauen und der Stressbewältigung bis zur Findung der beruflichen Richtung und täglicher Motivation.",
+  "explanationTeenage1": "Ein Begleiter, der die Adoleszenz zutiefst versteht. Hilft Teenagern, das Selbstwertgefühl zu stärken, Wut zu kontrollieren, ihre Zukunft zu planen und offen mit ihren Eltern zu kommunizieren.",
+  "explanationTeenage2": "Ein einfühlsamer Führer durch die turbulenten Teenagerjahre. Befähigt Teenager, Resilienz zu entwickeln, Wut konstruktiv zu bewältigen und gesunde Eltern-Teenie-Beziehungen aufrechtzuerhalten.",
+  "explanationChild1": "Ein fürsorglicher Begleiter für die prägendsten Jahre von Kindern. Hilft Kindern, emotionales Bewusstsein zu entwickeln, soziale Fähigkeiten aufzubauen, sich an die Schule anzupassen, Ängste zu überwinden und den Fokus zu verbessern.",
+  "explanationChild2": "Ein fürsorglicher und geduldiger Begleiter, der sich dafür einsetzt, Kindern zum Gedeihen zu verhelfen — und ein sicheres Umfeld schafft, in dem Kinder lernen, Gefühle auszudrücken, Freundschaften aufzubauen und selbstbewusst zu wachsen.",
+  "explanationPersonal1": "Ein zutiefst mitfühlender Begleiter, der sich auf emotionales Wohlbefinden konzentriert. Führt dich durch Achtsamkeit, emotionale Heilung und Selbstfindung, um dich von übermäßigem Nachdenken zu befreien.",
+  "explanationPersonal2": "Ein unterstützender persönlicher Begleiter, der dir hilft, wieder mit dir selbst in Kontakt zu kommen. Spezialisiert auf Angstbewältigung, Achtsamkeit und Schlafverbesserung für echte innere Ruhe.",
+  "explanationExamAnxiety1": "Ein fokussierter Begleiter, der Prüfungsstress in selbstbewusste Leistung verwandelt. Rüstet Schüler mit Zeitmanagement, Entspannungsmethoden und vertrauensbildenden Strategien aus.",
+  "explanationExamAnxiety2": "Ein spezialisierter akademischer Begleiter, der Schülern hilft, Prüfungsangst zu überwinden und durch bewährte Techniken und strukturierte Prüfungsvorbereitung intelligenter zu lernen.",
   "filterTitle": "Filtern",
-  "filterCoachingArea": "Coaching-Bereich",
-  "filterExpertise": "Fachgebiet",
-  "filterSelectCoachingArea": "Coaching-Bereich auswählen",
+  "filterCoachingArea": "Begleitung-Bereich",
+  "filterExpertise": "Expertise",
+  "filterSelectCoachingArea": "Begleitung-Bereich auswählen",
   "filterSave": "Speichern",
-
-  "coachDetailInformation": "Informationen",
+  "coachDetailInformation": "Information",
   "coachDetailUnlimitedMemory": "Unbegrenzt",
-  "coachDetailMemory": "Gedächtnis",
+  "coachDetailMemory": "Speicher",
   "coachDetailMultilingual": "Mehrsprachig",
   "coachDetailLanguage": "Sprache",
   "coachDetailAvailability": "Verfügbarkeit",
@@ -477,42 +417,214 @@
   "coachDetailStartVideoCall": "Videoanruf starten",
   "coachDetailOnline": "Online",
   "coachDetailVerified": "Verifiziert",
-  "coachDetailCreateAppointment": "Termin erstellen",
-
-  "searchSoundHint": "Sounds, Stimmungen, Vibes suchen..",
+  "coachDetailCreateAppointment": "Einen Termin erstellen",
+  "searchSoundHint": "Suche nach Sounds, Stimmungen, Vibes..",
   "featuredForYou": "Für dich empfohlen",
-  "mostPopular": "Am beliebtesten",
-
+  "mostPopular": "Beliebteste",
   "soundCategoryFocus": "Fokus",
   "soundCategorySleep": "Schlaf",
   "soundCategoryMeditation": "Meditation",
   "soundCategoryRelax": "Entspannen",
-
-  "soundDeepWorkFlow": "Deep Work Flow",
+  "soundDeepWorkFlow": "Tiefer Arbeitsfluss",
   "soundDeepWorkFlowSub": "Steigere deine Produktivität",
   "soundBinauralBeats": "Binaurale Beats",
   "soundBinauralBeatsSub": "Stimme deine Gehirnwellen ab",
-  "soundLibraryAmbience": "Bibliotheks-Ambiente",
-  "soundLibraryAmbienceSub": "Ruhige Studienatmosphäre",
-
+  "soundLibraryAmbience": "Bibliotheksatmosphäre",
+  "soundLibraryAmbienceSub": "Ruhige Lernatmosphäre",
   "soundRainOnWindow": "Regen am Fenster",
-  "soundRainOnWindowSub": "Gleite in ruhigen Schlaf",
+  "soundRainOnWindowSub": "Lass dich in einen friedlichen Schlaf treiben",
   "soundOceanWaves": "Meereswellen",
-  "soundOceanWavesSub": "Beruhigende Wellenrhythmen",
-  "soundDeepSpaceDrone": "Weltraum-Drone",
+  "soundOceanWavesSub": "Rhythmische Wellen, um dich zu beruhigen",
+  "soundDeepSpaceDrone": "Deep Space Drone",
   "soundDeepSpaceDroneSub": "Kosmische Ambient-Reise",
-
   "soundTibetanBowls": "Tibetische Klangschalen",
-  "soundTibetanBowlsSub": "Uralte Heilschwingungen",
+  "soundTibetanBowlsSub": "Alte heilende Schwingungen",
   "soundForestBirds": "Waldvögel",
-  "soundForestBirdsSub": "Morgenmelodie der Natur",
+  "soundForestBirdsSub": "Die Morgenmelodie der Natur",
   "soundMorningZen": "Morgen-Zen",
-  "soundMorningZenSub": "Starte achtsam in den Tag",
-
-  "soundFireplaceCrackle": "Kaminknistern",
-  "soundFireplaceCrackleSub": "Warme und gemütliche Vibes",
+  "soundMorningZenSub": "Beginne deinen Tag achtsam",
+  "soundFireplaceCrackle": "Kaminfeuerknistern",
+  "soundFireplaceCrackleSub": "Warme und gemütliche Stimmung",
   "soundGentleStream": "Sanfter Bach",
-  "soundGentleStreamSub": "Fließende Wasserruhe",
+  "soundGentleStreamSub": "Fließende Wasserstille",
   "soundSoftPiano": "Sanftes Klavier",
-  "soundSoftPianoSub": "Zarte Melodien zum Entspannen"
+  "soundSoftPianoSub": "Zarte Melodien zum Entspannen",
+  "quickMessage": "Schnelle Nachricht",
+  "chatMessage": "Nachricht",
+  "chatHistory": "Verlauf",
+  "noChatHistory": "Noch kein Chatverlauf",
+  "calling": "Wird angerufen...",
+  "image": "Bild",
+  "coachesTitle": "Begleiter",
+  "searchAtMindcoach": "Bei __MINDBegleiter__ suchen",
+  "noResultsFound": "Keine Ergebnisse für \"{query}\" gefunden",
+  "@noResultsFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumTryFree": "Teste __MIND_Begleiter__ Premium\n1 Woche lang kostenlos",
+  "premiumUnlimitedAccess": "Erhalte unbegrenzten Zugang und nutze die Möglichkeiten",
+  "premiumFeatureSkipAds": "Werbung überspringen",
+  "premiumFeatureUnlimitedCharacters": "Unbegrenzte Charakterauswahl",
+  "premiumFeatureExpandedMemory": "Erweiterter Speicher und Kontext",
+  "premiumFeatureAdvancedReasoning": "Mit fortschrittlichen Denkfähigkeiten",
+  "premiumStartTrial": "1 Woche kostenlose Testversion starten",
+  "premiumBillingNote": "Nach deiner 7-tägigen kostenlosen Testversion werden dir 8,99 $/Monat berechnet. Du kannst jederzeit kündigen.",
+  "premiumRestorePurchase": "Kauf wiederherstellen",
+  "termsOfUse": "Nutzungsbedingungen",
+  "premiumSaveBadge": "17% SPAREN",
+  "premiumPlanAnnual": "Jährlich",
+  "premiumPlanMonthly": "Monatlich",
+  "premiumPlanPerYearAfterTrial": "pro Jahr nach 7 Tagen Testversion",
+  "goodbyeTitle": "Wir vermissen dich ",
+  "goodbyeSubtitle": "Es tut uns leid, dass du dein Konto gelöscht hast.\nWir hoffen, dich wiederzusehen...",
+  "goBack": "Geh zurück",
+  "profileFromGallery": "Aus Galerie auswählen",
+  "profileFromCamera": "Ein Foto machen",
+  "profilePhotoUpdated": "Profilfoto aktualisiert",
+  "logoutDialogTitle": "Du bist dabei, dich abzumelden",
+  "logoutDialogSubtitle": "Bis bald! Wir werden deine Atemübungen vermissen.",
+  "sectionAccountSettings": "KONTOEINSTELLUNGEN",
+  "sectionGeneral": "ALLGEMEIN",
+  "menuItemPremium": "Premium",
+  "menuItemRateUs": "Bewerte uns",
+  "premiumBadge": "PREMIUM",
+  "premiumStatusActive": "aktiv",
+  "linkCopied": "Link kopiert!",
+  "shareFriend": "Mit Freund teilen",
+  "errorMessageFailed": "Nachricht konnte nicht gesendet werden",
+  "errorImageFailed": "Bild konnte nicht gesendet werden",
+  "errorVoiceFileNotFound": "Sprachdatei nicht gefunden",
+  "errorVoiceMessageFailed": "Sprachnachricht konnte nicht gesendet werden",
+  "errorVoiceNotPlayed": "Sprachdatei konnte nicht abgespielt werden",
+  "errorVoiceMessageNotPlayed": "Sprachnachricht konnte nicht abgespielt werden",
+  "errorRecordingStart": "Aufnahme konnte nicht gestartet werden",
+  "errorRecordingStop": "Aufnahme konnte nicht gestoppt werden",
+  "errorMicrophonePermission": "Mikrofonberechtigung erforderlich",
+  "errorRecordingTooShort": "Aufnahme zu kurz, bitte länger aufnehmen",
+  "errorAppointmentDateNotFound": "Termindatum nicht gefunden",
+  "errorAppointmentExpired": "Terminzeit ist abgelaufen",
+  "errorAppointmentNotYet": "Sitzung hat noch nicht begonnen",
+  "errorConsultantNotFound": "Berater nicht gefunden",
+  "errorConsultantsNotLoaded": "Beraterliste konnte nicht geladen werden",
+  "errorConsultantLoadFailed": "Berater konnte nicht geladen werden",
+  "errorOperationFailed": "Vorgang fehlgeschlagen",
+  "errorPhotoUpload": "Profilfoto konnte nicht hochgeladen werden",
+  "errorGeneral": "Ein Fehler ist aufgetreten",
+  "recordingStatus": "Aufnahme läuft...",
+  "email": "E-Mail",
+  "emailHint": "beispiel@email.com",
+  "messageOptionalHint": "Schreibe deine Nachricht, falls du eine hast.",
+  "appLanguage": "App-Sprache",
+  "moodTrackerSubtitle": "Ein kurzer Check-in wirkt Wunder",
+  "moodDescCalm": "Diese innere Ruhe ist deine größte Stärke. Genieße diesen Moment und bleib ausgeglichen.",
+  "moodDescHappy": "Deine positive Energie ist ansteckend! Verbreite weiterhin Freude und genieße dieses wunderbare Gefühl.",
+  "moodDescNeutral": "Ein ausgeglichener Gemütszustand ist völlig in Ordnung. Nimm dir einen Moment, um bei dir selbst nachzufragen.",
+  "moodDescTired": "Dein Körper sagt dir, dass du dich ausruhen sollst. Mach eine Pause und lade deine Batterien auf — du hast es verdient.",
+  "moodDescStressed": "Atme tief durch. Denk daran, dass es in Ordnung ist, langsamer zu werden und die Dinge Schritt für Schritt anzugehen.",
+  "todaysSessions": "Heutige Sitzungen",
+  "makeAnAppointment": "Termin vereinbaren",
+  "testResult": "Testergebnis",
+  "mentalTest": "Mentaltest",
+  "age": "Alter",
+  "enterYourAge": "Gib dein Alter ein",
+  "profileSaved": "Profil erfolgreich gespeichert",
+  "done": "Fertig",
+  "deleteAccountWhyLeaving": "Wir möchten nicht, dass du gehst, aber wir verstehen dich.",
+  "deleteAccountImproveQuestion": "Um die __MINDBegleiter__-Erfahrung zu verbessern, könntest du uns sagen, warum du gehst?",
+  "deleteReasonNotRealistic": "Ich fand die KI-Charaktere nicht realistisch.",
+  "deleteReasonTechnicalIssues": "Ich habe technische Probleme bei Video-Chats.",
+  "deleteReasonPrice": "Die Abonnementpreise übersteigen meine Erwartungen.",
+  "deleteReasonNoCharacters": "Ich konnte keine Charaktere finden, die meinem Stil entsprechen.",
+  "deleteReasonShortTry": "Ich wollte es nur für kurze Zeit ausprobieren.",
+  "deleteReasonOther": "Sonstiges",
+  "messageOptionalLabel": "Nachricht (optional)",
+  "specialOffer": "Sonderangebot",
+  "specialOfferSubtitle": "Schau dir das Angebot an, das wir für dich vorbereitet haben, bevor du gehst.",
+  "switchTo1MonthPlan": "Zum 1-Monats-Plan wechseln",
+  "monthlyPlanPrice": "$79/Monat, jederzeit kündbar",
+  "noLongTermCommitment": "Keine langfristige Verpflichtung. Bleib monatlich mit unserer Community verbunden.",
+  "whatYouKeep": "Was du behältst:",
+  "featureAllCharacters": "Zugang zu allen Charakteren",
+  "featureUnlimitedVideoCalls": "Unbegrenzte Videoanrufe",
+  "featureUnlimitedCharacterEditing": "Unbegrenzte Charakter-Bearbeitung",
+  "switchToMonthlyPlan": "Zum Monatsplan wechseln",
+  "areYouSure": "Bist du sicher?",
+  "finalOfferSubtitle": "Wir möchten wirklich nicht, dass du gehst. Hier ist, was du verlierst:",
+  "featureUnlimitedCharacterAccess": "Unbegrenzter Charakterzugang",
+  "featureUnlimitedVideoCallAccess": "Unbegrenzter Videoanruf-Zugang",
+  "featureUnlimitedCharacterEditingAccess": "Unbegrenzte Charakter-Bearbeitungsmöglichkeiten",
+  "stayAnd60Off": "Bleib und erhalte 60% Rabatt für 1 Monat",
+  "bestOfferPrice": "Unser bestes Angebot aller Zeiten. Nur $27.60/Monat",
+  "accept60OffAndStay": "60% Rabatt annehmen & bleiben",
+  "sadToSeeYouGo": "Schade, dass du gehst",
+  "membershipCancelledInfo": "Deine Mitgliedschaft wurde gekündigt. Du hast bis zum Ende deines aktuellen Abrechnungszeitraums Zugang.",
+  "changeYourMind": "Hast du es dir anders überlegt?",
+  "reactivateInfo": "Du kannst deine Mitgliedschaft jederzeit reaktivieren, um deine Vorteile zu behalten.",
+  "waitReactivate": "Warte, ich möchte reaktivieren →",
+  "findCoachMatchedFor": "{count} Begleiter für {area} gefunden",
+  "@findCoachMatchedFor": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "findCoachTitle": "Finde deinen Begleiter",
+  "findCoachSwipeToBrowse": "Wischen zum Durchsehen - {schedule}",
+  "@findCoachSwipeToBrowse": {
+    "placeholders": {
+      "schedule": {
+        "type": "String"
+      }
+    }
+  },
+  "findCoachYearsExperience": "{count} Jahre Erfahrung",
+  "@findCoachYearsExperience": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "findCoachSkip": "Überspringen",
+  "findCoachBook": "Buchen",
+  "splashTagline": "Nimm dir einen Moment für dich.",
+  "stepOf": "Schritt {current} von {total}",
+  "@stepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "trialEndedTitle": "Zeit abgelaufen",
+  "trialEndedMessage": "Dein 1-minütiges Testlimit ist erreicht. Melde dich an, um mit deinem Begleiter weiterzusprechen.",
+  "trialEndedAction": "Anmelden, um fortzufahren",
+  "noUpcomingAppointments": "Keine bevorstehenden Termine",
+  "noCompletedAppointments": "Keine abgeschlossenen Termine",
+  "videoCallStatusConnecting": "Verbinden...",
+  "videoCallStatusListening": "Hört zu",
+  "videoCallStatusMuted": "Stumm",
+  "videoCallStatusThinking": "Denkt nach...",
+  "videoCallStatusSpeaking": "Spricht",
+  "videoCallStatusError": "Verbindungsfehler",
+  "videoCallEncrypted": "Ende-zu-Ende verschlüsselt",
+  "videoCallTurnCamera": "Kamera wechseln",
+  "videoCallEndButton": "Beenden",
+  "videoCallMute": "Stummschalten",
+  "videoCallEndDialogTitle": "Möchtest du den Anruf wirklich beenden?",
+  "videoCallEndDialogCancel": "Abbrechen",
+  "videoCallEndDialogEnd": "Beenden",
+  "videoCallRateTitle": "Gespräch bewerten",
+  "videoCallRateSubtitle": "Bewerte den Videoanruf"
 }

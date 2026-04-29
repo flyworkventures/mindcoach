@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 
 import 'provider/faq_provider.dart';
@@ -22,148 +22,120 @@ class _FaqScreenState extends ConsumerState<FaqScreen> {
     final lang = Localizations.localeOf(context).languageCode; // en / tr / de
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        // 🔹 Arka plan gradient
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment(-0.9, -1.0),
-            end: Alignment(1.0, 0.9),
-            colors: [
-              Color(0xFFFBFCFF),
-              Color(0xFFF9FAFF),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // ÜST BAR
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          width: 34,
-                          height: 34,
-
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                              color: const Color(0xFFC4C4C4),
-                              width: 1,
-                            ),
-                          ),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/svg/arrow_back.svg',
-                              width: 18,
-                              height: 18,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.black,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+      backgroundColor: Colors.white, // Figma arka planı temiz beyaz
+      body: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // --- ÜST BAR (Geri Butonu ve Başlık) ---
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: SvgPicture.asset('assets/icons/ic_bakc.svg'),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    context.l10n.faq,
+                    style: TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400, // Regular
+                      height: 1.0,
+                      color: Colors.black,
                     ),
-                    const Spacer(),
-                    Text(
-                      _subTitleForLang(lang),
-                      style: GoogleFonts.quicksand(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        height: 1.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const Spacer(),
-                    const SizedBox(width: 36),
-                  ],
-                ),
+                  ),
+                ],
+              ),
 
-                SizedBox(height: 32.h),
+              SizedBox(height: 28.h),
 
-                // LİSTE
-                Expanded(
-                  child: asyncFaq.when(
-                    data: (items) {
-                      return ListView.separated(
-                        itemCount: items.length,
-                        separatorBuilder: (_, _) => SizedBox(height: 10.h),
-                        itemBuilder: (context, index) {
-                          final item = items[index];
+              // --- F.A.Q. LİSTESİ ---
+              Expanded(
+                child: asyncFaq.when(
+                  data: (items) {
+                    return ListView.separated(
+                      physics: ClampingScrollPhysics(),
+                      itemCount: items.length,
+                      separatorBuilder: (_, _) => SizedBox(height: 10.h),
+                      itemBuilder: (context, index) {
+                        final item = items[index];
 
-                          final question =
-                              item.question[lang] ?? item.question['en']!;
-                          final answer =
-                              item.answer[lang] ?? item.answer['en']!;
+                        final question =
+                            item.question[lang] ?? item.question['en']!;
+                        final answer = item.answer[lang] ?? item.answer['en']!;
 
-                          final isExpanded = _expandedIndex == index;
+                        final isExpanded = _expandedIndex == index;
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              _FaqQuestionCard(
-                                question: question,
-                                isExpanded: isExpanded,
-                                onTap: () {
-                                  setState(() {
-                                    if (_expandedIndex == index) {
-                                      _expandedIndex = null;
-                                    } else {
-                                      _expandedIndex = index;
-                                    }
-                                  });
-                                },
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // SORU KARTI
+                            _FaqQuestionCard(
+                              question: question,
+                              isExpanded: isExpanded,
+                              onTap: () {
+                                setState(() {
+                                  if (_expandedIndex == index) {
+                                    _expandedIndex = null; // Zaten açıksa kapat
+                                  } else {
+                                    _expandedIndex = index; // Seçileni aç
+                                  }
+                                });
+                              },
+                            ),
+
+                            // CEVAP KARTI (Animasyonlu Açılış/Kapanış)
+                            AnimatedCrossFade(
+                              firstChild: const SizedBox(
+                                width: double.infinity,
+                                height: 0,
                               ),
-                              if (isExpanded) ...[
-                                SizedBox(height: 6.h),
-                                _FaqAnswerCard(answer: answer),
-                              ],
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                    error: (err, stack) => Center(
-                      child: Text(
-                        'Something went wrong.\n${err.toString()}',
-                        textAlign: TextAlign.center,
-                      ),
+                              secondChild: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 10.h,
+                                  ), // Kartlar arası gap 10px
+                                  _FaqAnswerCard(answer: answer),
+                                ],
+                              ),
+                              crossFadeState: isExpanded
+                                  ? CrossFadeState.showSecond
+                                  : CrossFadeState.showFirst,
+                              duration: const Duration(milliseconds: 250),
+                              sizeCurve: Curves.fastOutSlowIn,
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(
+                    child: Text(
+                      'Something went wrong.\n${err.toString()}',
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
-
-  String _subTitleForLang(String lang) {
-    switch (lang) {
-      case 'tr':
-        return 'Sık Sorulan Sorular';
-      case 'de':
-        return 'Häufig gestellte Fragen';
-      default:
-        return 'Frequently Asked Questions';
-    }
-  }
 }
 
-/// SORU KARTI
+// -----------------------------------------------------------------------------
+// YEREL WIDGET'LAR
+// -----------------------------------------------------------------------------
+
+/// SORU KARTI WIDGET'I
 class _FaqQuestionCard extends StatelessWidget {
   final String question;
   final bool isExpanded;
@@ -177,64 +149,56 @@ class _FaqQuestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 180),
-      curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFDEDEDE), width: 1),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: onTap,
-          child: SizedBox(
-            height: 51.h, // 🔹 sabit yükseklik (Figma 51)
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Soru metni
-                  Expanded(
-                    child: Text(
-                      question,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.quicksand(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700, // Bold
-                        height: 1.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  // Up / Down arrow (SVG)
-                  SvgPicture.asset(
-                    isExpanded
-                        ? 'assets/svg/up_arrow.svg'
-                        : 'assets/svg/down_arrow.svg',
-                    width: 9,
-                    height: 9,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.black,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 50.h, // Figma'daki Fixed Height: 50px
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16), // Figma Radius: 16px
+          border: Border.all(
+            color: const Color(0xFFE2E2E2), // Border Color: #E2E2E2
+            width: 2, // Border Width: 2px
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Justify: space-between
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Soru Metni
+            Expanded(
+              child: Text(
+                question,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700, // Bold
+                  height: 1.0,
+                  color: Color(0xFF96989C), // Text Secondary (#96989C)
+                ),
               ),
             ),
-          ),
+            const SizedBox(width: 8),
+
+            // Animasyonlu Yön Oku
+            AnimatedRotation(
+              turns: isExpanded ? 0.5 : 0.0, // 180 derece döner
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.fastOutSlowIn,
+              child: SvgPicture.asset('assets/icons/ic_down.svg'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-/// CEVAP KARTI
+/// CEVAP KARTI WIDGET'I
 class _FaqAnswerCard extends StatelessWidget {
   final String answer;
 
@@ -243,26 +207,24 @@ class _FaqAnswerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 121.h, // 🔹 Figma: 121
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(16), // Soruyla aynı ovallikte
         border: Border.all(
-          color: const Color(0xFFDEDEDE),
-          width: 1,
+          color: const Color(0xFFE2E2E2), // Aynı Border: #E2E2E2
+          width: 2, // 2px border
         ),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-      child: SingleChildScrollView(
-        // olası uzun cevaplar için
-        child: Text(
-          answer,
-          style: GoogleFonts.quicksand(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            height: 18 / 12, // line-height: 18px
-            color: Colors.grey.shade800,
-          ),
+      padding: const EdgeInsets.all(16),
+      child: Text(
+        answer,
+        style: const TextStyle(
+          fontFamily: 'Geist',
+          fontSize: 12,
+          fontWeight: FontWeight.w400, // Regular
+          height: 18 / 12, // Figma Line Height: 18px (1.5)
+          color: Color(0xFF96989C), // Text Secondary (#96989C)
         ),
       ),
     );

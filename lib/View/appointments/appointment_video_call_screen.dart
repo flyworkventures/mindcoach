@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
 import 'package:mindcoach/core/repo/stream_call_repo.dart';
+import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 import '../specialists_screen/specialists_notifier.dart';
@@ -142,9 +143,9 @@ class _AppointmentVideoCallScreenState
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Randevu süresi doldu'),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: Text(context.l10n.errorAppointmentExpired),
+          duration: const Duration(seconds: 2),
         ),
       );
 
@@ -254,7 +255,7 @@ class _AppointmentVideoCallScreenState
     try {
       if (!await _audioRecorder!.hasPermission()) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Mikrofon izni gerekli')),
+          SnackBar(content: Text(context.l10n.errorMicrophonePermission)),
         );
         return;
       }
@@ -282,7 +283,7 @@ class _AppointmentVideoCallScreenState
     } catch (e) {
       log('❌ Kayıt başlatma hatası: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Kayıt başlatılamadı: $e')),
+        SnackBar(content: Text(context.l10n.errorRecordingStart)),
       );
     }
   }
@@ -321,8 +322,8 @@ class _AppointmentVideoCallScreenState
             _recordingStartTime = null;
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Kayıt çok kısa, lütfen daha uzun kayıt yapın')),
+            SnackBar(
+                content: Text(context.l10n.errorRecordingTooShort)),
           );
 
           try {
@@ -402,7 +403,7 @@ class _AppointmentVideoCallScreenState
         _isGlowing = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Hata: $e')),
+        SnackBar(content: Text(context.l10n.errorGeneral)),
       );
     }
   }

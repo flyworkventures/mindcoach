@@ -158,12 +158,18 @@ class AuthController extends Notifier<AsyncValue<void>> {
   /// - Repository → Delete account API çağrısı
   /// - AuthService → Session temizle
   /// - NavigationService → Unauthenticated'a yönlendir
-  Future<void> deleteAccount() async {
+  Future<void> deleteAccount({
+    String? deleteReason,
+    String? deleteMessage,
+  }) async {
     debugPrint('🗑️ [AUTH-CONTROLLER] Delete account başlatılıyor...');
     state = const AsyncLoading();
     try {
       // 1. Delete account API çağrısı
-      await _repo.deleteAccount();
+      await _repo.deleteAccount(
+        deleteReason: deleteReason,
+        deleteMessage: deleteMessage,
+      );
       debugPrint('✅ [AUTH-CONTROLLER] Delete account API çağrısı tamamlandı');
 
       // 2. Session'ı temizle

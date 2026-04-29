@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 
 class PremiumScreen extends StatefulWidget {
@@ -104,7 +105,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
                   // Başlık (2 satır)
                   Text(
-                    'Try Mind Coach Premium\nfree for 1 week',
+                    context.l10n.premiumTryFree,
                     style: GoogleFonts.quicksand(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
@@ -116,7 +117,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
                   // Alt açıklama
                   Text(
-                    'Get unlimited access and take\nadvantage of opportunities',
+                    context.l10n.premiumUnlimitedAccess,
                     style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
@@ -128,10 +129,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   SizedBox(height: 20.h),
 
                   // Feature list
-                  _FeatureRow(text: 'Skip Ads'),
-                  _FeatureRow(text: 'Unlimited Character Selection'),
-                  _FeatureRow(text: 'Expanded memory and context'),
-                  _FeatureRow(text: 'With advanced reasoning capabilities'),
+                  _FeatureRow(text: context.l10n.premiumFeatureSkipAds),
+                  _FeatureRow(text: context.l10n.premiumFeatureUnlimitedCharacters),
+                  _FeatureRow(text: context.l10n.premiumFeatureExpandedMemory),
+                  _FeatureRow(text: context.l10n.premiumFeatureAdvancedReasoning),
                   SizedBox(height: 32.h),
 
                   // Plan kartları
@@ -139,10 +140,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _PlanCard(
-                        title: 'Annual',
+                        title: context.l10n.premiumPlanAnnual,
                         oldPrice: '\$107.88',
                         price: '\$79.99',
-                        subtitle: 'per year after 7 days trial',
+                        subtitle: context.l10n.premiumPlanPerYearAfterTrial,
                         isSelected: _selectedPlan == 0,
                         showSaveBadge: true,
                         onTap: () {
@@ -151,10 +152,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       ),
                       SizedBox(width: 16.w),
                       _PlanCard(
-                        title: 'Monthly',
+                        title: context.l10n.premiumPlanMonthly,
                         oldPrice: null,
                         price: '\$8.99',
-                        subtitle: 'per year after 7 days trial',
+                        subtitle: context.l10n.premiumPlanPerYearAfterTrial,
                         isSelected: _selectedPlan == 1,
                         showSaveBadge: false,
                         onTap: () {
@@ -187,7 +188,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        'start 1 week free trial',
+                        context.l10n.premiumStartTrial,
                         style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -201,7 +202,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
                   // Alttaki açıklama
                   Text(
-                    "You’ll be charged \$8.99 per month after your 7 day free trial ends. You can cancel anytime.",
+                    context.l10n.premiumBillingNote,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontSize: 11,
@@ -230,11 +231,11 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       spacing: 8.w,
                       children: [
-                        _FooterText('Restore purchase'),
+                        _FooterText(context.l10n.premiumRestorePurchase),
                         _FooterDot(),
-                        _FooterText('Terms of Use'),
+                        _FooterText(context.l10n.termsOfUse),
                         _FooterDot(),
-                        _FooterText('Privacy Policy'),
+                        _FooterText(context.l10n.onboardingPrivacyPolicy),
                       ],
                     ),
                   ),
@@ -334,7 +335,7 @@ class _PlanCard extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Text(
-          'SAVE 17%',
+          context.l10n.premiumSaveBadge,
           style: GoogleFonts.poppins(
             fontSize: 11,
             fontWeight: FontWeight.w600,

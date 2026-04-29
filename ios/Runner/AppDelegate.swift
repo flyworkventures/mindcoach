@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import AVFoundation
 import flutter_local_notifications
 import UserNotifications
 
@@ -20,6 +21,77 @@ import UserNotifications
     }
     
     GeneratedPluginRegistrant.register(with: self)
+
+    // ── Voice call audio session channel ──────────────────────────────────
+    // Enables hardware echo cancellation on iPhone for real-time voice chat.
+    // Called from Flutter when entering/leaving the voice-call screen.
+    let controller = window?.rootViewController as? FlutterViewController
+    if let messenger = controller?.binaryMessenger {
+      let channel = FlutterMethodChannel(
+        name: "mindcoach/voice_audio_session",
+        binaryMessenger: messenger)
+      channel.setMethodCallHandler { (call, result) in
+        let session = AVAudioSession.sharedInstance()
+        do {
+          switch call.method {
+          case "configureForVoiceCall":
+            // Other plugins (flutter_pcm_sound, record, …) may reset the
+            // category / mode on us. Re-apply BOTH explicitly so we end up
+            // in voiceChat mode (required for iOS hardware AEC).
+            //
+            // NOTE: We deliberately DO NOT pass `.defaultToSpeaker`. This
+            // makes the call behave like a real phone call — audio is
+            // routed to the earpiece (receiver) by default, and the user
+            // must explicitly tap the speaker button to switch to
+            // loudspeaker. Matches the iOS Phone app UX.
+            try session.setCategory(
+              .playAndRecord,
+              mode: .voiceChat, // enables hardware AEC + auto-ducking
+              options: [.allowBluetooth, .allowBluetoothA2DP])
+            // setCategory occasionally silently reverts the mode to
+            // `default` on iOS 17+; force it again if that happened.
+            if session.mode != .voiceChat {
+              try? session.setMode(.voiceChat)
+            }
+            try session.setActive(true, options: [])
+            // Ensure we start on the earpiece every time the voice-call
+            // screen is (re-)configured. If a previous audio route left us
+            // on the speaker, clear that override.
+            try? session.overrideOutputAudioPort(.none)
+            result(session.mode.rawValue) // return the actual mode for debugging
+
+          case "setSpeakerOn":
+            // Toggle between loudspeaker and earpiece (the iPhone Phone app
+            // "Speaker" button behaviour). Must be called while the session
+            // is already active in .playAndRecord/.voiceChat mode.
+            let on = (call.arguments as? [String: Any])?["on"] as? Bool ?? false
+            try session.overrideOutputAudioPort(on ? .speaker : .none)
+            result(on)
+
+          case "resetAudioSession":
+            // Return to a permissive default so OTHER audio features in the
+            // app (voice-message recording, audio playback, etc.) keep
+            // working. Do NOT call setActive(false) — that silences the whole
+            // app until the next setActive(true) and breaks unrelated chat
+            // features after the user leaves the voice call screen.
+            try session.setCategory(
+              .playAndRecord,
+              mode: .default,
+              options: [.defaultToSpeaker, .allowBluetooth, .mixWithOthers])
+            try session.setActive(true)
+            result(nil)
+          default:
+            result(FlutterMethodNotImplemented)
+          }
+        } catch {
+          result(FlutterError(
+            code: "AUDIO_SESSION_ERROR",
+            message: error.localizedDescription,
+            details: nil))
+        }
+      }
+    }
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

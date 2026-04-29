@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,7 +23,7 @@ class _HomeCoachesSectionState extends ConsumerState<HomeCoachesSection> {
   @override
   void initState() {
     super.initState();
-    // TODO: "exam_coach" değerini kendi veri modelindeki Sınav Kaygısı Koçu koduyla (job) değiştir.
+    // Varsayılan filtre: sınav kaygısı koçları
     _selectedJob = 'exam_anxiety';
   }
 
@@ -35,21 +36,13 @@ class _HomeCoachesSectionState extends ConsumerState<HomeCoachesSection> {
       return const SizedBox.shrink();
     }
 
-    // Extract unique job types
+    // API'den gelen gerçek job tiplerine göre filtre listesi oluştur
     final jobTypes = specialists.map((s) => s.job).toSet().toList();
 
-    // Sınav kaygısı koçunun her zaman ilk sırada görünmesini istiyorsan listeyi sıralayabilirsin (Opsiyonel)
-    // jobTypes.remove(_selectedJob);
-    // if (_selectedJob != null) jobTypes.insert(0, _selectedJob!);
-
-    // If no filter selected, show all. Otherwise filter by selected job.
+    // Filtre seçiliyse sadece o job tipini göster (max 4), seçili değilse tümünü göster
     final filtered = _selectedJob == null
         ? specialists
-        : specialists
-              .where((s) => s.job == _selectedJob)
-              .toList()
-              .take(2) // Sadece 2 tanesini göster
-              .toList();
+        : specialists.where((s) => s.job == _selectedJob).toList();
 
     return Padding(
       padding: const EdgeInsets.only(top: 24),
@@ -73,9 +66,8 @@ class _HomeCoachesSectionState extends ConsumerState<HomeCoachesSection> {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      // Eğer seçiliyse null yapma (her zaman biri seçili kalsın)
-                      // Veya tıklanınca null olmasını (tümünü göstermeyi) istiyorsan eski mantığı bırakabilirsin.
-                      // _selectedJob = isSelected ? null : job;
+                      // Her zaman en az bir rehber türü seçili kalsın.
+                      // Aynı tipe tekrar basılsa da seçimi kaldırma.
                       _selectedJob = job;
                     });
                   },
@@ -147,20 +139,11 @@ class _HomeCoachCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final langCode = context.langCode;
-    final featureConvert = FeatureConvert(context);
-
-    final name =
-        item.names[langCode] as String? ??
+    // Uzman ismini ayarla
+    final specialistName =
+        item.names[context.langCode] as String? ??
         item.names['en'] as String? ??
         item.names.values.first.toString();
-
-    final jobTitle = JobConvert(item.job, context).call();
-
-    // Show max 2 features + remaining count
-    final features = item.features;
-    final visibleCount = features.length > 2 ? 2 : features.length;
-    final remaining = features.length - visibleCount;
 
     return GestureDetector(
       onTap: () {
@@ -174,181 +157,250 @@ class _HomeCoachCard extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFB6BECA).withValues(alpha: 0.3),
-              offset: const Offset(0, 2),
-              blurRadius: 8,
-            ),
-          ],
+          borderRadius: BorderRadius.circular(16), // Figma: Radius 16px
+          border: Border.all(
+            color: Colors.black.withValues(alpha: 0.05),
+          ), // Inner border
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Photo
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
-                  image: DecorationImage(
-                    image: NetworkImage(item.photoURL),
-                    fit: BoxFit.cover,
+        child: Padding(
+          padding: const EdgeInsets.all(10), // Figma: Padding 10px
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // FOTOĞRAF (Yuvarlak köşe ile) - Dinamik SVG / PNG kontrolü
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: double.infinity,
+                    // Figma'daki arka plan gradyanı
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF2BD383), // Üstteki açık gri
+                          Color(0xFF166D44), // Alttaki koyu siyahımsı renk
+                        ],
+                      ),
+                    ),
+                    child: Builder(
+                      builder: (context) {
+                        final url = item.photoURL;
+                        final isSvg = url.toLowerCase().endsWith('.svg');
+
+                        // Hata durumunda çıkacak ikon
+                        Widget fallbackIcon() => const Center(
+                          child: Icon(
+                            Icons.person,
+                            size: 40,
+                            color: Color(0xFF96989C),
+                          ),
+                        );
+
+                        if (isSvg) {
+                          return SvgPicture.network(
+                            url,
+                            fit: BoxFit.cover,
+                            alignment: const Alignment(0.0, -0.8),
+                            errorBuilder: (_, _, _) => fallbackIcon(),
+                          );
+                        } else {
+                          return CachedNetworkImage(
+                            imageUrl: url,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                            errorWidget: (_, _, _) => fallbackIcon(),
+                            placeholder: (_, _) => const SizedBox.shrink(),
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
+              const SizedBox(height: 12),
 
-            // Content
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 4, 10, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // İSİM
+              Text(
+                specialistName,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600, // SemiBold
+                  color: Colors.black,
+                  height: 28 / 20,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 2),
+
+              // ALT BAŞLIK + RATING
+              Row(
                 children: [
-                  // Name
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                      height: 20 / 16,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-
-                  // Job title
-                  Text(
-                    jobTitle,
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF96989C),
-                      height: 14 / 12,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Feature tags
-                  Row(
-                    children: [
-                      for (int i = 0; i < visibleCount; i++) ...[
-                        if (i > 0) const SizedBox(width: 4),
-                        Flexible(
-                          child: _tag(
-                            featureConvert.call(features[i].toString()),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  if (remaining > 0) ...[
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: _tag(
-                            featureConvert.call(
-                              features[visibleCount].toString(),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        _tag('$remaining+', isCount: true),
-                      ],
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-
-                  // Create appointment button
-                  GestureDetector(
-                    onTap: () {
-                      ref
-                          .read(specialistsProvider.notifier)
-                          .selectSpecialist(item.id);
-                      Navigator.pushNamed(
-                        context,
-                        PageRoutes.specialistDetail,
-                        arguments: item,
-                      );
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 8,
+                  Expanded(
+                    child: Text(
+                      JobConvert(item.job, context).call(),
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF96989C),
+                        height: 16 / 12,
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF21BC87),
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(
-                              0xFF21BC87,
-                            ).withValues(alpha: 0.5),
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SvgPicture.asset("assets/icons/ic_yz.svg"),
-                          Spacer(),
-                          Text(
-                            context.l10n.coachDetailCreateAppointment,
-                            style: const TextStyle(
-                              fontFamily: 'Geist',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+
+              // ETİKETLER (Tags) - Dynamic features
+              ..._buildFeatureTags(context),
+
+              const SizedBox(height: 12),
+
+              // BUTON (Create an appointment)
+              GestureDetector(
+                onTap: () {
+                  ref
+                      .read(specialistsProvider.notifier)
+                      .selectSpecialist(item.id);
+                  Navigator.pushNamed(
+                    context,
+                    PageRoutes.specialistDetail,
+                    arguments: item,
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF21BC87),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF21BC87).withValues(alpha: 0.5),
+                        offset: const Offset(0, 0),
+                        blurRadius: 10,
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.calendar_today,
+                        size: 12,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        context.l10n.coachDetailCreateAppointment,
+                        style: const TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _tag(String text, {bool isCount = false}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+  List<Widget> _buildFeatureTags(BuildContext context) {
+    final featureConvert = FeatureConvert(context);
+    final features = item.features;
+    if (features.isEmpty) return [];
+
+    // Show first 2 tags in first row, then 1 tag + count in second row
+    final visibleCount = features.length > 3 ? 3 : features.length;
+    final remaining = features.length - visibleCount;
+
+    final firstRowCount = visibleCount >= 2 ? 2 : visibleCount;
+    final secondRowCount = visibleCount > 2 ? 1 : 0;
+
+    return [
+      Row(
+        children: [
+          for (int i = 0; i < firstRowCount; i++) ...[
+            if (i > 0) const SizedBox(width: 4),
+            Flexible(
+              child: _buildTag(featureConvert.call(features[i].toString())),
+            ),
+          ],
+        ],
+      ),
+      if (secondRowCount > 0) ...[
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            Expanded(
+              child: _buildTag(
+                featureConvert.call(features[2].toString()),
+                isExpanded: true,
+              ),
+            ),
+            if (remaining > 0) ...[
+              const SizedBox(width: 4),
+              _buildTag('$remaining+', isCount: true),
+            ],
+          ],
+        ),
+      ],
+    ];
+  }
+
+  // Ufak gri etiketler (Tags) için yardımcı widget
+  Widget _buildTag(
+    String text, {
+    bool isExpanded = false,
+    bool isCount = false,
+  }) {
+    final tagWidget = Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8,
+        vertical: 4,
+      ), // Figma: Padding 4px Top/Bottom, 8px Left/Right
       decoration: BoxDecoration(
         color: isCount
             ? Colors.grey[200]
-            : const Color(0xFF898989).withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(99),
+            : const Color(
+                0xFF898989,
+              ).withValues(alpha: 0.10), // #898989 10% Opacity
+        borderRadius: BorderRadius.circular(99), // Tam oval radius
       ),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Geist',
           fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF737373),
-          height: 12 / 9,
+          fontWeight: FontWeight.w600, // SemiBold
+          color: const Color(0xFF737373),
+          height: 14 / 10,
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
       ),
     );
+
+    if (isExpanded) {
+      return tagWidget;
+    }
+    return tagWidget;
   }
 }

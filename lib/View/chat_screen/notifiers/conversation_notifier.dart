@@ -33,6 +33,7 @@ class ChatMessage {
 
 class ConversationsState {
   final List<MessageModel> messages;
+  final bool isLoadingMessages;
   final XFile? selectedImage;
   final bool isRecording;
   final String? recordingPath;
@@ -43,6 +44,7 @@ class ConversationsState {
  
   const ConversationsState({
     required this.messages,
+    this.isLoadingMessages = false,
     this.selectedImage,
     this.isRecording = false,
     this.recordingPath,
@@ -54,6 +56,7 @@ class ConversationsState {
  
   ConversationsState copyWith({
     List<MessageModel>? messages,
+    bool? isLoadingMessages,
     XFile? selectedImage,
     bool clearSelectedImage = false,
     bool? isRecording,
@@ -66,6 +69,7 @@ class ConversationsState {
   }) {
     return ConversationsState(
       messages: messages ?? this.messages,
+      isLoadingMessages: isLoadingMessages ?? this.isLoadingMessages,
       selectedImage: clearSelectedImage ? null : (selectedImage ?? this.selectedImage),
       isRecording: isRecording ?? this.isRecording,
       recordingPath: recordingPath ?? this.recordingPath,
@@ -107,9 +111,21 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
 
 
   Future<void> getMessages(int id)async{
-    ChatRepo chatRepo = ChatRepo(ref);
-   List<MessageModel> messages = await chatRepo.getMessagesFromConsultantId(id.toString());
-   state = state.copyWith(messages: messages);
+    final shouldShowInitialLoading = state.messages.isEmpty;
+    if (shouldShowInitialLoading) {
+      state = state.copyWith(isLoadingMessages: true);
+    }
+    try {
+      ChatRepo chatRepo = ChatRepo(ref);
+      List<MessageModel> messages = await chatRepo.getMessagesFromConsultantId(id.toString());
+      state = state.copyWith(
+        messages: messages,
+        isLoadingMessages: false,
+      );
+    } catch (e) {
+      log("❌ getMessages hatası: $e");
+      state = state.copyWith(isLoadingMessages: false);
+    }
   }
 
   /// Belirli bir consultant'ın mesajlarını temizle
@@ -117,7 +133,7 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
     // Eğer mevcut mesajlar bu consultant'a aitse, temizle
     // Not: Bu basit bir implementasyon, daha gelişmiş bir çözüm için
     // mesajları consultantId'ye göre gruplamak gerekebilir
-    state = state.copyWith(messages: []);
+    state = state.copyWith(messages: [], isLoadingMessages: true);
   }
 
 
@@ -144,6 +160,23 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
     File? imageFile,
     File? audioFile,
   }) async {
+    // --- OPTİMİSTİK UPDATE: Mesajı API cevabı beklemeden anında ekle ---
+    MessageModel? optimisticMsg;
+    if (message != null && message.trim().isNotEmpty && imageFile == null && audioFile == null) {
+      optimisticMsg = MessageModel(
+        messageId: -DateTime.now().millisecondsSinceEpoch, // geçici negatif ID
+        chatId: 0,
+        senderId: 0,
+        sender: 'user',
+        message: message.trim(),
+        sentTime: DateTime.now().toIso8601String(),
+      );
+      state = state.copyWith(messages: [...state.messages, optimisticMsg]);
+
+      // Chat listesini de hemen güncelle
+      _updateChatListLastMessage(consultantId, message.trim(), true);
+    }
+
     try {
       ChatRepo chatRepo = ChatRepo(ref);
       await chatRepo.sendPremiumMessage(
@@ -152,26 +185,26 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
         imageFile: imageFile,
         audioFile: audioFile,
       );
-      
-      // Chat listesindeki son mesajı güncelle
-      String lastMessage;
-      if (imageFile != null) {
-        lastMessage = message?.isNotEmpty == true ? message! : '[Resim]';
-      } else if (audioFile != null) {
-        lastMessage = message?.isNotEmpty == true ? message! : '[Sesli Mesaj]';
-      } else {
-        lastMessage = message?.trim() ?? '';
-      }
-      
-      if (lastMessage.isNotEmpty) {
+
+      // Resim/ses için chat listesini güncelle (text için zaten yapıldı)
+      if (imageFile != null || audioFile != null) {
+        final lastMessage = imageFile != null
+            ? (message?.isNotEmpty == true ? message! : '[Resim]')
+            : (message?.isNotEmpty == true ? message! : '[Sesli Mesaj]');
         _updateChatListLastMessage(consultantId, lastMessage, true);
-      }
-      
-      // Mesaj gönderildikten sonra mesajları yeniden yükle (sadece text mesaj için)
-      if (imageFile == null && audioFile == null && message != null && message.trim().isNotEmpty) {
+        // Resim/ses mesajlarında optimistik update yok, sunucudan çek
         await getMessages(consultantId);
       }
+      // Text mesajlarda getMessages çağırmıyoruz — optimistik mesaj zaten gösteriliyor,
+      // 4 saniyelik polling timer sunucu cevabını (AI yanıtı dahil) yakalayacak.
     } catch (e) {
+      // Hata durumunda optimistik mesajı geri al
+      if (optimisticMsg != null) {
+        final filtered = state.messages
+            .where((m) => m.messageId != optimisticMsg!.messageId)
+            .toList();
+        state = state.copyWith(messages: filtered);
+      }
       log("❌ sendPremiumMessage hatası: $e");
       rethrow;
     }
@@ -221,6 +254,7 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
       if (specialistId != null && ref != null) {
         ref!.read(chatProvider.notifier).upsertLastMessage(
           id: specialistId,
+          consultantId: consultantId,  // gerçek API ID'si
           lastMessage: lastMessage,
           time: DateTime.now(),
           isFromMe: isFromMe,

@@ -1,6 +1,7 @@
 
 class UserModel {
   final int id;
+  final int? age;
   final String credential;
   final dynamic credentialData;
   final String? username;
@@ -20,6 +21,7 @@ class UserModel {
   final String? token; // authentication / session token
   UserModel({
     required this.id,
+    this.age,
     required this.credential,
     required this.credentialData,
     required this.username,
@@ -43,6 +45,7 @@ class UserModel {
 
   UserModel copyWith({
     int? id,
+    int? age,
     String? credential,
     dynamic credentialData,
     String? username,
@@ -63,6 +66,7 @@ class UserModel {
   }) {
     return UserModel(
       id: id ?? this.id,
+      age: age ?? this.age,
       credential: credential ?? this.credential,
       credentialData: credentialData ?? this.credentialData,
       username: username ?? this.username,
@@ -87,6 +91,7 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'age': age,
       'credential': credential,
       'credentialData': credentialData,
       'username': username,
@@ -110,6 +115,9 @@ class UserModel {
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'] is int ? map['id'] as int : int.tryParse(map['id'].toString()) ?? 0,
+      age: map['age'] is int
+          ? map['age'] as int
+          : int.tryParse(map['age']?.toString() ?? ''),
       credential: map['credential'] as String? ?? 'unknown',
       credentialData: map['credentialData'],
       username: map['username'] != null ? map['username'] as String : null,

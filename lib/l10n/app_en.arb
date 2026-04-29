@@ -1,8 +1,9 @@
 {
   "@@locale": "en",
-
   "relaxingSound": "Relaxing Sound",
   "seeAll": "See All",
+  "online": "Online",
+  "typeAMessage": "Type a message...",
   "premiumHeadlinePart1": "A space just to be ",
   "premiumHeadlineHighlight": "understood",
   "premiumHeadlinePart2": ",\nwithout judgment.",
@@ -12,22 +13,20 @@
   "premiumFeature3": "Advanced AI tailored for you",
   "premiumAnnualDiscount": "40% off on annual plan",
   "premiumCta": "Get Started",
-"onboardingTitle1": "Feeling overwhelmed?",
-  "onboardingDesc1": "Talk to a certified coach in minutes — whenever you need it.",
+  "onboardingTitle1": "Feeling overwhelmed?",
+  "onboardingDesc1": "Talk to a certified guide in minutes — whenever you need it.",
   "onboardingTitle2": "Talk your way.",
   "onboardingDesc2": "Text, voice, or video",
-  "onboardingTitle3": "Find the right coach for you.",
+  "onboardingTitle3": "Find the right guide for you.",
   "onboardingDesc3": "Get matched based on your goals, schedule and preferences.",
   "swipeToContinue": "Swipe to continue",
-
-  "onboardingTermsPrefix": "By signing up for MindCoach, you agree to our ",
+  "onboardingTermsPrefix": "By signing up for __MINDguide2__, you agree to our ",
   "onboardingTermsOfService": "Terms of Service",
   "onboardingTermsMiddle": ". Learn how we process your data in our ",
   "onboardingPrivacyPolicy": "Privacy Policy",
   "onboardingTermsAnd": " and ",
   "onboardingCookiesPolicy": "Cookies Policy",
   "onboardingTermsSuffix": ".",
-
   "nameGenderStepTitle": "Tell us a bit about yourself",
   "nameGenderStepSubtitle": "A short bio helps others know the real you. Keep it fun and genuine.",
   "fullName": "Full Name",
@@ -35,31 +34,26 @@
   "gender": "Gender",
   "male": "Male",
   "female": "Female",
-
   "next": "Next",
   "getStarted": "Get Started",
-  "findMyCoaches": "Find My Coaches",
-
-  "loginSubtitle": "Sign in to find your coach and start your journey. Takes 2 minutes.",
+  "findMyCoaches": "Find My Guides",
+  "loginSubtitle": "Sign in to find your guide and start your journey. Takes 2 minutes.",
   "continueWithGoogle": "Continue with Google",
   "continueWithApple": "Continue with Apple",
   "dataPrivacyNotice": "Your data is never shared with third parties. You can delete your account at any time.",
-
-  "approachTitle": "How should your coach approach you?",
-  "approachSubtitle": "Helps us match your personality to the right coach",
+  "approachTitle": "How should your guide approach you?",
+  "approachSubtitle": "Helps us match your personality to the right guide",
   "approachPatient": "Patient",
   "approachSupportive": "Supportive",
   "approachConvincing": "Convincing",
   "approachEnergetic": "Energetic",
   "approachHumorous": "Humorous",
-
   "dobTitle": "When were you born?",
   "dobSubtitle": "We personalize the experience based on your age.",
   "dobDayLabel": "Day",
   "dobMonthLabel": "Month",
   "dobYearLabel": "Year",
   "dobErrorInvalid": "Please select a valid date of birth.",
-
   "january": "January",
   "february": "February",
   "march": "March",
@@ -72,7 +66,6 @@
   "october": "October",
   "november": "November",
   "december": "December",
-
   "januaryShort": "Jan",
   "februaryShort": "Feb",
   "marchShort": "Mar",
@@ -85,26 +78,23 @@
   "octoberShort": "Oct",
   "novemberShort": "Nov",
   "decemberShort": "Dec",
-
   "nameGenderTitle": "Tell us a bit about yourself",
-  "nameGenderSubtitle": "So your coach can get to know the real you",
+  "nameGenderSubtitle": "So your guide can get to know the real you",
   "nameGenderFullNameLabel": "Full Name",
   "nameGenderFullNameHint": "Enter your full name",
   "nameGenderGenderLabel": "Gender",
   "nameGenderMale": "Male",
   "nameGenderFemale": "Female",
   "nameGenderPreferNotToSay": "Prefer not to say",
-
   "supportAreaTitle": "What area would you like support with?",
-  "supportAreaSubtitle": "We'll only show coaches who specialise in this",
+  "supportAreaSubtitle": "We'll only show guides who specialise in this",
   "supportAreaIndividual": "Individual Growth",
   "supportAreaFamily": "Family",
   "supportAreaCareer": "Career",
   "supportAreaEducation": "Education",
   "supportAreaPersonalDevelopment": "Personal Development",
-
   "availableDaysTitle": "Which days are you available?",
-  "availableDaysSubtitle": "So we only show coaches free when you are",
+  "availableDaysSubtitle": "So we only show guides free when you are",
   "dayMonday": "Mon",
   "dayTuesday": "Tue",
   "dayWednesday": "Wed",
@@ -112,9 +102,8 @@
   "dayFriday": "Fri",
   "daySaturday": "Sat",
   "daySunday": "Sun",
-
   "meetingTimeTitle": "What time works best for you?",
-  "meetingTimeSubtitle": "Coaches with matching slots will be highlighted",
+  "meetingTimeSubtitle": "Guides with matching slots will be highlighted",
   "meetingTimeMorning": "Morning",
   "meetingTimeAfternoon": "Afternoon",
   "meetingTimeEvening": "Evening",
@@ -123,37 +112,33 @@
   "meetingTimeAfternoonRange": "12:00 - 16:00",
   "meetingTimeEveningRange": "16:00 - 21:00",
   "meetingTimeFlexibleRange": "",
-
   "successTitle": "Account has been created",
   "successSubtitle": "Your account has been successfully created. Enjoy the app.",
-
   "topicFeelingGood": "Feeling Good",
   "appointmentDescription": "You have a meeting with {name} about {topic}.",
   "@appointmentDescription": {
     "placeholders": {
-      "name": { "type": "String" },
-      "topic": { "type": "String" }
+      "name": {
+        "type": "String"
+      },
+      "topic": {
+        "type": "String"
+      }
     }
   },
-
   "quickActions": "Quick Actions",
-
   "hi": "Hi",
   "goodMorning": "Good Morning",
   "goodAfternoon": "Good Afternoon",
   "goodEvening": "Good Evening",
-
   "welcome": "Welcome",
   "howAreYouFeelIngToday": "How are you feeling today?",
   "getStart": "Let's start",
-
   "onboardingQuote1": "Your only limits are the ones you set yourself.",
   "onboardingQuote2": "Take a deep breath and start your journey.",
   "onboardingQuote3": "The quieter you become, the more you are able to hear.",
-
   "someoneWantsToTalkToYou": "Someone wants to talk to you.",
   "startTalking": "Start Talking",
-
   "moodTerrible": "Terrible",
   "moodBad": "Bad",
   "moodNeutral": "Neutral",
@@ -163,70 +148,53 @@
   "moodHappy": "Happy",
   "moodTired": "Tired",
   "moodStressed": "Stressed",
-
+  "moodTrackerSubtitle": "A small check-in goes a long way",
+  "moodDescCalm": "This peace in your mind is your greatest strength. Enjoy this moment and stay balanced.",
+  "moodDescHappy": "Your positive energy is contagious! Keep spreading joy and embracing this wonderful feeling.",
+  "moodDescNeutral": "A steady state of mind is perfectly fine. Take a moment to check in with yourself.",
+  "moodDescTired": "Your body is telling you to rest. Take a break and recharge — you deserve it.",
+  "moodDescStressed": "Take a deep breath. Remember, it's okay to slow down and take things one step at a time.",
+  "todaysSessions": "Today's sessions",
+  "makeAnAppointment": "Make an Appointment",
   "timeToTrackMood": "It's time to track your mood",
-
   "days": "Days",
   "hours": "Hours",
   "minutes": "Minutes",
   "seconds": "Seconds",
-
   "timeRemainingTitle": "Time remaining until the next meeting begins.",
   "upcomingMeetingTitle": "Upcoming Meeting",
   "noUpcomingMeetings": "You have no upcoming meetings.",
-
   "takeTheTestNow": "Take the Test Now",
   "testDescription": "Assess your mental state and learn more about yourself.",
-
   "premiumPlan": "Premium Plan",
   "premiumDescription": "Unlock your AI chatbot & get all premium features.",
-
   "upgradePlan": "Upgrade Plan",
   "areYouStressed": "Are You Stressed?",
   "areYouAnxious": "Are You Anxious",
-
   "questionsForAdults": "{questionNumber} Questions for Adults",
   "@questionsForAdults": {
     "description": "Shows the number of questions for adult mode.",
     "placeholders": {
-      "questionNumber": { "type": "int" }
+      "questionNumber": {
+        "type": "int"
+      }
     }
   },
-
   "statusAssessmentTest": "Status Assessment Test",
   "stressScaleTest": "Stress Scale Test",
   "anxietyScaleTest": "Anxiety Scale Test",
-
   "continueButton": "Continue",
   "@continueButton": {
     "description": "Primary button label to start the mental test"
   },
-
   "testRule1": "Evaluate your **last week**.",
-  "@testRule1": {
-    "description": "First rule: evaluate your last week, bold part between **"
-  },
-
   "testRule2": "It is recommended that you take the test **once a week**.",
-  "@testRule2": {
-    "description": "Second rule: recommended frequency of the test"
-  },
-
   "testRule3": "If you stop the test halfway through, **you can continue from where you left off.**",
-  "@testRule3": {
-    "description": "Third rule: user can continue later"
-  },
-
   "testDisclaimer": "The results of this test provide insight into individual mental health but do not replace a diagnosis or recommendation as discussed with a mental health professional.",
-  "@testDisclaimer": {
-    "description": "Legal/medical disclaimer for mental health test"
-  },
-
   "never": "Never",
   "sometimes": "Sometimes and occasionally",
   "often": "Quite often",
   "always": "Always",
-
   "stressQ1": "I had trouble relaxing and letting go.",
   "stressQ2": "I tend to overreact to events.",
   "stressQ3": "I felt nervous or anxious.",
@@ -234,17 +202,14 @@
   "stressQ5": "I had difficulty and occasionally ignored my feelings.",
   "stressQ6": "I had trouble falling asleep or staying asleep.",
   "stressQ7": "I felt overwhelmed by responsibilities.",
-
   "stressScaleTitle": "Stress scale test",
   "yourStressLevelPrefix": "Your stress level: ",
-
   "stressLevelLow": "Low stress",
   "stressLevelLowDescription": "Your current stress level is low. You manage daily challenges well.",
   "stressLevelModerate": "Moderate stress",
   "stressLevelModerateDescription": "Your stress level is moderate. It is manageable, but requires attention.",
   "stressLevelHigh": "High stress",
   "stressLevelHighDescription": "Your stress level is high. You need to slow down and listen to your body.",
-
   "stressAnalysisIntro": "Thank you for completing the test. Your results indicate that there are some factors in your daily life that may be challenging you and causing fatigue.",
   "stressAnalysisP1Part1": "While this level isn't a ",
   "stressAnalysisP1Bold1": "'high alert', ",
@@ -255,9 +220,9 @@
   "stressAnalysisP2Part2": "You can see this result as an opportunity to ",
   "stressAnalysisP2Bold2": "manage your stress before it leads to burnout.",
   "stressAnalysisRemember": "Remember, this test is an awareness tool, not a medical diagnosis. Taking time for yourself is the first step toward feeling better.",
-
+  "testResult": "Test result",
+  "mentalTest": "Mental Test",
   "backToHome": "Back to Home",
-
   "specialistsScreenTitle": "Mentors",
   "specialistAuraName": "Aura",
   "specialistAuraTitle": "Individual Mentorship",
@@ -266,7 +231,7 @@
   "specialistZenTitle": "Relationship Advisor",
   "specialistZenDescription": "Helping you build healthy and balanced relationships.",
   "specialistElaraName": "Elara",
-  "specialistElaraTitle": "Development Coach",
+  "specialistElaraTitle": "Development Guide",
   "specialistElaraDescription": "Supports your personal growth and long-term goals.",
   "specialistOrionName": "Orion",
   "specialistOrionTitle": "Social Behavior Guide",
@@ -274,49 +239,84 @@
   "specialistCyraName": "Cyra",
   "specialistCyraTitle": "Academic Mentor",
   "specialistCyraDescription": "Helps with focus, study habits and academic planning.",
-
   "chatScreenGreeting": "Hello, {name}",
   "@chatScreenGreeting": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "chatScreenTitle": "Chats",
   "chatLastFromYouPrefix": "You: ",
-
   "chatDeleteToast": "Chat with {name} has been deleted.",
   "@chatDeleteToast": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "askMentor": "Ask, {name}",
   "@askMentor": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "gallery": "Gallery",
   "camera": "Camera",
   "document": "Document",
   "free": "FREE",
   "calendar": "Calendar",
-
+  "age": "Age",
+  "enterYourAge": "Enter your age",
+  "profileSaved": "Profile saved successfully",
+  "done": "Done",
+  "deleteAccountWhyLeaving": "We don't want you to go, but we understand.",
+  "deleteAccountImproveQuestion": "To help us improve the __MINDguide__ experience, could you tell us why you're leaving?",
+  "deleteReasonNotRealistic": "I didn't find the AI characters realistic.",
+  "deleteReasonTechnicalIssues": "I'm experiencing technical issues with video chats.",
+  "deleteReasonPrice": "The subscription prices are above my expectations.",
+  "deleteReasonNoCharacters": "I couldn't find the type of characters I was looking for.",
+  "deleteReasonShortTry": "I just wanted to try it for a short while.",
+  "deleteReasonOther": "Other",
+  "messageOptionalLabel": "Message (optional)",
+  "specialOffer": "Special offer",
+  "specialOfferSubtitle": "Before you go, take a look at the offer we've prepared for you.",
+  "switchTo1MonthPlan": "Switch to 1-Month Plan",
+  "monthlyPlanPrice": "$79/month, cancel anytime",
+  "noLongTermCommitment": "No long-term commitment. Stay connected with our community on a month-to-month basis.",
+  "whatYouKeep": "What you'll keep:",
+  "featureAllCharacters": "Access all characters",
+  "featureUnlimitedVideoCalls": "Unlimited video calls",
+  "featureUnlimitedCharacterEditing": "Unlimited character editing",
+  "switchToMonthlyPlan": "Switch to Monthly Plan",
+  "areYouSure": "Are you sure?",
+  "finalOfferSubtitle": "We really don't want to see you go. Here's what you'll lose:",
+  "featureUnlimitedCharacterAccess": "Unlimited character access",
+  "featureUnlimitedVideoCallAccess": "Unlimited video call access",
+  "featureUnlimitedCharacterEditingAccess": "Unlimited character editing access",
+  "stayAnd60Off": "Stay and get 60% off for 1 month",
+  "bestOfferPrice": "Our best offer ever. Just $27.60/month",
+  "accept60OffAndStay": "Accept 60% Off & Stay",
+  "sadToSeeYouGo": "We're sad to see you go",
+  "membershipCancelledInfo": "Your membership has been cancelled. You'll have access until the end of your current billing period.",
+  "changeYourMind": "Change your mind?",
+  "reactivateInfo": "You can reactivate your membership anytime to keep your benefits.",
+  "waitReactivate": "Wait, I want to reactivate →",
   "profileSettings": "Profile Settings",
   "shareWithFriends": "Share with Friends",
   "notifications": "Notifications",
   "appointments": "Meetings",
   "faq": "FAQ",
-
   "phoneNumber": "Phone Number",
   "logout": "Logout",
   "deleteAccount": "Delete Account",
   "save": "Save",
+  "appLanguage": "App Language",
   "areYouSureLogout": "Are you sure you want to logout?",
-
   "deleteProfile": "Delete Profile",
   "cancel": "Cancel",
   "delete": "Delete",
@@ -329,66 +329,60 @@
   "allNotificationsDeleted": "All notifications deleted successfully",
   "noNotificationsToDelete": "No notifications to delete",
   "errorDeletingNotifications": "Error deleting notifications",
-
   "invitePeople": "Invite People",
   "copyLinkInviteFriend": "Copy the link to invite your friends",
   "share": "Share",
-
   "upcoming": "Upcoming",
   "completed": "Completed",
-
   "relativeToday": "Today",
   "relativeTomorrow": "Tomorrow",
   "relativeYesterday": "Yesterday",
-
   "relativeDaysAgo": "{count} days ago",
   "@relativeDaysAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "relativeWeeksAgo": "{count} weeks ago",
   "@relativeWeeksAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "numberOfQuestions": "Question {currentQuestion} of {totalQuestion}",
   "@numberOfQuestions": {
     "placeholders": {
-      "currentQuestion": { "type": "int" },
-      "totalQuestion": { "type": "int" }
+      "currentQuestion": {
+        "type": "int"
+      },
+      "totalQuestion": {
+        "type": "int"
+      }
     }
   },
-
   "english": "English",
   "turkish": "Turkish",
   "german": "German",
   "language": "Language",
-
   "back": "Back",
-
   "enterFullNamePrompt": "Please enter your full name.",
   "meetingStarted": "Meeting Started",
   "selectedDate": "Selected Date",
-
-  "newChatStarted" : "New Chat Started",
+  "newChatStarted": "New Chat Started",
   "startNewMeeting": "Start a new meeting",
-
   "continueAsGuest": "Continue as Guest",
-
-  "jobThoughtAndHabitGuide": "Thought and Habit Coach",
-  "jobFamilyAssistant": "Family Coach",
-  "jobAdult": "Adult Coach",
-  "jobChild": "Child Coach",
-  "jobTeenage": "Teen Coach",
-  "jobPersonal": "Personal Coach",
-  "jobExamAnxiety": "Exam Anxiety Coach",
-
+  "jobThoughtAndHabitGuide": "Thought and Habit Guide",
+  "jobFamilyAssistant": "Family Guide",
+  "jobAdult": "Adult Guide",
+  "jobChild": "Child Guide",
+  "jobTeenage": "Teen Guide",
+  "jobPersonal": "Personal Guide",
+  "jobExamAnxiety": "Exam Anxiety Guide",
   "noSpecialistsFound": "No specialists found",
-
   "featureFamilyConflicts": "Family Conflicts",
   "featureParenting": "Parenting",
   "featureCommunication": "Communication",
@@ -397,7 +391,6 @@
   "featureDivorceSupport": "Divorce Support",
   "featureChildBehavior": "Child Behavior",
   "featureFamilyHarmony": "Family Harmony",
-
   "featureStressManagement": "Stress Management",
   "featureSelfConfidence": "Self-Confidence",
   "featureLifeBalance": "Life Balance",
@@ -406,7 +399,6 @@
   "featureDecisionMaking": "Decision Making",
   "featureMotivation": "Motivation",
   "featurePersonalGrowth": "Personal Growth",
-
   "featureEmotionalAwareness": "Emotional Awareness",
   "featureSocialSkills": "Social Skills",
   "featureSchoolAdaptation": "School Adaptation",
@@ -415,7 +407,6 @@
   "featureFriendshipBuilding": "Friendship Building",
   "featureFocusAttention": "Focus & Attention",
   "featureBehavioralSupport": "Behavioral Support",
-
   "featureIdentityDevelopment": "Identity Development",
   "featurePeerPressure": "Peer Pressure",
   "featureAcademicStress": "Academic Stress",
@@ -424,7 +415,6 @@
   "featureAngerManagement": "Anger Management",
   "featureFuturePlanning": "Future Planning",
   "featureParentCommunication": "Parent Communication",
-
   "featureLoneliness": "Loneliness",
   "featureAnxietySupport": "Anxiety Support",
   "featureGriefProcessing": "Grief Processing",
@@ -433,7 +423,6 @@
   "featureOverthinking": "Overthinking",
   "featureSelfDiscovery": "Self-Discovery",
   "featureEmotionalHealing": "Emotional Healing",
-
   "featureTestAnxiety": "Test Anxiety",
   "featureStudyTechniques": "Study Techniques",
   "featureTimeManagement": "Time Management",
@@ -442,33 +431,30 @@
   "featureRelaxationMethods": "Relaxation Methods",
   "featureExamPreparation": "Exam Preparation",
   "featureConfidenceBuilding": "Confidence Building",
-
-  "explanationFamilyAssistant": "A family coach who helps you navigate through family dynamics, resolve conflicts, strengthen parent-child bonds, and build a more harmonious home environment. Whether you're dealing with communication breakdowns, boundary issues, or major life transitions like divorce, your coach provides a safe space to explore solutions together.",
-  "explanationAdult": "A personal development coach designed for adults who want to take control of their lives. From managing daily stress and building self-confidence to making important career decisions and finding life balance, your coach supports you with practical strategies tailored to your unique challenges and goals.",
-  "explanationChild": "A gentle and supportive coach specially trained to help children express their emotions, build social skills, and adapt to school life. Using age-appropriate techniques, your coach helps kids overcome fears, improve focus, and develop healthy friendships in a safe and encouraging environment.",
-  "explanationTeenage": "A coach who truly understands the teenage experience. From identity exploration and peer pressure to academic stress and digital wellbeing, your coach helps teens build self-esteem, manage emotions, and plan for the future while maintaining healthy communication with parents.",
-  "explanationPersonal": "A compassionate personal coach focused on your inner wellbeing. Whether you're struggling with loneliness, anxiety, grief, or simply overthinking, your coach guides you through mindfulness practices, emotional healing techniques, and self-discovery exercises to help you find peace and clarity.",
-  "explanationExamAnxiety": "A specialized coach who helps students conquer exam anxiety and unlock their true academic potential. Through proven study techniques, relaxation methods, and confidence-building exercises, your coach transforms test stress into focused preparation and calm performance.",
-
-  "explanationFamilyAssistant1": "A dedicated family coach specializing in resolving deep-rooted family conflicts and rebuilding strained relationships. With expertise in parenting challenges, communication skills, and setting healthy boundaries, this coach helps families navigate difficult transitions like divorce while guiding children through behavioral changes — all within a safe, judgment-free space.",
-  "explanationFamilyAssistant2": "A warm and empathetic family coach focused on strengthening the bonds that matter most. Specializing in effective parenting strategies, open communication, and relationship repair, this coach helps families heal after difficult periods like separation or divorce, while supporting children's emotional and behavioral development toward lasting harmony.",
-  "explanationAdult1": "A results-driven coach for adults seeking meaningful change. With a focus on stress management, achieving life balance, and career guidance, this coach helps you regulate your emotions, make confident decisions, and unlock sustainable personal growth through practical, goal-oriented strategies.",
-  "explanationAdult2": "A holistic development coach empowering adults to reach their full potential. From building unshakable self-confidence and managing stress to finding career direction and daily motivation, this coach combines emotional regulation techniques with actionable life strategies to create lasting positive change.",
-  "explanationTeenage1": "A coach who deeply understands the unique challenges of adolescence. From navigating identity development and resisting peer pressure to managing academic stress and building healthy digital habits, this coach helps teens strengthen their self-esteem, control anger, plan their future, and communicate openly with their parents.",
-  "explanationTeenage2": "An empathetic guide through the turbulent teenage years. Specializing in identity exploration, academic pressure, and digital wellbeing, this coach empowers teens to develop resilience against peer influence, manage anger constructively, build long-term goals, and maintain healthy parent-teen relationships.",
-  "explanationChild1": "A nurturing coach designed to support children through their most formative years. Using gentle, age-appropriate methods, this coach helps kids develop emotional awareness, build social skills, adapt to school life, express themselves freely, overcome fears, form meaningful friendships, improve focus, and develop positive behavioral patterns.",
-  "explanationChild2": "A caring and patient coach dedicated to helping children thrive. With a focus on emotional intelligence, social development, and school adaptation, this coach creates a safe environment where kids learn to express their feelings, conquer fears, build lasting friendships, strengthen concentration, and receive the behavioral support they need to grow confidently.",
-  "explanationPersonal1": "A deeply compassionate coach focused on your emotional wellbeing and inner peace. Whether you're experiencing loneliness, anxiety, grief, or restless nights, this coach guides you through mindfulness practices, emotional healing processes, and self-discovery journeys to help you break free from overthinking and find lasting clarity.",
-  "explanationPersonal2": "A supportive and intuitive personal coach who helps you reconnect with yourself. Specializing in anxiety management, mindfulness techniques, and sleep improvement, this coach gently guides you through patterns of overthinking and emotional distress toward genuine healing and a renewed sense of inner calm.",
-  "explanationExamAnxiety1": "A focused and methodical coach who transforms exam stress into confident performance. Specializing in time management, handling performance pressure, and building deep concentration, this coach equips students with practical relaxation methods, structured exam preparation techniques, and confidence-building strategies for academic success.",
-  "explanationExamAnxiety2": "A specialized academic coach dedicated to helping students overcome test anxiety and study smarter. Through proven study techniques, effective time management, and performance pressure resilience, this coach builds deep concentration skills, structured exam preparation habits, and lasting confidence for every test day.",
-
+  "explanationFamilyAssistant": "A family guide who helps you navigate through family dynamics, resolve conflicts, strengthen parent-child bonds, and build a more harmonious home environment.",
+  "explanationAdult": "A personal development guide for adults who want to take control of their lives — from managing daily stress and building self-confidence to finding life balance.",
+  "explanationChild": "A gentle and supportive guide trained to help children express their emotions, build social skills, and adapt to school life using age-appropriate techniques.",
+  "explanationTeenage": "A guide who understands the teenage experience — from identity exploration and peer pressure to academic stress and digital wellbeing.",
+  "explanationPersonal": "A compassionate personal guide focused on inner wellbeing. Guides you through mindfulness, emotional healing, and self-discovery to find peace and clarity.",
+  "explanationExamAnxiety": "A specialized guide who helps students conquer exam anxiety through proven study techniques, relaxation methods, and confidence-building exercises.",
+  "explanationFamilyAssistant1": "A dedicated family guide specializing in resolving deep-rooted family conflicts and rebuilding strained relationships. Helps families navigate difficult transitions like divorce while guiding children through behavioral changes.",
+  "explanationFamilyAssistant2": "A warm and empathetic family guide focused on strengthening the bonds that matter most. Helps families heal after difficult periods while supporting children's emotional and behavioral development.",
+  "explanationAdult1": "A results-driven guide for adults seeking meaningful change. Focuses on stress management, life balance, and career guidance through practical, goal-oriented strategies.",
+  "explanationAdult2": "A holistic development guide empowering adults to reach their full potential — from building self-confidence and managing stress to finding career direction and daily motivation.",
+  "explanationTeenage1": "A guide who deeply understands adolescence. Helps teens strengthen self-esteem, control anger, plan their future, and communicate openly with their parents.",
+  "explanationTeenage2": "An empathetic guide through the turbulent teenage years. Empowers teens to develop resilience, manage anger constructively, and maintain healthy parent-teen relationships.",
+  "explanationChild1": "A nurturing guide for children's most formative years. Helps kids develop emotional awareness, build social skills, adapt to school, overcome fears, and improve focus.",
+  "explanationChild2": "A caring and patient guide dedicated to helping children thrive — creating a safe environment where kids learn to express feelings, build friendships, and grow confidently.",
+  "explanationPersonal1": "A deeply compassionate guide focused on emotional wellbeing. Guides you through mindfulness, emotional healing, and self-discovery to break free from overthinking.",
+  "explanationPersonal2": "A supportive personal guide who helps you reconnect with yourself. Specializes in anxiety management, mindfulness, and sleep improvement toward genuine inner calm.",
+  "explanationExamAnxiety1": "A focused guide who transforms exam stress into confident performance. Equips students with time management, relaxation methods, and confidence-building strategies.",
+  "explanationExamAnxiety2": "A specialized academic guide dedicated to helping students overcome test anxiety and study smarter through proven techniques and structured exam preparation.",
   "filterTitle": "Filter",
-  "filterCoachingArea": "Coaching Area",
+  "filterCoachingArea": "Guidance Area",
   "filterExpertise": "Expertise",
-  "filterSelectCoachingArea": "Select Coaching Area",
+  "filterSelectCoachingArea": "Select Guidance Area",
   "filterSave": "Save",
-
+  "filterClear": "Clear",
   "coachDetailInformation": "Information",
   "coachDetailUnlimitedMemory": "Unlimited",
   "coachDetailMemory": "Memory",
@@ -480,41 +466,166 @@
   "coachDetailOnline": "Online",
   "coachDetailVerified": "Verified",
   "coachDetailCreateAppointment": "Create an appointment",
-
   "searchSoundHint": "Search sounds, moods, vibes..",
   "featuredForYou": "Featured For You",
   "mostPopular": "Most Popular",
-
   "soundCategoryFocus": "Focus",
   "soundCategorySleep": "Sleep",
   "soundCategoryMeditation": "Meditation",
   "soundCategoryRelax": "Relax",
-
   "soundDeepWorkFlow": "Deep Work Flow",
   "soundDeepWorkFlowSub": "Enhance your productivity",
   "soundBinauralBeats": "Binaural Beats",
   "soundBinauralBeatsSub": "Tune your brainwaves",
   "soundLibraryAmbience": "Library Ambience",
   "soundLibraryAmbienceSub": "Quiet study atmosphere",
-
   "soundRainOnWindow": "Rain on Window",
   "soundRainOnWindowSub": "Drift into peaceful sleep",
   "soundOceanWaves": "Ocean Waves",
   "soundOceanWavesSub": "Rhythmic waves to calm you",
   "soundDeepSpaceDrone": "Deep Space Drone",
   "soundDeepSpaceDroneSub": "Cosmic ambient journey",
-
   "soundTibetanBowls": "Tibetan Bowls",
   "soundTibetanBowlsSub": "Ancient healing vibrations",
   "soundForestBirds": "Forest Birds",
   "soundForestBirdsSub": "Nature's morning melody",
   "soundMorningZen": "Morning Zen",
   "soundMorningZenSub": "Start your day mindfully",
-
   "soundFireplaceCrackle": "Fireplace Crackle",
   "soundFireplaceCrackleSub": "Warm and cozy vibes",
   "soundGentleStream": "Gentle Stream",
   "soundGentleStreamSub": "Flowing water serenity",
   "soundSoftPiano": "Soft Piano",
-  "soundSoftPianoSub": "Delicate melodies to unwind"
+  "soundSoftPianoSub": "Delicate melodies to unwind",
+  "quickMessage": "Quick Message",
+  "chatMessage": "Message",
+  "chatHistory": "History",
+  "noChatHistory": "No chat history yet",
+  "calling": "Calling...",
+  "image": "Image",
+  "coachesTitle": "Guides",
+  "searchAtMindcoach": "Search at __MINDguide__",
+  "noResultsFound": "No results found for \"{query}\"",
+  "@noResultsFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumTryFree": "Try __MIND_guide__ Premium\nfree for 1 week",
+  "premiumUnlimitedAccess": "Get unlimited access and take advantage of opportunities",
+  "premiumFeatureSkipAds": "Skip Ads",
+  "premiumFeatureUnlimitedCharacters": "Unlimited Character Selection",
+  "premiumFeatureExpandedMemory": "Expanded memory and context",
+  "premiumFeatureAdvancedReasoning": "With advanced reasoning capabilities",
+  "premiumStartTrial": "Start 1 week free trial",
+  "premiumBillingNote": "You'll be charged $8.99/month after your 7 day free trial. You can cancel anytime.",
+  "premiumRestorePurchase": "Restore purchase",
+  "termsOfUse": "Terms of Use",
+  "premiumSaveBadge": "SAVE 17%",
+  "premiumPlanAnnual": "Annual",
+  "premiumPlanMonthly": "Monthly",
+  "premiumPlanPerYearAfterTrial": "per year after 7 days trial",
+  "goodbyeTitle": "We Miss You ",
+  "goodbyeSubtitle": "We're sorry you deleted your account.\nWe hope to see you again...",
+  "goBack": "Go Back",
+  "profileFromGallery": "Choose from Gallery",
+  "profileFromCamera": "Take a Photo",
+  "profilePhotoUpdated": "Profile photo updated",
+  "logoutDialogTitle": "You are about to log out",
+  "logoutDialogSubtitle": "See you again soon! We'll miss your breathing exercises.",
+  "sectionAccountSettings": "ACCOUNT SETTINGS",
+  "sectionGeneral": "GENERAL",
+  "menuItemPremium": "Premium",
+  "menuItemRateUs": "Rate Us",
+  "premiumBadge": "PREMIUM",
+  "premiumStatusActive": "active",
+  "linkCopied": "Link copied!",
+  "shareFriend": "Share Friend",
+  "errorMessageFailed": "Message could not be sent",
+  "errorImageFailed": "Image could not be sent",
+  "errorVoiceFileNotFound": "Voice file not found",
+  "errorVoiceMessageFailed": "Voice message could not be sent",
+  "errorVoiceNotPlayed": "Voice file could not be played",
+  "errorVoiceMessageNotPlayed": "Voice message could not be played",
+  "errorRecordingStart": "Recording could not be started",
+  "errorRecordingStop": "Recording could not be stopped",
+  "errorMicrophonePermission": "Microphone permission required",
+  "errorRecordingTooShort": "Recording too short, please record longer",
+  "errorAppointmentDateNotFound": "Appointment date not found",
+  "errorAppointmentExpired": "Appointment time has passed",
+  "errorAppointmentNotYet": "Session hasn't started yet",
+  "errorConsultantNotFound": "Consultant not found",
+  "errorConsultantsNotLoaded": "Consultant list could not be loaded",
+  "errorConsultantLoadFailed": "Consultant could not be loaded",
+  "errorOperationFailed": "Operation failed",
+  "errorPhotoUpload": "Profile photo could not be uploaded",
+  "errorGeneral": "An error occurred",
+  "recordingStatus": "Recording...",
+  "email": "E-mail",
+  "emailHint": "example@email.com",
+  "messageOptionalHint": "Write your message if you have any.",
+  "findCoachMatchedFor": "{count} guides matched for {area}",
+  "@findCoachMatchedFor": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "findCoachTitle": "Find your guide",
+  "findCoachSwipeToBrowse": "Swipe to browse - {schedule}",
+  "@findCoachSwipeToBrowse": {
+    "placeholders": {
+      "schedule": {
+        "type": "String"
+      }
+    }
+  },
+  "findCoachYearsExperience": "{count} yrs experience",
+  "@findCoachYearsExperience": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "findCoachSkip": "Skip",
+  "findCoachBook": "Book",
+  "splashTagline": "Take a moment for yourself.",
+  "stepOf": "Step {current} of {total}",
+  "@stepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "trialEndedTitle": "Time's up",
+  "trialEndedMessage": "You've reached the 1-minute trial limit. Sign in to keep talking with your guide.",
+  "trialEndedAction": "Sign in to continue",
+  "noUpcomingAppointments": "No upcoming appointments",
+  "noCompletedAppointments": "No completed appointments",
+  "videoCallStatusConnecting": "Connecting...",
+  "videoCallStatusListening": "Listening",
+  "videoCallStatusMuted": "Muted",
+  "videoCallStatusThinking": "Thinking...",
+  "videoCallStatusSpeaking": "Speaking",
+  "videoCallStatusError": "Connection error",
+  "videoCallEncrypted": "End-to-end encrypted",
+  "videoCallTurnCamera": "Turn Camera",
+  "videoCallEndButton": "End",
+  "videoCallMute": "Mute",
+  "videoCallEndDialogTitle": "Are you sure you want to end the call?",
+  "videoCallEndDialogCancel": "Cancel",
+  "videoCallEndDialogEnd": "End",
+  "videoCallRateTitle": "Rate Conversation",
+  "videoCallRateSubtitle": "Evaluate the video call"
 }
