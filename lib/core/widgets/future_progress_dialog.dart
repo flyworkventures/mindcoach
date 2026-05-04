@@ -20,11 +20,14 @@ Future<T> showFutureProgressDialog<T>({
     return action();
   }
 
-  showDialog<void>(
+  final NavigatorState navigator = Navigator.of(
+    context,
+    rootNavigator: useRootNavigator,
+  );
+  final Route<void> progressRoute = DialogRoute<void>(
     context: context,
     barrierDismissible: false,
     barrierColor: Colors.black.withValues(alpha: 0.30),
-    useRootNavigator: useRootNavigator,
     builder: (ctx) => const PopScope(
       canPop: false,
       child: Center(
@@ -32,19 +35,28 @@ Future<T> showFutureProgressDialog<T>({
       ),
     ),
   );
+  navigator.push(progressRoute);
 
   try {
     final T result = await action();
-    if (context.mounted) {
-      Navigator.of(context, rootNavigator: useRootNavigator).pop();
-    }
+    _dismissProgressRouteSafely(navigator, progressRoute);
     return result;
   } catch (e) {
-    if (context.mounted) {
-      Navigator.of(context, rootNavigator: useRootNavigator).pop();
-    }
+    _dismissProgressRouteSafely(navigator, progressRoute);
     rethrow;
   }
+}
+
+void _dismissProgressRouteSafely(
+  NavigatorState navigator,
+  Route<void> progressRoute,
+) {
+  if (!navigator.mounted) return;
+  // Login gibi akışlarda işlem sırasında route değiştiriliyor (pushNamedAndRemoveUntil).
+  // Kör `pop()` yeni sayfayı kapatabiliyor; yalnızca gerçekten bizim dialog route
+  // hâlâ navigator'a bağlıysa onu kaldır.
+  if (progressRoute.navigator != navigator) return;
+  navigator.removeRoute(progressRoute);
 }
 
 extension FutureProgressDialogExtension on BuildContext {
