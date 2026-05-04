@@ -14,13 +14,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_pcm_sound/flutter_pcm_sound.dart' as pcm;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
+import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/Services/rive_preload_service.dart';
+import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
+import 'package:mindcoach/View/specialists_screen/specialists_notifier.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
+import 'package:mindcoach/core/utils/call_permissions.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
-import 'package:mindcoach/core/utils/local_db_keys.dart';
+import 'package:mindcoach/core/utils/realtime_auth_token.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 import 'package:mindcoach/http/http_service.dart';
 import 'package:mindcoach/models/consultant_model.dart';
@@ -38,7 +41,15 @@ class _AudioChunk {
 
 class VideoCallRealtimeScreen extends ConsumerStatefulWidget {
   final ConsultantModel specialist;
-  const VideoCallRealtimeScreen({super.key, required this.specialist});
+
+  /// Onboarding deneme akisi: 1 dk limiti baglanti kurulunca baslar.
+  final bool isTrial;
+
+  const VideoCallRealtimeScreen({
+    super.key,
+    required this.specialist,
+    this.isTrial = false,
+  });
 
   @override
   ConsumerState<VideoCallRealtimeScreen> createState() =>
@@ -55,32 +66,81 @@ class _VideoCallRealtimeScreenState
 
   static const int _sampleRate = 24000;
   static const int _channels = 1;
-  final Queue<int> _pcmQueue = Queue<int>();
+  // PCM playback ring — chunked Int16List queue.
+  // Eski Queue<int> her sample için boxed int allocation yapıyordu;
+  // 24k sample/sn × ~25 chunk/sn = 600k allocation/sn = ana CPU bottleneck.
+  // Yeni yapı: gelen her PCM mesajı tek Int16List olarak enqueue edilir,
+  // feed sırasında ön taraftan offset ile okunur (zero-allocation).
+  final Queue<Int16List> _pcmChunks = Queue<Int16List>();
+  int _pcmChunkOffset = 0;
+  int _pcmTotalSamples = 0;
   bool _pcmSetup = false;
   bool _pcmStarted = false;
-  bool _isRinging = false;
-  int _ringSamplePos = 0;
-  static const int _ringOnSamples = _sampleRate * 2;
-  static const int _ringOffSamples = _sampleRate * 4;
-  static const int _ringPeriodSamples = _ringOnSamples + _ringOffSamples;
 
   _CallState _callState = _CallState.connecting;
   bool _isMuted = false;
-  final bool _isSpeakerOn = false;
+  // Çağrı açılışı için iki ön-koşul:
+  //   • Rive avatar dosyası yüklendi (_onRiveLoaded fired)
+  //   • Sunucu connection_success gönderdi (WebSocket hazır)
+  // İkisi de tamamlanmadan listening state'e geçilmiyor, kamera açılmıyor.
+  bool _riveReady = false;
+  bool _serverConnectionReady = false;
+  bool _callOpenFinalized = false;
+
+  /// Görüntülü görüşmede çıkış her zaman hoparlör (iOS/Android route + barge-in eşiği).
+  static const bool _isSpeakerOn = true;
   Timer? _timer;
   int _secondsElapsed = 0;
 
+  Timer? _trialTimer;
+  bool _trialDialogShown = false;
+  /// Bağlantı kurulduğunda kalan ücretsiz görüntülü saniye (TrialQuotaService).
+  int _videoTrialBudgetSeconds = 60;
+  bool _videoTrialUsagePersisted = false;
+
+  /// ai_response_complete gelmezse speaking'de kalınır; ikinci kullanıcı turunda mic kesilir.
+  Timer? _aiSpeakingWatchdog;
+
+  /// Son AI PCM baytının geldiği an — akış kesilince [ai_response_complete] olmadan dinlemeye dönüş.
+  DateTime? _lastAiPcmReceivedAt;
+  Timer? _aiPlaybackIdleTimer;
+  /// Sunucu chunk'ları arasında 1-2 sn boşluk olabiliyor (TTS buffering).
+  /// 900 ms ile erken drain → ses ortada kesiliyordu.
+  static const int _aiPlaybackIdleMs = 2800;
+  /// Aynı anda yalnızca bir drain/listen akışı (idle watchdog + ai_response_complete yarışı).
+  bool _pcmDrainInFlight = false;
+  /// Bu AI turunda en az bir PCM byte geldiyse true ([ai_speaking_start] sıfırlar).
+  bool _receivedAiPcmThisTurn = false;
+
+  /// [flutter_pcm_sound] OnFeedSamples: kuyruk boşalınca `remaining_frames == 0`
+  /// olana kadar beklenir — aksi halde son ~0.5 sn ses hoparlörde kesiliyordu.
+  Completer<void>? _nativePcmDrainedCompleter;
+
   static const int _bargeInSustainedMs = 160;
   static const int _preRollMaxMs = 500;
-  static const int _postSpeechCooldownMs = 400;
+  static const int _postSpeechCooldownMs = 180;
 
-  /// PCM oynatıcıda kalan tampon (~bir frame süresi); ağız ses bitene kadar kapalı kalsın.
-  static const int _pcmPlaybackTailMs = 110;
+  /// Native drain tamamlandıktan sonra DAC / route için kısa tampon (ms).
+  static const int _pcmPostNativeDrainPadMs = 40;
 
-  /// Rive blend (ms) — düşük = daha hızlı viseme geçişleri.
-  static const double _riveTalkOpenBlendMs = 82;
-  static const double _riveVisemeBlendMs = 55;
-  static const int _realtimeVisemeDebounceMs = 48;
+  /// Server hazır olsa bile [connection_success] henüz client'a gelmediyse
+  /// arada gelmiş [ai_speaking_start] event'i kuyrukta tutulur, finalize
+  /// anında uygulanır.
+  bool _aiSpeakingStartPending = false;
+
+  /// Ağız açılış blend'i (konuşma başlangıcı).
+  static const double _riveTalkOpenBlendMs = 40;
+  /// Konuşma bittiğinde talk=false öncesi kısa blend — uzun süre bırakılınca
+  /// Rive ~1 sn "takılı" kalıyordu.
+  static const double _riveTalkCloseBlendMs = 26;
+  /// Viseme şekil geçişi (ms); çok düşük olursa titreme, bu değer ~1.5 frame.
+  static const double _riveVisemeBlendMs = 26;
+  /// RMS'ten viseme uygulama gecikmesi; her yeni örnekte timer **yeniden**
+  /// kurulur → ses süresince saniyede çok daha sık tetiklenir.
+  static const int _realtimeVisemeDebounceMs = 5;
+  /// PCM chunk içi RMS penceresi (ms). Küçük = aynı ses süresinde çok daha
+  /// fazla dudak güncellemesi (kullanıcı isteği: başlangıç–bitiş arası yoğun).
+  static const int _visemeRmsWindowMs = 12;
   static const int _bargeInMinAiSpeakingMs = 450;
   static const int _bargeInRmsThresholdEarpiece = 2200;
   static const int _bargeInRmsThresholdSpeaker = 3200;
@@ -103,8 +163,11 @@ class _VideoCallRealtimeScreenState
   // Prevents mouth opening before audio arrives.
   bool _riveAudioActive = false;
   // Exponentially smoothed RMS — fallback when no phoneme timeline is active.
+  // Klasik audio envelope follower: attack hızlı, release yavaş — sesin
+  // amplitüdü ani düştüğünde ağız hemen kapanmasın, doğal sönsün.
   double _rmsSmoothed = 0.0;
   int _visemeApplied = 0;
+  DateTime? _visemeAppliedAt;
   Timer? _realtimeVisemeApplyTimer;
   int _pendingRealtimeVisemeId = 0;
   // Phoneme-based timeline timers (from server Rhubarb map).
@@ -112,6 +175,8 @@ class _VideoCallRealtimeScreenState
   final List<Timer> _visemeTimers = [];
   bool _visemeTimelineActive = false;
   Map<String, dynamic>? _pendingVisemeTimelineMsg;
+  /// Son viseme timeline timer'ından gelen güncelleme (RMS ile çakışmayı önler).
+  DateTime? _lastVisemeFromTimelineAt;
 
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
@@ -129,9 +194,94 @@ class _VideoCallRealtimeScreenState
     super.initState();
     _riveFileLoader = _buildRiveFileLoader();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initLocalCamera();
-      _init(); // post-frame: sayfanın önce render olmasına izin ver
-      _scheduleRemoteRiveUpgrade();
+      _bootstrapVideoCall();
+      // Placeholder arkaplan fotoğrafını ilk frame'den hemen sonra prefetch et:
+      // CachedNetworkImage daha sonra decode etmeden raster cache'inden çeker,
+      // ilk gerçek paint'te jank'ı önler.
+      final url = widget.specialist.photoURL;
+      if (url.isNotEmpty && mounted) {
+        precacheImage(CachedNetworkImageProvider(url), context).catchError((_) {});
+      }
+    });
+  }
+
+  Future<void> _bootstrapVideoCall() async {
+    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+      final ok = await ensureVideoCallPermissions();
+      if (!mounted) return;
+      if (!ok) {
+        setState(() {
+          _cameraSetupCompleted = true;
+          _cameraAccessGranted = false;
+        });
+        _setError();
+        return;
+      }
+    }
+    if (!mounted) return;
+
+    // YENİ AKIŞ:
+    //   1. PCM oynatıcı + audio session konfigürasyonu (sessizce, ses yok)
+    //   2. WebSocket bağlantısı kur
+    //   3. Rive avatar yüklendi + connection_success geldi → finalize
+    //   4. Finalize'de placeholder fade out + kamera başlat
+    //
+    // Ring tone YOK — bağlantı süresince placeholder + spinner gösterilir.
+    // Kamera ringing/connect fazlarında AÇILMIYOR; CameraController.initialize
+    // iOS'ta ~600-900ms platform-thread blocking → açılış kasması bunun yüzünden.
+    await _initPcmPlayer();
+    await _connect();
+    _scheduleRemoteRiveUpgrade();
+  }
+
+  /// Hem Rive yüklendiyse hem de server hazırsa çağrıyı finalize eder.
+  /// Bir tarafı henüz hazır değilse no-op; geç gelen tarafın handler'ı
+  /// tekrar tetikler.
+  void _maybeFinalizeCallOpen() {
+    if (_callOpenFinalized) return;
+    if (!_riveReady || !_serverConnectionReady) return;
+    if (!mounted) return;
+    _callOpenFinalized = true;
+
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
+    unawaited(_configureAudioSession());
+
+    setState(() => _callState = _CallState.listening);
+    _aiSpeakingSince = null;
+    _syncRiveTalk();
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() => _secondsElapsed++);
+    });
+    unawaited(_maybeStartTrialTimer());
+
+    // Server hazır olduktan sonra ai_speaking_start kuyrukta birikmiş
+    // olabilir — şimdi uygula.
+    if (_aiSpeakingStartPending) {
+      _aiSpeakingStartPending = false;
+      _receivedAiPcmThisTurn = false;
+      unawaited(_configureAudioSession());
+      unawaited(_ensurePcmStarted());
+      _resetBargeInState();
+      _aiSpeakingSince = DateTime.now();
+      setState(() => _callState = _CallState.speaking);
+      _syncRiveTalk();
+      _armAiSpeakingWatchdog();
+      _armAiPlaybackIdleMonitor();
+    }
+
+    // Mic'i kısa bir gecikmeyle aç ki audio session tam oturmuş olsun.
+    if (!_isMuted) {
+      unawaited(_rebindMicAfterRealtimeReady());
+    }
+
+    // Kamerayı en SON başlat: Rive ekranda zaten gözüküyor, placeholder
+    // fade-out yapıyor, mic rebind sürüyor. Camera initialize'ın UI
+    // thread'i bloklamadan tek başına çalışması için ekstra 350 ms.
+    Future<void>.delayed(const Duration(milliseconds: 350), () {
+      if (!mounted) return;
+      unawaited(_initLocalCamera());
     });
   }
 
@@ -209,13 +359,22 @@ class _VideoCallRealtimeScreenState
     final cameras = _cameras;
     if (cameras == null || index < 0 || index >= cameras.length) return;
     await _cameraController?.dispose();
+    // PIP preview kutusu sadece 88×120dp. ResolutionPreset.low (320×240)
+    // bu boyutta görsel olarak medium'dan ayırt edilemiyor ama iOS'ta
+    // initialize ~%50 daha hızlı (~400ms → ~200ms) ve toplam GPU yükü
+    // belirgin şekilde azalıyor.
     _cameraController = CameraController(
       cameras[index],
-      ResolutionPreset.medium,
+      ResolutionPreset.low,
       enableAudio: false,
     );
     try {
       await _cameraController!.initialize();
+      // Kamera initialize ses oturumunu sessizce sıfırlayabiliyor — voiceChat
+      // moduna geri al ve PCM oynatıcısının çalıştığından emin ol ki AI sesi
+      // kesintiye uğramasın.
+      await _configureAudioSession();
+      await _ensurePcmStarted();
     } catch (_) {
       await _cameraController?.dispose();
       _cameraController = null;
@@ -243,7 +402,18 @@ class _VideoCallRealtimeScreenState
       } else {
         _cameraIndex = idx;
       }
+      // Kamera değişimi sırasında ses oturumu kısa süre voiceChat dışına
+      // düşebiliyor; pre-warm: dispose'dan ÖNCE PCM kuyruğunu garantiye al
+      // ki AI o sırada konuşuyorsa hiç durmasın.
+      await _ensurePcmStarted();
       await _attachCamera(_cameraIndex);
+      // Ek emniyet kemeri: bazı iOS sürümlerinde initialize hemen sonrası
+      // bile audio interrupted state'te kalabiliyor. 60ms sonra son bir
+      // kez voiceChat moduna sabitle.
+      Future.delayed(const Duration(milliseconds: 60), () {
+        if (!mounted) return;
+        unawaited(_configureAudioSession());
+      });
     } finally {
       _cameraSwitching = false;
     }
@@ -297,15 +467,23 @@ class _VideoCallRealtimeScreenState
     }
   }
 
-  Future<void> _init() async {
-    // PCM + ses oturumu kurulumu ile WebSocket bağlantısını paralel başlat.
-    // _initPcmPlayer zaten _configureAudioSession'ı içinde çağırıyor.
-    await Future.wait([_initPcmPlayer(), _connect()]);
-    await _startRingTone();
-  }
 
+  /// Native AVAudioSession.setCategory + setActive yapıyor — pahalı işlem.
+  /// Önceki kod: bootstrap, _init, _initPcmPlayer, _onRealtimeConnectionReady,
+  /// _attachCamera, _flipCamera, _startMicStream… 5-7 yerden ardışık çağrı
+  /// yapılıyordu, native taraf her seferinde session'ı resetliyor ve PCM
+  /// playback "underrun" hatası veriyordu. Rate-limit ile son 250ms içinde
+  /// yapılmış bir konfigürasyonu tekrar etmiyoruz.
+  DateTime? _lastAudioSessionConfigAt;
+  bool _audioSessionConfiguring = false;
   Future<void> _configureAudioSession() async {
-    if (!Platform.isIOS) return;
+    if (kIsWeb) return;
+    if (!Platform.isIOS && !Platform.isAndroid) return;
+    final now = DateTime.now();
+    final last = _lastAudioSessionConfigAt;
+    if (last != null && now.difference(last).inMilliseconds < 250) return;
+    if (_audioSessionConfiguring) return;
+    _audioSessionConfiguring = true;
     try {
       await _audioSessionChannel.invokeMethod<String>('configureForVoiceCall');
       if (_isSpeakerOn) {
@@ -313,11 +491,16 @@ class _VideoCallRealtimeScreenState
           await _audioSessionChannel.invokeMethod('setSpeakerOn', {'on': true});
         } catch (_) {}
       }
-    } catch (_) {}
+      _lastAudioSessionConfigAt = DateTime.now();
+    } catch (_) {
+    } finally {
+      _audioSessionConfiguring = false;
+    }
   }
 
   Future<void> _resetAudioSession() async {
-    if (!Platform.isIOS) return;
+    if (kIsWeb) return;
+    if (!Platform.isIOS && !Platform.isAndroid) return;
     try {
       await _audioSessionChannel.invokeMethod('resetAudioSession');
     } catch (_) {}
@@ -329,7 +512,9 @@ class _VideoCallRealtimeScreenState
       channelCount: _channels,
       iosAudioCategory: pcm.IosAudioCategory.playAndRecord,
     );
-    await pcm.FlutterPcmSound.setFeedThreshold((_sampleRate * 0.25).round());
+    // 400ms → 480ms: TTS chunk'ları arası ağ jitter'da native tampon ara
+    // ara boşalıp "tık" / sessizlik yapıyordu.
+    await pcm.FlutterPcmSound.setFeedThreshold((_sampleRate * 0.48).round());
     pcm.FlutterPcmSound.setFeedCallback(_onPcmFeedRequest);
     _pcmSetup = true;
     await _configureAudioSession();
@@ -341,102 +526,85 @@ class _VideoCallRealtimeScreenState
     _pcmStarted = true;
   }
 
-  void _onPcmFeedRequest(int _) {
-    if (_isRinging) {
-      _feedRingToneChunk();
+  void _onPcmFeedRequest(int remainingFrames) {
+    if (_pcmTotalSamples == 0) {
+      _signalNativePcmDrainedIfIdle(remainingFrames);
       return;
     }
-    if (_pcmQueue.isEmpty) return;
     final int maxSamples = (_sampleRate * 0.5).round();
-    final int toSend = _pcmQueue.length < maxSamples
-        ? _pcmQueue.length
+    final int toSend = _pcmTotalSamples < maxSamples
+        ? _pcmTotalSamples
         : maxSamples;
     final Int16List samples = Int16List(toSend);
+    int dst = 0;
     double sumSq = 0;
-    for (int i = 0; i < toSend; i++) {
-      samples[i] = _pcmQueue.removeFirst();
-      final v = samples[i].toDouble();
-      sumSq += v * v;
+    while (dst < toSend && _pcmChunks.isNotEmpty) {
+      final Int16List chunk = _pcmChunks.first;
+      final int available = chunk.length - _pcmChunkOffset;
+      final int needed = toSend - dst;
+      final int copy = available < needed ? available : needed;
+      // setRange = memcpy-equivalent native fastpath
+      samples.setRange(dst, dst + copy, chunk, _pcmChunkOffset);
+      // RMS only over the slice we just pulled — no second pass.
+      for (int i = 0; i < copy; i++) {
+        final double v = chunk[_pcmChunkOffset + i].toDouble();
+        sumSq += v * v;
+      }
+      dst += copy;
+      if (copy == available) {
+        _pcmChunks.removeFirst();
+        _pcmChunkOffset = 0;
+      } else {
+        _pcmChunkOffset += copy;
+      }
     }
-    if (toSend > 0) {
-      _lastPlaybackRms = sqrt(sumSq / toSend).round();
-      _driveRealtimeVisemeFromRms(_lastPlaybackRms);
-    }
+    if (dst == 0) return;
+
+    _pcmTotalSamples -= dst;
+    _lastPlaybackRms = sqrt(sumSq / dst).round();
     pcm.FlutterPcmSound.feed(
-      pcm.PcmArrayInt16(bytes: samples.buffer.asByteData()),
+      pcm.PcmArrayInt16(
+        bytes: samples.buffer.asByteData(samples.offsetInBytes, dst * 2),
+      ),
     );
   }
 
-  Future<void> _startRingTone() async {
-    if (_isRinging) return;
-    _isRinging = true;
-    _ringSamplePos = 0;
-    await _ensurePcmStarted();
-    _feedRingToneChunk();
+  void _signalNativePcmDrainedIfIdle(int remainingFrames) {
+    if (remainingFrames != 0) return;
+    // Aksi halde konuşmalar arası native "0" event'i yanlışlıkla bekleyeni
+    // erken serbest bırakır.
+    if (!_pcmDrainInFlight) return;
+    final c = _nativePcmDrainedCompleter;
+    if (c == null || c.isCompleted) return;
+    c.complete();
+    _nativePcmDrainedCompleter = null;
   }
 
-  void _stopRingTone() {
-    _isRinging = false;
-    _pcmQueue.clear();
-  }
-
-  void _feedRingToneChunk() {
-    if (!_isRinging || !_pcmStarted) return;
-    const int chunkSamples = 6000;
-    final Int16List samples = Int16List(chunkSamples);
-    const double f1 = 440.0;
-    const double f2 = 480.0;
-    const double amp = 0.22;
-    for (int i = 0; i < chunkSamples; i++) {
-      final int pos = _ringSamplePos + i;
-      final int phase = pos % _ringPeriodSamples;
-      double sample = 0;
-      if (phase < _ringOnSamples) {
-        final double t = pos / _sampleRate.toDouble();
-        sample = (sin(2 * pi * f1 * t) + sin(2 * pi * f2 * t)) * 0.5 * amp;
+  /// Dart kuyruğu boşaldıktan sonra hoparlördeki gerçek PCM bitişini bekle.
+  Future<void> _awaitNativePcmFullyDrained() async {
+    final c = Completer<void>();
+    _nativePcmDrainedCompleter = c;
+    try {
+      await c.future.timeout(
+        const Duration(milliseconds: 1400),
+        onTimeout: () {},
+      );
+    } finally {
+      if (identical(_nativePcmDrainedCompleter, c)) {
+        _nativePcmDrainedCompleter = null;
       }
-      samples[i] = (sample * 32767).round().clamp(-32767, 32767);
     }
-    _ringSamplePos += chunkSamples;
-    pcm.FlutterPcmSound.feed(
-      pcm.PcmArrayInt16(bytes: samples.buffer.asByteData()),
-    );
-  }
-
-  void _playPickupChime() {
-    if (!_pcmStarted) return;
-    const int totalSamples = _sampleRate ~/ 4;
-    final Int16List samples = Int16List(totalSamples);
-    final int half = totalSamples ~/ 2;
-    for (int i = 0; i < totalSamples; i++) {
-      final double t = i / _sampleRate.toDouble();
-      final double freq = i < half ? 660.0 : 880.0;
-      double s = sin(2 * pi * freq * t) * 0.28;
-      const int fade = 360;
-      final int localI = i < half ? i : i - half;
-      final int localLen = half;
-      if (localI < fade) {
-        s *= localI / fade;
-      } else if (localI > localLen - fade) {
-        s *= (localLen - localI) / fade;
-      }
-      samples[i] = (s * 32767).round().clamp(-32767, 32767);
-    }
-    for (int i = 0; i < totalSamples; i++) {
-      _pcmQueue.add(samples[i]);
-    }
-    _onPcmFeedRequest(0);
   }
 
   Future<void> _connect() async {
     try {
-      final token = await LocalDbService().getString(key: LocalDbKeys.token);
-      if (token == null || token.isEmpty) throw Exception('Token yok');
+      final token = await ensureRealtimeAuthToken(ref);
       final deviceLang = ref.read(localeProvider.notifier).getLanguageCode();
+      // Sesli arama ile aynı sorgu — ek parametre sunucu oturumunu bozabiliyordu.
       final url =
-          '${AppConstants.wsBaseURL}?token=${Uri.encodeQueryComponent(token)}'
+          '${AppConstants.wsBaseURL}'
+          '?token=${Uri.encodeQueryComponent(token)}'
           '&consultantId=${widget.specialist.id}'
-          '&sampleRate=$_sampleRate'
           '&lang=${Uri.encodeQueryComponent(deviceLang)}';
       _ws = await WebSocket.connect(url);
       _wsSub = _ws!.listen(
@@ -480,10 +648,20 @@ class _VideoCallRealtimeScreenState
 
   Future<void> _startMicStream() async {
     if (_micStreamActive) return;
+    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+      final ok = await ensureMicrophonePermission();
+      if (!ok) {
+        _setError();
+        return;
+      }
+    }
     final hasPermission = await _recorder.hasPermission();
     if (!hasPermission) {
       _setError();
       return;
+    }
+    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+      await _configureAudioSession();
     }
     final stream = await _recorder.startStream(
       const RecordConfig(
@@ -494,7 +672,7 @@ class _VideoCallRealtimeScreenState
     );
     _micSub = stream.listen((chunk) {
       if (chunk.isEmpty || chunk.length % 2 != 0) return;
-      if (_isMuted || _isRinging || _ws?.readyState != WebSocket.open) return;
+      if (_isMuted || _ws?.readyState != WebSocket.open) return;
       final gateUntil = _micGateOpenAt;
       if (gateUntil != null && DateTime.now().isBefore(gateUntil)) return;
       _micGateOpenAt = null;
@@ -526,6 +704,8 @@ class _VideoCallRealtimeScreenState
           _highRmsStreakMs += durMs;
           if (_highRmsStreakMs >= _bargeInSustainedMs) {
             _bargeInSent = true;
+            _cancelAiSpeakingWatchdog();
+            _cancelAiPlaybackIdleMonitor();
             _flushPcm();
             _ws!.add(jsonEncode({'type': 'barge_in_request'}));
             for (final c in _preRoll) {
@@ -575,6 +755,7 @@ class _VideoCallRealtimeScreenState
     _realtimeVisemeApplyTimer = null;
     _pendingRealtimeVisemeId = 0;
     _visemeApplied = 0;
+    _visemeAppliedAt = null;
     _rmsSmoothed = 0.0;
     _pendingVisemeTimelineMsg = null;
     for (final t in _visemeTimers) {
@@ -582,6 +763,7 @@ class _VideoCallRealtimeScreenState
     }
     _visemeTimers.clear();
     _visemeTimelineActive = false;
+    _lastVisemeFromTimelineAt = null;
   }
 
   void _maybeFlushPendingVisemeTimeline() {
@@ -595,6 +777,9 @@ class _VideoCallRealtimeScreenState
     final List<dynamic> timeline = (msg['timeline'] as List<dynamic>?) ?? [];
     final int startOffsetMs = (msg['startOffsetMs'] as num?)?.toInt() ?? 0;
 
+    int futureCount = 0;
+    int lastFutureDelayMs = 0;
+
     for (final entry in timeline) {
       final int timeMs = (entry['t'] as num).toInt();
       final int id = (entry['id'] as num).toInt();
@@ -604,22 +789,43 @@ class _VideoCallRealtimeScreenState
         _visemeApplied = id;
         continue;
       }
+      futureCount++;
+      if (delayMs > lastFutureDelayMs) lastFutureDelayMs = delayMs;
 
       _visemeTimers.add(
         Timer(Duration(milliseconds: delayMs), () {
           if (!mounted) return;
-          if (_callState != _CallState.speaking || _isMuted || _isRinging) {
+          if (_callState != _CallState.speaking || _isMuted) {
             return;
           }
-          if (!_riveAudioActive) return;
+          // Timeline tetikleri PCM'den önce de çalışabilir; !_riveAudioActive
+          // ile atlamak dudakları uzun süre donduruyordu.
           _visemeApplied = id;
+          _visemeAppliedAt = DateTime.now();
+          _lastVisemeFromTimelineAt = DateTime.now();
           _setRiveNumber('visemeNum', id.toDouble());
           _setRiveNumber('duration', _riveVisemeBlendMs);
         }),
       );
     }
 
+    // Timeline'ın TÜMÜ geçmişte kaldıysa (text_done audio'dan geç gelmiş)
+    // ya da çok az gelecek entry varsa, RMS sürücüsünü tekrar devreye al.
+    // Aksi halde ağız son uygulanan id'ye yapışıp donar — kullanıcı ağzı
+    // hareketsiz görür.
+    if (futureCount < 3) {
+      _visemeTimelineActive = false;
+      return;
+    }
+
+    // NOT: Eskiden burada lastFutureDelayMs + 80 ms sonra _visemeTimelineActive
+    // false yapılıyordu — timeline biter bitmez RMS ile çakışıp ağız
+    // hareketleri "iptal" gibi görünüyordu. Artık timeline aktif kalır;
+    // RMS yalnızca [_lastVisemeFromTimelineAt] üzerinden throttling ile
+    // timeline'a müdahale eder (aşağıda).
+
     if (_visemeApplied != 0) {
+      _visemeAppliedAt = DateTime.now();
       _setRiveNumber('visemeNum', _visemeApplied.toDouble());
       _setRiveNumber('duration', _riveVisemeBlendMs);
     }
@@ -667,28 +873,43 @@ class _VideoCallRealtimeScreenState
   }
 
   void _driveRealtimeVisemeFromRms(int rms) {
-    if (_callState != _CallState.speaking || _isMuted || _isRinging) return;
+    if (_callState != _CallState.speaking || _isMuted) return;
 
-    // When a phoneme timeline is active, it controls the mouth — skip RMS.
-    // RMS only acts as fallback before the timeline arrives (early streaming).
+    // Timeline açıkken: yalnızca timeline hamlesi yapıldıktan sonra kısa
+    // bir süre RMS'i bastır — üst üste yazma "dudak iptal" ediyormuş gibi
+    // görünür. Süre dolunca veya timeline sessiz kaldığında RMS tail'i devralır.
     if (_visemeTimelineActive) {
-      // Ses çıkmadan önce timeline gelmiş olabilir — ilk PCM ile birlikte işle.
-      if (!_riveAudioActive && rms > 400) {
+      if (!_riveAudioActive && rms > 220) {
         _riveAudioActive = true;
         _setRiveBool('talk', true);
         _setRiveNumber('duration', _riveTalkOpenBlendMs);
         _maybeFlushPendingVisemeTimeline();
       }
-      return;
+      final lastTl = _lastVisemeFromTimelineAt;
+      if (lastTl != null &&
+          DateTime.now().difference(lastTl).inMilliseconds < 85) {
+        return;
+      }
     }
 
-    // ── Exponential moving average (fallback, no timeline yet) ───────────────
-    const double alpha = 0.20;
-    _rmsSmoothed = _rmsSmoothed * (1 - alpha) + rms * alpha;
+    // ── Asymmetric envelope follower (attack/release) ───────────────────────
+    // "Hızlı konuşma" hissi: yükselişte çok hızlı tepki + düşüşte de hızlı
+    // sönüm. Release alpha'yı yükseltmek hece sınırlarındaki kısa sessizlikleri
+    // koruyup ağzı her hecede yeniden tetiklemeye yarar — sürekli açık kalmaz,
+    // titreyerek hızlı bir konuşma izlenimi verir.
+    const double attackAlpha = 0.70; // amplitüde anında tepki
+    const double releaseAlpha = 0.32; // hızlı sönüm — heceler arası kapanma
+    final double rmsD = rms.toDouble();
+    if (rmsD > _rmsSmoothed) {
+      _rmsSmoothed = _rmsSmoothed * (1 - attackAlpha) + rmsD * attackAlpha;
+    } else {
+      _rmsSmoothed = _rmsSmoothed * (1 - releaseAlpha) + rmsD * releaseAlpha;
+    }
     final int smoothRms = _rmsSmoothed.round();
 
     // Open mouth the first time real audio arrives (PCM gerçekten yürüdüğünde).
-    if (!_riveAudioActive && smoothRms > 300) {
+    // Daha düşük eşik → ağız sesin başlangıcına anında reaksiyon verir.
+    if (!_riveAudioActive && smoothRms > 130) {
       _riveAudioActive = true;
       _setRiveBool('talk', true);
       _setRiveNumber('duration', _riveTalkOpenBlendMs);
@@ -696,53 +917,269 @@ class _VideoCallRealtimeScreenState
     }
     if (!_riveAudioActive) return;
 
-    // ── 4-level viseme mapping (fewer levels = fewer jumps) ──────────────────
-    // Levels: closed → slight → medium → wide.
-    // Thresholds are based on ElevenLabs PCM16 typical TTS amplitude range.
+    // ── 6-level viseme mapping ──
+    // Eşikler düşürüldü: küçük amplitüd dalgalanmaları bile farklı viseme'ye
+    // sıçrasın. Bu sayede saniyede çok daha fazla mouth-shape değişimi
+    // ekrana düşer ve hızlı konuşma izlenimi güçlenir.
     int targetId;
-    if (smoothRms < 600) {
-      targetId = 0; // closed / rest
-    } else if (smoothRms < 1800) {
-      targetId = 2; // slight open (consonants, quiet syllables)
-    } else if (smoothRms < 3500) {
-      targetId = 7; // medium open (normal vowels)
+    if (smoothRms < 150) {
+      targetId = 0; // tam sessizlik / cümle sonu
+    } else if (smoothRms < 450) {
+      targetId = 2; // hafif açıklık (rest pozisyonuna yakın)
+    } else if (smoothRms < 1000) {
+      targetId = 5; // küçük ünlü
+    } else if (smoothRms < 1900) {
+      targetId = 7; // orta ünlü
+    } else if (smoothRms < 3000) {
+      targetId = 10; // güçlü ünlü
     } else {
-      targetId = 15; // wide open (stressed vowels)
+      targetId = 15; // tam açık (vurgulu ünlü)
     }
 
-    // Only schedule a Rive update when the target actually changed
+    // Her yeni RMS örneğinde debounce timer'ı yeniden kur: aksi halde
+    // "timer zaten kuyrukta" ile saniyede birkaç güncellemeyle sınırlanıyordu.
     _pendingRealtimeVisemeId = targetId;
-    if (targetId == _visemeApplied) return; // already showing this level
-    if (_realtimeVisemeApplyTimer != null) return; // update queued
-
+    if (targetId == _visemeApplied) return;
+    _realtimeVisemeApplyTimer?.cancel();
     _realtimeVisemeApplyTimer = Timer(
       Duration(milliseconds: _realtimeVisemeDebounceMs),
       () {
         _realtimeVisemeApplyTimer = null;
         if (!mounted) return;
-        if (_callState != _CallState.speaking || _isMuted || _isRinging) return;
+        if (_callState != _CallState.speaking || _isMuted) return;
         final int id = _pendingRealtimeVisemeId;
         if (id == _visemeApplied) return;
+
+        // ── Closed hold-time ──
+        // Kısa tutuldu: yoğun konuşmada heceler arası kapanma da görünsün.
+        if (id == 0 && _visemeApplied != 0) {
+          final appliedAt = _visemeAppliedAt;
+          if (appliedAt != null) {
+            final heldMs = DateTime.now()
+                .difference(appliedAt)
+                .inMilliseconds;
+            if (heldMs < 26) {
+              // Henüz erken — kararı reschedule et, RMS hâlâ düşükse sonraki
+              // değerlendirmede tekrar 0 görür ve kapatır.
+              _realtimeVisemeApplyTimer = Timer(
+                Duration(milliseconds: 26 - heldMs),
+                () {
+                  _realtimeVisemeApplyTimer = null;
+                  if (!mounted) return;
+                  if (_callState != _CallState.speaking || _isMuted) {
+                    return;
+                  }
+                  if (_pendingRealtimeVisemeId != 0) return;
+                  _visemeApplied = 0;
+                  _visemeAppliedAt = DateTime.now();
+                  _setRiveNumber('visemeNum', 0);
+                  _setRiveNumber('duration', _riveVisemeBlendMs);
+                },
+              );
+              return;
+            }
+          }
+        }
+
         _visemeApplied = id;
+        _visemeAppliedAt = DateTime.now();
         _setRiveNumber('visemeNum', id.toDouble());
         _setRiveNumber('duration', _riveVisemeBlendMs);
       },
     );
   }
 
+  Future<void> _maybeStartTrialTimer() async {
+    if (!widget.isTrial) return;
+    if (_trialTimer != null && _trialTimer!.isActive) return;
+    final remaining = await TrialQuotaService.instance.videoTrialSecondsRemaining();
+    if (!mounted) return;
+    if (remaining <= 0) {
+      await _onTrialExpired();
+      return;
+    }
+    _videoTrialBudgetSeconds = remaining.clamp(1, TrialQuotaService.videoTrialSecondLimit);
+    _trialTimer?.cancel();
+    _trialTimer = Timer(Duration(seconds: _videoTrialBudgetSeconds), _onTrialExpired);
+  }
+
+  Future<void> _persistVideoTrialUsageOnce() async {
+    if (!widget.isTrial || _videoTrialUsagePersisted) return;
+    _videoTrialUsagePersisted = true;
+    final cap = _videoTrialBudgetSeconds > 0
+        ? _videoTrialBudgetSeconds
+        : TrialQuotaService.videoTrialSecondLimit;
+    final used = min(_secondsElapsed, cap);
+    if (used <= 0) return;
+    await TrialQuotaService.instance.addVideoTrialSeconds(used);
+  }
+
+  Future<void> _onTrialExpired() async {
+    if (!mounted || _trialDialogShown) return;
+    _trialDialogShown = true;
+    await _persistVideoTrialUsageOnce();
+    if (!mounted) return;
+    final l10n = context.l10n;
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(
+              l10n.trialEndedTitle,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
+            content: Text(
+              l10n.trialEndedMessage,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF555555),
+                height: 1.4,
+              ),
+            ),
+            actions: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF21BC87),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(
+                    l10n.trialEndedAction,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (!mounted) return;
+    Navigator.of(context, rootNavigator: true).pop();
+    await presentProOffersPaywall();
+  }
+
+  /// Sunucu connection_success gönderdiğinde işaretle ve finalize'i dene.
+  /// Rive henüz yüklü değilse finalize ertelenir; _onRiveLoaded içinde
+  /// tekrar tetiklenecek.
+  void _onRealtimeConnectionReady() {
+    if (!mounted) return;
+    _serverConnectionReady = true;
+    _maybeFinalizeCallOpen();
+  }
+
+  /// [afterAiPlayback]: AI PCM bittikten sonra mic'e dönüş — kısa gecikme
+  /// yeter; 400ms kullanıcıya "Rive 1 sn dondu" hissi veriyordu.
+  Future<void> _rebindMicAfterRealtimeReady({bool afterAiPlayback = false}) async {
+    await _stopMicStream();
+    await Future<void>.delayed(
+      Duration(milliseconds: afterAiPlayback ? 90 : 400),
+    );
+    if (!mounted || _ws?.readyState != WebSocket.open || _isMuted) return;
+    await _configureAudioSession();
+    await _startMicStream();
+  }
+
+  void _cancelAiSpeakingWatchdog() {
+    _aiSpeakingWatchdog?.cancel();
+    _aiSpeakingWatchdog = null;
+  }
+
+  void _cancelAiPlaybackIdleMonitor() {
+    _aiPlaybackIdleTimer?.cancel();
+    _aiPlaybackIdleTimer = null;
+    _lastAiPcmReceivedAt = null;
+  }
+
+  void _evaluateAiPlaybackIdleFallback() {
+    if (!mounted) return;
+    if (_callState != _CallState.speaking) {
+      _cancelAiPlaybackIdleMonitor();
+      return;
+    }
+    // İlk PCM gelmeden idle sayma — [ai_speaking_start] ile [_aiSpeakingSince]
+    // arasındaki boşluk yanlışlıkla drain tetikliyordu.
+    if (!_receivedAiPcmThisTurn) return;
+    final base = _lastAiPcmReceivedAt;
+    if (base == null) return;
+
+    final stallMs = DateTime.now().difference(base).inMilliseconds;
+
+    // Yazılım kuyruğunda çalınmayı bekleyen örnek varken ASLA drain / flush
+    // yapma. Chunk'lar geç gelince "playback stuck" sanılıp kuyruk atılıyor
+    // ve ses ortadan kesiliyordu.
+    if (_pcmTotalSamples > 0) {
+      return;
+    }
+
+    if (stallMs < _aiPlaybackIdleMs) return;
+
+    debugPrint(
+      '🔊 [VIDEO] playback idle fallback → drain/listen '
+      '(ai_response_complete eksik olabilir, stall=${stallMs}ms)',
+    );
+    _cancelAiPlaybackIdleMonitor();
+    _cancelAiSpeakingWatchdog();
+    unawaited(_waitForPcmDrainAndListen());
+  }
+
+  void _armAiPlaybackIdleMonitor() {
+    _cancelAiPlaybackIdleMonitor();
+    _lastAiPcmReceivedAt = null;
+    _aiPlaybackIdleTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
+      _evaluateAiPlaybackIdleFallback();
+    });
+  }
+
+  void _armAiSpeakingWatchdog() {
+    _cancelAiSpeakingWatchdog();
+    _aiSpeakingWatchdog = Timer(
+      const Duration(seconds: 75),
+      _onAiSpeakingWatchdogFired,
+    );
+  }
+
+  void _onAiSpeakingWatchdogFired() {
+    _aiSpeakingWatchdog = null;
+    if (!mounted) return;
+    if (_callState != _CallState.speaking) return;
+    _cancelAiPlaybackIdleMonitor();
+    debugPrint('⚠️ [VIDEO] speaking watchdog → drain/listen + playback_done');
+    unawaited(_waitForPcmDrainAndListen());
+  }
+
   void _handleJson(Map<String, dynamic> msg) {
     final type = msg['type'] as String? ?? '';
     switch (type) {
       case 'connection_success':
-        _stopRingTone();
-        _configureAudioSession();
-        _playPickupChime();
-        if (mounted) setState(() => _callState = _CallState.listening);
-        _aiSpeakingSince = null;
-        _syncRiveTalk();
-        _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-          if (mounted) setState(() => _secondsElapsed++);
-        });
+        _onRealtimeConnectionReady();
         break;
       case 'user_speech_started':
         if (_isMuted) break;
@@ -752,22 +1189,38 @@ class _VideoCallRealtimeScreenState
         break;
       case 'user_speech_stopped':
         if (_isMuted) break;
+        // AI hâlâ konuşurken sunucu bazen [user_speech_stopped] yollar (VAD).
+        // Thinking'e geçmek ağzı kapatıyor + kullanıcı "dudak iptal" görüyor.
+        if (_callState == _CallState.speaking) break;
         if (mounted) setState(() => _callState = _CallState.thinking);
         _syncRiveTalk();
         break;
       case 'ai_speaking_start':
-        _stopRingTone();
-        _configureAudioSession();
-        _ensurePcmStarted();
+        // Çağrı henüz finalize olmadıysa (Rive yüklenmedi veya
+        // connection_success'i biz kaydetmeden başka event geldi) ai_speaking
+        // event'ini kuyrukta tut; finalize sırasında uygulanır.
+        if (!_callOpenFinalized) {
+          _aiSpeakingStartPending = true;
+          break;
+        }
+        _receivedAiPcmThisTurn = false;
+        unawaited(_configureAudioSession());
+        unawaited(_ensurePcmStarted());
         _resetBargeInState();
         _aiSpeakingSince = DateTime.now();
         if (mounted) setState(() => _callState = _CallState.speaking);
         _syncRiveTalk();
+        _armAiSpeakingWatchdog();
+        _armAiPlaybackIdleMonitor();
         break;
       case 'ai_response_complete':
+        _cancelAiSpeakingWatchdog();
+        _cancelAiPlaybackIdleMonitor();
         _waitForPcmDrainAndListen();
         break;
       case 'barge_in':
+        _cancelAiSpeakingWatchdog();
+        _cancelAiPlaybackIdleMonitor();
         _flushPcm();
         _resetBargeInState();
         _aiSpeakingSince = null;
@@ -775,6 +1228,9 @@ class _VideoCallRealtimeScreenState
         _setRiveNumber('visemeNum', 0);
         if (mounted) setState(() => _callState = _CallState.listening);
         _syncRiveTalk();
+        if (!_isMuted && _ws?.readyState == WebSocket.open) {
+          unawaited(_rebindMicAfterRealtimeReady());
+        }
         break;
       case 'error':
         _setError();
@@ -783,52 +1239,133 @@ class _VideoCallRealtimeScreenState
   }
 
   void _enqueuePcmBytes(Uint8List bytes) {
+    _lastAiPcmReceivedAt = DateTime.now();
+    if (_callState == _CallState.speaking) {
+      _receivedAiPcmThisTurn = true;
+    }
     final int sampleCount = bytes.length ~/ 2;
+    if (sampleCount == 0) return;
+
+    // PCM16 LE → Int16List. Tek allocation; sample-by-sample boxing yok.
+    // Sunucu little-endian gönderdiği ve mobil host da little-endian olduğu
+    // için ByteData.getInt16(LE) ile manuel decode etmek host endianness'a
+    // bağımsız doğru çalışır.
+    final Int16List samples = Int16List(sampleCount);
     final ByteData bd = ByteData.view(
       bytes.buffer,
       bytes.offsetInBytes,
       sampleCount * 2,
     );
     for (int i = 0; i < sampleCount; i++) {
-      _pcmQueue.add(bd.getInt16(i * 2, Endian.little));
+      samples[i] = bd.getInt16(i * 2, Endian.little);
     }
+    _pcmChunks.add(samples);
+    _pcmTotalSamples += sampleCount;
+
+    // ── Pencere bazlı RMS örneklemesi (viseme driver için) ──
+    // PCM feed callback'i tampon doldurma için ~250ms aralıkla çalışıyor; bu
+    // ağzı saniyede sadece 4 kez güncellerdi. Sunucudan gelen ses paketi ~30
+    // ila ~120ms arası olabildiği için chunk içini _visemeRmsWindowMs'lik
+    // alt-pencerelere bölüp her birinde ayrı RMS hesaplıyoruz — viseme
+    // sürücüsü bu sayede syllable hızında çalışıyor. Int16List üzerinde
+    // doğrudan iterasyon ByteData.getInt16'dan ~3× daha hızlı.
+    final int windowSamples = ((_visemeRmsWindowMs / 1000.0) * _sampleRate)
+        .round()
+        .clamp(64, sampleCount);
+    if (sampleCount >= windowSamples) {
+      final int windowCount = sampleCount ~/ windowSamples;
+      for (int w = 0; w < windowCount; w++) {
+        final int start = w * windowSamples;
+        double sumSq = 0;
+        for (int i = 0; i < windowSamples; i++) {
+          final double v = samples[start + i].toDouble();
+          sumSq += v * v;
+        }
+        final int rms = sqrt(sumSq / windowSamples).round();
+        _driveRealtimeVisemeFromRms(rms);
+      }
+    } else {
+      // Küçük son chunk'larda da en az bir RMS — aksi halde dudak son hecede
+      // donuyordu.
+      double sumSq = 0;
+      for (int i = 0; i < sampleCount; i++) {
+        final double v = samples[i].toDouble();
+        sumSq += v * v;
+      }
+      final int rms = sqrt(sumSq / sampleCount).round();
+      _driveRealtimeVisemeFromRms(rms);
+    }
+
     _ensurePcmStarted();
     _onPcmFeedRequest(0);
   }
 
-  void _flushPcm() => _pcmQueue.clear();
+  void _flushPcm() {
+    _pcmChunks.clear();
+    _pcmChunkOffset = 0;
+    _pcmTotalSamples = 0;
+    final c = _nativePcmDrainedCompleter;
+    _nativePcmDrainedCompleter = null;
+    if (c != null && !c.isCompleted) {
+      c.complete();
+    }
+  }
 
   Future<void> _waitForPcmDrainAndListen() async {
-    while (_pcmQueue.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 50));
-      if (!mounted) return;
-    }
-    // Donanım tamponu boşalsın — ağız gerçek ses sonuna yakın kapansın.
-    await Future.delayed(const Duration(milliseconds: _pcmPlaybackTailMs));
     if (!mounted) return;
-    _micGateOpenAt = DateTime.now().add(
-      const Duration(milliseconds: _postSpeechCooldownMs),
-    );
-    if (_ws?.readyState == WebSocket.open) {
-      _ws!.add(jsonEncode({'type': 'playback_done'}));
+    if (_callState != _CallState.speaking) return;
+    if (_pcmDrainInFlight) return;
+    _pcmDrainInFlight = true;
+    try {
+      final drainDeadline = DateTime.now().add(const Duration(seconds: 20));
+      while (_pcmTotalSamples > 0 && DateTime.now().isBefore(drainDeadline)) {
+        await Future.delayed(const Duration(milliseconds: 50));
+        if (!mounted) return;
+      }
+      if (_pcmTotalSamples > 0) {
+        _flushPcm();
+      }
+      // setFeedThreshold ~480ms + son feed; yazılım kuyruğu 0 iken native
+      // hâlâ çalınıyordu — kısa delay ile "ister misin" sonu kesiliyordu.
+      await _awaitNativePcmFullyDrained();
+      await Future<void>.delayed(
+        const Duration(milliseconds: _pcmPostNativeDrainPadMs),
+      );
+      if (!mounted) return;
+      _micGateOpenAt = DateTime.now().add(
+        const Duration(milliseconds: _postSpeechCooldownMs),
+      );
+      if (_ws?.readyState == WebSocket.open) {
+        _ws!.add(jsonEncode({'type': 'playback_done'}));
+      }
+      _aiSpeakingSince = null;
+      if (mounted) setState(() => _callState = _CallState.listening);
+      _clearVisemeTimers();
+      _setRiveNumber('visemeNum', 0);
+      _syncRiveTalk();
+      _resetBargeInState();
+      if (!_isMuted && _ws?.readyState == WebSocket.open) {
+        unawaited(_rebindMicAfterRealtimeReady(afterAiPlayback: true));
+      }
+    } finally {
+      _pcmDrainInFlight = false;
     }
-    _aiSpeakingSince = null;
-    if (mounted) setState(() => _callState = _CallState.listening);
-    _clearVisemeTimers();
-    _setRiveNumber('visemeNum', 0);
-    _syncRiveTalk();
   }
 
   Future<void> _toggleMute() async {
     final next = !_isMuted;
     setState(() => _isMuted = next);
-    if (next) {
-      await _stopMicStream();
-      if (mounted && _callState != _CallState.speaking) {
-        setState(() => _callState = _CallState.listening);
-      }
-    } else if (_ws?.readyState == WebSocket.open) {
-      await _startMicStream();
+    // Recorder'ı stop/start ETME — bu iOS'ta audio session'ı sıfırlıyor,
+    // AI'ın o sırada konuştuğu sesi yarım saniye kesintiye uğratıyordu.
+    // _micSub listener'ında zaten `if (_isMuted) return` var; ses zaten
+    // sunucuya gitmiyor. Bu şekilde mute anlık ve sessiz kesinti yapmıyor.
+    if (next && mounted && _callState != _CallState.speaking) {
+      setState(() => _callState = _CallState.listening);
+    }
+    // Mic gate'i temizle: muted iken kapı zaten kapalı, unmute olunca
+    // post-speech cooldown'dan kalan eski deadline kullanıcıyı bloklamasın.
+    if (!next) {
+      _micGateOpenAt = null;
     }
     _syncRiveTalk();
   }
@@ -1017,20 +1554,26 @@ class _VideoCallRealtimeScreenState
   }
 
   Future<void> _submitVideoCallRating(int rating) async {
+    // Notifier referansını await öncesinde al — ekran pop edildikten
+    // sonra mounted=false olur ama notifier hâlâ geçerlidir.
+    final notifier = ref.read(specialistsProvider.notifier);
     try {
       await _httpService.post(
         path: AppConstants.videoCallRateURL,
         body: {'consultantId': widget.specialist.id, 'rating': rating},
       );
+      // Backend'deki güncel rating'i provider'a yansıt
+      notifier.init();
     } catch (_) {
       // rating gönderimi başarısız olsa da çıkış akışını bloklamayalım
     }
   }
 
   Future<void> _endCall() async {
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
     _clearVisemeTimers();
     _timer?.cancel();
-    _stopRingTone();
 
     // Bağımsız temizlik işlemlerini paralel çalıştır.
     await Future.wait([
@@ -1056,7 +1599,8 @@ class _VideoCallRealtimeScreenState
   }
 
   void _setError() {
-    _stopRingTone();
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
     _clearVisemeTimers();
     if (mounted) setState(() => _callState = _CallState.error);
     _syncRiveTalk();
@@ -1083,11 +1627,15 @@ class _VideoCallRealtimeScreenState
       } catch (_) {}
     }
     _syncRiveTalk();
+
+    // Rive yüklendi → finalize'i dene. Sunucu hazırsa pickup'ı şimdi
+    // tetikler; değilse server connection_success'i bekler.
+    _riveReady = true;
+    _maybeFinalizeCallOpen();
   }
 
   void _syncRiveTalk() {
-    final bool shouldTalk =
-        _callState == _CallState.speaking && !_isMuted && !_isRinging;
+    final bool shouldTalk = _callState == _CallState.speaking && !_isMuted;
 
     // When state leaves speaking: close mouth and reset audio-active flag.
     // When entering speaking: do NOT open the mouth yet — wait for the first
@@ -1097,6 +1645,10 @@ class _VideoCallRealtimeScreenState
       _riveAudioActive = false;
       _rmsSmoothed = 0.0;
       _visemeApplied = 0;
+      _visemeAppliedAt = null;
+      // Önce kısa blend süresi, sonra talk kapat — Rive SM'de uzun süre
+      // "konuşuyor" pozunda takılı kalma (kullanıcının ~1 sn lag şikayeti).
+      _setRiveNumber('duration', _riveTalkCloseBlendMs);
       _setRiveBool('talk', false);
       _setRiveNumber('visemeNum', 0.0);
     }
@@ -1125,6 +1677,11 @@ class _VideoCallRealtimeScreenState
 
   @override
   void dispose() {
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
+    _trialTimer?.cancel();
+    _trialTimer = null;
+    unawaited(_persistVideoTrialUsageOnce());
     _timer?.cancel();
     _clearVisemeTimers();
     // Cache'den alınan loader'lar global RivePreloadService'e aittir — dispose etme.
@@ -1167,7 +1724,14 @@ class _VideoCallRealtimeScreenState
                     children: [
                       _buildTopChip(
                         leading: SvgPicture.asset("assets/icons/recor.svg"),
-                        label: _formatElapsed(_secondsElapsed),
+                        label: widget.isTrial
+                            ? (_timer != null
+                                  ? _formatTrialRemaining(
+                                      (_videoTrialBudgetSeconds - _secondsElapsed)
+                                          .clamp(0, _videoTrialBudgetSeconds),
+                                    )
+                                  : _formatTrialRemaining(_videoTrialBudgetSeconds))
+                            : _formatElapsed(_secondsElapsed),
                         isTimer: true,
                       ),
                       Column(
@@ -1251,12 +1815,16 @@ class _VideoCallRealtimeScreenState
 
     Widget inner;
     if (!_cameraSetupCompleted) {
-      inner = SizedBox(
-        width: 24.w,
-        height: 24.w,
-        child: const CircularProgressIndicator(
-          strokeWidth: 2,
-          color: Colors.white54,
+      // Önceden 24.w idi ve container'ın merkezine değil sol-üste yapışıyordu;
+      // PIP kutusunda orantısız büyük gözüküyordu. 16dp + Center ile çözüldü.
+      inner = const Center(
+        child: SizedBox(
+          width: 16,
+          height: 16,
+          child: CircularProgressIndicator(
+            strokeWidth: 1.6,
+            color: Colors.white54,
+          ),
         ),
       );
     } else if (!_cameraAccessGranted) {
@@ -1277,20 +1845,17 @@ class _VideoCallRealtimeScreenState
       );
     } else {
       final CameraController c = controller;
-      inner = ClipRect(
-        child: OverflowBox(
+      // Kamerayı PIP kutusuna taşırmadan, en-boy oranını koruyarak ve zoomsuz sığdırır.
+      inner = SizedBox.expand(
+        child: FittedBox(
+          fit: BoxFit
+              .cover, // Kutuyu doldurur, taşan kısımları otomatik merkezden keser
           alignment: Alignment.center,
-          minWidth: 0,
-          minHeight: 0,
-          maxWidth: double.infinity,
-          maxHeight: double.infinity,
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: SizedBox(
-              width: c.value.previewSize!.height,
-              height: c.value.previewSize!.width,
-              child: CameraPreview(c),
-            ),
+          child: SizedBox(
+            // Kamera sensörü genelde yatay (landscape) olduğu için portre modunda width/height yer değiştirir
+            width: c.value.previewSize!.height,
+            height: c.value.previewSize!.width,
+            child: CameraPreview(c),
           ),
         ),
       );
@@ -1303,39 +1868,66 @@ class _VideoCallRealtimeScreenState
         height: 120.h,
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(16.w),
           border: Border.all(
             color: Colors.white.withValues(alpha: 0.25),
             width: 1,
           ),
         ),
-        child: RepaintBoundary(child: Center(child: inner)),
+        // RepaintBoundary ve Center etrafında fazladan radius/taşma problemleri olmaması için
+        child: RepaintBoundary(child: inner),
       ),
     );
   }
 
   Widget _buildVideoCard() {
+    // YAPI: AnimatedSwitcher + KeyedSubtree(placeholder/rive) yerine
+    // Stack + AnimatedOpacity. Sebep:
+    //   • Eski yapıda Rive widget'ı SADECE _callState != connecting olunca
+    //     mount oluyordu. "Telefon açıldı" anında ilk kez mount → ilk paint
+    //     → iOS'ta ~150-300 ms blocking jank.
+    //   • Yeni yapıda Rive widget'ı ringing sırasında zaten mount: arka
+    //     planda paint ediliyor ama placeholder üstüne tam opaque oturuyor.
+    //   • connection_success'te placeholder fade-out (140 ms) → arkadaki
+    //     Rive ANINDA görünür hale geliyor, mount/first-paint maliyeti yok.
+    final bool showAvatar =
+        _callState != _CallState.connecting && _callState != _CallState.error;
     return Container(
       color: const Color(0xFF22C987),
-      child: RepaintBoundary(
-        child: KeyedSubtree(
-          key: ValueKey<int>(_riveLoaderKey),
-          child: rive.RiveWidgetBuilder(
-            fileLoader: _riveFileLoader,
-            onLoaded: _onRiveLoaded,
-            builder: (context, state) => switch (state) {
-              rive.RiveLoading() => _buildRiveLoadingPlaceholder(),
-              rive.RiveFailed() => _buildRiveLoadingPlaceholder(
-                showSpinner: false,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          RepaintBoundary(
+            child: KeyedSubtree(
+              key: ValueKey<int>(_riveLoaderKey),
+              child: rive.RiveWidgetBuilder(
+                fileLoader: _riveFileLoader,
+                onLoaded: _onRiveLoaded,
+                builder: (context, state) {
+                  return switch (state) {
+                    rive.RiveLoading() => const SizedBox.shrink(),
+                    rive.RiveFailed() => const SizedBox.shrink(),
+                    rive.RiveLoaded() => rive.RiveWidget(
+                      controller: state.controller,
+                      fit: rive.Fit.cover,
+                      alignment: const Alignment(0, 0.35),
+                    ),
+                  };
+                },
               ),
-              rive.RiveLoaded() => rive.RiveWidget(
-                controller: state.controller,
-                fit: rive.Fit.cover,
-                alignment: Alignment.topCenter,
-              ),
-            },
+            ),
           ),
-        ),
+          IgnorePointer(
+            ignoring: showAvatar,
+            child: AnimatedOpacity(
+              opacity: showAvatar ? 0.0 : 1.0,
+              duration: const Duration(milliseconds: 140),
+              curve: Curves.easeOut,
+              child: _buildRiveLoadingPlaceholder(
+                showSpinner: _callState != _CallState.error,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1350,13 +1942,17 @@ class _VideoCallRealtimeScreenState
           // Blur kenarlarındaki şeffaflık artefaktını önlemek için görsel
           // container'dan taşırılır (negatif offset), ClipRect keser.
           if (photoUrl.isNotEmpty)
+            // Bulanık zemin: sigma 24 → 14 düşürüldü. iOS GPU yükü ~%60
+            // azalıyor; yine de kenardaki yüzü güzel yumuşatıyor. Karartma
+            // alpha'sı hafifçe artırıldı ki düşük blur'la birlikte görsel
+            // his aynı kalsın.
             Positioned(
-              top: -30,
-              bottom: -30,
-              left: -30,
-              right: -30,
+              top: -24,
+              bottom: -24,
+              left: -24,
+              right: -24,
               child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                imageFilter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
                 child: CachedNetworkImage(
                   imageUrl: photoUrl,
                   fit: BoxFit.cover,
@@ -1425,9 +2021,16 @@ class _VideoCallRealtimeScreenState
 
   Widget _buildBottomPanel(BuildContext context) {
     final l10n = context.l10n;
-    return ClipRRect(
+    // BackdropFilter iOS'ta GPU-yoğun: sigma 20 → 10 düşürüldü, görsel
+    // farkı çıplak gözle hissedilmiyor ama ilk frame ve sonraki rebuild'ler
+    // (1 sn'lik timer setState'i) belirgin şekilde ucuzlıyor.
+    // RepaintBoundary, bottom panel'in üst ağaçtan bağımsız repaint
+    // edilmesini sağlar — Rive avatar her frame yenilense de buradaki
+    // blur tekrar render edilmek zorunda kalmaz.
+    return RepaintBoundary(
+      child: ClipRRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: double.infinity,
           padding: EdgeInsets.only(
@@ -1435,7 +2038,7 @@ class _VideoCallRealtimeScreenState
             bottom: MediaQuery.of(context).padding.bottom,
           ),
           decoration: BoxDecoration(
-            color: const Color(0xFF000000).withValues(alpha: 0.30),
+            color: const Color(0xFF000000).withValues(alpha: 0.35),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1522,6 +2125,7 @@ class _VideoCallRealtimeScreenState
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -1568,5 +2172,12 @@ class _VideoCallRealtimeScreenState
     final m = ((sec % 3600) ~/ 60).toString().padLeft(2, '0');
     final s = (sec % 60).toString().padLeft(2, '0');
     return '$h:$m:$s';
+  }
+
+  /// Deneme modunda kalan süre (görüşme bağlandıktan sonra geri sayım).
+  String _formatTrialRemaining(int remainingSec) {
+    final m = (remainingSec ~/ 60).toString().padLeft(2, '0');
+    final s = (remainingSec % 60).toString().padLeft(2, '0');
+    return '$m:$s';
   }
 }

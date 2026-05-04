@@ -9,8 +9,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
+// ignore: unused_import
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
+import 'package:mindcoach/core/routes/video_call_route_args.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
+import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 import 'package:mindcoach/models/message_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -310,13 +315,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
           // Video call
           GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                PageRoutes.videoCall,
-                arguments: widget.specialistId,
-              );
-            },
+            onTap: () => unawaited(_openVideoCall()),
             child: SvgPicture.asset('assets/icons/ic_video.svg'),
           ),
           const SizedBox(width: 16),
@@ -733,6 +732,25 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     });
   }
 
+  Future<void> _openVideoCall() async {
+    // TEST: Premium kontrolü geçici olarak devre dışı.
+    // Geri açmak için:
+    // final premium = ref.read(AllProviders.premiumProvider);
+    // if (!premium) {
+    //   await presentProOffersPaywall();
+    //   return;
+    // }
+    if (!mounted) return;
+    await Navigator.pushNamed(
+      context,
+      PageRoutes.videoCall,
+      arguments: VideoCallRouteArgs(
+        specialist: widget.specialistId,
+        isTrial: false,
+      ),
+    );
+  }
+
   Future<void> _sendMessage() async {
     final previousTopMessageId = _latestMessageId(
       ref.read(conversationsProvider).messages,
@@ -772,7 +790,12 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 _startReplyPolling(previousTopMessageId: previousTopMessageId);
               }
             })
-            .catchError((e) {
+            .catchError((Object e) async {
+              if (!mounted) return;
+              if (e is TrialQuotaExceededException) {
+                await presentProOffersPaywall();
+                return;
+              }
               debugPrint("❌ Mesaj gönderme hatası: $e");
             });
 
@@ -821,16 +844,19 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               _startReplyPolling(previousTopMessageId: previousTopMessageId);
             }
           })
-          .catchError((e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.l10n.errorVoiceMessageFailed),
-                  duration: const Duration(seconds: 3),
-                  backgroundColor: Colors.red,
-                ),
-              );
+          .catchError((Object e) async {
+            if (!mounted) return;
+            if (e is TrialQuotaExceededException) {
+              await presentProOffersPaywall();
+              return;
             }
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.l10n.errorVoiceMessageFailed),
+                duration: const Duration(seconds: 3),
+                backgroundColor: Colors.red,
+              ),
+            );
           });
     } catch (e) {
       if (mounted) {
@@ -953,16 +979,19 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               _startReplyPolling(previousTopMessageId: previousTopMessageId);
             }
           })
-          .catchError((e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.l10n.errorImageFailed),
-                  duration: const Duration(seconds: 3),
-                  backgroundColor: Colors.red,
-                ),
-              );
+          .catchError((Object e) async {
+            if (!mounted) return;
+            if (e is TrialQuotaExceededException) {
+              await presentProOffersPaywall();
+              return;
             }
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.l10n.errorImageFailed),
+                duration: const Duration(seconds: 3),
+                backgroundColor: Colors.red,
+              ),
+            );
           });
 
       _messageController.clear();

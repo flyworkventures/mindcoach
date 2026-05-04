@@ -24,6 +24,12 @@ class JobConvert {
         return l10n.jobPersonal;
       case 'exam_anxiety':
         return l10n.jobExamAnxiety;
+      case 'emotional_balance':
+        return l10n.jobEmotionalBalance;
+      case 'difficult_experiences':
+        return l10n.jobDifficultExperiences;
+      case 'resilience_empowerment':
+        return l10n.jobResilienceEmpowerment;
       default:
         return value;
     }

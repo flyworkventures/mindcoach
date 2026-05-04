@@ -36,6 +36,14 @@ class ExplanationConvert {
         return l10n.explanationExamAnxiety1;
       case 'explanation_exam_anxiety_2':
         return l10n.explanationExamAnxiety2;
+      case 'explanation_emotional_balance_1':
+        return l10n.explanationEmotionalBalance1;
+      case 'explanation_thought_and_habit_guide_1':
+        return l10n.explanationThoughtAndHabitGuide1;
+      case 'explanation_difficult_experiences_1':
+        return l10n.explanationDifficultExperiences1;
+      case 'explanation_resilience_empowerment_1':
+        return l10n.explanationResilienceEmpowerment1;
 
       // Fallback per-type explanations
       case 'explanation_family_assistant':

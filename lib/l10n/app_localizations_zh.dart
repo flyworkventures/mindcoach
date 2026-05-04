@@ -48,6 +48,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get premiumCta => '开始使用';
 
   @override
+  String get premiumPrice => '¥28';
+
+  @override
+  String get premiumPricePeriod => '/月';
+
+  @override
   String get onboardingTitle1 => '感觉不知所措？';
 
   @override
@@ -789,13 +795,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get featureUnlimitedCharacterEditingAccess => '无限角色编辑访问';
 
   @override
-  String get stayAnd60Off => '留下并享受1个月60%折扣';
+  String get stayAnd60Off => '留下并享受1个月50%折扣';
 
   @override
-  String get bestOfferPrice => '我们有史以来最好的优惠。仅\$27.60/月';
+  String get bestOfferPrice => '我们有史以来最好的优惠。仅\$1.49/月';
 
   @override
-  String get accept60OffAndStay => '接受60%折扣并留下';
+  String get accept60OffAndStay => '接受50%折扣并留下';
 
   @override
   String get sadToSeeYouGo => '很遗憾看到您离开';
@@ -832,6 +838,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get logout => '注销';
+
+  @override
+  String get pleaseWait => '请稍候…';
 
   @override
   String get deleteAccount => '删除帐户';
@@ -973,6 +982,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => '考试焦虑向导';
+
+  @override
+  String get jobEmotionalBalance => '情绪平衡指导师';
+
+  @override
+  String get jobDifficultExperiences => '困难经历指导师';
+
+  @override
+  String get jobResilienceEmpowerment => '韧性与赋能指导师';
 
   @override
   String get noSpecialistsFound => '未找到专家';
@@ -1190,6 +1208,22 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get explanationExamAnxiety2 =>
       '一位专业的学术向导，致力于通过行之有效的技巧和结构化的备考方法，帮助学生克服考试焦虑，更聪明地学习。';
+
+  @override
+  String get explanationEmotionalBalance1 =>
+      '一位温暖而敏锐的指导师，专注于情绪调节，帮助您以慈悲之心认识和处理自己的感受。支持您建立情绪韧性、内心平静，以及与自己和他人的真实连接。';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      '一位专注于重塑您的思维方式和日常习惯的变革性指导师。帮助您打破限制性思维模式，建立有益的日常惯例，并通过循证技术创造持久的积极改变。';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      '一位富有同情心和经验丰富的指导师，在您生命中最艰难的时刻——悲伤、创伤、失去和不确定性——陪伴在您身旁。帮助您处理困难的情绪，在逆境中找到意义，并以焕然一新的力量重建自己。';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      '一位致力于帮助您发现内在力量的激励型、以优势为中心的指导师。引导您走过挑战、挫折和过渡期——建立面对生活所带来一切的韧性和自信。';
 
   @override
   String get filterTitle => '筛选';

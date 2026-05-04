@@ -2,7 +2,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/core/repo/consultant_repo.dart';
-
 import 'package:mindcoach/models/consultant_model.dart';
 
 /// UZMAN ID'LERİ
@@ -11,10 +10,7 @@ enum SpecialistId { aura, zen, elara, orion, cyra }
 class SpecialistsState {
   final List<ConsultantModel>? specialists; // filtrelenmiş liste
   final int selectedId;
-  SpecialistsState({
-    required this.specialists,
-    required this.selectedId,
-  });
+  SpecialistsState({required this.specialists, required this.selectedId});
 
   SpecialistsState copyWith({
     List<ConsultantModel>? specialists,
@@ -32,14 +28,14 @@ class SpecialistsNotifier extends Notifier<SpecialistsState> {
   SpecialistsState build() {
     // İlk state - boş liste ile başla
     final initialState = SpecialistsState(specialists: [], selectedId: 0);
-    
+
     // ✅ ÖNEMLİ: provider build sırasında state değiştirmiyoruz
     // API'den consultants'ları çek ve widget build bittikten sonra yükle
     Future(() {
       if (!ref.mounted) return;
       _loadConsultants();
     });
-    
+
     return initialState;
   }
 
@@ -49,7 +45,7 @@ class SpecialistsNotifier extends Notifier<SpecialistsState> {
       ConsultantRepo repo = ConsultantRepo(ref);
       List<ConsultantModel>? list = await repo.getAllConsultant();
       if (!ref.mounted) return;
-      
+
       if (list != null && list.isNotEmpty) {
         state = state.copyWith(specialists: list);
         debugPrint("✅ ${list.length} consultant yüklendi");
@@ -71,7 +67,8 @@ class SpecialistsNotifier extends Notifier<SpecialistsState> {
   void selectSpecialist(int id) {
     state = state.copyWith(selectedId: id);
   }
-/*
+
+  /*
   // ---- Filters API ----
 
   void setFilters(SpecialistFilters filters) {
@@ -96,4 +93,6 @@ class SpecialistsNotifier extends Notifier<SpecialistsState> {
 }
 
 final specialistsProvider =
-NotifierProvider<SpecialistsNotifier, SpecialistsState>(SpecialistsNotifier.new);
+    NotifierProvider<SpecialistsNotifier, SpecialistsState>(
+      SpecialistsNotifier.new,
+    );

@@ -48,6 +48,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get premiumCta => 'はじめる';
 
   @override
+  String get premiumPrice => '¥600';
+
+  @override
+  String get premiumPricePeriod => '/月';
+
+  @override
   String get onboardingTitle1 => '圧倒されていませんか？';
 
   @override
@@ -795,13 +801,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get featureUnlimitedCharacterEditingAccess => '無制限のキャラクター編集アクセス';
 
   @override
-  String get stayAnd60Off => '留まって1ヶ月60%オフを獲得';
+  String get stayAnd60Off => '留まって1ヶ月50%オフを獲得';
 
   @override
-  String get bestOfferPrice => '過去最高のオファー。わずか\$27.60/月';
+  String get bestOfferPrice => '過去最高のオファー。わずか\$1.49/月';
 
   @override
-  String get accept60OffAndStay => '60%オフを受け入れて留まる';
+  String get accept60OffAndStay => '50%オフを受け入れて留まる';
 
   @override
   String get sadToSeeYouGo => 'お別れが悲しいです';
@@ -839,6 +845,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get logout => 'ログアウト';
+
+  @override
+  String get pleaseWait => 'しばらくお待ちください';
 
   @override
   String get deleteAccount => 'アカウント削除';
@@ -980,6 +989,15 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => '試験不安ガイド';
+
+  @override
+  String get jobEmotionalBalance => '感情バランスガイド';
+
+  @override
+  String get jobDifficultExperiences => '困難な経験ガイド';
+
+  @override
+  String get jobResilienceEmpowerment => '回復力と強化ガイド';
 
   @override
   String get noSpecialistsFound => '専門家が見つかりません';
@@ -1199,6 +1217,22 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get explanationExamAnxiety2 =>
       '実証済みのテクニックと体系的な試験準備を通じて、学生がテストの不安を克服し、より賢く勉強するのを助けることに特化した専門のアカデミックガイド。';
+
+  @override
+  String get explanationEmotionalBalance1 =>
+      '感情調整を専門とする温かく直感的なガイド。思いやりをもって感情を認識し処理するお手伝いをします。感情的な回復力、内なる平和、そして自分自身や他者との真のつながりを育むことをサポートします。';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      '思考パターンや日常習慣を変革することに焦点を当てたガイド。制限的な思考パターンを打ち破り、力を与えるルーティンを築き、科学的根拠に基づく技法を通じて持続的なポジティブな変化を生み出すお手伝いをします。';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      '人生の最も困難な瞬間——悲しみ、トラウマ、喪失、不確かさ——に寄り添う思いやりある経験豊富なガイド。困難な感情を処理し、苦難の中に意味を見出し、新たな力で再建するお手伝いをします。';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      'あなたが内なる力を発見するために尽力する、励ましと強さに焦点を当てたガイド。困難、挫折、移行期を通じて導き——人生が何をもたらしても立ち向かうための回復力と自信を育てます。';
 
   @override
   String get filterTitle => 'フィルター';

@@ -49,6 +49,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get premiumCta => 'Начать';
 
   @override
+  String get premiumPrice => '₽399';
+
+  @override
+  String get premiumPricePeriod => '/мес';
+
+  @override
   String get onboardingTitle1 => 'Чувствуете себя подавленным?';
 
   @override
@@ -849,13 +855,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Неограниченный доступ к редактированию персонажей';
 
   @override
-  String get stayAnd60Off => 'Останьтесь и получите скидку 60% на 1 месяц';
+  String get stayAnd60Off => 'Останьтесь и получите скидку 50% на 1 месяц';
 
   @override
-  String get bestOfferPrice => 'Наше лучшее предложение. Всего \$27.60/месяц';
+  String get bestOfferPrice => 'Наше лучшее предложение. Всего \$1.49/месяц';
 
   @override
-  String get accept60OffAndStay => 'Принять скидку 60% и остаться';
+  String get accept60OffAndStay => 'Принять скидку 50% и остаться';
 
   @override
   String get sadToSeeYouGo => 'Грустно видеть вас уходящим';
@@ -894,6 +900,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get logout => 'Выйти';
+
+  @override
+  String get pleaseWait => 'Пожалуйста, подождите…';
 
   @override
   String get deleteAccount => 'Удалить аккаунт';
@@ -1038,6 +1047,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => 'Наставник по экзаменационному стрессу';
+
+  @override
+  String get jobEmotionalBalance => 'Наставник по эмоциональному балансу';
+
+  @override
+  String get jobDifficultExperiences => 'Наставник по сложным переживаниям';
+
+  @override
+  String get jobResilienceEmpowerment =>
+      'Наставник по устойчивости и укреплению';
 
   @override
   String get noSpecialistsFound => 'Специалисты не найдены';
@@ -1257,6 +1276,22 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get explanationExamAnxiety2 =>
       'Специализированный академический наставник, помогающий студентам преодолеть страх перед тестами и учиться эффективнее с помощью проверенных методов и структурированной подготовки к экзаменам.';
+
+  @override
+  String get explanationEmotionalBalance1 =>
+      'Тёплый и интуитивный наставник, специализирующийся на эмоциональной регуляции, помогающий вам распознавать и обрабатывать свои чувства с состраданием. Поддерживает вас в развитии эмоциональной устойчивости, внутреннего спокойствия и подлинной связи с собой и другими.';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      'Трансформирующий наставник, сосредоточенный на изменении вашего мышления и повседневных привычек. Помогает вам разрушить ограничивающие модели мышления, выстроить вдохновляющие рутины и создать устойчивые позитивные изменения с помощью научно обоснованных техник.';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      'Сострадательный и опытный наставник, идущий рядом с вами в самые сложные моменты жизни — горе, травму, потерю и неопределённость. Помогает вам переработать трудные эмоции, найти смысл в невзгодах и восстановиться с обновлённой силой.';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      'Мотивирующий и ориентированный на силу наставник, посвящённый помощи вам в открытии вашей внутренней силы. Ведёт вас через испытания, неудачи и переходные периоды — развивая устойчивость и уверенность для встречи со всем, что приносит жизнь.';
 
   @override
   String get filterTitle => 'Фильтр';

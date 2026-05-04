@@ -49,6 +49,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get premiumCta => 'Commencer';
 
   @override
+  String get premiumPrice => '2,99 €';
+
+  @override
+  String get premiumPricePeriod => '/mois';
+
+  @override
   String get onboardingTitle1 => 'Vous vous sentez dépassé(e) ?';
 
   @override
@@ -852,13 +858,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get stayAnd60Off =>
-      'Restez et bénéficiez de 60% de réduction pendant 1 mois';
+      'Restez et bénéficiez de 50% de réduction pendant 1 mois';
 
   @override
-  String get bestOfferPrice => 'Notre meilleure offre. Seulement \$27.60/mois';
+  String get bestOfferPrice => 'Notre meilleure offre. Seulement \$1.49/mois';
 
   @override
-  String get accept60OffAndStay => 'Accepter 60% de réduction et rester';
+  String get accept60OffAndStay => 'Accepter 50% de réduction et rester';
 
   @override
   String get sadToSeeYouGo => 'Triste de vous voir partir';
@@ -897,6 +903,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get logout => 'Déconnexion';
+
+  @override
+  String get pleaseWait => 'Veuillez patienter…';
 
   @override
   String get deleteAccount => 'Supprimer le compte';
@@ -1045,6 +1054,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => 'Guide en anxiété des examens';
+
+  @override
+  String get jobEmotionalBalance => 'Guide Équilibre Émotionnel';
+
+  @override
+  String get jobDifficultExperiences => 'Guide Expériences Difficiles';
+
+  @override
+  String get jobResilienceEmpowerment => 'Guide Résilience et Renforcement';
 
   @override
   String get noSpecialistsFound => 'Aucun spécialiste trouvé';
@@ -1264,6 +1282,22 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get explanationExamAnxiety2 =>
       'Un guide académique spécialisé dédié à aider les étudiants à surmonter l\'anxiété des tests et à étudier plus intelligemment grâce à des techniques éprouvées et une préparation structurée aux examens.';
+
+  @override
+  String get explanationEmotionalBalance1 =>
+      'Un guide chaleureux et intuitif spécialisé dans la régulation émotionnelle, vous aidant à reconnaître et traiter vos émotions avec compassion. Vous soutient dans le développement de la résilience émotionnelle, de la sérénité intérieure et d\'une connexion authentique avec vous-même et les autres.';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      'Un guide transformateur axé sur la restructuration de votre mentalité et de vos habitudes quotidiennes. Vous aide à briser les schémas de pensée limitants, à construire des routines dynamisantes et à créer un changement positif durable grâce à des techniques fondées sur des preuves.';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      'Un guide compatissant et expérimenté qui vous accompagne dans les moments les plus difficiles de la vie — deuil, traumatisme, perte et incertitude. Vous aide à traverser les émotions difficiles, à trouver du sens dans les épreuves et à vous reconstruire avec une force renouvelée.';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      'Un guide motivant et centré sur la force, dédié à vous aider à découvrir votre pouvoir intérieur. Vous guide à travers les défis, les revers et les transitions — en développant la résilience et la confiance pour affronter tout ce que la vie apporte.';
 
   @override
   String get filterTitle => 'Filtrer';

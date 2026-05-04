@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,6 +58,11 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
   bool _isSubmitting = false;
   Offset _dragOffset = Offset.zero;
   static const double _horizontalSwipeThreshold = 90;
+  static const int _maxDisplayCoaches = 3;
+
+  /// Filtre / koç listesi değişince yeniden 3 rastgele koç üretmek için.
+  int? _displayPoolCacheKey;
+  List<ConsultantModel>? _displayCoaches;
 
   @override
   void didUpdateWidget(covariant FindCoachStep oldWidget) {
@@ -65,7 +72,8 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
     }
   }
 
-  List<ConsultantModel> _matchedCoaches() {
+  /// Alan filtresi sonrası aday havuzu (henüz 3 ile sınırlı değil).
+  List<ConsultantModel> _filteredPool() {
     final source = widget.coaches;
     if (source.isEmpty) return const [];
     final selectedArea = widget.profileState.supportArea;
@@ -79,6 +87,25 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
       return job.contains(key) || features.contains(key);
     }).toList();
     return filtered.isEmpty ? source : filtered;
+  }
+
+  /// En fazla [_maxDisplayCoaches] koç; havuz karıştırılıp rastgele seçilir (oturum içi sabit).
+  List<ConsultantModel> _matchedCoaches() {
+    final pool = _filteredPool();
+    if (pool.isEmpty) return const [];
+
+    final ids = pool.map((c) => c.id).toList()..sort();
+    final cacheKey = Object.hash(
+      ids.join(','),
+      widget.profileState.supportArea?.index,
+    );
+
+    if (_displayPoolCacheKey != cacheKey) {
+      _displayPoolCacheKey = cacheKey;
+      final shuffled = List<ConsultantModel>.from(pool)..shuffle(Random());
+      _displayCoaches = shuffled.take(_maxDisplayCoaches).toList();
+    }
+    return _displayCoaches ?? const [];
   }
 
   String _selectedDaysText() {

@@ -23,6 +23,7 @@ import 'package:mindcoach/models/consultant_model.dart';
 
 import '../../View/OnboardView/onboarding_page.dart';
 import 'page_routes.dart';
+import 'video_call_route_args.dart';
 
 class AppRouter {
   static Map<String, WidgetBuilder> routes = {
@@ -57,12 +58,16 @@ class AppRouter {
 
     PageRoutes.videoCall: (context) {
       final args = ModalRoute.of(context)?.settings.arguments;
-      if (args is! ConsultantModel) {
+      final parsed = _parseVideoCallArgs(args);
+      if (parsed == null) {
         return const Scaffold(
           body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
         );
       }
-      return VideoCallRealtimeScreen(specialist: args);
+      return VideoCallRealtimeScreen(
+        specialist: parsed.specialist,
+        isTrial: parsed.isTrial,
+      );
     },
 
     /// YENİ EKLENEN: Voice Call Route
@@ -164,7 +169,8 @@ class AppRouter {
 
       case PageRoutes.videoCall:
         final args = settings.arguments;
-        if (args is! ConsultantModel) {
+        final parsed = _parseVideoCallArgs(args);
+        if (parsed == null) {
           return _page(
             const Scaffold(
               body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
@@ -172,7 +178,13 @@ class AppRouter {
             settings,
           );
         }
-        return _page(VideoCallRealtimeScreen(specialist: args), settings);
+        return _page(
+          VideoCallRealtimeScreen(
+            specialist: parsed.specialist,
+            isTrial: parsed.isTrial,
+          ),
+          settings,
+        );
 
       case PageRoutes.videoCallView:
         return _page(
@@ -273,5 +285,18 @@ class AppRouter {
       return out;
     }
     return <int, int>{};
+  }
+
+  /// [ConsultantModel] veya [VideoCallRouteArgs] kabul eder (geriye dönük uyumluluk).
+  static ({ConsultantModel specialist, bool isTrial})? _parseVideoCallArgs(
+    Object? raw,
+  ) {
+    if (raw is VideoCallRouteArgs) {
+      return (specialist: raw.specialist, isTrial: raw.isTrial);
+    }
+    if (raw is ConsultantModel) {
+      return (specialist: raw, isTrial: false);
+    }
+    return null;
   }
 }

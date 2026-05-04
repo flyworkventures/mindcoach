@@ -1,25 +1,28 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/View/appointments/appointments_notifier.dart';
-import 'package:mindcoach/core/repo/consultant_repo.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
+import 'package:mindcoach/core/repo/consultant_repo.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
+import 'package:mindcoach/core/routes/video_call_route_args.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/explanation_convert.dart';
 import 'package:mindcoach/core/utils/feature_convert.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
+// ignore: unused_import
+import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 
 class SpecialistDetailScreen extends ConsumerStatefulWidget {
   final ConsultantModel specialist;
 
   /// Onboarding sirasinda (login olmadan) acildiginda true olur.
-  /// Bu durumda 1 dakikalik konusma/inceleme limiti baslar; sure dolunca
-  /// kullaniciya dialog gosterilip login ekranina yonlendirilir.
+  /// 1 dakikalik limit yalnizca goruntulu arama baglandiginda baslar
+  /// ([VideoCallRealtimeScreen], `connection_success`).
   final bool isTrial;
 
   const SpecialistDetailScreen({
@@ -37,10 +40,6 @@ class _SpecialistDetailScreenState
     extends ConsumerState<SpecialistDetailScreen> {
   int? _selectedSlotIndex;
   late ConsultantModel _specialist;
-
-  Timer? _trialTimer;
-  bool _trialDialogShown = false;
-  static const Duration _trialDuration = Duration(minutes: 1);
 
   @override
   void initState() {
@@ -68,91 +67,6 @@ class _SpecialistDetailScreenState
     } catch (_) {
       // Refresh başarısız olsa da mevcut detay ekranı çalışmaya devam etsin.
     }
-  }
-
-  void _startTrialTimerIfNeeded() {
-    if (!widget.isTrial) return;
-    if (_trialTimer?.isActive ?? false) return;
-    _trialTimer = Timer(_trialDuration, _onTrialExpired);
-  }
-
-  @override
-  void dispose() {
-    _trialTimer?.cancel();
-    _trialTimer = null;
-    super.dispose();
-  }
-
-  Future<void> _onTrialExpired() async {
-    if (!mounted || _trialDialogShown) return;
-    _trialDialogShown = true;
-    final l10n = context.l10n;
-
-    await showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return PopScope(
-          canPop: false,
-          child: AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            title: Text(
-              l10n.trialEndedTitle,
-              style: const TextStyle(
-                fontFamily: 'Geist',
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
-            content: Text(
-              l10n.trialEndedMessage,
-              style: const TextStyle(
-                fontFamily: 'Geist',
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF555555),
-                height: 1.4,
-              ),
-            ),
-            actions: [
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF21BC87),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(
-                    l10n.trialEndedAction,
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (!mounted) return;
-    Navigator.of(
-      context,
-      rootNavigator: true,
-    ).pushNamedAndRemoveUntil(PageRoutes.login, (route) => false);
   }
 
   @override
@@ -442,8 +356,8 @@ class _SpecialistDetailScreenState
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Information',
+                          Text(
+                            l10n.coachDetailInformation,
                             style: TextStyle(
                               fontFamily: 'Geist',
                               fontSize: 18,
@@ -589,15 +503,31 @@ class _SpecialistDetailScreenState
             // Start Video Call button
             Expanded(
               child: GestureDetector(
-                onTap: () {
-                  _startTrialTimerIfNeeded();
-                  Navigator.pushNamed(
+                onTap: () async {
+                  // TEST: Premium kontrolü geçici olarak devre dışı.
+                  // Geri açmak için aşağıdaki bloğu kullan:
+                  // final premium = ref.read(AllProviders.premiumProvider);
+                  // late final bool isTrial;
+                  // if (premium) {
+                  //   isTrial = false;
+                  // } else if (widget.isTrial) {
+                  //   isTrial = true;
+                  // } else {
+                  //   await presentProOffersPaywall();
+                  //   return;
+                  // }
+                  final premium = ref.read(AllProviders.premiumProvider);
+                  final bool isTrial = !premium && widget.isTrial;
+                  if (!context.mounted) return;
+                  await Navigator.pushNamed(
                     context,
                     PageRoutes.videoCall,
-                    arguments: specialist,
-                  ).then((_) {
-                    _refreshSpecialist();
-                  });
+                    arguments: VideoCallRouteArgs(
+                      specialist: specialist,
+                      isTrial: isTrial,
+                    ),
+                  );
+                  if (mounted) _refreshSpecialist();
                 },
                 child: Container(
                   height: 54, // Fixed (54px)
@@ -779,21 +709,8 @@ class _SpecialistDetailScreenState
 
   Widget _buildAppointmentCard(Set<String> bookedSlots) {
     final now = DateTime.now();
-    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
+    final localeTag = Localizations.localeOf(context).toLanguageTag();
+    final dateLabel = DateFormat('d MMMM, EEEE', localeTag).format(now);
 
     // Varsayılan slotlar; DB'de aynı saatte ilgili koçun randevusu varsa pasif/soluk gösterilir.
     final slots = [
@@ -829,7 +746,7 @@ class _SpecialistDetailScreenState
                 SvgPicture.asset("assets/icons/ic_cal.svg"),
                 const SizedBox(width: 8),
                 Text(
-                  '${now.day} ${monthNames[now.month - 1]}, ${dayNames[now.weekday - 1]}day',
+                  dateLabel,
                   style: const TextStyle(
                     fontFamily: 'Geist',
                     fontSize: 15,

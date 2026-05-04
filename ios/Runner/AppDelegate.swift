@@ -79,7 +79,24 @@ import UserNotifications
               mode: .default,
               options: [.defaultToSpeaker, .allowBluetooth, .mixWithOthers])
             try session.setActive(true)
+            // Always release the proximity sensor when leaving the call.
+            DispatchQueue.main.async {
+              UIDevice.current.isProximityMonitoringEnabled = false
+            }
             result(nil)
+
+          case "setProximityMonitoring":
+            // Real-phone behaviour: when the user holds the device to
+            // their ear, iOS automatically blanks the screen and locks
+            // touch input. Only active while the voice-call screen is
+            // visible — must be turned off again on dispose so the rest
+            // of the app behaves normally.
+            let on = (call.arguments as? [String: Any])?["on"] as? Bool ?? false
+            DispatchQueue.main.async {
+              UIDevice.current.isProximityMonitoringEnabled = on
+            }
+            result(on)
+
           default:
             result(FlutterMethodNotImplemented)
           }

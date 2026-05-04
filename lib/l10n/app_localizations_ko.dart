@@ -49,6 +49,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get premiumCta => '시작하기';
 
   @override
+  String get premiumPrice => '₩5,500';
+
+  @override
+  String get premiumPricePeriod => '/월';
+
+  @override
   String get onboardingTitle1 => '마음이 벅차신가요?';
 
   @override
@@ -801,13 +807,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get featureUnlimitedCharacterEditingAccess => '무제한 캐릭터 편집 접근';
 
   @override
-  String get stayAnd60Off => '남아서 1개월 60% 할인 받기';
+  String get stayAnd60Off => '남아서 1개월 50% 할인 받기';
 
   @override
-  String get bestOfferPrice => '역대 최고의 제안. 단 \$27.60/월';
+  String get bestOfferPrice => '역대 최고의 제안. 단 \$1.49/월';
 
   @override
-  String get accept60OffAndStay => '60% 할인 수락 & 남기';
+  String get accept60OffAndStay => '50% 할인 수락 & 남기';
 
   @override
   String get sadToSeeYouGo => '떠나시는 게 아쉽습니다';
@@ -845,6 +851,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get logout => '로그아웃';
+
+  @override
+  String get pleaseWait => '잠시만 기다려 주세요';
 
   @override
   String get deleteAccount => '계정 삭제';
@@ -986,6 +995,15 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => '시험 불안 가이드';
+
+  @override
+  String get jobEmotionalBalance => '감정 균형 가이드';
+
+  @override
+  String get jobDifficultExperiences => '어려운 경험 가이드';
+
+  @override
+  String get jobResilienceEmpowerment => '회복력 및 강화 가이드';
 
   @override
   String get noSpecialistsFound => '전문가를 찾을 수 없습니다';
@@ -1205,6 +1223,22 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get explanationExamAnxiety2 =>
       '입증된 기술과 체계적인 시험 준비를 통해 학생들이 시험 불안을 극복하고 더 효율적으로 공부할 수 있도록 헌신하는 전문 아카데믹 가이드입니다.';
+
+  @override
+  String get explanationEmotionalBalance1 =>
+      '감정 조절을 전문으로 하는 따뜻하고 직관적인 가이드로, 연민을 가지고 감정을 인식하고 처리할 수 있도록 도와줍니다. 감정적 회복력, 내면의 평화, 자신과 타인과의 진정한 연결을 구축하는 데 도움을 줍니다.';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      '사고방식과 일상 습관을 재형성하는 데 초점을 맞춘 변혁적인 가이드입니다. 제한적인 사고 패턴을 깨고, 역량을 강화하는 루틴을 만들고, 근거 기반 기법을 통해 지속적인 긍정적 변화를 만드는 데 도움을 줍니다.';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      '슬픔, 트라우마, 상실, 불확실성 등 삶의 가장 어려운 순간에 함께 걸어가는 연민 어린 경험 많은 가이드입니다. 어려운 감정을 처리하고, 역경 속에서 의미를 찾고, 새로운 힘으로 재건하는 데 도움을 줍니다.';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      '내면의 힘을 발견할 수 있도록 돕는 데 전념하는 동기 부여적이고 강점 중심의 가이드입니다. 도전, 좌절, 전환기를 통해 안내하며 — 삶이 가져오는 무엇이든 맞설 수 있는 회복력과 자신감을 키웁니다.';
 
   @override
   String get filterTitle => '필터';

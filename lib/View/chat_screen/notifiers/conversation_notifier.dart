@@ -16,6 +16,7 @@ import 'package:mindcoach/models/message_model.dart';
 import '../../specialists_screen/specialists_notifier.dart';
 import '../chat_notifier.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 
 class ChatMessage {
   final String id;
@@ -210,32 +211,38 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
     }
   }
 
-  /// Normal mesaj gönder - premium kontrolü yapar
+  /// Normal mesaj gönder - premium kontrolü + trial kotası uygular.
+  ///
+  /// Non-premium kullanıcı için 20 mesajlık deneme kotası kontrol edilir.
+  /// Kota dolmuşsa [TrialQuotaExceededException] fırlatılır; UI bunu yakalayıp
+  /// paywall açmalı.
   Future<void> sendMessage({
     required int id,
     required String text,
   }) async {
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
-    
-    bool isPremium = true;
-    
-    if (isPremium==true) {
-      // Premium kullanıcı - premium mesaj gönder
-      await sendPremiumMessage(
-        consultantId: id,
-        message: trimmed,
-      );
-    } else {
-      // Normal kullanıcı - normal mesaj gönder
-      ChatRepo chatRepo = ChatRepo(ref);
-      await chatRepo.sendMessagesFromConsultantId(id, trimmed);
-      
-      // Chat listesindeki son mesajı güncelle
-      _updateChatListLastMessage(id, trimmed, true);
-      
-      // Mesaj gönderildikten sonra mesajları yeniden yükle
-      await getMessages(id);
+
+    final bool isPremium = _isPremium();
+
+    // Trial kota kontrolü — gönderim öncesi.
+    if (!isPremium) {
+      final canSend = await TrialQuotaService.instance.canSendMessage();
+      if (!canSend) {
+        throw TrialQuotaExceededException.message();
+      }
+    }
+
+    // NOT: Backend'de "premium" / "normal" mesaj endpoint ayrımı var; mevcut
+    // davranış tüm mesajları premium endpoint'ine gönderiyordu. Trial kotası
+    // kontrolünü yukarıda client tarafında yaptığımız için bu davranışı aynen
+    // koruyoruz — backend tarafında ayrıca limit kontrolü yoksa client gating
+    // tek savunma hattı. Backend ayrımı netleşince burada split yapılır.
+    await sendPremiumMessage(consultantId: id, message: trimmed);
+
+    // Başarılı gönderim → trial sayacını ilerlet (sadece non-premium).
+    if (!isPremium) {
+      await TrialQuotaService.instance.incrementMessage();
     }
   }
   
@@ -266,37 +273,44 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
     }
   }
 
-  /// Resim mesajı gönder - premium kontrolü yapar
+  /// Resim mesajı gönder — trial kotası 20 mesajlık genel kotaya dahildir.
   Future<void> sendImageMessage({
     required int consultantId,
     required File imageFile,
     String? message,
   }) async {
     final isPremium = _isPremium();
-    
+
+    if (!isPremium) {
+      final canSend = await TrialQuotaService.instance.canSendMessage();
+      if (!canSend) {
+        throw TrialQuotaExceededException.message();
+      }
+    }
+
     if (isPremium) {
-      // Premium kullanıcı - premium mesaj gönder
       await sendPremiumMessage(
         consultantId: consultantId,
         imageFile: imageFile,
         message: message,
       );
     } else {
-      // Normal kullanıcı - normal mesaj gönder
       ChatRepo chatRepo = ChatRepo(ref);
       await chatRepo.sendImageMessage(
         consultantId: consultantId,
         imageFile: imageFile,
         message: message,
       );
-      
-      // Chat listesindeki son mesajı güncelle
       final lastMessage = message?.isNotEmpty == true ? message! : '[Resim]';
       _updateChatListLastMessage(consultantId, lastMessage, true);
     }
+
+    if (!isPremium) {
+      await TrialQuotaService.instance.incrementMessage();
+    }
   }
 
-  /// Sesli mesaj gönder - premium kontrolü yapar
+  /// Sesli mesaj gönder — trial kotası 20 mesajlık genel kotaya dahildir.
   Future<void> sendVoiceMessage({
     required int consultantId,
     required File audioFile,
@@ -304,25 +318,32 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
   }) async {
     try {
       final isPremium = _isPremium();
-      
+
+      if (!isPremium) {
+        final canSend = await TrialQuotaService.instance.canSendMessage();
+        if (!canSend) {
+          throw TrialQuotaExceededException.message();
+        }
+      }
+
       if (isPremium) {
-        // Premium kullanıcı - premium mesaj gönder
         await sendPremiumMessage(
           consultantId: consultantId,
           audioFile: audioFile,
           message: message,
         );
       } else {
-        // Normal kullanıcı - normal mesaj gönder
         ChatRepo chatRepo = ChatRepo(ref);
         await chatRepo.sendVoiceMessage(
           consultantId: consultantId,
           audioFile: audioFile,
-          message: null, // Mesaj boş bırakılıyor
+          message: null,
         );
-        
-        // Chat listesindeki son mesajı güncelle
         _updateChatListLastMessage(consultantId, '[Sesli Mesaj]', true);
+      }
+
+      if (!isPremium) {
+        await TrialQuotaService.instance.incrementMessage();
       }
     } catch (e) {
       log("❌ sendVoiceMessage hatası: $e");

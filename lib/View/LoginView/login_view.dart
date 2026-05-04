@@ -12,6 +12,7 @@ import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
+import 'package:mindcoach/core/widgets/future_progress_dialog.dart';
 import 'package:mindcoach/models/user_model.dart';
 
 class LoginView extends ConsumerStatefulWidget {
@@ -32,61 +33,63 @@ class _LoginViewState extends ConsumerState<LoginView> {
     setState(() => _loadingProvider = provider);
 
     try {
-      // 1. Social login
-      debugPrint('[LoginView] Login baslatiliyor: ${provider.name}');
-      final UserModel? userModel = await ref
-          .read(AllProviders.authProvider.notifier)
-          .login(provider);
+      await context.runWithProgressDialog(() async {
+        // 1. Social login
+        debugPrint('[LoginView] Login baslatiliyor: ${provider.name}');
+        final UserModel? userModel = await ref
+            .read(AllProviders.authProvider.notifier)
+            .login(provider);
 
-      if (userModel == null || !mounted) {
-        debugPrint('[LoginView] Login basarisiz veya widget dispose edildi');
-        if (mounted) setState(() => _loadingProvider = null);
-        return;
-      }
+        if (userModel == null || !mounted) {
+          debugPrint('[LoginView] Login basarisiz veya widget dispose edildi');
+          return;
+        }
 
-      debugPrint('[LoginView] Login basarili: id=${userModel.id}, '
-          'username=${userModel.username}, '
-          'answerData=${userModel.answerData != null}');
+        debugPrint('[LoginView] Login basarili: id=${userModel.id}, '
+            'username=${userModel.username}, '
+            'answerData=${userModel.answerData != null}');
 
-      // 2. Guest kullanicilari icin profil tamamlamaya gerek yok
-      if (provider == SocialLoginProvider.guest) {
-        debugPrint('[LoginView] Guest kullanici → navbar');
+        // 2. Guest kullanicilari icin profil tamamlamaya gerek yok
+        if (provider == SocialLoginProvider.guest) {
+          debugPrint('[LoginView] Guest kullanici → navbar');
+          _navigateToNavbar();
+          return;
+        }
+
+        // 3. Profil zaten tamamlanmissa direkt anasayfaya git
+        if (userModel.answerData != null) {
+          debugPrint('[LoginView] Profil zaten tamamlanmis → navbar');
+          _navigateToNavbar();
+          return;
+        }
+
+        // 4. Onboarding sirasinda local storage'a yazilan profile setup verisini
+        //    Riverpod state'ine yukle (uygulama yeniden acildiginda da kaybolmasin
+        //    diye persist edildi).
+        await ref
+            .read(AllControllers.profileSetupProvider.notifier)
+            .hydrateFromLocalIfNeeded();
+
+        // 5. Onboarding sorularindaki cevaplari backend'e gonder
+        debugPrint('[LoginView] Profil tamamlaniyor...');
+        final profileState = ref.read(AllControllers.profileSetupProvider);
+        debugPrint('[LoginView] ProfileState: '
+            'fullName="${profileState.fullName}", '
+            'gender=${profileState.gender}, '
+            'supportArea=${profileState.supportArea}, '
+            'meetingTime=${profileState.meetingTime}, '
+            'days=${profileState.availableDays.map((e) => e.name).toList()}');
+
+        await _completeProfileWithStoredData();
+        debugPrint('[LoginView] Profil tamamlandi → navbar');
+
+        // 6. Anasayfaya yonlendir
         _navigateToNavbar();
-        return;
-      }
-
-      // 3. Profil zaten tamamlanmissa direkt anasayfaya git
-      if (userModel.answerData != null) {
-        debugPrint('[LoginView] Profil zaten tamamlanmis → navbar');
-        _navigateToNavbar();
-        return;
-      }
-
-      // 4. Onboarding sirasinda local storage'a yazilan profile setup verisini
-      //    Riverpod state'ine yukle (uygulama yeniden acildiginda da kaybolmasin
-      //    diye persist edildi).
-      await ref
-          .read(AllControllers.profileSetupProvider.notifier)
-          .hydrateFromLocalIfNeeded();
-
-      // 5. Onboarding sorularindaki cevaplari backend'e gonder
-      debugPrint('[LoginView] Profil tamamlaniyor...');
-      final profileState = ref.read(AllControllers.profileSetupProvider);
-      debugPrint('[LoginView] ProfileState: '
-          'fullName="${profileState.fullName}", '
-          'gender=${profileState.gender}, '
-          'supportArea=${profileState.supportArea}, '
-          'meetingTime=${profileState.meetingTime}, '
-          'days=${profileState.availableDays.map((e) => e.name).toList()}');
-
-      await _completeProfileWithStoredData();
-      debugPrint('[LoginView] Profil tamamlandi → navbar');
-
-      // 6. Anasayfaya yonlendir
-      _navigateToNavbar();
+      }, message: context.l10n.pleaseWait);
     } catch (e, st) {
       debugPrint('[LoginView] Login hatasi: $e');
       debugPrint('[LoginView] Stack trace: $st');
+    } finally {
       if (mounted) setState(() => _loadingProvider = null);
     }
   }
@@ -179,7 +182,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                       backgroundColor: isIOS ? Colors.black : Colors.white,
                       textColor: isIOS ? Colors.white : Colors.black,
                       borderColor: isIOS ? null : const Color(0xFFB8B8B8),
-                      isLoading: _loadingProvider == topProvider,
+                      isLoading: false,
                       isDisabled: _loadingProvider != null,
                       onPressed: () => _handleLogin(topProvider),
                     ),
@@ -193,7 +196,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                       backgroundColor: isIOS ? Colors.white : Colors.black,
                       textColor: isIOS ? Colors.black : Colors.white,
                       borderColor: isIOS ? const Color(0xFFB8B8B8) : null,
-                      isLoading: _loadingProvider == bottomProvider,
+                      isLoading: false,
                       isDisabled: _loadingProvider != null,
                       onPressed: () => _handleLogin(bottomProvider),
                     ),
@@ -205,25 +208,19 @@ class _LoginViewState extends ConsumerState<LoginView> {
                         onTap: _loadingProvider != null
                             ? null
                             : () => _handleLogin(SocialLoginProvider.guest),
-                        child: _loadingProvider == SocialLoginProvider.guest
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Color(0xFF96989C),
-                                ),
-                              )
-                            : Text(
-                                l.continueAsGuest,
-                                style: const TextStyle(
-                                  fontFamily: 'Geist',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF96989C),
-                                  height: 1.0,
-                                ),
-                              ),
+                        child: Opacity(
+                          opacity: _loadingProvider != null ? 0.45 : 1,
+                          child: Text(
+                            l.continueAsGuest,
+                            style: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF96989C),
+                              height: 1.0,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
 

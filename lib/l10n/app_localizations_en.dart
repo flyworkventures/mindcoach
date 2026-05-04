@@ -49,6 +49,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumCta => 'Get Started';
 
   @override
+  String get premiumPrice => '\$3.99';
+
+  @override
+  String get premiumPricePeriod => '/mo';
+
+  @override
   String get onboardingTitle1 => 'Feeling overwhelmed?';
 
   @override
@@ -73,7 +79,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingTermsPrefix =>
-      'By signing up for __MINDguide2__, you agree to our ';
+      'By signing up for MindCoach, you agree to our ';
 
   @override
   String get onboardingTermsOfService => 'Terms of Service';
@@ -762,7 +768,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccountImproveQuestion =>
-      'To help us improve the __MINDguide__ experience, could you tell us why you\'re leaving?';
+      'To help us improve the MindCoach experience, could you tell us why you\'re leaving?';
 
   @override
   String get deleteReasonNotRealistic =>
@@ -840,13 +846,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Unlimited character editing access';
 
   @override
-  String get stayAnd60Off => 'Stay and get 60% off for 1 month';
+  String get stayAnd60Off => 'Stay and get 50% off for 1 month';
 
   @override
-  String get bestOfferPrice => 'Our best offer ever. Just \$27.60/month';
+  String get bestOfferPrice => 'Our best offer ever. Just \$1.49/month';
 
   @override
-  String get accept60OffAndStay => 'Accept 60% Off & Stay';
+  String get accept60OffAndStay => 'Accept 50% Off & Stay';
 
   @override
   String get sadToSeeYouGo => 'We\'re sad to see you go';
@@ -885,6 +891,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get pleaseWait => 'Please wait…';
 
   @override
   String get deleteAccount => 'Delete Account';
@@ -1029,6 +1038,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => 'Exam Anxiety Guide';
+
+  @override
+  String get jobEmotionalBalance => 'Emotional Balance Guide';
+
+  @override
+  String get jobDifficultExperiences => 'Difficult Experiences Guide';
+
+  @override
+  String get jobResilienceEmpowerment => 'Resilience & Empowerment Guide';
 
   @override
   String get noSpecialistsFound => 'No specialists found';
@@ -1250,6 +1268,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'A specialized academic guide dedicated to helping students overcome test anxiety and study smarter through proven techniques and structured exam preparation.';
 
   @override
+  String get explanationEmotionalBalance1 =>
+      'A warm and intuitive guide who specializes in emotional regulation, helping you recognize and process your feelings with compassion. Supports you in building emotional resilience, inner calm, and authentic connection with yourself and others.';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      'A transformative guide focused on reshaping your mindset and daily habits. Helps you break limiting thought patterns, build empowering routines, and create lasting positive change through evidence-based techniques.';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      'A compassionate and experienced guide who walks alongside you through life\'s most challenging moments — grief, trauma, loss, and uncertainty. Helps you process difficult emotions, find meaning in hardship, and rebuild with renewed strength.';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      'A motivating and strength-focused guide dedicated to helping you discover your inner power. Guides you through challenges, setbacks, and transitions — building the resilience and confidence to face whatever life brings.';
+
+  @override
   String get filterTitle => 'Filter';
 
   @override
@@ -1415,7 +1449,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coachesTitle => 'Guides';
 
   @override
-  String get searchAtMindcoach => 'Search at __MINDguide__';
+  String get searchAtMindcoach => 'Search at MindCoach';
 
   @override
   String noResultsFound(String query) {
@@ -1423,7 +1457,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get premiumTryFree => 'Try __MIND_guide__ Premium\nfree for 1 week';
+  String get premiumTryFree => 'Try MindCoach Premium\nfree for 1 week';
 
   @override
   String get premiumUnlimitedAccess =>

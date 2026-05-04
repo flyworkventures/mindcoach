@@ -38,7 +38,23 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
 
   List<String> _getAvailableJobs(List<ConsultantModel>? specialists) {
     if (specialists == null || specialists.isEmpty) return [];
-    return specialists.map((s) => s.job).toSet().toList();
+    const jobOrder = [
+      'exam_anxiety',
+      'adult',
+      'child',
+      'teenage',
+      'personal',
+      'family_assistant',
+      'thought_and_habit_guide',
+      'emotional_balance',
+      'difficult_experiences',
+      'resilience_empowerment',
+    ];
+    final raw = specialists.map((s) => s.job).toSet();
+    return [
+      ...jobOrder.where(raw.contains),
+      ...raw.where((j) => !jobOrder.contains(j)),
+    ];
   }
 
   List<String> _getAvailableFeatures(List<ConsultantModel>? specialists) {
@@ -89,9 +105,27 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
     }).toList();
 
     // Figma'daki gibi kategori bazlı göstermek için gruplama yapıyoruz
+    // Önce sınav kaygısı, ortada mevcut tipler, sonda yeni rehberlik tipleri
+    const _groupJobOrder = [
+      'exam_anxiety',
+      'adult',
+      'child',
+      'teenage',
+      'personal',
+      'family_assistant',
+      'thought_and_habit_guide',
+      'emotional_balance',
+      'difficult_experiences',
+      'resilience_empowerment',
+    ];
     final Map<String, List<ConsultantModel>> groupedSpecialists = {};
     if (filteredSpecialists != null) {
-      for (var specialist in filteredSpecialists) {
+      final sorted = [...filteredSpecialists]..sort((a, b) {
+        final ai = _groupJobOrder.indexOf(a.job);
+        final bi = _groupJobOrder.indexOf(b.job);
+        return (ai == -1 ? 999 : ai).compareTo(bi == -1 ? 999 : bi);
+      });
+      for (var specialist in sorted) {
         final jobTitle = JobConvert(specialist.job, context).call();
         if (!groupedSpecialists.containsKey(jobTitle)) {
           groupedSpecialists[jobTitle] = [];

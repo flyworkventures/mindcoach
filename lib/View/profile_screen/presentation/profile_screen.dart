@@ -12,10 +12,12 @@ import 'package:mindcoach/View/ProfileView/notifiers/notification_notifier.dart'
 import 'package:mindcoach/app/my_app.dart';
 import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/routes/page_routes.dart';
 import '../../../core/utils/context_l10n_extensions.dart';
+import '../../../core/widgets/future_progress_dialog.dart';
 
 class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
@@ -170,21 +172,27 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                     height: 50, // Figma height
                     child: ElevatedButton(
                       onPressed: () async {
+                        final l10n = context.l10n;
                         Navigator.of(context).pop(); // Dialog'u kapat
-                        final authNotifier = ref.read(
-                          AllProviders.authProvider.notifier,
-                        );
+                        final rootCtx = navigatorKey.currentContext;
                         ref.read(bottomNavProvider.notifier).reset();
                         try {
-                          // 1. API logout + token temizle + userProvider sıfırla
-                          await authNotifier.logout();
+                          if (rootCtx != null) {
+                            await showFutureProgressDialog<void>(
+                              context: rootCtx,
+                              message: l10n.pleaseWait,
+                              action: () =>
+                                  ref.read(AllProviders.authProvider.notifier).logout(),
+                            );
+                          } else {
+                            await ref.read(AllProviders.authProvider.notifier).logout();
+                          }
                           navigatorKey.currentState?.pushNamedAndRemoveUntil(
                             PageRoutes.login,
                             (route) => false,
                           );
                         } catch (e) {
                           debugPrint('❌ [LOGOUT] Hata: $e');
-                          // Hata olsa bile login ekranına zorla yönlendir
                           navigatorKey.currentState?.pushNamedAndRemoveUntil(
                             PageRoutes.login,
                             (route) => false,
@@ -627,11 +635,21 @@ class _ShareFriendBottomSheet extends StatelessWidget {
 
   final String shareUrl = "https://fly-work.com/mindcoach/download/";
 
-  Future<void> _openLink() async {
-    final Uri url = Uri.parse(shareUrl);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    }
+  /// Eski davranış kutuya basınca linki tarayıcıda açıyordu (mağaza /
+  /// indirme sayfası). Yeni davranış: native iOS/Android paylaşım sheet'ini
+  /// açar, kullanıcı linki istediği uygulamada (WhatsApp, Mesaj, Mail,
+  /// Twitter, vb.) paylaşabilir.
+  Future<void> _shareLink(BuildContext context) async {
+    final RenderBox? box = context.findRenderObject() as RenderBox?;
+    final Rect? sharePositionOrigin =
+        box != null ? box.localToGlobal(Offset.zero) & box.size : null;
+    await SharePlus.instance.share(
+      ShareParams(
+        text: shareUrl,
+        subject: 'Mind Coach',
+        sharePositionOrigin: sharePositionOrigin,
+      ),
+    );
   }
 
   void _copyLink(BuildContext context) {
@@ -723,7 +741,7 @@ class _ShareFriendBottomSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: GestureDetector(
-                onTap: _openLink, // Kutunun kendisine basınca linke gider
+                onTap: () => _shareLink(context),
                 child: Container(
                   padding: const EdgeInsets.all(10), // Padding 10px
                   decoration: BoxDecoration(

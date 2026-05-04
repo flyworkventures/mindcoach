@@ -16,4 +16,11 @@ class LocalDbKeys {
   static String notification4Hours = "notification4Hours";
   static String notification8Hours = "notification8Hours";
   static String notification24Hours = "notification24Hours";
+
+  // Premium deneme süresi sayaçları (cihaz başına; non-premium kullanıcı için)
+  // 20 mesaj + 3 dk (180 sn) sesli arama. Premium kullanıcılar için anlamsız.
+  static String trialMessagesUsed = "trialMessagesUsed";
+  static String trialVoiceSecondsUsed = "trialVoiceSecondsUsed";
+  /// Ücretsiz görüntülü deneme: toplam en fazla 60 sn (cihaz başına, non-premium).
+  static String trialVideoSecondsUsed = "trialVideoSecondsUsed";
 }

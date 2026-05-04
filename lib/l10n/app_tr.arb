@@ -15,6 +15,8 @@
   "premiumFeature3": "Sana özel gelişmiş yapay zeka",
   "premiumAnnualDiscount": "Yıllık planda %40 indirim",
   "premiumCta": "Hemen Başla",
+  "premiumPrice": "₺149,99",
+  "premiumPricePeriod": "/ay",
 
   "onboardingTitle1": "Bunalmış mı hissediyorsun?",
   "onboardingDesc1": "Sertifikalı bir rehberle dakikalar içinde konuş — ne zaman ihtiyacın olursa.",
@@ -303,6 +305,7 @@
 
   "phoneNumber": "Telefon Numarası",
   "logout": "Çıkış Yap",
+  "pleaseWait": "Lütfen bekleyin…",
   "deleteAccount": "Hesabı Sil",
   "save": "Kaydet",
   "areYouSureLogout": "Çıkış yapmak istediğinize emin misiniz?",
@@ -376,6 +379,9 @@
   "jobTeenage": "Genç Rehberi",
   "jobPersonal": "Kişisel Rehber",
   "jobExamAnxiety": "Sınav Kaygısı Rehberi",
+  "jobEmotionalBalance": "Duygusal Denge Rehberi",
+  "jobDifficultExperiences": "Zor Deneyimler Rehberi",
+  "jobResilienceEmpowerment": "Dayanıklılık ve Güçlenme Rehberi",
 
   "noSpecialistsFound": "Uzman bulunamadı",
 
@@ -452,6 +458,10 @@
   "explanationPersonal2": "Kendinizle yeniden bağlantı kurmanıza yardımcı olan destekleyici bir kişisel rehber. Gerçek iç huzuruna ulaşmak için anksiyete yönetimi, farkındalık ve uyku düzeni konularında uzmanlaşmıştır.",
   "explanationExamAnxiety1": "Sınav stresini özgüvenli bir performansa dönüştüren odaklı bir rehber. Öğrencileri zaman yönetimi, gevşeme yöntemleri ve özgüven geliştirme stratejileri ile donatır.",
   "explanationExamAnxiety2": "Öğrencilerin sınav kaygısını aşmalarına ve kanıtlanmış teknikler ile yapılandırılmış sınav hazırlığı aracılığıyla daha akıllıca çalışmalarına yardımcı olmaya adanmış uzman bir akademik rehber.",
+  "explanationEmotionalBalance1": "Duygularınızı tanımanıza ve şefkatle işlemenize yardımcı olan sıcak ve sezgisel bir rehber. Duygusal dayanıklılık, iç huzur ve kendinizle ile başkalarıyla özgün bağlantı kurmanızı destekler.",
+  "explanationThoughtAndHabitGuide1": "Düşünce yapınızı ve günlük alışkanlıklarınızı dönüştürmeye odaklanan bir rehber. Sınırlayıcı düşünce kalıplarını kırmanıza, güçlendirici rutinler oluşturmanıza ve kanıta dayalı teknikler aracılığıyla kalıcı pozitif değişim yaratmanıza yardımcı olur.",
+  "explanationDifficultExperiences1": "Hayatın en zorlu anlarında —kayıp, travma, yas ve belirsizlik— yanınızda yürüyen şefkatli ve deneyimli bir rehber. Zor duyguları işlemenize, zorluklarda anlam bulmanıza ve yenilenen güçle yeniden inşa etmenize yardımcı olur.",
+  "explanationResilienceEmpowerment1": "İç gücünüzü keşfetmenize yardımcı olmaya adanmış, motive edici ve güç odaklı bir rehber. Zorluklar, geri adımlar ve geçiş süreçlerinde size rehberlik eder — hayatın getirdiklerine karşı durmak için dayanıklılık ve özgüven inşa eder.",
 
   "filterTitle": "Filtrele",
   "filterCoachingArea": "Rehberlik Alanı",
@@ -633,9 +643,9 @@
   "featureUnlimitedCharacterAccess": "Sınırsız karakter erişimi",
   "featureUnlimitedVideoCallAccess": "Sınırsız video görüşme erişimi",
   "featureUnlimitedCharacterEditingAccess": "Sınırsız karakter düzenleme erişimi",
-  "stayAnd60Off": "Kal ve 1 ay boyunca %60 indirim kazan",
-  "bestOfferPrice": "Şimdiye kadarki en iyi teklifimiz. Sadece $27.60/ay",
-  "accept60OffAndStay": "%60 İndirimi Kabul Et & Kal",
+  "stayAnd60Off": "Kal ve 1 ay boyunca %50 indirim kazan",
+  "bestOfferPrice": "Şimdiye kadarki en iyi teklifimiz. Sadece ₺79,99/ay",
+  "accept60OffAndStay": "%50 İndirimi Kabul Et & Kal",
   "sadToSeeYouGo": "Gidişini görmek üzücü",
   "membershipCancelledInfo": "Üyeliğiniz iptal edildi. Mevcut fatura döneminizin sonuna kadar erişiminiz devam eder.",
   "changeYourMind": "Fikrin değişti mi?",

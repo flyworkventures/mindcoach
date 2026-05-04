@@ -12,6 +12,8 @@ import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
 import '../../Riverpod/Providers/all_providers.dart';
 import '../../core/routes/page_routes.dart';
 import '../../core/utils/app_constants.dart';
+import '../../core/utils/revenuecat_paywalls.dart';
+import '../../core/widgets/future_progress_dialog.dart';
 import '../../core/utils/context_l10n_extensions.dart';
 import '../../models/user_model.dart';
 import '../auth/presentation/controller/auth_controller.dart';
@@ -177,12 +179,13 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     if (authState.isLoading) return false;
 
     try {
-      await ref
-          .read(authControllerProvider.notifier)
-          .deleteAccount(
-            deleteReason: feedback.reason,
-            deleteMessage: feedback.message,
-          );
+      await context.runWithProgressDialog(
+        () => ref.read(authControllerProvider.notifier).deleteAccount(
+              deleteReason: feedback.reason,
+              deleteMessage: feedback.message,
+            ),
+        message: context.l10n.pleaseWait,
+      );
       return true;
     } catch (e) {
       if (mounted) {
@@ -469,13 +472,19 @@ class _DeleteAccountFlowSheetState extends State<_DeleteAccountFlowSheet> {
         return _SpecialOfferBottomSheet(
           onBack: _goBack,
           onNext: _goNext,
+          onSwitchToMonthlyPlan: () async {
+            Navigator.of(context).pop();
+            await Future.microtask(() {});
+            await presentProOffersPaywall();
+          },
         );
       case 2:
         return _FinalOfferBottomSheet(
           onBack: _goBack,
-          onAcceptOffer: () {
+          onAcceptOffer: () async {
             Navigator.of(context).pop();
-            // TODO: %60 İndirimli plana geçiş
+            await Future.microtask(() {});
+            await presentDiscountPaywall();
           },
           onConfirmDelete: () async {
             final ok = await widget.onDeleteConfirmed(_feedback);
@@ -830,8 +839,13 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
 class _SpecialOfferBottomSheet extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onNext;
+  final Future<void> Function() onSwitchToMonthlyPlan;
 
-  const _SpecialOfferBottomSheet({required this.onBack, required this.onNext});
+  const _SpecialOfferBottomSheet({
+    required this.onBack,
+    required this.onNext,
+    required this.onSwitchToMonthlyPlan,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1028,9 +1042,8 @@ class _SpecialOfferBottomSheet extends StatelessWidget {
                     width: double.infinity,
                     height: 40,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // TODO: Aylık Plana geçiş işlemleri
-                        Navigator.of(context).pop();
+                      onPressed: () async {
+                        await onSwitchToMonthlyPlan();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF21BC87),
@@ -1149,7 +1162,7 @@ class _SpecialOfferBottomSheet extends StatelessWidget {
 class _FinalOfferBottomSheet extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onConfirmDelete;
-  final VoidCallback onAcceptOffer;
+  final Future<void> Function() onAcceptOffer;
 
   const _FinalOfferBottomSheet({
     required this.onBack,
@@ -1344,7 +1357,9 @@ class _FinalOfferBottomSheet extends StatelessWidget {
                     width: double.infinity,
                     height: 40,
                     child: ElevatedButton(
-                      onPressed: onAcceptOffer,
+                      onPressed: () async {
+                        await onAcceptOffer();
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF21BC87),
                         elevation: 0,

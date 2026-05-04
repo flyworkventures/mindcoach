@@ -63,16 +63,26 @@ class _SpecialistsFilterSheetState extends State<SpecialistsFilterSheet> {
   }
 
   List<_DropdownItem> _buildCoachingAreas() {
-    final keys = widget.availableJobs.isNotEmpty
+    const jobOrder = [
+      'exam_anxiety',
+      'adult',
+      'child',
+      'teenage',
+      'personal',
+      'family_assistant',
+      'thought_and_habit_guide',
+      'emotional_balance',
+      'difficult_experiences',
+      'resilience_empowerment',
+    ];
+    final rawJobs = widget.availableJobs.isNotEmpty
         ? widget.availableJobs
-        : [
-            'adult',
-            'family_assistant',
-            'child',
-            'teenage',
-            'personal',
-            'exam_anxiety',
-          ];
+        : jobOrder;
+    final rawSet = rawJobs.toSet();
+    final keys = [
+      ...jobOrder.where(rawSet.contains),
+      ...rawSet.where((j) => !jobOrder.contains(j)),
+    ];
     return keys
         .map(
           (key) =>

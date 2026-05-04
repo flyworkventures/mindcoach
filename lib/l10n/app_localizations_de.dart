@@ -49,6 +49,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get premiumCta => 'Loslegen';
 
   @override
+  String get premiumPrice => '€2,99';
+
+  @override
+  String get premiumPricePeriod => '/Mon.';
+
+  @override
   String get onboardingTitle1 => 'Fühlst du dich überfordert?';
 
   @override
@@ -848,14 +854,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Unbegrenzte Charakter-Bearbeitungsmöglichkeiten';
 
   @override
-  String get stayAnd60Off => 'Bleib und erhalte 60% Rabatt für 1 Monat';
+  String get stayAnd60Off => 'Bleib und erhalte 50% Rabatt für 1 Monat';
 
   @override
   String get bestOfferPrice =>
-      'Unser bestes Angebot aller Zeiten. Nur \$27.60/Monat';
+      'Unser bestes Angebot aller Zeiten. Nur \$1.49/Monat';
 
   @override
-  String get accept60OffAndStay => '60% Rabatt annehmen & bleiben';
+  String get accept60OffAndStay => '50% Rabatt annehmen & bleiben';
 
   @override
   String get sadToSeeYouGo => 'Schade, dass du gehst';
@@ -894,6 +900,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get logout => 'Abmelden';
+
+  @override
+  String get pleaseWait => 'Bitte warten …';
 
   @override
   String get deleteAccount => 'Konto löschen';
@@ -1043,6 +1052,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => 'Prüfungsangst-Begleiter';
+
+  @override
+  String get jobEmotionalBalance => 'Emotionaler Balance-Begleiter';
+
+  @override
+  String get jobDifficultExperiences => 'Begleiter für schwierige Erfahrungen';
+
+  @override
+  String get jobResilienceEmpowerment => 'Resilienz- und Stärkungs-Begleiter';
 
   @override
   String get noSpecialistsFound => 'Keine Spezialisten gefunden';
@@ -1262,6 +1280,22 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get explanationExamAnxiety2 =>
       'Ein spezialisierter akademischer Begleiter, der Schülern hilft, Prüfungsangst zu überwinden und durch bewährte Techniken und strukturierte Prüfungsvorbereitung intelligenter zu lernen.';
+
+  @override
+  String get explanationEmotionalBalance1 =>
+      'Ein warmherziger und intuitiver Begleiter, der auf emotionale Regulierung spezialisiert ist und dir hilft, deine Gefühle mit Mitgefühl zu erkennen und zu verarbeiten. Unterstützt dich beim Aufbau emotionaler Resilienz, innerer Ruhe und echter Verbindung zu dir selbst und anderen.';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      'Ein transformativer Begleiter, der sich auf die Umgestaltung deiner Denkweise und täglichen Gewohnheiten konzentriert. Hilft dir, einschränkende Denkmuster zu durchbrechen, stärkende Routinen aufzubauen und durch evidenzbasierte Techniken dauerhaft positive Veränderungen zu schaffen.';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      'Ein mitfühlender und erfahrener Begleiter, der dich durch die herausforderndsten Momente des Lebens begleitet — Trauer, Trauma, Verlust und Unsicherheit. Hilft dir, schwierige Emotionen zu verarbeiten, in Schwierigkeiten Sinn zu finden und mit erneuerter Kraft neu aufzubauen.';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      'Ein motivierender und stärkeorientierter Begleiter, der dir hilft, deine innere Kraft zu entdecken. Begleitet dich durch Herausforderungen, Rückschläge und Übergangsphasen — und baut die Resilienz und das Selbstvertrauen auf, um allem zu begegnen, was das Leben bringt.';
 
   @override
   String get filterTitle => 'Filtern';

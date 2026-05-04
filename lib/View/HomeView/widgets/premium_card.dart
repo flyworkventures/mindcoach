@@ -104,11 +104,11 @@ class PremiumCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         RichText(
-                          text: const TextSpan(
+                          text: TextSpan(
                             children: [
                               TextSpan(
-                                text: '14,99\$',
-                                style: TextStyle(
+                                text: l.premiumPrice,
+                                style: const TextStyle(
                                   fontFamily: 'Geist',
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
@@ -116,8 +116,8 @@ class PremiumCard extends ConsumerWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: '/mo',
-                                style: TextStyle(
+                                text: l.premiumPricePeriod,
+                                style: const TextStyle(
                                   fontFamily: 'Geist',
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,

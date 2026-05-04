@@ -49,6 +49,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get premiumCta => 'Hemen Başla';
 
   @override
+  String get premiumPrice => '₺149,99';
+
+  @override
+  String get premiumPricePeriod => '/ay';
+
+  @override
   String get onboardingTitle1 => 'Bunalmış mı hissediyorsun?';
 
   @override
@@ -836,14 +842,14 @@ class AppLocalizationsTr extends AppLocalizations {
       'Sınırsız karakter düzenleme erişimi';
 
   @override
-  String get stayAnd60Off => 'Kal ve 1 ay boyunca %60 indirim kazan';
+  String get stayAnd60Off => 'Kal ve 1 ay boyunca %50 indirim kazan';
 
   @override
   String get bestOfferPrice =>
-      'Şimdiye kadarki en iyi teklifimiz. Sadece \$27.60/ay';
+      'Şimdiye kadarki en iyi teklifimiz. Sadece ₺79,99/ay';
 
   @override
-  String get accept60OffAndStay => '%60 İndirimi Kabul Et & Kal';
+  String get accept60OffAndStay => '%50 İndirimi Kabul Et & Kal';
 
   @override
   String get sadToSeeYouGo => 'Gidişini görmek üzücü';
@@ -882,6 +888,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get logout => 'Çıkış Yap';
+
+  @override
+  String get pleaseWait => 'Lütfen bekleyin…';
 
   @override
   String get deleteAccount => 'Hesabı Sil';
@@ -1026,6 +1035,15 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => 'Sınav Kaygısı Rehberi';
+
+  @override
+  String get jobEmotionalBalance => 'Duygusal Denge Rehberi';
+
+  @override
+  String get jobDifficultExperiences => 'Zor Deneyimler Rehberi';
+
+  @override
+  String get jobResilienceEmpowerment => 'Dayanıklılık ve Güçlenme Rehberi';
 
   @override
   String get noSpecialistsFound => 'Uzman bulunamadı';
@@ -1245,6 +1263,22 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get explanationExamAnxiety2 =>
       'Öğrencilerin sınav kaygısını aşmalarına ve kanıtlanmış teknikler ile yapılandırılmış sınav hazırlığı aracılığıyla daha akıllıca çalışmalarına yardımcı olmaya adanmış uzman bir akademik rehber.';
+
+  @override
+  String get explanationEmotionalBalance1 =>
+      'Duygularınızı tanımanıza ve şefkatle işlemenize yardımcı olan sıcak ve sezgisel bir rehber. Duygusal dayanıklılık, iç huzur ve kendinizle ile başkalarıyla özgün bağlantı kurmanızı destekler.';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      'Düşünce yapınızı ve günlük alışkanlıklarınızı dönüştürmeye odaklanan bir rehber. Sınırlayıcı düşünce kalıplarını kırmanıza, güçlendirici rutinler oluşturmanıza ve kanıta dayalı teknikler aracılığıyla kalıcı pozitif değişim yaratmanıza yardımcı olur.';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      'Hayatın en zorlu anlarında —kayıp, travma, yas ve belirsizlik— yanınızda yürüyen şefkatli ve deneyimli bir rehber. Zor duyguları işlemenize, zorluklarda anlam bulmanıza ve yenilenen güçle yeniden inşa etmenize yardımcı olur.';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      'İç gücünüzü keşfetmenize yardımcı olmaya adanmış, motive edici ve güç odaklı bir rehber. Zorluklar, geri adımlar ve geçiş süreçlerinde size rehberlik eder — hayatın getirdiklerine karşı durmak için dayanıklılık ve özgüven inşa eder.';
 
   @override
   String get filterTitle => 'Filtrele';

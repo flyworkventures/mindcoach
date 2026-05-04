@@ -6,16 +6,20 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pcm_sound/flutter_pcm_sound.dart' as pcm;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
+import 'package:mindcoach/core/utils/call_permissions.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
-import 'package:mindcoach/core/utils/local_db_keys.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
+import 'package:mindcoach/core/utils/realtime_auth_token.dart';
+import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/l10n/app_localizations.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 import 'package:record/record.dart';
@@ -46,7 +50,13 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   // ── PCM playback (flutter_pcm_sound) ───────────────────────────────────────
   static const int _sampleRate = 24000;
   static const int _channels = 1;
-  final Queue<int> _pcmQueue = Queue<int>();
+  // Eski Queue<int> her sample için boxed int allocation yapıyordu;
+  // 24k sample/sn × ~25 chunk/sn = 600k allocation/sn = ana CPU bottleneck.
+  // Yeni: gelen her PCM mesajı tek Int16List olarak enqueue, feed sırasında
+  // ön taraftan offset ile okunur (zero-allocation).
+  final Queue<Int16List> _pcmChunks = Queue<Int16List>();
+  int _pcmChunkOffset = 0;
+  int _pcmTotalSamples = 0;
   bool _pcmSetup = false;
   bool _pcmStarted = false;
 
@@ -61,6 +71,21 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   _CallState _callState = _CallState.connecting;
   int _secondsElapsed = 0;
   Timer? _durationTimer;
+  bool _voiceTrialHardStopShown = false;
+
+  /// Sunucu ai_response_complete göndermezse speaking'de takılı kalınıyordu; mikrofon ikinci turda ölüyordu.
+  Timer? _aiSpeakingWatchdog;
+
+  /// Son AI PCM baytının geldiği an — akış kesilince [ai_response_complete] olmadan dinlemeye dönüş.
+  DateTime? _lastAiPcmReceivedAt;
+  Timer? _aiPlaybackIdleTimer;
+
+  /// AI cümleleri arasında doğal 1s civarı boşluklar olabiliyor; çok kısa
+  /// idle eşik konuşma ortasında speaking→listening geçişine sebep olur.
+  static const int _aiPlaybackIdleMs = 1600;
+
+  /// Son PCM’den bu kadar ms geçtiyse ve kuyruk hâlâ doluysa oynatıcı takılmıştır — zorla boşalt.
+  static const int _aiPlaybackStuckQueueFlushMs = 3000;
   bool _isMuted = false;
   bool _isSpeakerOn = false;
 
@@ -86,38 +111,93 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       duration: const Duration(milliseconds: 800),
     )..repeat(reverse: true);
 
-    _configureAudioSession()
-        .then((_) => _initPcmPlayer())
-        .then((_) => _connect())
-        .then((_) => _configureAudioSession())
-        .then((_) => _startRingTone());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _bootstrapVoiceCall());
   }
 
-  // ── iOS audio session ──────────────────────────────────────────────────────
+  Future<void> _bootstrapVoiceCall() async {
+    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+      final ok = await ensureMicrophonePermission();
+      if (!mounted) return;
+      if (!ok) {
+        _setError();
+        return;
+      }
+    }
+    if (!ref.read(AllProviders.premiumProvider)) {
+      final canStart = await TrialQuotaService.instance.canStartVoiceCall();
+      if (!mounted) return;
+      if (!canStart) {
+        await presentProOffersPaywall();
+        if (mounted) Navigator.of(context).pop();
+        return;
+      }
+    }
+    await _configureAudioSession();
+    await _initPcmPlayer();
+    await _connect();
+    await _configureAudioSession();
+    await _startRingTone();
+    // Proximity sensor — only on the earpiece route, mirroring the iPhone
+    // Phone app: holding the device to your ear blanks the screen, switching
+    // to speaker turns the proximity logic off.
+    await _setProximityMonitoring(!_isSpeakerOn);
+  }
+
+  // ── iOS / Android ses oturumu (MainActivity + AppDelegate MethodChannel) ──
+  /// Native AVAudioSession.setCategory + setActive ÇOK pahalı işlemler;
+  /// her çağrıda PCM playback "underrun" yaşıyordu çünkü session geçici
+  /// olarak interrupted state'e geçiyordu. Birden fazla yerden ardışık
+  /// çağrılar 250ms içindeyse tek seferde toplu yapılıyor.
+  DateTime? _lastAudioSessionConfigAt;
+  bool _audioSessionConfiguring = false;
   Future<void> _configureAudioSession() async {
-    if (!Platform.isIOS) return;
+    if (kIsWeb) return;
+    if (!Platform.isIOS && !Platform.isAndroid) return;
+    final now = DateTime.now();
+    final last = _lastAudioSessionConfigAt;
+    if (last != null && now.difference(last).inMilliseconds < 250) return;
+    if (_audioSessionConfiguring) return;
+    _audioSessionConfiguring = true;
     try {
       final mode = await _audioSessionChannel.invokeMethod<String>(
         'configureForVoiceCall',
       );
-      debugPrint('🔊 [AUDIO] iOS AVAudioSession ready — mode=$mode');
-      // Re-applying the category resets any active output-port override,
-      // so re-assert the user's speaker preference after every config.
+      debugPrint('🔊 [AUDIO] session ready — mode=$mode');
       if (_isSpeakerOn) {
         try {
           await _audioSessionChannel.invokeMethod('setSpeakerOn', {'on': true});
         } catch (_) {}
       }
+      _lastAudioSessionConfigAt = DateTime.now();
     } catch (e) {
       debugPrint('⚠️ [AUDIO] session config failed: $e');
+    } finally {
+      _audioSessionConfiguring = false;
     }
   }
 
   Future<void> _resetAudioSession() async {
-    if (!Platform.isIOS) return;
+    if (kIsWeb) return;
+    if (!Platform.isIOS && !Platform.isAndroid) return;
     try {
       await _audioSessionChannel.invokeMethod('resetAudioSession');
     } catch (_) {}
+  }
+
+  // ── Proximity sensor (real-phone "hold to ear → screen off") ──────────────
+  // iOS: UIDevice.proximityMonitoringEnabled — OS handles the dim itself.
+  // Android: PROXIMITY_SCREEN_OFF_WAKE_LOCK — same wake lock the stock
+  // Phone app uses to blank the display + lock touch input.
+  Future<void> _setProximityMonitoring(bool on) async {
+    if (kIsWeb) return;
+    if (!Platform.isIOS && !Platform.isAndroid) return;
+    try {
+      await _audioSessionChannel.invokeMethod('setProximityMonitoring', {
+        'on': on,
+      });
+    } catch (e) {
+      debugPrint('⚠️ [AUDIO] proximity toggle failed: $e');
+    }
   }
 
   // ── PCM player setup ───────────────────────────────────────────────────────
@@ -128,7 +208,10 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
         channelCount: _channels,
         iosAudioCategory: pcm.IosAudioCategory.playAndRecord,
       );
-      await pcm.FlutterPcmSound.setFeedThreshold((_sampleRate * 0.25).round());
+      // 250ms → 400ms: hafif network jitter'da bile tampon boşalıp ses
+      // kesintisi yapıyordu. 400ms tolerans yaklaşık bir kelime aksamayı
+      // maskeler. Latency artışı yok; PCM playback yine gelir gelmez başlar.
+      await pcm.FlutterPcmSound.setFeedThreshold((_sampleRate * 0.40).round());
       pcm.FlutterPcmSound.setFeedCallback(_onPcmFeedRequest);
       _pcmSetup = true;
       await _configureAudioSession();
@@ -153,20 +236,36 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       return;
     }
 
-    if (_pcmQueue.isEmpty) return;
+    if (_pcmTotalSamples == 0) return;
 
     final int maxSamples = (_sampleRate * 0.5).round();
-    final int toSend = _pcmQueue.length < maxSamples
-        ? _pcmQueue.length
+    final int toSend = _pcmTotalSamples < maxSamples
+        ? _pcmTotalSamples
         : maxSamples;
 
     final Int16List samples = Int16List(toSend);
+    int dst = 0;
     double sumSq = 0;
-    for (int i = 0; i < toSend; i++) {
-      samples[i] = _pcmQueue.removeFirst();
-      final v = samples[i].toDouble();
-      sumSq += v * v;
+    while (dst < toSend && _pcmChunks.isNotEmpty) {
+      final Int16List chunk = _pcmChunks.first;
+      final int available = chunk.length - _pcmChunkOffset;
+      final int needed = toSend - dst;
+      final int copy = available < needed ? available : needed;
+      // setRange = native memcpy fastpath
+      samples.setRange(dst, dst + copy, chunk, _pcmChunkOffset);
+      for (int i = 0; i < copy; i++) {
+        final double v = chunk[_pcmChunkOffset + i].toDouble();
+        sumSq += v * v;
+      }
+      dst += copy;
+      if (copy == available) {
+        _pcmChunks.removeFirst();
+        _pcmChunkOffset = 0;
+      } else {
+        _pcmChunkOffset += copy;
+      }
     }
+    _pcmTotalSamples -= toSend;
     if (toSend > 0) {
       _lastPlaybackRms = sqrt(sumSq / toSend).round();
     }
@@ -187,7 +286,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   void _stopRingTone() {
     if (!_isRinging) return;
     _isRinging = false;
-    _pcmQueue.clear();
+    _flushPcm();
   }
 
   // ── "Phone picked up" chime ────────────────────────────────────────────────
@@ -210,9 +309,8 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       }
       samples[i] = (s * 32767).round().clamp(-32767, 32767);
     }
-    for (int i = 0; i < totalSamples; i++) {
-      _pcmQueue.add(samples[i]);
-    }
+    _pcmChunks.add(samples);
+    _pcmTotalSamples += totalSamples;
     _onPcmFeedRequest(0);
   }
 
@@ -250,10 +348,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   // ── WebSocket connection ───────────────────────────────────────────────────
   Future<void> _connect() async {
     try {
-      final token = await LocalDbService().getString(key: LocalDbKeys.token);
-      if (token == null || token.isEmpty) {
-        throw Exception('Token bulunamadı — lütfen tekrar giriş yapın');
-      }
+      final token = await ensureRealtimeAuthToken(ref);
 
       final deviceLang = ref.read(localeProvider.notifier).getLanguageCode();
 
@@ -302,20 +397,22 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   // A small "pre-roll" buffer saves the last ~500ms of mic audio so that
   // after barge-in fires we can replay those chunks to the server, i.e.
   // the first half-second of the user's interrupting speech isn't lost.
-  // Tuned for iPhone built-in speaker + iOS voiceChat AEC:
-  //  - RMS threshold chosen well above typical post-AEC echo residue
-  //    (usually ~300-800) but below a normal voice (~2500-8000).
-  //  - 160ms sustained → fast enough to feel responsive on barge-in, long
-  //    enough to reject short bursts like a cough or speaker pop.
-  static const int _bargeInSustainedMs = 160;
+  // ChatGPT-vari hız: kullanıcı konuşur konuşmaz AI sussun.
+  //  - Taban eşik düşük tutulup playback RMS oranı sıkılaştırıldı, yani
+  //    sessiz AI anlarında bile yumuşak ses yakalanır, gürültülü anlarda
+  //    echo daha iyi reddedilir.
+  //  - 100ms sustained → toplam barge-in gecikmesi 250 + 100 + ~250ms
+  //    flush = ~600ms, ChatGPT hissine yakın.
+  //  - Ratio 2.0x: typical AEC residue ~playback*0.4, dolayısıyla 2.0
+  //    çarpanı ile echo eşiği konuşma seviyesinin altında kalır.
+  static const int _bargeInSustainedMs = 100;
   static const int _preRollMaxMs = 500;
 
-  // After the AI stops speaking, keep the mic gated closed for this long
-  // so any acoustic tail from the iPhone speaker doesn't get transcribed
-  // as a user utterance (we were seeing "going." show up as the tail of
-  // "how's it going?"). 400ms is generous enough for typical room decay
-  // without making the user wait.
-  static const int _postSpeechCooldownMs = 400;
+  // AI sustuktan sonra hoparlör akustik kuyruğunun mikrofona dönüp
+  // sahte bir "kullanıcı konuştu" tetiklemesine yol açmaması için
+  // mikrofon kapısı bu kadar kapalı tutulur. AEC + 250ms tipik oda
+  // sönümü için yeterli; daha uzun süre kullanıcı yanıt veremiyor hissi.
+  static const int _postSpeechCooldownMs = 250;
 
   int _highRmsStreakMs = 0;
   bool _bargeInSent = false;
@@ -324,9 +421,13 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   DateTime? _aiSpeakingSince;
   int _lastPlaybackRms = 0;
 
-  static const int _bargeInMinAiSpeakingMs = 450;
-  static const int _bargeInRmsThresholdEarpiece = 2200;
-  static const int _bargeInRmsThresholdSpeaker = 3200;
+  // Asgari AI konuşma süresi: ilk 250ms'i koruyoruz ki "merhaba" gibi
+  // başlangıç hece sırasında yapay tetikleme olmasın; sonrasında her an
+  // kesilebilir.
+  static const int _bargeInMinAiSpeakingMs = 250;
+  static const int _bargeInRmsThresholdEarpiece = 1700;
+  static const int _bargeInRmsThresholdSpeaker = 2400;
+  static const double _bargeInPlaybackRatio = 2.0;
 
   int _computePcm16Rms(Uint8List chunk) {
     final int n = chunk.length ~/ 2;
@@ -354,10 +455,20 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   // ── Microphone → PCM16 → WebSocket ─────────────────────────────────────────
   Future<void> _startMicStream() async {
     if (_micStreamActive) return;
+    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+      final ok = await ensureMicrophonePermission();
+      if (!ok) {
+        _setError();
+        return;
+      }
+    }
     final hasPermission = await _recorder.hasPermission();
     if (!hasPermission) {
       _setError();
       return;
+    }
+    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+      await _configureAudioSession();
     }
 
     final stream = await _recorder.startStream(
@@ -375,7 +486,8 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       // whole realtime session with "Invalid 'audio'". Drop it here.
       if (chunk.length % 2 != 0) return;
       if (_isMuted) return;
-      if (_isRinging) return;
+      // Zil çalarken eskiden tamamen kesiyorduk; connection_success gecikince
+      // kullanıcı hiç konuşamıyordu. Echo riski AEC ile tolere edilir.
       if (_ws?.readyState != WebSocket.open) return;
 
       // Post-speech cooldown: the AI just stopped speaking, but the
@@ -400,7 +512,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
             : _bargeInRmsThresholdEarpiece;
         final int echoAwareThreshold = max(
           dynamicThreshold,
-          (_lastPlaybackRms * 1.6).round(),
+          (_lastPlaybackRms * _bargeInPlaybackRatio).round(),
         );
         final int speakingForMs = _aiSpeakingSince == null
             ? 0
@@ -416,8 +528,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
           bufferedMs -= _preRoll.removeFirst().durationMs;
         }
 
-        if (
-            !_bargeInSent &&
+        if (!_bargeInSent &&
             speakingForMs >= _bargeInMinAiSpeakingMs &&
             rms >= echoAwareThreshold) {
           _highRmsStreakMs += durMs;
@@ -429,6 +540,8 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
               'streak=${_highRmsStreakMs}ms)',
             );
             _bargeInSent = true;
+            _cancelAiSpeakingWatchdog();
+            _cancelAiPlaybackIdleMonitor();
             _flushPcm();
             if (_ws?.readyState == WebSocket.open) {
               _ws!.add(jsonEncode({'type': 'barge_in_request'}));
@@ -481,19 +594,125 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
     }
   }
 
+  Future<void> _onRealtimeConnectionReady() async {
+    if (!mounted) return;
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
+    _stopRingTone();
+    await _configureAudioSession();
+    _playPickupChime();
+    if (mounted) setState(() => _callState = _CallState.listening);
+    _aiSpeakingSince = null;
+    _durationTimer?.cancel();
+    _durationTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() => _secondsElapsed++);
+      final premium = ref.read(AllProviders.premiumProvider);
+      if (premium) return;
+      unawaited(() async {
+        await TrialQuotaService.instance.addVoiceSeconds(1);
+        final remaining = await TrialQuotaService.instance.voiceSecondsRemaining();
+        if (!mounted || _voiceTrialHardStopShown) return;
+        if (remaining <= 0) {
+          _voiceTrialHardStopShown = true;
+          _durationTimer?.cancel();
+          await presentProOffersPaywall();
+          if (mounted) await _endCall();
+        }
+      }());
+    });
+
+    if (!_isMuted) {
+      await _rebindMicAfterRealtimeReady();
+    }
+  }
+
+  void _cancelAiSpeakingWatchdog() {
+    _aiSpeakingWatchdog?.cancel();
+    _aiSpeakingWatchdog = null;
+  }
+
+  void _cancelAiPlaybackIdleMonitor() {
+    _aiPlaybackIdleTimer?.cancel();
+    _aiPlaybackIdleTimer = null;
+    _lastAiPcmReceivedAt = null;
+  }
+
+  void _evaluateAiPlaybackIdleFallback() {
+    if (!mounted) return;
+    if (_callState != _CallState.speaking) {
+      _cancelAiPlaybackIdleMonitor();
+      return;
+    }
+    final base = _lastAiPcmReceivedAt ?? _aiSpeakingSince;
+    if (base == null) return;
+
+    final stallMs = DateTime.now().difference(base).inMilliseconds;
+
+    final bool queueHasData = _pcmTotalSamples > 0;
+    if (queueHasData && stallMs < _aiPlaybackStuckQueueFlushMs) {
+      return;
+    }
+    if (queueHasData && stallMs >= _aiPlaybackStuckQueueFlushMs) {
+      debugPrint(
+        '🔊 [VOICE] playback queue stuck — flush ($stallMs ms since last PCM)',
+      );
+      _flushPcm();
+    }
+
+    if (stallMs < _aiPlaybackIdleMs) return;
+
+    debugPrint(
+      '🔊 [VOICE] playback idle fallback → drain/listen '
+      '(sunucu ai_response_complete eksik olabilir)',
+    );
+    _cancelAiPlaybackIdleMonitor();
+    _cancelAiSpeakingWatchdog();
+    unawaited(_waitForPcmDrainAndListen());
+  }
+
+  void _armAiPlaybackIdleMonitor() {
+    _cancelAiPlaybackIdleMonitor();
+    _lastAiPcmReceivedAt = null;
+    _aiPlaybackIdleTimer = Timer.periodic(const Duration(milliseconds: 200), (
+      _,
+    ) {
+      _evaluateAiPlaybackIdleFallback();
+    });
+  }
+
+  /// [ai_response_complete] gelmezse [speaking]'de kalınır; normal konuşma PCM'i iletilmez (yalnızca barge-in).
+  void _armAiSpeakingWatchdog() {
+    _cancelAiSpeakingWatchdog();
+    _aiSpeakingWatchdog = Timer(
+      const Duration(seconds: 75),
+      _onAiSpeakingWatchdogFired,
+    );
+  }
+
+  void _onAiSpeakingWatchdogFired() {
+    _aiSpeakingWatchdog = null;
+    if (!mounted) return;
+    if (_callState != _CallState.speaking) return;
+    _cancelAiPlaybackIdleMonitor();
+    debugPrint('⚠️ [VOICE] speaking watchdog → drain/listen + playback_done');
+    unawaited(_waitForPcmDrainAndListen());
+  }
+
+  Future<void> _rebindMicAfterRealtimeReady() async {
+    await _stopMicStream();
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    if (!mounted || _ws?.readyState != WebSocket.open || _isMuted) return;
+    await _configureAudioSession();
+    await _startMicStream();
+  }
+
   void _handleJson(Map<String, dynamic> msg) {
     final type = msg['type'] as String? ?? '';
 
     switch (type) {
       case 'connection_success':
-        _stopRingTone();
-        _configureAudioSession();
-        _playPickupChime();
-        if (mounted) setState(() => _callState = _CallState.listening);
-        _aiSpeakingSince = null;
-        _durationTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-          if (mounted) setState(() => _secondsElapsed++);
-        });
+        unawaited(_onRealtimeConnectionReady());
         break;
 
       case 'user_speech_started':
@@ -515,17 +734,26 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
         _resetBargeInState();
         _aiSpeakingSince = DateTime.now();
         if (mounted) setState(() => _callState = _CallState.speaking);
+        _armAiSpeakingWatchdog();
+        _armAiPlaybackIdleMonitor();
         break;
 
       case 'ai_response_complete':
+        _cancelAiSpeakingWatchdog();
+        _cancelAiPlaybackIdleMonitor();
         _waitForPcmDrainAndListen();
         break;
 
       case 'barge_in':
+        _cancelAiSpeakingWatchdog();
+        _cancelAiPlaybackIdleMonitor();
         _flushPcm();
         _resetBargeInState();
         _aiSpeakingSince = null;
         if (mounted) setState(() => _callState = _CallState.listening);
+        if (!_isMuted && _ws?.readyState == WebSocket.open) {
+          unawaited(_rebindMicAfterRealtimeReady());
+        }
         break;
 
       case 'error':
@@ -539,27 +767,43 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
 
   // ── PCM queue helpers ──────────────────────────────────────────────────────
   void _enqueuePcmBytes(Uint8List bytes) {
+    _lastAiPcmReceivedAt = DateTime.now();
     final int sampleCount = bytes.length ~/ 2;
+    if (sampleCount == 0) return;
+    // Tek allocation; sample-by-sample boxing yok.
+    final Int16List samples = Int16List(sampleCount);
     final ByteData bd = ByteData.view(
       bytes.buffer,
       bytes.offsetInBytes,
       sampleCount * 2,
     );
     for (int i = 0; i < sampleCount; i++) {
-      _pcmQueue.add(bd.getInt16(i * 2, Endian.little));
+      samples[i] = bd.getInt16(i * 2, Endian.little);
     }
+    _pcmChunks.add(samples);
+    _pcmTotalSamples += sampleCount;
     _ensurePcmStarted();
     _onPcmFeedRequest(0);
   }
 
   void _flushPcm() {
-    _pcmQueue.clear();
+    _pcmChunks.clear();
+    _pcmChunkOffset = 0;
+    _pcmTotalSamples = 0;
   }
 
   Future<void> _waitForPcmDrainAndListen() async {
-    while (_pcmQueue.isNotEmpty) {
+    if (!mounted) return;
+    if (_callState != _CallState.speaking) return;
+
+    final drainDeadline = DateTime.now().add(const Duration(seconds: 20));
+    while (_pcmTotalSamples > 0 && DateTime.now().isBefore(drainDeadline)) {
       await Future.delayed(const Duration(milliseconds: 50));
       if (!mounted) return;
+    }
+    if (_pcmTotalSamples > 0) {
+      debugPrint('⚠️ [VOICE] PCM drain timeout — kuyruk zorla temizleniyor');
+      _flushPcm();
     }
     await Future.delayed(const Duration(milliseconds: 80));
     if (!mounted) return;
@@ -575,19 +819,28 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       setState(() => _callState = _CallState.listening);
     }
     _aiSpeakingSince = null;
+    _resetBargeInState();
+    if (!_isMuted && _ws?.readyState == WebSocket.open) {
+      unawaited(_rebindMicAfterRealtimeReady());
+    }
   }
 
   void _requestBargeIn() {
     if (_isMuted) return;
     if (_callState != _CallState.speaking) return;
     if (_ws?.readyState != WebSocket.open) return;
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
     _flushPcm();
     _ws!.add(jsonEncode({'type': 'barge_in_request'}));
     if (mounted) setState(() => _callState = _CallState.listening);
+    unawaited(_rebindMicAfterRealtimeReady());
   }
 
   // ── End call / cleanup ─────────────────────────────────────────────────────
   Future<void> _endCall() async {
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
     _stopRingTone();
     _durationTimer?.cancel();
     await _stopMicStream();
@@ -601,6 +854,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
     try {
       pcm.FlutterPcmSound.release();
     } catch (_) {}
+    await _setProximityMonitoring(false);
     await _resetAudioSession();
     if (mounted) Navigator.of(context).pop();
   }
@@ -608,15 +862,15 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   Future<void> _toggleMute() async {
     final next = !_isMuted;
     setState(() => _isMuted = next);
-    if (next) {
-      await _stopMicStream();
-      if (mounted && _callState != _CallState.speaking) {
-        setState(() => _callState = _CallState.listening);
-      }
-      return;
+    // Recorder'ı stop/start ETME — bu iOS'ta audio session'ı sıfırlayıp
+    // AI'ın o anda konuştuğu sesi yarım saniye kesintiye uğratıyordu.
+    // _micSub listener'ında zaten `if (_isMuted) return` var; ses zaten
+    // sunucuya gitmiyor. Mute artık anlık ve sessiz kesinti yapmıyor.
+    if (next && mounted && _callState != _CallState.speaking) {
+      setState(() => _callState = _CallState.listening);
     }
-    if (_ws?.readyState == WebSocket.open) {
-      await _startMicStream();
+    if (!next) {
+      _micGateOpenAt = null;
     }
   }
 
@@ -625,23 +879,30 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
   // user taps the speaker button to switch to loudspeaker and taps again
   // to switch back.
   Future<void> _toggleSpeaker() async {
-    if (!Platform.isIOS) return;
+    if (kIsWeb || !(Platform.isIOS || Platform.isAndroid)) return;
     final next = !_isSpeakerOn;
     try {
       await _audioSessionChannel.invokeMethod('setSpeakerOn', {'on': next});
       if (mounted) setState(() => _isSpeakerOn = next);
+      // Earpiece mode → proximity ON (hold to ear blanks screen).
+      // Speaker mode  → proximity OFF (device away from face anyway).
+      await _setProximityMonitoring(!next);
     } catch (e) {
       debugPrint('⚠️ [AUDIO] speaker toggle failed: $e');
     }
   }
 
   void _setError() {
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
     _stopRingTone();
     if (mounted) setState(() => _callState = _CallState.error);
   }
 
   @override
   void dispose() {
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
     _durationTimer?.cancel();
     _wsSub?.cancel();
     _stopMicStream();
@@ -654,6 +915,9 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
     try {
       pcm.FlutterPcmSound.release();
     } catch (_) {}
+    // Make sure proximity sensor is released even if user closes the screen
+    // via system back / swipe-down without going through _endCall.
+    _setProximityMonitoring(false);
     _resetAudioSession();
     super.dispose();
   }
@@ -778,6 +1042,27 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
     return values['en']?[_callState] ?? l10n.calling;
   }
 
+  // Durum başına foto halkası rengi.
+  //  - listening : yeşil (kullanıcı konuşabilir)
+  //  - thinking  : amber (AI işleyişte)
+  //  - speaking  : mavi  (AI konuşuyor — dokunarak da kesilebilir)
+  //  - connecting: gri   (henüz hat kurulmadı)
+  //  - error     : kırmızı
+  Color _stateColor() {
+    switch (_callState) {
+      case _CallState.listening:
+        return const Color(0xFF5ED085);
+      case _CallState.thinking:
+        return const Color(0xFFF5A623);
+      case _CallState.speaking:
+        return const Color(0xFF4A7BFF);
+      case _CallState.connecting:
+        return const Color(0xFF9AA0A6);
+      case _CallState.error:
+        return const Color(0xFFE53935);
+    }
+  }
+
   // ── Build ──────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
@@ -818,32 +1103,79 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
             ),
             const SizedBox(height: 48),
 
-            // Profil Resmi ve Animasyon (Yeşil Arka Planlı Yuvarlak)
+            // Profil Resmi + duruma göre renk değişen nabızlı halkalar.
+            // Halka rengi listening/thinking/speaking/connecting/error
+            // durumlarına göre farklılaşır; pulse efekti _pulseCtrl ile.
             GestureDetector(
               onTap: _isMuted ? null : _requestBargeIn,
-              child: Container(
-                width: 220,
-                height: 220,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF5ED085), // Tasarımdaki yeşil arka plan
-                  shape: BoxShape.circle,
-                  image: photoURL.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(photoURL),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
+              behavior: HitTestBehavior.opaque,
+              child: SizedBox(
+                width: 280,
+                height: 280,
+                child: AnimatedBuilder(
+                  animation: _pulseCtrl,
+                  builder: (context, _) {
+                    final double t = Curves.easeInOut.transform(
+                      _pulseCtrl.value,
+                    );
+                    final Color color = _stateColor();
+                    return Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 280,
+                          height: 280,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: color.withOpacity(0.08 + 0.10 * t),
+                          ),
+                        ),
+                        Container(
+                          width: 250,
+                          height: 250,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: color.withOpacity(0.16 + 0.12 * t),
+                          ),
+                        ),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 280),
+                          curve: Curves.easeOut,
+                          width: 220,
+                          height: 220,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF5ED085),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: color, width: 4),
+                            image: photoURL.isNotEmpty
+                                ? DecorationImage(
+                                    image: NetworkImage(photoURL),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                            boxShadow: [
+                              BoxShadow(
+                                color: color.withOpacity(0.35),
+                                blurRadius: 24 + 8 * t,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: photoURL.isEmpty
+                              ? const Icon(
+                                  Icons.person_rounded,
+                                  size: 100,
+                                  color: Colors.white54,
+                                )
+                              : null,
+                        ),
+                      ],
+                    );
+                  },
                 ),
-                child: photoURL.isEmpty
-                    ? const Icon(
-                        Icons.person_rounded,
-                        size: 100,
-                        color: Colors.white54,
-                      )
-                    : null,
               ),
             ),
-            const SizedBox(height: 48),
+            const SizedBox(height: 32),
 
             // Durum Metni - Font: Geist, Medium, 16px, #303030
             AnimatedSwitcher(

@@ -49,6 +49,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get premiumCta => 'शुरू करें';
 
   @override
+  String get premiumPrice => '₹329';
+
+  @override
+  String get premiumPricePeriod => '/माह';
+
+  @override
   String get onboardingTitle1 => 'अभिभूत महसूस कर रहे हैं?';
 
   @override
@@ -838,14 +844,13 @@ class AppLocalizationsHi extends AppLocalizations {
       'असीमित पात्र संपादन पहुंच';
 
   @override
-  String get stayAnd60Off => 'रुकें और 1 महीने के लिए 60% छूट पाएं';
+  String get stayAnd60Off => 'रुकें और 1 महीने के लिए 50% छूट पाएं';
 
   @override
-  String get bestOfferPrice =>
-      'हमारा अब तक का सबसे अच्छा ऑफर। केवल \$27.60/माह';
+  String get bestOfferPrice => 'हमारा अब तक का सबसे अच्छा ऑफर। केवल \$1.49/माह';
 
   @override
-  String get accept60OffAndStay => '60% छूट स्वीकार करें और रुकें';
+  String get accept60OffAndStay => '50% छूट स्वीकार करें और रुकें';
 
   @override
   String get sadToSeeYouGo => 'आपका जाना दुखद है';
@@ -884,6 +889,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get logout => 'लॉग आउट';
+
+  @override
+  String get pleaseWait => 'कृपया प्रतीक्षा करें';
 
   @override
   String get deleteAccount => 'खाता हटाएं';
@@ -1028,6 +1036,15 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get jobExamAnxiety => 'परीक्षा चिंता मार्गदर्शक';
+
+  @override
+  String get jobEmotionalBalance => 'भावनात्मक संतुलन मार्गदर्शक';
+
+  @override
+  String get jobDifficultExperiences => 'कठिन अनुभव मार्गदर्शक';
+
+  @override
+  String get jobResilienceEmpowerment => 'लचीलापन और सशक्तिकरण मार्गदर्शक';
 
   @override
   String get noSpecialistsFound => 'कोई विशेषज्ञ नहीं मिला';
@@ -1247,6 +1264,22 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get explanationExamAnxiety2 =>
       'एक विशेष शैक्षणिक मार्गदर्शक जो सिद्ध तकनीकों और संरचित परीक्षा तैयारी के माध्यम से छात्रों को परीक्षा की चिंता दूर करने और होशियारी से अध्ययन करने में मदद करने के लिए समर्पित है।';
+
+  @override
+  String get explanationEmotionalBalance1 =>
+      'एक गर्मजोशी और सहज मार्गदर्शक जो भावनात्मक नियमन में विशेषज्ञ है, करुणा के साथ अपनी भावनाओं को पहचानने और संसाधित करने में मदद करती है। भावनात्मक लचीलापन, आंतरिक शांति और खुद के तथा दूसरों के साथ प्रामाणिक संबंध बनाने में सहायता करती है।';
+
+  @override
+  String get explanationThoughtAndHabitGuide1 =>
+      'एक परिवर्तनकारी मार्गदर्शक जो आपकी मानसिकता और दैनिक आदतों को फिर से आकार देने पर केंद्रित है। सीमित सोच के पैटर्न तोड़ने, सशक्त रूटीन बनाने और साक्ष्य-आधारित तकनीकों के माध्यम से स्थायी सकारात्मक बदलाव लाने में मदद करता है।';
+
+  @override
+  String get explanationDifficultExperiences1 =>
+      'एक करुणामय और अनुभवी मार्गदर्शक जो जीवन के सबसे चुनौतीपूर्ण क्षणों में — शोक, आघात, हानि और अनिश्चितता — आपके साथ चलता है। कठिन भावनाओं को संसाधित करने, कठिनाइयों में अर्थ खोजने और नई शक्ति के साथ पुनर्निर्माण में मदद करता है।';
+
+  @override
+  String get explanationResilienceEmpowerment1 =>
+      'एक प्रेरक और शक्ति-केंद्रित मार्गदर्शक जो आपको अपनी आंतरिक शक्ति खोजने में मदद करने के लिए समर्पित है। चुनौतियों, असफलताओं और परिवर्तनों के दौरान आपका मार्गदर्शन करता है — जो भी जीवन लाए उसका सामना करने के लिए लचीलापन और आत्मविश्वास बनाता है।';
 
   @override
   String get filterTitle => 'फ़िल्टर';

@@ -4,7 +4,9 @@ import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Services/NotificationsService/notification_service.dart';
 import 'package:mindcoach/Services/NotificationsService/periodic_notification_scheduler.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
+import 'package:mindcoach/app/my_app.dart';
 import 'package:mindcoach/app/navbar_shell.dart';
+import 'package:mindcoach/core/routes/page_routes.dart';
 
 import '../../../../core/services/auth_service.dart';
 import '../../../../core/services/navigation_service.dart';
@@ -178,6 +180,7 @@ class AuthController extends Notifier<AsyncValue<void>> {
 
       // 3. Unauthenticated'a yönlendir
       _navigationService.navigateToUnauthenticated();
+      _navigateRootToLogin();
 
       state = const AsyncData(null);
       debugPrint('✅ [AUTH-CONTROLLER] Delete account tamamlandı');
@@ -187,9 +190,21 @@ class AuthController extends Notifier<AsyncValue<void>> {
       // Hata olsa bile session'ı temizle
       await _authService.clearSession();
       _navigationService.navigateToUnauthenticated();
+      _navigateRootToLogin();
 
       state = AsyncError(e, st);
     }
+  }
+
+  /// [AuthGate] kökte kullanılmadığı için state güncellemesi tek başına ekranı
+  /// değiştirmez; tüm yığını kaldırıp giriş ekranına gider.
+  void _navigateRootToLogin() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        PageRoutes.login,
+        (_) => false,
+      );
+    });
   }
 }
 

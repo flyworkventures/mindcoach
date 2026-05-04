@@ -37,7 +37,24 @@ class _HomeCoachesSectionState extends ConsumerState<HomeCoachesSection> {
     }
 
     // API'den gelen gerçek job tiplerine göre filtre listesi oluştur
-    final jobTypes = specialists.map((s) => s.job).toSet().toList();
+    // Önce sınav kaygısı, ortada mevcut tipler, sonda yeni rehberlik tipleri
+    const _jobOrder = [
+      'exam_anxiety',
+      'adult',
+      'child',
+      'teenage',
+      'personal',
+      'family_assistant',
+      'thought_and_habit_guide',
+      'emotional_balance',
+      'difficult_experiences',
+      'resilience_empowerment',
+    ];
+    final _rawJobs = specialists.map((s) => s.job).toSet();
+    final jobTypes = [
+      ..._jobOrder.where(_rawJobs.contains),
+      ..._rawJobs.where((j) => !_jobOrder.contains(j)),
+    ];
 
     // Filtre seçiliyse sadece o job tipini göster (max 4), seçili değilse tümünü göster
     final filtered = _selectedJob == null

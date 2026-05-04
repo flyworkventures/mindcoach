@@ -196,6 +196,18 @@ abstract class AppLocalizations {
   /// **'Get Started'**
   String get premiumCta;
 
+  /// No description provided for @premiumPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'\$3.99'**
+  String get premiumPrice;
+
+  /// No description provided for @premiumPricePeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'/mo'**
+  String get premiumPricePeriod;
+
   /// No description provided for @onboardingTitle1.
   ///
   /// In en, this message translates to:
@@ -241,7 +253,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingTermsPrefix.
   ///
   /// In en, this message translates to:
-  /// **'By signing up for __MINDguide2__, you agree to our '**
+  /// **'By signing up for MindCoach, you agree to our '**
   String get onboardingTermsPrefix;
 
   /// No description provided for @onboardingTermsOfService.
@@ -1519,7 +1531,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAccountImproveQuestion.
   ///
   /// In en, this message translates to:
-  /// **'To help us improve the __MINDguide__ experience, could you tell us why you\'re leaving?'**
+  /// **'To help us improve the MindCoach experience, could you tell us why you\'re leaving?'**
   String get deleteAccountImproveQuestion;
 
   /// No description provided for @deleteReasonNotRealistic.
@@ -1657,19 +1669,19 @@ abstract class AppLocalizations {
   /// No description provided for @stayAnd60Off.
   ///
   /// In en, this message translates to:
-  /// **'Stay and get 60% off for 1 month'**
+  /// **'Stay and get 50% off for 1 month'**
   String get stayAnd60Off;
 
   /// No description provided for @bestOfferPrice.
   ///
   /// In en, this message translates to:
-  /// **'Our best offer ever. Just \$27.60/month'**
+  /// **'Our best offer ever. Just \$1.49/month'**
   String get bestOfferPrice;
 
   /// No description provided for @accept60OffAndStay.
   ///
   /// In en, this message translates to:
-  /// **'Accept 60% Off & Stay'**
+  /// **'Accept 50% Off & Stay'**
   String get accept60OffAndStay;
 
   /// No description provided for @sadToSeeYouGo.
@@ -1743,6 +1755,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
+
+  /// No description provided for @pleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait…'**
+  String get pleaseWait;
 
   /// No description provided for @deleteAccount.
   ///
@@ -2013,6 +2031,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exam Anxiety Guide'**
   String get jobExamAnxiety;
+
+  /// No description provided for @jobEmotionalBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Emotional Balance Guide'**
+  String get jobEmotionalBalance;
+
+  /// No description provided for @jobDifficultExperiences.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficult Experiences Guide'**
+  String get jobDifficultExperiences;
+
+  /// No description provided for @jobResilienceEmpowerment.
+  ///
+  /// In en, this message translates to:
+  /// **'Resilience & Empowerment Guide'**
+  String get jobResilienceEmpowerment;
 
   /// No description provided for @noSpecialistsFound.
   ///
@@ -2416,6 +2452,30 @@ abstract class AppLocalizations {
   /// **'A specialized academic guide dedicated to helping students overcome test anxiety and study smarter through proven techniques and structured exam preparation.'**
   String get explanationExamAnxiety2;
 
+  /// No description provided for @explanationEmotionalBalance1.
+  ///
+  /// In en, this message translates to:
+  /// **'A warm and intuitive guide who specializes in emotional regulation, helping you recognize and process your feelings with compassion. Supports you in building emotional resilience, inner calm, and authentic connection with yourself and others.'**
+  String get explanationEmotionalBalance1;
+
+  /// No description provided for @explanationThoughtAndHabitGuide1.
+  ///
+  /// In en, this message translates to:
+  /// **'A transformative guide focused on reshaping your mindset and daily habits. Helps you break limiting thought patterns, build empowering routines, and create lasting positive change through evidence-based techniques.'**
+  String get explanationThoughtAndHabitGuide1;
+
+  /// No description provided for @explanationDifficultExperiences1.
+  ///
+  /// In en, this message translates to:
+  /// **'A compassionate and experienced guide who walks alongside you through life\'s most challenging moments — grief, trauma, loss, and uncertainty. Helps you process difficult emotions, find meaning in hardship, and rebuild with renewed strength.'**
+  String get explanationDifficultExperiences1;
+
+  /// No description provided for @explanationResilienceEmpowerment1.
+  ///
+  /// In en, this message translates to:
+  /// **'A motivating and strength-focused guide dedicated to helping you discover your inner power. Guides you through challenges, setbacks, and transitions — building the resilience and confidence to face whatever life brings.'**
+  String get explanationResilienceEmpowerment1;
+
   /// No description provided for @filterTitle.
   ///
   /// In en, this message translates to:
@@ -2749,7 +2809,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchAtMindcoach.
   ///
   /// In en, this message translates to:
-  /// **'Search at __MINDguide__'**
+  /// **'Search at MindCoach'**
   String get searchAtMindcoach;
 
   /// No description provided for @noResultsFound.
@@ -2761,7 +2821,7 @@ abstract class AppLocalizations {
   /// No description provided for @premiumTryFree.
   ///
   /// In en, this message translates to:
-  /// **'Try __MIND_guide__ Premium\nfree for 1 week'**
+  /// **'Try MindCoach Premium\nfree for 1 week'**
   String get premiumTryFree;
 
   /// No description provided for @premiumUnlimitedAccess.

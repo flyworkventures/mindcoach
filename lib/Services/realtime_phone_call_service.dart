@@ -69,10 +69,8 @@ class RealtimePhoneCallService {
 
       _consultantId = consultantId;
 
-      // WebSocket URL'i oluştur (3001 portunda)
-      // NOT: Kullanıcı localhost:3001 kullanıyor, production'da baseUrl kullanılmalı
-      final wsProtocol = AppConstants.baseURL.startsWith('https') ? 'wss' : 'ws';
-      final wsUrl = '$wsProtocol://localhost:3001?token=$token&consultantId=$consultantId';
+      // WebSocket URL'i oluştur (3001 portunda) — AppConstants.wsBaseURL kullanıyoruz
+      final wsUrl = '${AppConstants.wsBaseURL}?token=$token&consultantId=$consultantId';
       
       log("🔌 WebSocket bağlantısı kuruluyor: $wsUrl");
 
