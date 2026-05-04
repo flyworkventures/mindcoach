@@ -13,7 +13,6 @@ import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/explanation_convert.dart';
 import 'package:mindcoach/core/utils/feature_convert.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
-// ignore: unused_import
 import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 
@@ -504,20 +503,16 @@ class _SpecialistDetailScreenState
             Expanded(
               child: GestureDetector(
                 onTap: () async {
-                  // TEST: Premium kontrolü geçici olarak devre dışı.
-                  // Geri açmak için aşağıdaki bloğu kullan:
-                  // final premium = ref.read(AllProviders.premiumProvider);
-                  // late final bool isTrial;
-                  // if (premium) {
-                  //   isTrial = false;
-                  // } else if (widget.isTrial) {
-                  //   isTrial = true;
-                  // } else {
-                  //   await presentProOffersPaywall();
-                  //   return;
-                  // }
                   final premium = ref.read(AllProviders.premiumProvider);
-                  final bool isTrial = !premium && widget.isTrial;
+                  late final bool isTrial;
+                  if (premium) {
+                    isTrial = false;
+                  } else if (widget.isTrial) {
+                    isTrial = true;
+                  } else {
+                    await presentProOffersPaywall();
+                    return;
+                  }
                   if (!context.mounted) return;
                   await Navigator.pushNamed(
                     context,

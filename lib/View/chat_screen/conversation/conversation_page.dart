@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
-// ignore: unused_import
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
@@ -733,13 +732,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   }
 
   Future<void> _openVideoCall() async {
-    // TEST: Premium kontrolü geçici olarak devre dışı.
-    // Geri açmak için:
-    // final premium = ref.read(AllProviders.premiumProvider);
-    // if (!premium) {
-    //   await presentProOffersPaywall();
-    //   return;
-    // }
+    final premium = ref.read(AllProviders.premiumProvider);
+    if (!premium) {
+      await presentProOffersPaywall();
+      return;
+    }
     if (!mounted) return;
     await Navigator.pushNamed(
       context,
