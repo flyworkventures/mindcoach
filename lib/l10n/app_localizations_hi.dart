@@ -591,6 +591,68 @@ class AppLocalizationsHi extends AppLocalizations {
   String get stressQ7 => 'मुझे जिम्मेदारियों के बोझ तले दबा हुआ महसूस हुआ।';
 
   @override
+  String get stressQ8 => 'मुझे बिना किसी अच्छे कारण के डर महसूस हुआ।';
+
+  @override
+  String get stressQ9 =>
+      'मुझे शारीरिक गतिविधि के बिना भी सांस की कमी का अनुभव हुआ।';
+
+  @override
+  String get stressQ10 => 'मुझे विनाश या आतंक की भावना हुई।';
+
+  @override
+  String get stressQ11 =>
+      'मुझे काम या दैनिक गतिविधियों पर ध्यान केंद्रित करने में कठिनाई हुई।';
+
+  @override
+  String get stressQ12 => 'मुझे अकेला या दूसरों से अलग-थलग महसूस हुआ।';
+
+  @override
+  String get stressQ13 =>
+      'मेरा दिल तेज़ी से धड़कता रहा या मुझे दिल की तेज़ी हुई।';
+
+  @override
+  String get stressQ14 =>
+      'मुझे चिड़चिड़ापन महसूस हुआ या अपने गुस्से को नियंत्रित करने में कठिनाई हुई।';
+
+  @override
+  String get stressQ15 =>
+      'मुझे गर्दन, कंधे या जबड़े में शारीरिक तनाव महसूस हुआ।';
+
+  @override
+  String get stressQ16 => 'मेरे मन में अपने बारे में नकारात्मक विचार आए।';
+
+  @override
+  String get stressQ17 =>
+      'मुझे रोज़मर्रा की परिस्थितियों से दबा हुआ महसूस हुआ।';
+
+  @override
+  String get stressQ18 => 'मुझे फैसले लेने में कठिनाई हुई।';
+
+  @override
+  String get stressQ19 => 'आराम के बाद भी मुझे थकावट महसूस हुई।';
+
+  @override
+  String get stressQ20 => 'मुझे भूख में बदलाव का अनुभव हुआ।';
+
+  @override
+  String get stressQ21 => 'मुझे रिश्ते बनाए रखने में कठिनाई हुई।';
+
+  @override
+  String get stressQ22 => 'मुझे फंसा हुआ या असहाय महसूस हुआ।';
+
+  @override
+  String get stressQ23 => 'मुझे बार-बार सिरदर्द या शरीर में दर्द हुआ।';
+
+  @override
+  String get stressQ24 =>
+      'मुझे उन गतिविधियों का आनंद लेने में कठिनाई हुई जो मुझे पसंद हैं।';
+
+  @override
+  String get stressQ25 =>
+      'मुझे लगा कि समय मेरे हाथ से निकल रहा है या मैं इसे भूल जा रहा हूं।';
+
+  @override
   String get stressScaleTitle => 'तनाव पैमाना टेस्ट';
 
   @override

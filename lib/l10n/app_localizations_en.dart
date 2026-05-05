@@ -589,6 +589,65 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stressQ7 => 'I felt overwhelmed by responsibilities.';
 
   @override
+  String get stressQ8 => 'I felt scared without good reason.';
+
+  @override
+  String get stressQ9 =>
+      'I experienced shortness of breath even without physical activity.';
+
+  @override
+  String get stressQ10 => 'I had a sense of doom or panic.';
+
+  @override
+  String get stressQ11 =>
+      'I struggled to concentrate on work or daily activities.';
+
+  @override
+  String get stressQ12 => 'I felt isolated or disconnected from others.';
+
+  @override
+  String get stressQ13 => 'My heart raced or I felt palpitations.';
+
+  @override
+  String get stressQ14 =>
+      'I felt irritable or had difficulty controlling my temper.';
+
+  @override
+  String get stressQ15 =>
+      'I experienced physical tension in my neck, shoulders, or jaw.';
+
+  @override
+  String get stressQ16 => 'I had negative thoughts about myself.';
+
+  @override
+  String get stressQ17 => 'I felt overwhelmed by everyday situations.';
+
+  @override
+  String get stressQ18 => 'I had difficulty making decisions.';
+
+  @override
+  String get stressQ19 => 'I felt exhausted even after rest.';
+
+  @override
+  String get stressQ20 => 'I experienced changes in appetite.';
+
+  @override
+  String get stressQ21 => 'I had difficulty maintaining relationships.';
+
+  @override
+  String get stressQ22 => 'I felt trapped or helpless.';
+
+  @override
+  String get stressQ23 => 'I had frequent headaches or body aches.';
+
+  @override
+  String get stressQ24 => 'I struggled to enjoy activities I usually like.';
+
+  @override
+  String get stressQ25 =>
+      'I felt time slipping away from me or losing track of it.';
+
+  @override
   String get stressScaleTitle => 'Stress scale test';
 
   @override

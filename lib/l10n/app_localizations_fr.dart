@@ -597,6 +597,70 @@ class AppLocalizationsFr extends AppLocalizations {
       'Je me suis senti(e) submergé(e) par les responsabilités.';
 
   @override
+  String get stressQ8 => 'J\'ai eu peur sans bonne raison.';
+
+  @override
+  String get stressQ9 =>
+      'J\'ai éprouvé un essoufflement même sans activité physique.';
+
+  @override
+  String get stressQ10 => 'J\'ai eu un sentiment de malheur ou de panique.';
+
+  @override
+  String get stressQ11 =>
+      'J\'ai lutté pour me concentrer sur le travail ou les activités quotidiennes.';
+
+  @override
+  String get stressQ12 =>
+      'Je me suis senti(e) isolé(e) ou déconnecté(e) des autres.';
+
+  @override
+  String get stressQ13 =>
+      'Mon cœur s\'est accéléré ou j\'ai ressenti des palpitations.';
+
+  @override
+  String get stressQ14 =>
+      'Je me suis senti(e) irritable ou j\'ai eu du mal à contrôler mon tempérament.';
+
+  @override
+  String get stressQ15 =>
+      'J\'ai ressenti une tension physique dans mon cou, mes épaules ou ma mâchoire.';
+
+  @override
+  String get stressQ16 => 'J\'ai eu des pensées négatives à mon sujet.';
+
+  @override
+  String get stressQ17 =>
+      'Je me suis senti(e) submergé(e) par les situations quotidiennes.';
+
+  @override
+  String get stressQ18 => 'J\'ai eu du mal à prendre des décisions.';
+
+  @override
+  String get stressQ19 => 'Je me suis senti(e) épuisé(e) même après du repos.';
+
+  @override
+  String get stressQ20 => 'J\'ai connu des changements d\'appétit.';
+
+  @override
+  String get stressQ21 => 'J\'ai eu du mal à maintenir mes relations.';
+
+  @override
+  String get stressQ22 => 'Je me suis senti(e) piégé(e) ou impuissant(e).';
+
+  @override
+  String get stressQ23 =>
+      'J\'ai eu des maux de tête fréquents ou des douleurs corporelles.';
+
+  @override
+  String get stressQ24 =>
+      'J\'ai lutté pour apprécier les activités que j\'aime habituellement.';
+
+  @override
+  String get stressQ25 =>
+      'J\'ai senti que le temps m\'échappait ou que je le perdais de vue.';
+
+  @override
   String get stressScaleTitle => 'Test de l\'échelle de stress';
 
   @override

@@ -587,6 +587,64 @@ class AppLocalizationsTr extends AppLocalizations {
   String get stressQ7 => 'Sorumluluklar altında ezilmiş hissettim.';
 
   @override
+  String get stressQ8 => 'Makul bir nedeni olmadan korkmuş hissettim.';
+
+  @override
+  String get stressQ9 => 'Fiziksel aktivite olmaksızın nefes darlığı yaşadım.';
+
+  @override
+  String get stressQ10 => 'Karamsar veya panik hissi yaşadım.';
+
+  @override
+  String get stressQ11 =>
+      'İş veya günlük aktivitelere konsantrasyon sağlamakta zorlandım.';
+
+  @override
+  String get stressQ12 => 'Yalnız veya başkalarından uzaklaşmış hissettim.';
+
+  @override
+  String get stressQ13 => 'Kalbim hızlı attı veya çarpıntı hissettim.';
+
+  @override
+  String get stressQ14 =>
+      'Sinirli hissettim veya öfkemi kontrol etmekte zorlandım.';
+
+  @override
+  String get stressQ15 =>
+      'Boyun, omuz veya çene bölgesinde fiziksel gerilim yaşadım.';
+
+  @override
+  String get stressQ16 => 'Kendim hakkında olumsuz düşünceler taşıdım.';
+
+  @override
+  String get stressQ17 => 'Günlük durumlar tarafından ezilmiş hissettim.';
+
+  @override
+  String get stressQ18 => 'Karar vermekte zorlandım.';
+
+  @override
+  String get stressQ19 => 'İstirah sonrası bile yorgun hissettim.';
+
+  @override
+  String get stressQ20 => 'İştahımda değişiklikler yaşadım.';
+
+  @override
+  String get stressQ21 => 'İlişkileri sürdürmekte zorlandım.';
+
+  @override
+  String get stressQ22 => 'Tuzağa düşmüş veya çaresiz hissettim.';
+
+  @override
+  String get stressQ23 => 'Sık sık baş ağrısı veya vücut ağrısı yaşadım.';
+
+  @override
+  String get stressQ24 => 'Normalde sevdiğim aktiviteleri yapamaz hale geldim.';
+
+  @override
+  String get stressQ25 =>
+      'Zamanın benden uzaklaştığını veya kaybettiğimi hissettim.';
+
+  @override
   String get stressScaleTitle => 'Stres ölçeği testi';
 
   @override

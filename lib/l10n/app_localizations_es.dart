@@ -592,6 +592,67 @@ class AppLocalizationsEs extends AppLocalizations {
   String get stressQ7 => 'Me sentí abrumado por las responsabilidades.';
 
   @override
+  String get stressQ8 => 'Sentí miedo sin una razón válida.';
+
+  @override
+  String get stressQ9 => 'Experimenté falta de aliento sin actividad física.';
+
+  @override
+  String get stressQ10 => 'Tuve una sensación de fatalidad o pánico.';
+
+  @override
+  String get stressQ11 =>
+      'Luché para concentrarme en el trabajo o actividades diarias.';
+
+  @override
+  String get stressQ12 => 'Me sentí aislado o desconectado de otros.';
+
+  @override
+  String get stressQ13 =>
+      'Mi corazón latía aceleradamente o sentí palpitaciones.';
+
+  @override
+  String get stressQ14 =>
+      'Me sentí irritable o tuve dificultad para controlar mi temperamento.';
+
+  @override
+  String get stressQ15 =>
+      'Experimenté tensión física en el cuello, hombros o mandíbula.';
+
+  @override
+  String get stressQ16 => 'Tuve pensamientos negativos sobre mí mismo.';
+
+  @override
+  String get stressQ17 => 'Me sentí abrumado por situaciones cotidianas.';
+
+  @override
+  String get stressQ18 => 'Tuve dificultad para tomar decisiones.';
+
+  @override
+  String get stressQ19 => 'Me sentí agotado incluso después de descansar.';
+
+  @override
+  String get stressQ20 => 'Experimenté cambios en el apetito.';
+
+  @override
+  String get stressQ21 => 'Tuve dificultad para mantener relaciones.';
+
+  @override
+  String get stressQ22 => 'Me sentí atrapado o impotente.';
+
+  @override
+  String get stressQ23 =>
+      'Tuve dolores de cabeza frecuentes o dolores corporales.';
+
+  @override
+  String get stressQ24 =>
+      'Luché por disfrutar de actividades que normalmente me gustan.';
+
+  @override
+  String get stressQ25 =>
+      'Sentí que el tiempo se me escurría o que lo perdía de vista.';
+
+  @override
   String get stressScaleTitle => 'Prueba de escala de estrés';
 
   @override

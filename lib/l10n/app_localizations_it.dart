@@ -594,6 +594,68 @@ class AppLocalizationsIt extends AppLocalizations {
   String get stressQ7 => 'Mi sono sentito sopraffatto dalle responsabilità.';
 
   @override
+  String get stressQ8 => 'Ho avuto paura senza una buona ragione.';
+
+  @override
+  String get stressQ9 =>
+      'Ho sperimentato mancanza di respiro anche senza attività fisica.';
+
+  @override
+  String get stressQ10 => 'Ho avuto una sensazione di sventura o panico.';
+
+  @override
+  String get stressQ11 =>
+      'Ho faticato a concentrarmi sul lavoro o sulle attività quotidiane.';
+
+  @override
+  String get stressQ12 => 'Mi sono sentito isolato o disconnesso dagli altri.';
+
+  @override
+  String get stressQ13 =>
+      'Il mio cuore ha accelerato il battito o ho sentito palpitazioni.';
+
+  @override
+  String get stressQ14 =>
+      'Mi sono sentito irritabile o ho avuto difficoltà a controllare il mio temperamento.';
+
+  @override
+  String get stressQ15 =>
+      'Ho sperimentato tensione fisica nel collo, alle spalle o alla mascella.';
+
+  @override
+  String get stressQ16 => 'Ho avuto pensieri negativi su me stesso.';
+
+  @override
+  String get stressQ17 =>
+      'Mi sono sentito sopraffatto da situazioni quotidiane.';
+
+  @override
+  String get stressQ18 => 'Ho avuto difficoltà a prendere decisioni.';
+
+  @override
+  String get stressQ19 => 'Mi sono sentito esausto anche dopo il riposo.';
+
+  @override
+  String get stressQ20 => 'Ho sperimentato cambiamenti nell\'appetito.';
+
+  @override
+  String get stressQ21 => 'Ho avuto difficoltà a mantenere le relazioni.';
+
+  @override
+  String get stressQ22 => 'Mi sono sentito intrappolato o impotente.';
+
+  @override
+  String get stressQ23 => 'Ho avuto frequenti mal di testa o dolori corporei.';
+
+  @override
+  String get stressQ24 =>
+      'Ho faticato a godermi attività che di solito mi piacciono.';
+
+  @override
+  String get stressQ25 =>
+      'Ho sentito che il tempo mi stava sfuggendo o che lo perdevo di vista.';
+
+  @override
   String get stressScaleTitle => 'Test della scala di stress';
 
   @override

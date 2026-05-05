@@ -1216,6 +1216,114 @@ abstract class AppLocalizations {
   /// **'I felt overwhelmed by responsibilities.'**
   String get stressQ7;
 
+  /// No description provided for @stressQ8.
+  ///
+  /// In en, this message translates to:
+  /// **'I felt scared without good reason.'**
+  String get stressQ8;
+
+  /// No description provided for @stressQ9.
+  ///
+  /// In en, this message translates to:
+  /// **'I experienced shortness of breath even without physical activity.'**
+  String get stressQ9;
+
+  /// No description provided for @stressQ10.
+  ///
+  /// In en, this message translates to:
+  /// **'I had a sense of doom or panic.'**
+  String get stressQ10;
+
+  /// No description provided for @stressQ11.
+  ///
+  /// In en, this message translates to:
+  /// **'I struggled to concentrate on work or daily activities.'**
+  String get stressQ11;
+
+  /// No description provided for @stressQ12.
+  ///
+  /// In en, this message translates to:
+  /// **'I felt isolated or disconnected from others.'**
+  String get stressQ12;
+
+  /// No description provided for @stressQ13.
+  ///
+  /// In en, this message translates to:
+  /// **'My heart raced or I felt palpitations.'**
+  String get stressQ13;
+
+  /// No description provided for @stressQ14.
+  ///
+  /// In en, this message translates to:
+  /// **'I felt irritable or had difficulty controlling my temper.'**
+  String get stressQ14;
+
+  /// No description provided for @stressQ15.
+  ///
+  /// In en, this message translates to:
+  /// **'I experienced physical tension in my neck, shoulders, or jaw.'**
+  String get stressQ15;
+
+  /// No description provided for @stressQ16.
+  ///
+  /// In en, this message translates to:
+  /// **'I had negative thoughts about myself.'**
+  String get stressQ16;
+
+  /// No description provided for @stressQ17.
+  ///
+  /// In en, this message translates to:
+  /// **'I felt overwhelmed by everyday situations.'**
+  String get stressQ17;
+
+  /// No description provided for @stressQ18.
+  ///
+  /// In en, this message translates to:
+  /// **'I had difficulty making decisions.'**
+  String get stressQ18;
+
+  /// No description provided for @stressQ19.
+  ///
+  /// In en, this message translates to:
+  /// **'I felt exhausted even after rest.'**
+  String get stressQ19;
+
+  /// No description provided for @stressQ20.
+  ///
+  /// In en, this message translates to:
+  /// **'I experienced changes in appetite.'**
+  String get stressQ20;
+
+  /// No description provided for @stressQ21.
+  ///
+  /// In en, this message translates to:
+  /// **'I had difficulty maintaining relationships.'**
+  String get stressQ21;
+
+  /// No description provided for @stressQ22.
+  ///
+  /// In en, this message translates to:
+  /// **'I felt trapped or helpless.'**
+  String get stressQ22;
+
+  /// No description provided for @stressQ23.
+  ///
+  /// In en, this message translates to:
+  /// **'I had frequent headaches or body aches.'**
+  String get stressQ23;
+
+  /// No description provided for @stressQ24.
+  ///
+  /// In en, this message translates to:
+  /// **'I struggled to enjoy activities I usually like.'**
+  String get stressQ24;
+
+  /// No description provided for @stressQ25.
+  ///
+  /// In en, this message translates to:
+  /// **'I felt time slipping away from me or losing track of it.'**
+  String get stressQ25;
+
   /// No description provided for @stressScaleTitle.
   ///
   /// In en, this message translates to:

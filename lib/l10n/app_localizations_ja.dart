@@ -566,6 +566,60 @@ class AppLocalizationsJa extends AppLocalizations {
   String get stressQ7 => '責任に押しつぶされそうに感じた。';
 
   @override
+  String get stressQ8 => '明確な理由がないのに恐れを感じた。';
+
+  @override
+  String get stressQ9 => '身体的な活動なしでも息切れを経験した。';
+
+  @override
+  String get stressQ10 => '厄災またはパニックの感覚があった。';
+
+  @override
+  String get stressQ11 => '仕事または日常の活動に集中するのが難しかった。';
+
+  @override
+  String get stressQ12 => '孤立しているか、他者から断絶されていると感じた。';
+
+  @override
+  String get stressQ13 => '心臓がドキドキしたか、動悸を感じた。';
+
+  @override
+  String get stressQ14 => 'イライラしたか、気分をコントロールするのが難しかった。';
+
+  @override
+  String get stressQ15 => '首、肩、または顎に身体的な緊張を経験した。';
+
+  @override
+  String get stressQ16 => '自分自身について否定的な考えを持った。';
+
+  @override
+  String get stressQ17 => '日常の状況に圧倒されたように感じた。';
+
+  @override
+  String get stressQ18 => '判断を下すのが難しかった。';
+
+  @override
+  String get stressQ19 => '休息後も疲労を感じた。';
+
+  @override
+  String get stressQ20 => '食欲の変化を経験した。';
+
+  @override
+  String get stressQ21 => '関係を維持するのが難しかった。';
+
+  @override
+  String get stressQ22 => '閉じ込められたか、無力感を感じた。';
+
+  @override
+  String get stressQ23 => '頻繁に頭痛や身体の痛みがあった。';
+
+  @override
+  String get stressQ24 => '通常は楽しむ活動を楽しむのが難しかった。';
+
+  @override
+  String get stressQ25 => '時間が逃げていくか、見失っているような感覚を感じた。';
+
+  @override
   String get stressScaleTitle => 'ストレス尺度テスト';
 
   @override

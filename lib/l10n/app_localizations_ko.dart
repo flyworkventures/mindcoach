@@ -570,6 +570,60 @@ class AppLocalizationsKo extends AppLocalizations {
   String get stressQ7 => '책임감에 짓눌리는 느낌을 받았습니다.';
 
   @override
+  String get stressQ8 => '특별한 이유 없이 두려움을 느꼈습니다.';
+
+  @override
+  String get stressQ9 => '신체 활동 없이도 숨이 차다고 느꼈습니다.';
+
+  @override
+  String get stressQ10 => '재난이나 공황의 감각을 경험했습니다.';
+
+  @override
+  String get stressQ11 => '일이나 일상 활동에 집중하기 어려웠습니다.';
+
+  @override
+  String get stressQ12 => '고립되었거나 다른 사람들과 단절된 느낌을 받았습니다.';
+
+  @override
+  String get stressQ13 => '심장이 빨리 뛰거나 심계항진을 느꼈습니다.';
+
+  @override
+  String get stressQ14 => '짜증이 났거나 기분을 조절하기 어려웠습니다.';
+
+  @override
+  String get stressQ15 => '목, 어깨 또는 턱의 신체적 긴장을 느꼈습니다.';
+
+  @override
+  String get stressQ16 => '자신에 대해 부정적인 생각을 했습니다.';
+
+  @override
+  String get stressQ17 => '일상적인 상황들에 압도당했습니다.';
+
+  @override
+  String get stressQ18 => '결정을 내리기 어려웠습니다.';
+
+  @override
+  String get stressQ19 => '휴식 후에도 피로했습니다.';
+
+  @override
+  String get stressQ20 => '식욕의 변화를 경험했습니다.';
+
+  @override
+  String get stressQ21 => '관계를 유지하기 어려웠습니다.';
+
+  @override
+  String get stressQ22 => '갇힌 느낌이나 무력감을 느꼈습니다.';
+
+  @override
+  String get stressQ23 => '자주 두통이나 신체 통증이 있었습니다.';
+
+  @override
+  String get stressQ24 => '보통 좋아하는 활동을 즐기기 어려웠습니다.';
+
+  @override
+  String get stressQ25 => '시간이 빠르게 지나가거나 놓치는 것 같은 느낌을 받았습니다.';
+
+  @override
   String get stressScaleTitle => '스트레스 척도 테스트';
 
   @override

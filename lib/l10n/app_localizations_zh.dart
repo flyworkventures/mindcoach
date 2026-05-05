@@ -562,6 +562,60 @@ class AppLocalizationsZh extends AppLocalizations {
   String get stressQ7 => '我感到被责任压得喘不过气来。';
 
   @override
+  String get stressQ8 => '我无缘无故地感到害怕。';
+
+  @override
+  String get stressQ9 => '即使没有体力活动，我也经历了呼吸急促。';
+
+  @override
+  String get stressQ10 => '我有厄运或恐慌的感觉。';
+
+  @override
+  String get stressQ11 => '我难以专注于工作或日常活动。';
+
+  @override
+  String get stressQ12 => '我感到孤立或与他人疏远。';
+
+  @override
+  String get stressQ13 => '我的心脏加速跳动或感到心悸。';
+
+  @override
+  String get stressQ14 => '我感到烦躁或难以控制脾气。';
+
+  @override
+  String get stressQ15 => '我在颈部、肩膀或下颌处经历了身体紧张。';
+
+  @override
+  String get stressQ16 => '我对自己有负面想法。';
+
+  @override
+  String get stressQ17 => '我被日常情况所压倒。';
+
+  @override
+  String get stressQ18 => '我难以做决定。';
+
+  @override
+  String get stressQ19 => '即使休息后我仍感到疲惫。';
+
+  @override
+  String get stressQ20 => '我经历了食欲变化。';
+
+  @override
+  String get stressQ21 => '我难以维持关系。';
+
+  @override
+  String get stressQ22 => '我感到被困或无助。';
+
+  @override
+  String get stressQ23 => '我经常头痛或身体疼痛。';
+
+  @override
+  String get stressQ24 => '我难以享受通常喜欢的活动。';
+
+  @override
+  String get stressQ25 => '我感到时间在流逝或我失去了对它的追踪。';
+
+  @override
   String get stressScaleTitle => '压力评量测试';
 
   @override
