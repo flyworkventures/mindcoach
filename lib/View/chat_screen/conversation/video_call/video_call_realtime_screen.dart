@@ -234,6 +234,13 @@ class _VideoCallRealtimeScreenState
     }
     if (!mounted) return;
 
+    // 🎬 PREMIUM KONTROLÜ: Görüntülü görüşme sadece premium kullanıcılara açık
+    if (!ref.read(AllProviders.premiumProvider).isPremium) {
+      await presentProOffersPaywall();
+      if (mounted) Navigator.of(context).pop();
+      return;
+    }
+
     // YENİ AKIŞ:
     //   1. PCM oynatıcı + audio session konfigürasyonu (sessizce, ses yok)
     //   2. WebSocket bağlantısı kur

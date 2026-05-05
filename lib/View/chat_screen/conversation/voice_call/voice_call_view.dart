@@ -123,14 +123,11 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
         return;
       }
     }
+    // 🎤 PREMIUM KONTROLÜ: Sesli görüşme sadece premium kullanıcılara açık
     if (!ref.read(AllProviders.premiumProvider).isPremium) {
-      final canStart = await TrialQuotaService.instance.canStartVoiceCall();
-      if (!mounted) return;
-      if (!canStart) {
-        await presentProOffersPaywall();
-        if (mounted) Navigator.of(context).pop();
-        return;
-      }
+      await presentProOffersPaywall();
+      if (mounted) Navigator.of(context).pop();
+      return;
     }
     await _configureAudioSession();
     await _initPcmPlayer();

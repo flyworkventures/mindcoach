@@ -211,9 +211,12 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
 
   /// Normal mesaj gönder - premium kontrolü + trial kotası uygular.
   ///
-  /// Non-premium kullanıcı için 20 mesajlık deneme kotası kontrol edilir.
+  /// Non-premium kullanıcı için 10 mesajlık deneme kotası kontrol edilir.
   /// Kota dolmuşsa [TrialQuotaExceededException] fırlatılır; UI bunu yakalayıp
   /// paywall açmalı.
+  ///
+  /// 💡 Premium users: Sınırsız mesaj
+  /// 💡 Trial users: 10 mesaj hakkı → paywall
   Future<void> sendMessage({
     required int id,
     required String text,
@@ -223,7 +226,7 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
 
     final bool isPremium = _isPremium();
 
-    // Trial kota kontrolü — gönderim öncesi.
+    // Trial kota kontrolü — gönderim öncesi (10 mesaj limit).
     if (!isPremium) {
       final canSend = await TrialQuotaService.instance.canSendMessage();
       if (!canSend) {
