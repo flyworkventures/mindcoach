@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
@@ -13,7 +12,8 @@ class HomeHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
-    final isPremium = ref.watch(AllProviders.premiumProvider);
+    final premiumState = ref.watch(AllProviders.premiumProvider);
+    final isPremium = premiumState.isPremium;
     final userModel = ref.watch(AllProviders.userProvider);
     final userName = userModel?.username ?? '';
     final ppPath = userModel?.profilePhotoUrl ?? '';
@@ -81,13 +81,7 @@ class HomeHeader extends ConsumerWidget {
           ),
 
           // Premium crown icon (only for premium users)
-          if (isPremium)
-            GestureDetector(
-              onTap: () async {
-                await RevenueCatUI.presentPaywall();
-              },
-              child: SvgPicture.asset("assets/icons/ic_prof_badge.svg"),
-            ),
+          if (isPremium) SvgPicture.asset("assets/icons/icpre.svg"),
           if (isPremium) const SizedBox(width: 8),
 
           // Notification bell

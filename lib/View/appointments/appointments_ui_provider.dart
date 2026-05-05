@@ -74,15 +74,23 @@ final upcomingAppointmentsProvider = Provider<List<AppointmentUiItem>>((ref) {
   final all = ref.watch(appointmentsListProvider);
   final now = DateTime.now();
 
-  final upcoming = all.where((e) => e.dateTime.isAfter(now)).toList();
+  final upcoming = all.where((e) {
+    final status = (e.info.status ?? '').trim().toLowerCase();
+    final isCompletedStatus = status == 'completed' || status.contains('completed');
+    final isCancelledStatus = status == 'cancelled' || status.contains('cancel');
+    return e.dateTime.isAfter(now) && !isCompletedStatus && !isCancelledStatus;
+  }).toList();
   upcoming.sort((a, b) => a.dateTime.compareTo(b.dateTime)); // yakın -> uzak
   return upcoming;
 });
 
 final completedAppointmentsProvider = Provider<List<AppointmentUiItem>>((ref) {
-  final all = ref.watch(appointmentsListProvider).where((e)=> e.isCompleted == true).toList();
-
-  final completed = all.where((e) => e.isCompleted).toList();
+  final all = ref.watch(appointmentsListProvider);
+  final completed = all.where((e) {
+    final status = (e.info.status ?? '').trim().toLowerCase();
+    final isCompletedStatus = status == 'completed' || status.contains('completed');
+    return isCompletedStatus || e.isCompleted;
+  }).toList();
   completed.sort((a, b) => b.dateTime.compareTo(a.dateTime)); // yeni -> eski
   return completed;
 });

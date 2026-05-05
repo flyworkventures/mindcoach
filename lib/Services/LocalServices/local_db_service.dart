@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/utils/local_db_keys.dart';
 
 class LocalDbService {
   
@@ -39,6 +40,76 @@ class LocalDbService {
   Future<bool> setInt({required String key, required int value}) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return await sharedPreferences.setInt(key, value);
+  }
+
+  // ========== PREMIUM SYSTEM METHODS ==========
+
+  /// Premium son kullanma tarihini ayarla (ISO 8601)
+  Future<bool> setPremiumExpiryDate(DateTime expiryDate) async {
+    return setString(
+      key: LocalDbKeys.premiumExpiryDate,
+      value: expiryDate.toIso8601String(),
+    );
+  }
+
+  /// Premium son kullanma tarihini al
+  Future<DateTime?> getPremiumExpiryDate() async {
+    final dateString = await getString(key: LocalDbKeys.premiumExpiryDate);
+    if (dateString == null || dateString.isEmpty) return null;
+    try {
+      return DateTime.parse(dateString);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Premium aktif mi (tarih kontrolü)
+  Future<bool> isPremiumActive() async {
+    final expiryDate = await getPremiumExpiryDate();
+    if (expiryDate == null) return false;
+    return DateTime.now().isBefore(expiryDate);
+  }
+
+  /// Premium başlangıç tarihini ayarla
+  Future<bool> setPremiumStartDate(DateTime startDate) async {
+    return setString(
+      key: LocalDbKeys.premiumStartDate,
+      value: startDate.toIso8601String(),
+    );
+  }
+
+  /// Premium başlangıç tarihini al
+  Future<DateTime?> getPremiumStartDate() async {
+    final dateString = await getString(key: LocalDbKeys.premiumStartDate);
+    if (dateString == null || dateString.isEmpty) return null;
+    try {
+      return DateTime.parse(dateString);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Premium satın alındı mı (trial değil) (Boolean)
+  Future<bool> getIsPremiumPurchased() async {
+    return await getBool(key: LocalDbKeys.isPremiumPurchased) ?? false;
+  }
+
+  /// Premium satın alındı statusunu ayarla
+  Future<bool> setIsPremiumPurchased(bool isPurchased) async {
+    return setBool(
+      key: LocalDbKeys.isPremiumPurchased,
+      value: isPurchased,
+    );
+  }
+
+  /// Premium durumunu sil (trial sona erdi)
+  Future<bool> clearPremiumStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool success = true;
+    success &= await prefs.remove(LocalDbKeys.premiumExpiryDate);
+    success &= await prefs.remove(LocalDbKeys.premiumStartDate);
+    success &= await prefs.remove(LocalDbKeys.isPremiumPurchased);
+    return success;
   }
 
 }

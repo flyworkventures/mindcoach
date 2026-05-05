@@ -509,9 +509,9 @@ class _SpecialistDetailScreenState
             Expanded(
               child: GestureDetector(
                 onTap: () async {
-                  final premium = ref.read(AllProviders.premiumProvider);
+                  final premiumState = ref.read(AllProviders.premiumProvider);
                   late final bool isTrial;
-                  if (premium) {
+                  if (premiumState.isPremium) {
                     isTrial = false;
                   } else if (widget.isTrial) {
                     isTrial = true;

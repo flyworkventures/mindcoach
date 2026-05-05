@@ -18,9 +18,19 @@ class LocalDbKeys {
   static String notification24Hours = "notification24Hours";
 
   // Premium deneme süresi sayaçları (cihaz başına; non-premium kullanıcı için)
-  // 20 mesaj + 3 dk (180 sn) sesli arama. Premium kullanıcılar için anlamsız.
+  // 10 mesaj yazılı chat'te (sonra premium gerekli). Sesli/video premium-only.
   static String trialMessagesUsed = "trialMessagesUsed";
   static String trialVoiceSecondsUsed = "trialVoiceSecondsUsed";
   /// Ücretsiz görüntülü deneme: toplam en fazla 60 sn (cihaz başına, non-premium).
   static String trialVideoSecondsUsed = "trialVideoSecondsUsed";
+
+  // Premium sistemi (device-based, account-agnostic)
+  /// Cihaza özgü sabit UUID (bir kez oluşturulur, silinmez)
+  static String deviceIdPremium = "deviceIdPremium";
+  /// Premium son kullanma tarihi (ISO 8601 string, null = premium yok)
+  static String premiumExpiryDate = "premiumExpiryDate";
+  /// Premium aktivasyon tarihi
+  static String premiumStartDate = "premiumStartDate";
+  /// Kullanıcı satın alma premium mi (true) yoksa trial (false)
+  static String isPremiumPurchased = "isPremiumPurchased";
 }

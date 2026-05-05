@@ -140,7 +140,8 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
         try {
           final appointmentDateStr = appointmentData["appointment_date"];
           final consultantId = appointmentData["consultant_id"] as int?;
-          final status = appointmentData["status"] as String?;
+          final rawStatus = appointmentData["status"];
+          final status = rawStatus?.toString().trim().toLowerCase();
           final appointmentId = appointmentData["id"] as int?;
           
           // Debug: Raw data logla
@@ -188,7 +189,9 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
               specialistName: specialistName,
               topicKey: 'feelingGood', // Varsayılan topic (API'de topic bilgisi yoksa)
               appointmentDateTime: appointmentDateTime, // Tam tarih + saat
-              status: status ?? 'scheduled', // Status bilgisi
+              status: (status != null && status.isNotEmpty)
+                  ? status
+                  : 'scheduled', // Status bilgisi
               consultantId: consultantId, // Consultant ID
               job: consultantJob, // Consultant'ın görevi
               appointmentId: appointmentId, // Appointment ID (iptal/geri alma için)

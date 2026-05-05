@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
+import 'package:mindcoach/Services/RevenueCatService/revenuecat_service.dart';
+import 'package:mindcoach/Services/ApiService/premium_api_service.dart';
+import 'package:mindcoach/Riverpod/Providers/premium_provider.dart';
 
 class PremiumScreen extends StatefulWidget {
   const PremiumScreen({super.key});
@@ -167,35 +174,39 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
                   SizedBox(height: 24.h),
 
-                  // Start trial button
-                  GestureDetector(
-                    onTap: () {
-                      // TODO: purchase flow
+                  // Get Premium button
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return GestureDetector(
+                        onTap: () async {
+                          await _handlePremiumPurchase(context, ref);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 44.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            gradient: const LinearGradient(
+                              begin: Alignment(-0.3, 0),
+                              end: Alignment(1.0, 0),
+                              colors: [
+                                Color(0xFF2BD383),
+                                Color(0xFF11998E),
+                              ],
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Get Premium',
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
                     },
-                    child: Container(
-                      width: double.infinity,
-                      height: 44.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        gradient: const LinearGradient(
-                          begin: Alignment(-0.3, 0),
-                          end: Alignment(1.0, 0),
-                          colors: [
-                            Color(0xFF2BD383),
-                            Color(0xFF11998E),
-                          ],
-                        ),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        context.l10n.premiumStartTrial,
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
                   ),
 
                   SizedBox(height: 10.h),
@@ -248,6 +259,71 @@ class _PremiumScreenState extends State<PremiumScreen> {
         ],
       ),
     );
+  }
+
+  /// Premium satın alını handle et (RevenueCat + Backend)
+  Future<void> _handlePremiumPurchase(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    try {
+      // 1. RevenueCat paywall'ı aç
+      await RevenueCatUI.presentPaywall();
+
+      // 2. Paywall kapandıktan sonra, premium status'ü kontrol et
+      final customerInfo = await Purchases.getCustomerInfo();
+      final primaryEntitlement = customerInfo.entitlements.all['premium'];
+
+      if (primaryEntitlement?.isActive == true) {
+        // 3. Backend'i bilgilendir
+        final premiumApiService = PremiumApiService();
+        final deviceId = ref.read(premiumProvider).deviceId;
+
+        try {
+          await premiumApiService.confirmPurchase(
+            deviceId: deviceId,
+            receiptData: customerInfo.originalAppUserId,
+            packageIdentifier: 'com.example.app.premium',
+          );
+        } catch (e) {
+          // Backend error but user purchased, activate anyway
+          debugPrint('Backend confirmation error: $e');
+        }
+
+        // 4. Local premium'ı aktivat
+        await ref
+            .read(premiumProvider.notifier)
+            .activatePurchasedPremium();
+
+        // 5. Başarı mesajı
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('🎉 Premium Activated! Enjoy all features.'),
+              duration: Duration(seconds: 3),
+            ),
+          );
+          // Kapat
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (mounted) Navigator.pop(context);
+          });
+        }
+      }
+    } on PlatformException catch (e) {
+      // User canceled or error occurred
+      debugPrint('Paywall error: ${e.code} - ${e.message}');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.message}')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Purchase failed: $e')),
+        );
+      }
+    }
   }
 }
 

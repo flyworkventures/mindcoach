@@ -123,7 +123,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
         return;
       }
     }
-    if (!ref.read(AllProviders.premiumProvider)) {
+    if (!ref.read(AllProviders.premiumProvider).isPremium) {
       final canStart = await TrialQuotaService.instance.canStartVoiceCall();
       if (!mounted) return;
       if (!canStart) {
@@ -607,8 +607,8 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
     _durationTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
       setState(() => _secondsElapsed++);
-      final premium = ref.read(AllProviders.premiumProvider);
-      if (premium) return;
+      final premiumState = ref.read(AllProviders.premiumProvider);
+      if (premiumState.isPremium) return;
       unawaited(() async {
         await TrialQuotaService.instance.addVoiceSeconds(1);
         final remaining = await TrialQuotaService.instance

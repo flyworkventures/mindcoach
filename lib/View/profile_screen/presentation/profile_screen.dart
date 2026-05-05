@@ -238,7 +238,8 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     );
     final userState = ref.watch(AllProviders.userProvider);
     final userModel = ref.watch(AllProviders.userProvider);
-    final isPremium = ref.watch(AllProviders.premiumProvider);
+    final premiumState = ref.watch(AllProviders.premiumProvider);
+    final isPremium = premiumState.isPremium;
     final ppPath = userModel?.profilePhotoUrl ?? '';
     final isGuest = (userState?.credential.toLowerCase() ?? '') == 'guest';
     final credentialData = userState?.credentialData;

@@ -4,19 +4,20 @@ import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 import 'package:mindcoach/core/widgets/app_back_button.dart';
 
 import '../../../core/utils/context_l10n_extensions.dart';
-import '../../appointments/appointment_ui.dart';
 import '../../appointments/appointments_notifier.dart';
+import '../../appointments/appointment_ui.dart';
+import '../../appointments/completed_appointment_ui.dart';
 import '../../appointments/appointments_ui_provider.dart';
 
 /// ROOT: Tabbar + üst bar
-class AppointmentsScreen extends StatefulWidget {
+class AppointmentsScreen extends ConsumerStatefulWidget {
   const AppointmentsScreen({super.key});
 
   @override
-  State<AppointmentsScreen> createState() => _AppointmentsScreenState();
+  ConsumerState<AppointmentsScreen> createState() => _AppointmentsScreenState();
 }
 
-class _AppointmentsScreenState extends State<AppointmentsScreen>
+class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -24,13 +25,15 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   void initState() {
     super.initState();
     // 2 Sekmemiz var. vsync için "with SingleTickerProviderStateMixin" eklendi.
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 160),
+    );
 
-    // Swipe yapıldığında (ekran kaydırıldığında) butonların rengini güncellemek için:
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        setState(() {});
-      }
+    // Ekran açıldığında randevuları API'den taze çek.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(appointmentsProvider.notifier).refresh();
     });
   }
 
@@ -45,7 +48,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     final l10n = context.l10n;
 
     return Scaffold(
-      backgroundColor: Colors.white, // Figma'ya göre temiz beyaz arkaplan
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -58,11 +61,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                   AppBackButton(),
                   const SizedBox(width: 8),
                   Text(
-                    l10n.appointments, // Veya "Past Appointment"
+                    l10n.appointments,
                     style: const TextStyle(
                       fontFamily: 'Geist',
                       fontSize: 16,
-                      fontWeight: FontWeight.w400, // Medium
+                      fontWeight: FontWeight.w400,
                       color: Colors.black,
                     ),
                   ),
@@ -71,35 +74,50 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
               SizedBox(height: 24.h),
 
-              // 2. CUSTOM TABBAR (Hap Şeklinde Butonlar)
-              Row(
-                children: [
-                  _buildTabButton(
-                    text: l10n.upcoming,
-                    isActive: _tabController.index == 0,
-                    onTap: () {
-                      _tabController.animateTo(0);
-                      setState(() {});
-                    },
-                  ),
-                  const SizedBox(width: 10), // Figma Gap: 10px
-                  _buildTabButton(
-                    text: l10n.completed,
-                    isActive: _tabController.index == 1,
-                    onTap: () {
-                      _tabController.animateTo(1);
-                      setState(() {});
-                    },
-                  ),
-                ],
+              // 2. CUSTOM TABBAR - ListenableBuilder ile efficient rebuild
+              ListenableBuilder(
+                listenable: _tabController,
+                builder: (context, child) {
+                  return Row(
+                    children: [
+                      _buildTabButton(
+                        text: l10n.upcoming,
+                        isActive: _tabController.index == 0,
+                        onTap: () {
+                          _tabController.animateTo(
+                            0,
+                            duration: const Duration(milliseconds: 160),
+                            curve: Curves.easeOutCubic,
+                          );
+                          // ❌ setState() kaldırıldı - ListenableBuilder trigger ediyor
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      _buildTabButton(
+                        text: l10n.completed,
+                        isActive: _tabController.index == 1,
+                        onTap: () {
+                          _tabController.animateTo(
+                            1,
+                            duration: const Duration(milliseconds: 160),
+                            curve: Curves.easeOutCubic,
+                          );
+                          // ❌ setState() kaldırıldı
+                        },
+                      ),
+                    ],
+                  );
+                },
               ),
 
               SizedBox(height: 24.h),
 
-              // 3. TAB BODY (Listelerin Göründüğü Yer)
+              // 3. TAB BODY - NeverScrollableScrollPhysics ile swipe disable
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Swipe disable
                   children: const [
                     UpcomingAppointmentsTab(),
                     CompletedAppointmentsTab(),
@@ -113,7 +131,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     );
   }
 
-  // Özel kapsül sekme butonu tasarımı
+  // Özel kapsül sekme butonu - AnimatedContainer ile smooth renk
   Widget _buildTabButton({
     required String text,
     required bool isActive,
@@ -121,22 +139,26 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: isActive
-              ? const Color(0xFF21BC87) // Aktif yeşil
-              : const Color(0xFF898989).withValues(alpha: 0.10), // İnaktif gri
-          borderRadius: BorderRadius.circular(9999), // Tam yuvarlak
+              ? const Color(0xFF21BC87)
+              : const Color(0xFF898989).withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(9999),
         ),
-        child: Text(
-          text,
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
           style: TextStyle(
             fontFamily: 'Geist',
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: isActive ? Colors.white : const Color(0xFF737373),
           ),
+          child: Text(text),
         ),
       ),
     );
@@ -150,10 +172,11 @@ class UpcomingAppointmentsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(upcomingAppointmentsProvider);
-    final appointmentsState = ref.watch(appointmentsProvider);
 
-    // Empty state - Fontlar Geist olarak güncellendi
-    if (appointmentsState.appointments.isEmpty || items.isEmpty) {
+    // ❌ KÖTÜ: appointmentsState.watch kaldırıldı - gereksiz rebuild trigger ediyor
+    // ✅ İYİ: Sadece items'ı watch et
+
+    if (items.isEmpty) {
       return Center(
         child: Text(
           context.l10n.noUpcomingAppointments,
@@ -168,7 +191,8 @@ class UpcomingAppointmentsTab extends ConsumerWidget {
     }
 
     return ListView.builder(
-      padding: EdgeInsets.zero, // Fazladan boşlukları temizler
+      padding: EdgeInsets.zero,
+      physics: const ClampingScrollPhysics(),
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
@@ -184,12 +208,9 @@ class CompletedAppointmentsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items = ref
-        .watch(completedAppointmentsProvider)
-        .where((e) => e.isCompleted == true)
-        .toList();
+    // completed provider zaten status/zaman kurallarını uyguluyor.
+    final items = ref.watch(completedAppointmentsProvider);
 
-    // Empty state - Fontlar Geist olarak güncellendi
     if (items.isEmpty) {
       return Center(
         child: Text(
@@ -205,11 +226,12 @@ class CompletedAppointmentsTab extends ConsumerWidget {
     }
 
     return ListView.builder(
-      padding: EdgeInsets.zero, // Fazladan boşlukları temizler
+      physics: const ClampingScrollPhysics(),
+      padding: EdgeInsets.zero,
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        return AppointmentCardUi(item: item);
+        return CompletedAppointmentCardUi(item: item);
       },
     );
   }

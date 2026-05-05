@@ -11,10 +11,10 @@ class PremiumCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isPremium = ref.watch(AllProviders.premiumProvider);
+    final premiumState = ref.watch(AllProviders.premiumProvider);
     final l = context.l10n;
 
-    if (isPremium) return const SizedBox.shrink();
+    if (premiumState.isPremium) return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),

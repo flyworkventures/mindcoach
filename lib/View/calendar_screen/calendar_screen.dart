@@ -10,7 +10,7 @@ import 'package:mindcoach/core/utils/job_convert.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../core/models/appointment_info.dart';
-import '../appointments/appointment_detail_screen.dart';
+import '../appointments/appointment_video_call_screen.dart';
 import '../appointments/appointments_notifier.dart';
 import '../specialists_screen/specialists_notifier.dart';
 
@@ -122,21 +122,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 ) {
                   final sessionOrder = entry.key + 1;
                   final info = entry.value;
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              AppointmentDetailScreen(appointment: info),
-                        ),
-                      );
-                    },
-                    child: _buildAppointmentCard(
-                      context: context,
-                      date: _selectedDay!,
-                      info: info,
-                      sessionOrder: sessionOrder,
-                    ),
+                  return _buildAppointmentCard(
+                    context: context,
+                    date: _selectedDay!,
+                    info: info,
+                    sessionOrder: sessionOrder,
                   );
                 }),
               ],
@@ -514,6 +504,55 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   // --- Randevu Kartı ---
 
+  bool _isAppointmentJoinAvailable(DateTime appointmentDateTime) {
+    final now = DateTime.now();
+    final diff = appointmentDateTime.difference(now);
+    // Randevu zamanı geldiyse (veya en fazla 5 dk geçtiyse) başlatılabilir.
+    return diff.inMinutes <= 5 && diff.inMinutes >= -5;
+  }
+
+  String _localizedStartLabel(BuildContext context) {
+    switch (Localizations.localeOf(context).languageCode) {
+      case 'tr':
+        return 'Basla';
+      case 'de':
+        return 'Starten';
+      case 'es':
+        return 'Iniciar';
+      case 'fr':
+        return 'Demarrer';
+      case 'hi':
+        return 'Shuru';
+      case 'it':
+        return 'Avvia';
+      case 'ja':
+        return '開始';
+      case 'ko':
+        return '시작';
+      case 'pt':
+        return 'Iniciar';
+      case 'ru':
+        return 'Начать';
+      case 'zh':
+        return '开始';
+      default:
+        return 'Start';
+    }
+  }
+
+  Future<void> _startAppointmentCall(
+    BuildContext context,
+    AppointmentInfo info,
+    DateTime appointmentDateTime,
+  ) async {
+    if (!_isAppointmentJoinAvailable(appointmentDateTime)) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => AppointmentVideoCallScreen(appointment: info),
+      ),
+    );
+  }
+
   Widget _buildAppointmentCard({
     required BuildContext context,
     required DateTime date,
@@ -553,6 +592,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final appointmentDateTime =
         info.appointmentDateTime ??
         DateTime(date.year, date.month, date.day, 9, 0);
+    final canStartNow = _isAppointmentJoinAvailable(appointmentDateTime);
     final formattedTime = DateFormat('HH:mm').format(appointmentDateTime);
 
     // Bugünkü seanslarda sıra bazlı renk:
@@ -642,39 +682,52 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     ),
                   ),
 
-                  // Sağ taraf Saat (Dinamik Renkli Kapsül)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: selectedColor.withValues(
-                        alpha: 0.1,
-                      ), // Seçilen rengin %10 saydam hali
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/icons/ic_clock.svg",
-                          // İkonun da kapsülle aynı renkte olması için colorFilter uygulandı
-                          colorFilter: ColorFilter.mode(
-                            selectedColor,
-                            BlendMode.srcIn,
+                  // Sağ taraf Saat / Başla (Dinamik Renkli Kapsül)
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: canStartNow
+                        ? () => _startAppointmentCall(
+                            context,
+                            info,
+                            appointmentDateTime,
+                          )
+                        : null,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: selectedColor.withValues(
+                          alpha: 0.1,
+                        ), // Seçilen rengin %10 saydam hali
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            canStartNow
+                                ? "assets/icons/ic_video.svg"
+                                : "assets/icons/ic_clock.svg",
+                            colorFilter: ColorFilter.mode(
+                              selectedColor,
+                              BlendMode.srcIn,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          formattedTime,
-                          style: TextStyle(
-                            fontFamily: 'Geist',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: selectedColor, // Seçilen metin rengi
+                          const SizedBox(width: 4),
+                          Text(
+                            canStartNow
+                                ? _localizedStartLabel(context)
+                                : formattedTime,
+                            style: TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: selectedColor,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

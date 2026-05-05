@@ -18,6 +18,7 @@ import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 import 'package:mindcoach/models/message_model.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:mindcoach/Services/rive_preload_service.dart';
@@ -312,23 +313,43 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             ),
           ),
 
-          // Video call
-          GestureDetector(
-            onTap: () => unawaited(_openVideoCall()),
-            child: SvgPicture.asset('assets/icons/ic_video.svg'),
+          // Video call (PREMIUM ONLY)
+          Consumer(
+            builder: (context, ref, _) {
+              return GestureDetector(
+                onTap: () async {
+                  final isPremium = ref.watch(AllProviders.premiumProvider).isPremium;
+                  if (!isPremium) {
+                    await RevenueCatUI.presentPaywall();
+                  } else {
+                    unawaited(_openVideoCall());
+                  }
+                },
+                child: SvgPicture.asset('assets/icons/ic_video.svg'),
+              );
+            },
           ),
           const SizedBox(width: 16),
 
-          // Phone call
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                PageRoutes.voiceCallView,
-                arguments: widget.specialistId,
+          // Phone call (PREMIUM ONLY)
+          Consumer(
+            builder: (context, ref, _) {
+              return GestureDetector(
+                onTap: () async {
+                  final isPremium = ref.watch(AllProviders.premiumProvider).isPremium;
+                  if (!isPremium) {
+                    await RevenueCatUI.presentPaywall();
+                  } else {
+                    Navigator.pushNamed(
+                      context,
+                      PageRoutes.voiceCallView,
+                      arguments: widget.specialistId,
+                    );
+                  }
+                },
+                child: SvgPicture.asset('assets/icons/ic_call.svg'),
               );
             },
-            child: SvgPicture.asset('assets/icons/ic_call.svg'),
           ),
         ],
       ),
@@ -732,8 +753,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   }
 
   Future<void> _openVideoCall() async {
-    final premium = ref.read(AllProviders.premiumProvider);
-    if (!premium) {
+    final premiumState = ref.read(AllProviders.premiumProvider);
+    if (!premiumState.isPremium) {
       await presentProOffersPaywall();
       return;
     }

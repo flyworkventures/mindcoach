@@ -22,22 +22,19 @@ class TrialQuotaExceededException implements Exception {
 /// Non-premium kullanıcılar için cihaz başına deneme süresi sayaçları.
 ///
 /// Kurallar (kullanıcı tarafından tanımlandı):
-/// • 20 adet mesaj
-/// • 3 dk (= 180 sn) sesli arama
-/// • Görüntülü görüşme premium'dur; non-premium için toplam **60 sn** ücretsiz
-///   görüntülü deneme hakkı vardır ([trialVideoSecondsUsed]). Kullanım
-///   [VideoCallRealtimeScreen] içinde `isTrial` oturumlarında sayılır.
+/// • 10 adet yazılı mesaj (chat'te) - sonra premium gerekli
+/// • Sesli arama: PREMIUM ONLY (trial yok)
+/// • Görüntülü görüşme: PREMIUM ONLY (trial yok)
 ///
 /// Sayaçlar `SharedPreferences` üzerinde tutulur — kullanıcı app'i yeniden
-/// kurarsa sayaçlar sıfırlanır; bu kabul edilebilir bir davranış (RC paywall
-/// dönüşüm hunisinin baskın olduğu trial mantığı).
+/// kurarsa sayaçlar sıfırlanır; bu kabul edilebilir bir davranış.
 class TrialQuotaService {
   TrialQuotaService._();
   static final TrialQuotaService instance = TrialQuotaService._();
 
-  static const int messageLimit = 20;
-  static const int voiceCallSecondLimit = 3 * 60; // 180 sn = 3 dk
-  static const int videoTrialSecondLimit = 60; // 1 dk ücretsiz görüntülü (toplam)
+  static const int messageLimit = 10; // Chat yazılı mesaj limitiVoice/Video premium-only
+  static const int voiceCallSecondLimit = 3 * 60; // 180 sn = 3 dk (deprecated, premium-only now)
+  static const int videoTrialSecondLimit = 60; // 1 dk ücretsiz görüntülü (deprecated, premium-only now)
 
   final LocalDbService _db = LocalDbService();
 
@@ -125,5 +122,22 @@ class TrialQuotaService {
     final used = await videoTrialSecondsUsed();
     final next = (used + seconds).clamp(0, videoTrialSecondLimit);
     await _db.setInt(key: LocalDbKeys.trialVideoSecondsUsed, value: next);
+  }
+
+  // ── Premium-only call gating ──────────────────────────────────────────────
+  /// Sesli arama: Premium users only (no trial)
+  /// Döner: true = user can call, false = show paywall
+  Future<bool> canStartVoiceCallPremiumOnly() async {
+    // Şu an burası FALSE döndürüyor
+    // conversation_notifier'da premiumProvider check'i yapılacak
+    return false; // Always blocked for trial users
+  }
+
+  /// Görüntülü arama: Premium users only (no trial)
+  /// Döner: true = user can call, false = show paywall
+  Future<bool> canStartVideoCallPremiumOnly() async {
+    // Şu an burası FALSE döndürüyor
+    // video_call_screen'de premiumProvider check'i yapılacak
+    return false; // Always blocked for trial users
   }
 }

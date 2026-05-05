@@ -140,12 +140,10 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
 
   /// Premium kontrolü yap
   bool _isPremium() {
-
-    
     try {
-      // UserProvider'dan kullanıcı bilgisini al
-      bool premium = ref!.watch(AllProviders.premiumProvider);
-      return premium;
+      // Premium provider'dan premium status'u al (device-based)
+      final premiumState = ref!.watch(AllProviders.premiumProvider);
+      return premiumState.isPremium;
     } catch (e) {
       log("⚠️ Premium kontrolü hatası: $e");
       return false;
