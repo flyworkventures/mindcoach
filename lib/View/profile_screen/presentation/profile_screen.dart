@@ -654,11 +654,22 @@ class _ShareFriendBottomSheet extends StatelessWidget {
 
   void _copyLink(BuildContext context) {
     Clipboard.setData(ClipboardData(text: shareUrl));
-    ScaffoldMessenger.of(context).showSnackBar(
+    final rootContext = Navigator.of(context, rootNavigator: true).context;
+    Navigator.of(context).pop();
+    final messenger = ScaffoldMessenger.of(rootContext);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
       SnackBar(
         content: Text(context.l10n.linkCopied),
         backgroundColor: const Color(0xFF21BC87),
         duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.fromLTRB(
+          16,
+          0,
+          16,
+          20 + MediaQuery.of(rootContext).viewPadding.bottom,
+        ),
       ),
     );
   }

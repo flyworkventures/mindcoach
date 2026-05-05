@@ -78,23 +78,31 @@ class ChatNotifier extends Notifier<ChatState> {
   bool _isRefreshing = false;
   DateTime? _lastRefreshAt;
   static const Duration _minRefreshInterval = Duration(seconds: 20);
+  int? _activeUserId;
 
   @override
   ChatState build() {
-
-    final user = ref.read(AllProviders.userProvider);
+    final user = ref.watch(AllProviders.userProvider);
+    final userId = user?.id;
     final userName = user?.username ?? '';
-    
+
+    final userChanged = _activeUserId != userId;
+    if (userChanged) {
+      _activeUserId = userId;
+      _isRefreshing = false;
+      _lastRefreshAt = null;
+    }
 
     Future(() {
       if (!ref.mounted) return;
+      if (userId == null) return;
       _loadChats();
     });
-    
+
     return ChatState(
       currentUserName: userName,
       chats: [],
-      isLoading: true,
+      isLoading: userId != null,
     );
   }
 

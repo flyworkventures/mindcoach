@@ -106,7 +106,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
 
     // Figma'daki gibi kategori bazlı göstermek için gruplama yapıyoruz
     // Önce sınav kaygısı, ortada mevcut tipler, sonda yeni rehberlik tipleri
-    const _groupJobOrder = [
+    const groupJobOrder = [
       'exam_anxiety',
       'adult',
       'child',
@@ -120,11 +120,12 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
     ];
     final Map<String, List<ConsultantModel>> groupedSpecialists = {};
     if (filteredSpecialists != null) {
-      final sorted = [...filteredSpecialists]..sort((a, b) {
-        final ai = _groupJobOrder.indexOf(a.job);
-        final bi = _groupJobOrder.indexOf(b.job);
-        return (ai == -1 ? 999 : ai).compareTo(bi == -1 ? 999 : bi);
-      });
+      final sorted = [...filteredSpecialists]
+        ..sort((a, b) {
+          final ai = groupJobOrder.indexOf(a.job);
+          final bi = groupJobOrder.indexOf(b.job);
+          return (ai == -1 ? 999 : ai).compareTo(bi == -1 ? 999 : bi);
+        });
       for (var specialist in sorted) {
         final jobTitle = JobConvert(specialist.job, context).call();
         if (!groupedSpecialists.containsKey(jobTitle)) {
@@ -525,17 +526,13 @@ class _SpecialistCard extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.calendar_today,
-                        size: 12,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 6),
+                      SvgPicture.asset("assets/icons/ic_ic.svg"),
+                      const SizedBox(width: 4),
                       Text(
                         context.l10n.coachDetailCreateAppointment,
                         style: const TextStyle(
                           fontFamily: 'Geist',
-                          fontSize: 10,
+                          fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),

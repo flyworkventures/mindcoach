@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:in_app_notification/in_app_notification.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
@@ -16,6 +15,10 @@ import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/local_db_keys.dart';
 import 'package:mindcoach/Http/http_service.dart';
 import 'package:mindcoach/models/user_model.dart';
+import 'package:mindcoach/View/appointments/appointments_notifier.dart';
+import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
+import 'package:mindcoach/View/chat_screen/notifiers/conversation_notifier.dart';
+import 'package:mindcoach/features/notifications/notification_notifier.dart';
 
 class AuthProvider extends StateNotifier{
   Ref? ref;
@@ -138,6 +141,12 @@ class AuthProvider extends StateNotifier{
           if (userData != null) {
              final userModel = UserModel.fromMap(userData);
               final userModelWithToken = userModel.copyWith(token: token);
+              if (ref != null) {
+                ref!.invalidate(chatProvider);
+                ref!.invalidate(conversationsProvider);
+                ref!.invalidate(appointmentsProvider);
+                ref!.invalidate(notificationNotifierProvider);
+              }
               return userModelWithToken;
           }else {
          return null;
@@ -175,6 +184,10 @@ Future logout() async{
       if (ref != null) {
         try {
           ref?.read(AllProviders.userProvider.notifier).setUserModel(null);
+          ref!.invalidate(chatProvider);
+          ref!.invalidate(conversationsProvider);
+          ref!.invalidate(appointmentsProvider);
+          ref!.invalidate(notificationNotifierProvider);
           Logger.info(text: " UserProvider temizlendi",className: "AuthProvider",functionName: "logout");
         } catch (e) {
             Logger.errorLog(text: "[LOGOUT] UserProvider temizleme hatası: $e",className: "AuthProvider",functionName: "logout");

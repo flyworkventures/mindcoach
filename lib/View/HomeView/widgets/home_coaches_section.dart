@@ -38,7 +38,7 @@ class _HomeCoachesSectionState extends ConsumerState<HomeCoachesSection> {
 
     // API'den gelen gerçek job tiplerine göre filtre listesi oluştur
     // Önce sınav kaygısı, ortada mevcut tipler, sonda yeni rehberlik tipleri
-    const _jobOrder = [
+    const jobOrder = [
       'exam_anxiety',
       'adult',
       'child',
@@ -50,10 +50,10 @@ class _HomeCoachesSectionState extends ConsumerState<HomeCoachesSection> {
       'difficult_experiences',
       'resilience_empowerment',
     ];
-    final _rawJobs = specialists.map((s) => s.job).toSet();
+    final rawJobs = specialists.map((s) => s.job).toSet();
     final jobTypes = [
-      ..._jobOrder.where(_rawJobs.contains),
-      ..._rawJobs.where((j) => !_jobOrder.contains(j)),
+      ...jobOrder.where(rawJobs.contains),
+      ...rawJobs.where((j) => !jobOrder.contains(j)),
     ];
 
     // Filtre seçiliyse sadece o job tipini göster (max 4), seçili değilse tümünü göster
@@ -312,17 +312,13 @@ class _HomeCoachCard extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.calendar_today,
-                        size: 12,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 6),
+                      SvgPicture.asset("assets/icons/ic_ic.svg"),
+                      const SizedBox(width: 4),
                       Text(
                         context.l10n.coachDetailCreateAppointment,
                         style: const TextStyle(
                           fontFamily: 'Geist',
-                          fontSize: 10,
+                          fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),

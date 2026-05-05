@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
+import 'package:mindcoach/core/widgets/future_progress_dialog.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 class PremiumCard extends ConsumerWidget {
@@ -19,7 +20,9 @@ class PremiumCard extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: GestureDetector(
         onTap: () async {
-          await RevenueCatUI.presentPaywall();
+          await context.runWithProgressDialog(() async {
+            await RevenueCatUI.presentPaywall();
+          }, message: context.l10n.pleaseWait);
         },
         child: Container(
           width: double.infinity,

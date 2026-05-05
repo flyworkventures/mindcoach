@@ -5,12 +5,14 @@ class TestFlowState {
   final String? testTitle;
   final String? imagePath;
   final int totalQuestions;
+  final int questionSeed;
 
   const TestFlowState({
     this.testName,
     this.testTitle,
     this.imagePath,
     this.totalQuestions = 0,
+    this.questionSeed = 0,
   });
 
   TestFlowState copyWith({
@@ -18,12 +20,14 @@ class TestFlowState {
     String? testTitle,
     String? imagePath,
     int? totalQuestions,
+    int? questionSeed,
   }) {
     return TestFlowState(
       testName: testName ?? this.testName,
       testTitle: testTitle ?? this.testTitle,
       imagePath: imagePath ?? this.imagePath,
       totalQuestions: totalQuestions ?? this.totalQuestions,
+      questionSeed: questionSeed ?? this.questionSeed,
     );
   }
 }
@@ -43,6 +47,7 @@ class TestFlowNotifier extends Notifier<TestFlowState> {
       testTitle: testTitle,
       imagePath: imagePath,
       totalQuestions: totalQuestions,
+      questionSeed: DateTime.now().microsecondsSinceEpoch,
     );
   }
 

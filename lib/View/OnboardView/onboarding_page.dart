@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
-import 'package:mindcoach/View/OnboardView/data/onboarding_localizations.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
+import 'package:mindcoach/View/OnboardView/data/onboarding_localizations.dart';
 import 'package:mindcoach/core/routes/page_routes.dart'; // Yönlendirme için eklendi
 import 'package:mindcoach/core/utils/local_db_keys.dart';
 
@@ -105,17 +105,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               // 1. Resim Alanı (Sabit Merkezlenmiş)
               Expanded(
                 flex: 5,
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 600),
-                  child: Container(
-                    key: ValueKey<int>(_currentIndex),
-                    alignment: Alignment
-                        .center, // Resimlerin merkezde sabit durmasını sağlar
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Image.asset(
-                      'assets/chars/onboard${_currentIndex + 1}.png',
-                      fit: BoxFit.contain,
-                      width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 600),
+                    child: Container(
+                      key: ValueKey<int>(_currentIndex),
+                      alignment: Alignment
+                          .center, // Resimlerin merkezde sabit durmasını sağlar
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Image.asset(
+                        'assets/chars/onboard${_currentIndex + 1}.png',
+                        fit: BoxFit.contain,
+                        width: double.infinity,
+                      ),
                     ),
                   ),
                 ),

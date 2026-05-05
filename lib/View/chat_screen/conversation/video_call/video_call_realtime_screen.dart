@@ -16,9 +16,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/Services/rive_preload_service.dart';
-import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/View/specialists_screen/specialists_notifier.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
+import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/call_permissions.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
@@ -94,6 +94,8 @@ class _VideoCallRealtimeScreenState
 
   Timer? _trialTimer;
   bool _trialDialogShown = false;
+  bool _trialExpired = false;
+
   /// Bağlantı kurulduğunda kalan ücretsiz görüntülü saniye (TrialQuotaService).
   int _videoTrialBudgetSeconds = 60;
   bool _videoTrialUsagePersisted = false;
@@ -104,11 +106,15 @@ class _VideoCallRealtimeScreenState
   /// Son AI PCM baytının geldiği an — akış kesilince [ai_response_complete] olmadan dinlemeye dönüş.
   DateTime? _lastAiPcmReceivedAt;
   Timer? _aiPlaybackIdleTimer;
+  Timer? _connectionReadyFallbackTimer;
+
   /// Sunucu chunk'ları arasında 1-2 sn boşluk olabiliyor (TTS buffering).
   /// 900 ms ile erken drain → ses ortada kesiliyordu.
   static const int _aiPlaybackIdleMs = 2800;
+
   /// Aynı anda yalnızca bir drain/listen akışı (idle watchdog + ai_response_complete yarışı).
   bool _pcmDrainInFlight = false;
+
   /// Bu AI turunda en az bir PCM byte geldiyse true ([ai_speaking_start] sıfırlar).
   bool _receivedAiPcmThisTurn = false;
 
@@ -130,14 +136,18 @@ class _VideoCallRealtimeScreenState
 
   /// Ağız açılış blend'i (konuşma başlangıcı).
   static const double _riveTalkOpenBlendMs = 40;
+
   /// Konuşma bittiğinde talk=false öncesi kısa blend — uzun süre bırakılınca
   /// Rive ~1 sn "takılı" kalıyordu.
   static const double _riveTalkCloseBlendMs = 26;
+
   /// Viseme şekil geçişi (ms); çok düşük olursa titreme, bu değer ~1.5 frame.
   static const double _riveVisemeBlendMs = 26;
+
   /// RMS'ten viseme uygulama gecikmesi; her yeni örnekte timer **yeniden**
   /// kurulur → ses süresince saniyede çok daha sık tetiklenir.
   static const int _realtimeVisemeDebounceMs = 5;
+
   /// PCM chunk içi RMS penceresi (ms). Küçük = aynı ses süresinde çok daha
   /// fazla dudak güncellemesi (kullanıcı isteği: başlangıç–bitiş arası yoğun).
   static const int _visemeRmsWindowMs = 12;
@@ -175,6 +185,7 @@ class _VideoCallRealtimeScreenState
   final List<Timer> _visemeTimers = [];
   bool _visemeTimelineActive = false;
   Map<String, dynamic>? _pendingVisemeTimelineMsg;
+
   /// Son viseme timeline timer'ından gelen güncelleme (RMS ile çakışmayı önler).
   DateTime? _lastVisemeFromTimelineAt;
 
@@ -200,7 +211,10 @@ class _VideoCallRealtimeScreenState
       // ilk gerçek paint'te jank'ı önler.
       final url = widget.specialist.photoURL;
       if (url.isNotEmpty && mounted) {
-        precacheImage(CachedNetworkImageProvider(url), context).catchError((_) {});
+        precacheImage(
+          CachedNetworkImageProvider(url),
+          context,
+        ).catchError((_) {});
       }
     });
   }
@@ -467,7 +481,6 @@ class _VideoCallRealtimeScreenState
     }
   }
 
-
   /// Native AVAudioSession.setCategory + setActive yapıyor — pahalı işlem.
   /// Önceki kod: bootstrap, _init, _initPcmPlayer, _onRealtimeConnectionReady,
   /// _attachCamera, _flipCamera, _startMicStream… 5-7 yerden ardışık çağrı
@@ -617,10 +630,31 @@ class _VideoCallRealtimeScreenState
         },
         cancelOnError: false,
       );
+      _armConnectionReadyFallback();
       await _startMicStream();
     } catch (_) {
       _setError();
     }
+  }
+
+  void _cancelConnectionReadyFallback() {
+    _connectionReadyFallbackTimer?.cancel();
+    _connectionReadyFallbackTimer = null;
+  }
+
+  void _armConnectionReadyFallback() {
+    _cancelConnectionReadyFallback();
+    // Bazı demo/backend akışları `connection_success` göndermiyor.
+    // WS açıksa kısa süre sonra çağrıyı açarak UI'ın connecting'de donmasını
+    // ve trial timer/kamera başlatılmamasını engelle.
+    _connectionReadyFallbackTimer = Timer(
+      const Duration(milliseconds: 1200),
+      () {
+        if (!mounted || _callOpenFinalized || _serverConnectionReady) return;
+        if (_ws?.readyState != WebSocket.open) return;
+        _onRealtimeConnectionReady();
+      },
+    );
   }
 
   int _computePcm16Rms(Uint8List chunk) {
@@ -738,6 +772,7 @@ class _VideoCallRealtimeScreenState
   }
 
   void _onWsData(dynamic data) {
+    if (_trialExpired) return;
     if (data is String) {
       final msg = jsonDecode(data) as Map<String, dynamic>;
       if (msg['type'] == 'viseme_timeline') {
@@ -955,9 +990,7 @@ class _VideoCallRealtimeScreenState
         if (id == 0 && _visemeApplied != 0) {
           final appliedAt = _visemeAppliedAt;
           if (appliedAt != null) {
-            final heldMs = DateTime.now()
-                .difference(appliedAt)
-                .inMilliseconds;
+            final heldMs = DateTime.now().difference(appliedAt).inMilliseconds;
             if (heldMs < 26) {
               // Henüz erken — kararı reschedule et, RMS hâlâ düşükse sonraki
               // değerlendirmede tekrar 0 görür ve kapatır.
@@ -992,15 +1025,22 @@ class _VideoCallRealtimeScreenState
   Future<void> _maybeStartTrialTimer() async {
     if (!widget.isTrial) return;
     if (_trialTimer != null && _trialTimer!.isActive) return;
-    final remaining = await TrialQuotaService.instance.videoTrialSecondsRemaining();
+    final remaining = await TrialQuotaService.instance
+        .videoTrialSecondsRemaining();
     if (!mounted) return;
     if (remaining <= 0) {
       await _onTrialExpired();
       return;
     }
-    _videoTrialBudgetSeconds = remaining.clamp(1, TrialQuotaService.videoTrialSecondLimit);
+    _videoTrialBudgetSeconds = remaining.clamp(
+      1,
+      TrialQuotaService.videoTrialSecondLimit,
+    );
     _trialTimer?.cancel();
-    _trialTimer = Timer(Duration(seconds: _videoTrialBudgetSeconds), _onTrialExpired);
+    _trialTimer = Timer(
+      Duration(seconds: _videoTrialBudgetSeconds),
+      _onTrialExpired,
+    );
   }
 
   Future<void> _persistVideoTrialUsageOnce() async {
@@ -1017,6 +1057,8 @@ class _VideoCallRealtimeScreenState
   Future<void> _onTrialExpired() async {
     if (!mounted || _trialDialogShown) return;
     _trialDialogShown = true;
+    _trialExpired = true;
+    await _terminateRealtimeForTrialExpiry();
     await _persistVideoTrialUsageOnce();
     if (!mounted) return;
     final l10n = context.l10n;
@@ -1082,8 +1124,27 @@ class _VideoCallRealtimeScreenState
     );
 
     if (!mounted) return;
-    Navigator.of(context, rootNavigator: true).pop();
-    await presentProOffersPaywall();
+    await _endCall(navigateToLogin: true);
+  }
+
+  Future<void> _terminateRealtimeForTrialExpiry() async {
+    _cancelAiSpeakingWatchdog();
+    _cancelAiPlaybackIdleMonitor();
+    _cancelConnectionReadyFallback();
+    _clearVisemeTimers();
+    _flushPcm();
+    _setRiveNumber('visemeNum', 0);
+    _setRiveBool('talk', false);
+    _syncRiveTalk();
+    if (mounted) {
+      setState(() => _callState = _CallState.error);
+    }
+    try {
+      await _stopMicStream();
+    } catch (_) {}
+    try {
+      await _ws?.close();
+    } catch (_) {}
   }
 
   /// Sunucu connection_success gönderdiğinde işaretle ve finalize'i dene.
@@ -1091,13 +1152,16 @@ class _VideoCallRealtimeScreenState
   /// tekrar tetiklenecek.
   void _onRealtimeConnectionReady() {
     if (!mounted) return;
+    _cancelConnectionReadyFallback();
     _serverConnectionReady = true;
     _maybeFinalizeCallOpen();
   }
 
   /// [afterAiPlayback]: AI PCM bittikten sonra mic'e dönüş — kısa gecikme
   /// yeter; 400ms kullanıcıya "Rive 1 sn dondu" hissi veriyordu.
-  Future<void> _rebindMicAfterRealtimeReady({bool afterAiPlayback = false}) async {
+  Future<void> _rebindMicAfterRealtimeReady({
+    bool afterAiPlayback = false,
+  }) async {
     await _stopMicStream();
     await Future<void>.delayed(
       Duration(milliseconds: afterAiPlayback ? 90 : 400),
@@ -1153,7 +1217,9 @@ class _VideoCallRealtimeScreenState
   void _armAiPlaybackIdleMonitor() {
     _cancelAiPlaybackIdleMonitor();
     _lastAiPcmReceivedAt = null;
-    _aiPlaybackIdleTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
+    _aiPlaybackIdleTimer = Timer.periodic(const Duration(milliseconds: 200), (
+      _,
+    ) {
       _evaluateAiPlaybackIdleFallback();
     });
   }
@@ -1239,6 +1305,25 @@ class _VideoCallRealtimeScreenState
   }
 
   void _enqueuePcmBytes(Uint8List bytes) {
+    if (!_callOpenFinalized &&
+        !_serverConnectionReady &&
+        _ws?.readyState == WebSocket.open) {
+      // `connection_success` hiç gelmeyen ortamlarda ilk PCM'i hazır sinyali
+      // kabul et; aksi halde avatar/kamera hiç açılmıyordu.
+      _onRealtimeConnectionReady();
+    }
+    if (_callOpenFinalized &&
+        _callState != _CallState.speaking &&
+        !_isMuted &&
+        mounted) {
+      _receivedAiPcmThisTurn = false;
+      _resetBargeInState();
+      _aiSpeakingSince = DateTime.now();
+      setState(() => _callState = _CallState.speaking);
+      _syncRiveTalk();
+      _armAiSpeakingWatchdog();
+      _armAiPlaybackIdleMonitor();
+    }
     _lastAiPcmReceivedAt = DateTime.now();
     if (_callState == _CallState.speaking) {
       _receivedAiPcmThisTurn = true;
@@ -1453,7 +1538,7 @@ class _VideoCallRealtimeScreenState
     if (shouldEnd != true || !mounted) return;
     await _showRateConversationSheet();
     if (!mounted) return;
-    await _endCall();
+    await _endCall(navigateToLogin: widget.isTrial);
   }
 
   Future<void> _showRateConversationSheet() async {
@@ -1569,9 +1654,10 @@ class _VideoCallRealtimeScreenState
     }
   }
 
-  Future<void> _endCall() async {
+  Future<void> _endCall({bool navigateToLogin = false}) async {
     _cancelAiSpeakingWatchdog();
     _cancelAiPlaybackIdleMonitor();
+    _cancelConnectionReadyFallback();
     _clearVisemeTimers();
     _timer?.cancel();
 
@@ -1595,7 +1681,15 @@ class _VideoCallRealtimeScreenState
       pcm.FlutterPcmSound.release();
     } catch (_) {}
     await _resetAudioSession();
-    if (mounted) Navigator.of(context).pop();
+    if (!mounted) return;
+    if (navigateToLogin) {
+      Navigator.of(
+        context,
+        rootNavigator: true,
+      ).pushNamedAndRemoveUntil(PageRoutes.login, (route) => false);
+      return;
+    }
+    Navigator.of(context).pop();
   }
 
   void _setError() {
@@ -1677,6 +1771,7 @@ class _VideoCallRealtimeScreenState
 
   @override
   void dispose() {
+    _cancelConnectionReadyFallback();
     _cancelAiSpeakingWatchdog();
     _cancelAiPlaybackIdleMonitor();
     _trialTimer?.cancel();
@@ -1727,10 +1822,13 @@ class _VideoCallRealtimeScreenState
                         label: widget.isTrial
                             ? (_timer != null
                                   ? _formatTrialRemaining(
-                                      (_videoTrialBudgetSeconds - _secondsElapsed)
+                                      (_videoTrialBudgetSeconds -
+                                              _secondsElapsed)
                                           .clamp(0, _videoTrialBudgetSeconds),
                                     )
-                                  : _formatTrialRemaining(_videoTrialBudgetSeconds))
+                                  : _formatTrialRemaining(
+                                      _videoTrialBudgetSeconds,
+                                    ))
                             : _formatElapsed(_secondsElapsed),
                         isTimer: true,
                       ),
@@ -2029,103 +2127,103 @@ class _VideoCallRealtimeScreenState
     // blur tekrar render edilmek zorunda kalmaz.
     return RepaintBoundary(
       child: ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(
-            top: 20.h,
-            bottom: MediaQuery.of(context).padding.bottom,
-          ),
-          decoration: BoxDecoration(
-            color: const Color(0xFF000000).withValues(alpha: 0.35),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                _resolveCoachName(),
-                style: TextStyle(
-                  fontFamily: 'Geist',
-                  fontSize: 28.w,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(
+              top: 20.h,
+              bottom: MediaQuery.of(context).padding.bottom,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF000000).withValues(alpha: 0.35),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _resolveCoachName(),
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 28.w,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                _resolveCoachRole(),
-                style: TextStyle(
-                  fontFamily: 'Geist',
-                  fontSize: 16.w,
-                  color: Colors.white.withValues(alpha: 0.8),
-                  fontWeight: FontWeight.w400,
+                SizedBox(height: 4.h),
+                Text(
+                  _resolveCoachRole(),
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 16.w,
+                    color: Colors.white.withValues(alpha: 0.8),
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
 
-              SizedBox(height: 20.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: _controlButton(
-                        icon: SvgPicture.asset("assets/icons/turn.svg"),
-                        label: l10n.videoCallTurnCamera,
-                        onTap: _flipCamera,
+                SizedBox(height: 20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: _controlButton(
+                          icon: SvgPicture.asset("assets/icons/turn.svg"),
+                          label: l10n.videoCallTurnCamera,
+                          onTap: _flipCamera,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: _controlButton(
-                        icon: SvgPicture.asset("assets/icons/end.svg"),
-                        label: l10n.videoCallEndButton,
-                        isPrimary: true,
-                        onTap: _onEndPressed,
+                    Expanded(
+                      child: Center(
+                        child: _controlButton(
+                          icon: SvgPicture.asset("assets/icons/end.svg"),
+                          label: l10n.videoCallEndButton,
+                          isPrimary: true,
+                          onTap: _onEndPressed,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: _controlButton(
-                        icon: _isMuted
-                            ? Container(
-                                width: 52.0,
-                                height: 52.0,
-                                padding: const EdgeInsets.all(
-                                  10.0,
-                                ), // Figma'daki 10px Padding
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(
-                                    0.5,
-                                  ), // #000000 %50 Opacity
-                                  shape: BoxShape
-                                      .circle, // Radius: 999px için en pratik yol
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(
+                    Expanded(
+                      child: Center(
+                        child: _controlButton(
+                          icon: _isMuted
+                              ? Container(
+                                  width: 52.0,
+                                  height: 52.0,
+                                  padding: const EdgeInsets.all(
+                                    10.0,
+                                  ), // Figma'daki 10px Padding
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(
                                       0.5,
-                                    ), // #FFFFFF %50 Opacity
-                                    width: 1.0, // 1px Border
+                                    ), // #000000 %50 Opacity
+                                    shape: BoxShape
+                                        .circle, // Radius: 999px için en pratik yol
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(
+                                        0.5,
+                                      ), // #FFFFFF %50 Opacity
+                                      width: 1.0, // 1px Border
+                                    ),
                                   ),
-                                ),
-                                child: SvgPicture.asset(
-                                  "assets/icons/microphone-slash.svg",
-                                ),
-                              )
-                            : SvgPicture.asset("assets/icons/mute.svg"),
-                        label: l10n.videoCallMute,
-                        onTap: () => _toggleMute(),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/microphone-slash.svg",
+                                  ),
+                                )
+                              : SvgPicture.asset("assets/icons/mute.svg"),
+                          label: l10n.videoCallMute,
+                          onTap: () => _toggleMute(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 

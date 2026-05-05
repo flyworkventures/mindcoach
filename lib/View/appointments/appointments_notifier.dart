@@ -49,6 +49,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
   Timer? _timer;
   AppointmentRepo? _appointmentRepo;
   ConsultantRepo? _consultantRepo;
+  int? _activeUserId;
 
   AppointmentRepo get appointmentRepo {
     _appointmentRepo ??= AppointmentRepo(ref);
@@ -62,10 +63,18 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
 
   @override
   AppointmentsState build() {
+    final userId = ref.watch(AllProviders.userProvider.select((u) => u?.id));
+
     ref.onDispose(() {
       _timer?.cancel();
       _timer = null;
     });
+
+    if (_activeUserId != userId) {
+      _activeUserId = userId;
+      _timer?.cancel();
+      _timer = null;
+    }
 
     // İlk state - boş map ile başla, loading true
     final initialState = AppointmentsState(
@@ -79,6 +88,10 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     Future(() {
       if (!ref.mounted) {
         log("⚠️ Ref mounted değil, randevular yüklenemiyor");
+        return;
+      }
+      if (userId == null) {
+        log("ℹ️ Kullanici yok, randevu state sifirlandi");
         return;
       }
       log("✅ Ref mounted, randevular yükleniyor...");

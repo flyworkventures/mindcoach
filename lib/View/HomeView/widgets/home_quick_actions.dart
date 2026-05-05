@@ -155,8 +155,41 @@ class _QuickActionCoachTile extends ConsumerWidget {
               ),
             ),
 
-            // Sağ tarafı kapsayan Row (Rating ve Ok ikonu)
-            SvgPicture.asset("assets/icons/ic_quick.svg"),
+            // Sağ tarafı kapsayan Row (Rating pill + ok ikonu)
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(12, 7, 12, 7),
+                  decoration: BoxDecoration(
+                    color: const Color(0x1AFFC107), // #FFC107 @10%
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.star_rounded,
+                        size: 18,
+                        color: Color(0xFFFFCC00),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        coach.rating.toStringAsFixed(2),
+                        style: const TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFFFFCC00),
+                          height: 1.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SvgPicture.asset("assets/icons/ic_quick.svg"),
+              ],
+            ),
           ],
         ),
       ),

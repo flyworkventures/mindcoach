@@ -44,6 +44,11 @@ class _SpecialistDetailScreenState
   void initState() {
     super.initState();
     _specialist = widget.specialist;
+    // Polling yerine, detay ekrani acildiginda tek sefer guncel randevu cek.
+    Future.microtask(() {
+      if (!mounted) return;
+      ref.read(appointmentsProvider.notifier).refresh();
+    });
   }
 
   @override
@@ -446,8 +451,9 @@ class _SpecialistDetailScreenState
       ),
 
       // ======== BOTTOM BAR ========
-      extendBody:
-          true, // Alt barın arkasına sayfanın akmasını engelle/isteğe bağlı
+      // Alt barın altında body'nin görünmesini kapat; en alttaki gri/karanlık
+      // şerit hissini önler.
+      extendBody: false,
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(
           left: 16,
@@ -752,6 +758,28 @@ class _SpecialistDetailScreenState
               ],
             ),
           ),
+          if (bookedSlots.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF21BC87).withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  '${context.l10n.appointments}: ${bookedSlots.length}',
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF21BC87),
+                  ),
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 16),
 
           // Time slots

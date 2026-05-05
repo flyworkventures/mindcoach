@@ -164,8 +164,8 @@ class _AppointmentNotificationCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           child: Row(
             children: [
-              // Sol: koç fotoğrafı (varsa)
-              if (photoUrl != null && photoUrl!.isNotEmpty) ...[
+              // Sol: rehber fotoğrafı, yoksa takvim ikonu.
+              if (photoUrl != null && photoUrl!.isNotEmpty)
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
@@ -175,9 +175,10 @@ class _AppointmentNotificationCard extends StatelessWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => _placeholderIcon(),
                   ),
-                ),
-                const SizedBox(width: 12),
-              ],
+                )
+              else
+                _placeholderIcon(),
+              const SizedBox(width: 12),
 
               // Orta: başlık + alt yazı
               Expanded(

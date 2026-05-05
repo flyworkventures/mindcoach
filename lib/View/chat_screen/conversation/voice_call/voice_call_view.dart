@@ -12,12 +12,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_pcm_sound/flutter_pcm_sound.dart' as pcm;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/call_permissions.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
-import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
-import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/core/utils/realtime_auth_token.dart';
 import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/l10n/app_localizations.dart';
@@ -611,7 +611,8 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       if (premium) return;
       unawaited(() async {
         await TrialQuotaService.instance.addVoiceSeconds(1);
-        final remaining = await TrialQuotaService.instance.voiceSecondsRemaining();
+        final remaining = await TrialQuotaService.instance
+            .voiceSecondsRemaining();
         if (!mounted || _voiceTrialHardStopShown) return;
         if (remaining <= 0) {
           _voiceTrialHardStopShown = true;

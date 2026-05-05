@@ -72,13 +72,13 @@ class NotificationNotifier extends Notifier<NotificationState> {
 
   /// Refresh notifications
   /// Only updates state if there are actual changes
-  Future<void> refresh() async {
+  Future<void> refresh({bool force = false}) async {
     final now = DateTime.now();
     final recentlyRefreshed =
         _lastRefreshAt != null &&
         now.difference(_lastRefreshAt!) < _minRefreshInterval;
 
-    if (_isRefreshing || recentlyRefreshed) return;
+    if (_isRefreshing || (!force && recentlyRefreshed)) return;
 
     _isRefreshing = true;
     state = state.copyWith(isLoading: true, error: null);

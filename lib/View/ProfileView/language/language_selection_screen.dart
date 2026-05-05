@@ -33,8 +33,10 @@ class _LanguageSelectionScreenState
   @override
   void initState() {
     super.initState();
-    final current = ref.read(localeProvider);
-    _selectedCode = current?.languageCode ?? 'en';
+    // localeProvider ilk açılışta async yüklenirken null olabilir.
+    // Bu durumda sistem locale'i göster; aksi halde ayarlar ekranı yanlışlıkla
+    // "English" seçili açılıyordu.
+    _selectedCode = ref.read(localeProvider.notifier).getLanguageCode();
   }
 
   void _save() {

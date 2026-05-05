@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../Services/NotificationsService/in_app_notification_service.dart';
 import '../View/HomeView/home_screen.dart';
+import '../View/appointments/appointments_notifier.dart';
 import '../View/calendar_screen/calendar_screen.dart';
 import '../View/chat_screen/chat_notifier.dart';
 import '../View/chat_screen/presentation/pages/chat_screen.dart';
@@ -34,10 +35,10 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
 
     // İlk yükleme
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _refreshNotifications();
+      _refreshRealtimeData();
     });
 
-    // Bildirim: her 30 saniyede bir kontrol
+    // Bildirimleri sık ama hafif aralıkla kontrol et (anlık yakın deneyim).
     _startNotificationTimer();
     // Chat: her 60 saniyede bir yenile
     _startChatRefreshTimer();
@@ -50,6 +51,14 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
     _chatRefreshTimer?.cancel();
     super.dispose();
   }
+  void _startNotificationTimer() {
+    _notificationTimer?.cancel();
+    _notificationTimer = Timer.periodic(const Duration(seconds: 12), (_) {
+      if (!mounted) return;
+      _refreshRealtimeData();
+    });
+  }
+
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -57,22 +66,13 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
 
     // Uygulama ön plana gelince bildirim + chat yenile
     if (state == AppLifecycleState.resumed) {
-      _refreshNotifications();
+      _refreshRealtimeData();
       try {
         ref.read(chatProvider.notifier).refreshChats();
       } catch (e) {
         debugPrint('Chat yenileme hatası (lifecycle): $e');
       }
     }
-  }
-
-  void _startNotificationTimer() {
-    _notificationTimer?.cancel();
-    _notificationTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
-      if (mounted) {
-        _refreshNotifications();
-      }
-    });
   }
 
   void _startChatRefreshTimer() {
@@ -92,16 +92,83 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
     });
   }
 
-  Future<void> _refreshNotifications() async {
+  Future<void> _refreshRealtimeData() async {
     if (!mounted) return;
 
     try {
-      // Refresh notifications - ref.listen will automatically trigger _checkAndShowNotifications
-      // if there are new notifications
-      await ref.read(notificationNotifierProvider.notifier).refresh();
+      // Polling yok; sadece app acilisi/foreground aninda yenilenir.
+      await ref.read(notificationNotifierProvider.notifier).refresh(force: true);
     } catch (e) {
-      debugPrint('Error refreshing notifications: $e');
+      debugPrint('Error refreshing realtime data: $e');
     }
+  }
+
+  String _localizedAppointmentDetailsCta(BuildContext context) {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    switch (languageCode) {
+      case 'tr':
+        return 'Randevu detaylarini gormek icin dokun';
+      case 'de':
+        return 'Tippen, um Termindetails anzuzeigen';
+      case 'es':
+        return 'Toca para ver los detalles de la cita';
+      case 'fr':
+        return 'Touchez pour voir les details du rendez-vous';
+      case 'hi':
+        return 'Appointment details dekhne ke liye tap karein';
+      case 'it':
+        return 'Tocca per vedere i dettagli dell\'appuntamento';
+      case 'ja':
+        return '予定の詳細を見るにはタップしてください';
+      case 'ko':
+        return '예약 세부 정보를 보려면 탭하세요';
+      case 'pt':
+        return 'Toque para ver os detalhes do agendamento';
+      case 'ru':
+        return 'Нажмите, чтобы посмотреть детали встречи';
+      case 'zh':
+        return '点击查看预约详情';
+      default:
+        return 'Tap to view appointment details';
+    }
+  }
+
+  String _withCalendarEmoji(String title) {
+    final trimmed = title.trimLeft();
+    if (trimmed.startsWith('🗓️')) return title;
+    return '🗓️ $title';
+  }
+
+  String? _extractConsultantPhotoUrl(Map<String, dynamic> metadata) {
+    final candidates = <dynamic>[
+      metadata['photoUrl'],
+      metadata['consultantPhotoUrl'],
+      metadata['consultant_photo_url'],
+      metadata['consultantPhoto'],
+      metadata['guidePhotoUrl'],
+    ];
+
+    final consultantObj = metadata['consultant'];
+    if (consultantObj is Map<String, dynamic>) {
+      candidates.addAll([
+        consultantObj['photoURL'],
+        consultantObj['photoUrl'],
+        consultantObj['avatar'],
+      ]);
+    }
+
+    for (final candidate in candidates) {
+      if (candidate is String && candidate.trim().isNotEmpty) {
+        return candidate.trim();
+      }
+    }
+    return null;
+  }
+
+  void _handleAppointmentNotificationTap() {
+    if (!mounted) return;
+    // Randevu bildirimi tiklandiginda Takvim sekmesine yonlendir.
+    ref.read(bottomNavProvider.notifier).setTab(2);
   }
 
   void _checkAndShowNotifications() {
@@ -110,6 +177,7 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
     final notificationState = ref.read(notificationNotifierProvider);
     final notifications = notificationState.notifications;
     final now = DateTime.now();
+    bool shouldRefreshAppointments = false;
 
     // Show only new notifications that haven't been shown yet AND are recent (within last 10 minutes)
     int newNotificationsShown = 0;
@@ -145,9 +213,7 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
           }
 
           // metadata'dan ek bilgileri çek
-          final photoUrl =
-              notification.metadata['photoUrl'] as String? ??
-              notification.metadata['consultantPhotoUrl'] as String?;
+          final photoUrl = _extractConsultantPhotoUrl(notification.metadata);
           final appointmentType =
               notification.metadata['appointmentType'] as String? ?? '';
           final isMissed =
@@ -159,12 +225,16 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
           // Show the notification
           InAppNotificationService.showAppointmentNotification(
             context,
-            title: notification.title,
-            subtitle: notification.subtitle,
+            title: _withCalendarEmoji(notification.title),
+            subtitle: _localizedAppointmentDetailsCta(context),
             duration: const Duration(seconds: 5),
+            onTap: _handleAppointmentNotificationTap,
             photoUrl: photoUrl,
             isMissed: isMissed,
           );
+          if (!isMissed) {
+            shouldRefreshAppointments = true;
+          }
           _shownNotificationIds.add(notification.id);
           newNotificationsShown++;
         }
@@ -175,6 +245,10 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
       debugPrint(
         '✅ Shown $newNotificationsShown new appointment notification(s)',
       );
+    }
+
+    if (shouldRefreshAppointments) {
+      ref.read(appointmentsProvider.notifier).refresh();
     }
   }
 

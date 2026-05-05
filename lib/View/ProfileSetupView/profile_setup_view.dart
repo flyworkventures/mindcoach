@@ -41,6 +41,8 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
 
   void _goNext() {
     if (_currentPage < _totalSteps - 1) {
+      // Özellikle NameGender adımından çıkarken klavyeyi kapat.
+      FocusManager.instance.primaryFocus?.unfocus();
       _pageController.nextPage(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,

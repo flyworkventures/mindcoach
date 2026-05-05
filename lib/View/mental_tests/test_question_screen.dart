@@ -25,7 +25,12 @@ class TestQuestionScreen extends ConsumerWidget {
         : flowState.totalQuestions;
 
     final answerOptions = buildAnswerOptionsL10n(context);
-    final questions = buildDummyQuestionsL10n(context);
+    final questions = buildQuestionsL10n(
+      context,
+      testTitle: flowState.testTitle ?? l10n.stressScaleTest,
+      totalQuestions: totalFromFlow,
+      seed: flowState.questionSeed,
+    );
 
     final total = totalFromFlow.clamp(1, questions.length);
     final currentIndex = qState.currentIndex.clamp(1, total);

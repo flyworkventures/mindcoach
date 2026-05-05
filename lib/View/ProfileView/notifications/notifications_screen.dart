@@ -1,8 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mindcoach/View/appointments/appointment_detail_screen.dart';
+import 'package:mindcoach/View/appointments/appointments_notifier.dart';
+import 'package:mindcoach/core/models/appointment_info.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
+import 'package:mindcoach/core/widgets/future_progress_dialog.dart';
 import 'package:mindcoach/features/notifications/notification_notifier.dart';
 import 'package:mindcoach/models/notification_model.dart';
 
@@ -20,7 +26,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     super.initState();
     // Refresh notifications when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(notificationNotifierProvider.notifier).refresh();
+      ref.read(notificationNotifierProvider.notifier).refresh(force: true);
     });
   }
 
@@ -225,16 +231,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
-                    child: const Padding(
+                    child: Padding(
                       padding: EdgeInsets.all(4.0),
-                      child: Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 20,
-                        color: Colors.black,
-                      ),
+                      child: SvgPicture.asset('assets/icons/ic_bakc.svg'),
                     ),
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: 4.w),
                   Text(
                     l10n.notifications,
                     style: const TextStyle(
@@ -326,7 +328,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                             onPressed: () {
                               ref
                                   .read(notificationNotifierProvider.notifier)
-                                  .refresh();
+                                  .refresh(force: true);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF2BD383),
@@ -373,7 +375,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       onRefresh: () async {
                         await ref
                             .read(notificationNotifierProvider.notifier)
-                            .refresh();
+                            .refresh(force: true);
                       },
                       color: const Color(0xFF2BD383),
                       backgroundColor: Colors.white,
@@ -431,10 +433,40 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   }
 }
 
-class _NotificationCard extends StatelessWidget {
+class _NotificationCard extends ConsumerWidget {
   final NotificationModel notification;
 
   const _NotificationCard({required this.notification});
+
+  String _localizedAppointmentDetailsCta(BuildContext context) {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    switch (languageCode) {
+      case 'tr':
+        return 'Randevu detaylarini gormek icin dokun';
+      case 'de':
+        return 'Tippen, um Termindetails anzuzeigen';
+      case 'es':
+        return 'Toca para ver los detalles de la cita';
+      case 'fr':
+        return 'Touchez pour voir les details du rendez-vous';
+      case 'hi':
+        return 'Appointment details dekhne ke liye tap karein';
+      case 'it':
+        return 'Tocca per vedere i dettagli dell\'appuntamento';
+      case 'ja':
+        return '予定の詳細を見るにはタップしてください';
+      case 'ko':
+        return '예약 세부 정보를 보려면 탭하세요';
+      case 'pt':
+        return 'Toque para ver os detalhes do agendamento';
+      case 'ru':
+        return 'Нажмите, чтобы посмотреть детали встречи';
+      case 'zh':
+        return '点击查看预约详情';
+      default:
+        return 'Tap to view appointment details';
+    }
+  }
 
   String _formatDate(String? dateString) {
     if (dateString == null) return '';
@@ -461,8 +493,63 @@ class _NotificationCard extends StatelessWidget {
     }
   }
 
+  String? _extractPhotoUrl(Map<String, dynamic> metadata) {
+    final candidates = <dynamic>[
+      metadata['photoUrl'],
+      metadata['consultantPhotoUrl'],
+      metadata['consultant_photo_url'],
+      metadata['consultantPhoto'],
+      metadata['guidePhotoUrl'],
+    ];
+
+    final consultantObj = metadata['consultant'];
+    if (consultantObj is Map<String, dynamic>) {
+      candidates.addAll([
+        consultantObj['photoURL'],
+        consultantObj['photoUrl'],
+        consultantObj['avatar'],
+      ]);
+    }
+
+    for (final candidate in candidates) {
+      if (candidate is String && candidate.trim().isNotEmpty) {
+        return candidate.trim();
+      }
+    }
+    return null;
+  }
+
+  AppointmentInfo? _findAppointmentById(WidgetRef ref, int appointmentId) {
+    final map = ref.read(appointmentsProvider).appointments;
+    for (final infos in map.values) {
+      for (final info in infos) {
+        if (info.appointmentId == appointmentId) return info;
+      }
+    }
+    return null;
+  }
+
+  Future<void> _openAppointmentWithLoading(
+    BuildContext context,
+    WidgetRef ref,
+    int? appointmentId,
+  ) async {
+    if (appointmentId == null) return;
+    await context.runWithProgressDialog(() async {
+      await ref.read(appointmentsProvider.notifier).refresh();
+      if (!context.mounted) return;
+      final info = _findAppointmentById(ref, appointmentId);
+      if (info == null) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => AppointmentDetailScreen(appointment: info),
+        ),
+      );
+    }, message: context.l10n.pleaseWait);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final metaType = notification.metadata['type'] as String? ?? '';
     final bool isAppointment =
         metaType == 'appointment' ||
@@ -473,86 +560,123 @@ class _NotificationCard extends StatelessWidget {
     // RANDEVU (APPOINTMENT) BİLDİRİMİ İÇİN ÖZEL TASARIM
     // ----------------------------------------------------
     if (isAppointment) {
-      return Container(
-        padding: const EdgeInsets.all(10), // Figma Padding: 10px
-        decoration: BoxDecoration(
-          color: const Color(0xFF21BC87).withValues(alpha: 0.10), // %10 Yeşil
-          borderRadius: BorderRadius.circular(16), // Figma Radius: 16px
-          border: Border.all(
-            color: const Color(0xFF21BC87), // 1px Yeşil Border
-            width: 1,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    notification
-                        .title, // "🗓️ Your appointment will start in 30 min."
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700, // Bold
-                      color: Colors.black,
-                      height: 18 / 14, // Figma Line Height: 18px
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                if (notification.sentTime != null)
-                  Text(
-                    _formatDate(notification.sentTime),
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF96989C),
-                    ),
-                  ),
-              ],
-            ),
+      final photoUrl = _extractPhotoUrl(notification.metadata);
+      final appointmentIdRaw = notification.metadata['appointmentId'];
+      final appointmentId = appointmentIdRaw is int
+          ? appointmentIdRaw
+          : int.tryParse(appointmentIdRaw?.toString() ?? '');
 
-            // Eğer backend'den fazladan bir açıklama da geliyorsa (opsiyonel)
-            if (notification.subtitle.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              Text(
-                notification.subtitle,
-                style: const TextStyle(
-                  fontFamily: 'Geist',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF96989C),
-                  height: 1.2,
+      return GestureDetector(
+        onTap: () => _openAppointmentWithLoading(context, ref, appointmentId),
+        child: Container(
+          padding: const EdgeInsets.all(10), // Figma Padding: 10px
+          decoration: BoxDecoration(
+            color: const Color(0xFF21BC87).withValues(alpha: 0.10), // %10 Yeşil
+            borderRadius: BorderRadius.circular(16), // Figma Radius: 16px
+            border: Border.all(
+              color: const Color(0xFF21BC87), // 1px Yeşil Border
+              width: 1,
+            ),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (photoUrl != null)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImage(
+                    imageUrl: photoUrl,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                    fadeInDuration: Duration.zero,
+                    fadeOutDuration: Duration.zero,
+                    memCacheWidth: 120,
+                    memCacheHeight: 120,
+                    placeholder: (_, _) => const SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: ColoredBox(color: Color(0x1421BC87)),
+                    ),
+                    errorWidget: (_, _, _) => const Icon(
+                      Icons.calendar_today_rounded,
+                      color: Color(0xFF21BC87),
+                      size: 28,
+                    ),
+                  ),
+                )
+              else
+                const Icon(
+                  Icons.calendar_today_rounded,
+                  color: Color(0xFF21BC87),
+                  size: 28,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            notification.title,
+                            style: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                              height: 18 / 14,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        if (notification.sentTime != null)
+                          Text(
+                            _formatDate(notification.sentTime),
+                            style: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF96989C),
+                            ),
+                          ),
+                      ],
+                    ),
+                    if (notification.subtitle.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        notification.subtitle,
+                        style: const TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF96989C),
+                          height: 1.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                    Text(
+                      _localizedAppointmentDetailsCta(context),
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF21BC87),
+                        decoration: TextDecoration.underline,
+                        decorationColor: Color(0xFF21BC87),
+                        height: 14 / 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
-
-            const SizedBox(height: 10), // Figma Gap: 10px
-
-            GestureDetector(
-              onTap: () {
-                // TODO: Randevu detaylarına yönlendir
-              },
-              child: const Text(
-                'Click to view appointment details',
-                style: TextStyle(
-                  fontFamily: 'Geist',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500, // Medium
-                  color: Color(0xFF21BC87), // Primary Color
-                  decoration: TextDecoration.underline,
-                  decorationColor: Color(0xFF21BC87),
-                  height: 14 / 12, // Figma Line Height: 14px
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       );
     }

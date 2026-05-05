@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/global_constants/month_strings.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
-import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../core/models/appointment_info.dart';
@@ -83,6 +83,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       backgroundColor: Colors.white, // Figma arkaplanı beyaz
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +117,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
               // 5. Seçilen Tarihteki Randevu Listesi
               if (_selectedDay != null) ...[
-                ..._getAppointmentsForDay(_selectedDay!).map((info) {
+                ..._getAppointmentsForDay(_selectedDay!).asMap().entries.map((entry) {
+                  final sessionOrder = entry.key + 1;
+                  final info = entry.value;
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
@@ -129,6 +133,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       context: context,
                       date: _selectedDay!,
                       info: info,
+                      sessionOrder: sessionOrder,
                     ),
                   );
                 }),
@@ -419,11 +424,27 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           },
 
           markerBuilder: (context, day, events) {
+            final isSelectedDay = isSameDay(_selectedDay, day);
+            if (events.isNotEmpty && isSelectedDay) {
+              // Seçili günde nokta beyaz olmalı.
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  width: 6,
+                  height: 6,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              );
+            }
             if (events.isNotEmpty) {
               return Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: 4),
+                  margin: const EdgeInsets.only(bottom: 8),
                   width: 6,
                   height: 6,
                   decoration: const BoxDecoration(
@@ -495,6 +516,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     required BuildContext context,
     required DateTime date,
     required AppointmentInfo info,
+    required int sessionOrder,
   }) {
     final langCode = context.langCode;
     final consultantId = info.consultantId;
@@ -531,17 +553,16 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         DateTime(date.year, date.month, date.day, 9, 0);
     final formattedTime = DateFormat('HH:mm').format(appointmentDateTime);
 
-    // 1. İstenen 3 rengi bir listeye tanımlıyoruz
-    final List<Color> themeColors = [
-      const Color(0xFF21BC87), // Yeşil
-      const Color(0xFFA855F7), // Mor
-      const Color.fromARGB(255, 144, 11, 25), // Koyu Kırmızı / Bordo
-    ];
-
-    // 2. Rastgele ama scroll esnasında değişmeyecek sabit bir indeks oluşturuyoruz
-    final int colorIndex =
-        (consultantId?.hashCode ?? info.hashCode).abs() % themeColors.length;
-    final Color selectedColor = themeColors[colorIndex];
+    // Bugünkü seanslarda sıra bazlı renk:
+    // 2. seans mor, 3. seans kırmızı, 4+ tekrar mevcut yeşil.
+    final Color selectedColor;
+    if (sessionOrder == 2) {
+      selectedColor = const Color(0xFFA855F7);
+    } else if (sessionOrder == 3) {
+      selectedColor = const Color(0xFFDC2626);
+    } else {
+      selectedColor = _kPrimaryGreen;
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
