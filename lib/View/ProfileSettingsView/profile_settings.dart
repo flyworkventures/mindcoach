@@ -12,9 +12,9 @@ import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
 import '../../Riverpod/Providers/all_providers.dart';
 import '../../core/routes/page_routes.dart';
 import '../../core/utils/app_constants.dart';
+import '../../core/utils/context_l10n_extensions.dart';
 import '../../core/utils/revenuecat_paywalls.dart';
 import '../../core/widgets/future_progress_dialog.dart';
-import '../../core/utils/context_l10n_extensions.dart';
 import '../../models/user_model.dart';
 import '../auth/presentation/controller/auth_controller.dart';
 
@@ -117,7 +117,10 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.errorGeneral), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text(context.l10n.errorGeneral),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -174,13 +177,17 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     );
   }
 
-  Future<bool> _deleteAccountWithFeedback(DeleteAccountFeedback feedback) async {
+  Future<bool> _deleteAccountWithFeedback(
+    DeleteAccountFeedback feedback,
+  ) async {
     final authState = ref.read(authControllerProvider);
     if (authState.isLoading) return false;
 
     try {
       await context.runWithProgressDialog(
-        () => ref.read(authControllerProvider.notifier).deleteAccount(
+        () => ref
+            .read(authControllerProvider.notifier)
+            .deleteAccount(
               deleteReason: feedback.reason,
               deleteMessage: feedback.message,
             ),
@@ -268,7 +275,9 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                                   color: Colors.white,
                                   image: ppPath.isNotEmpty
                                       ? DecorationImage(
-                                          image: CachedNetworkImageProvider(ppPath),
+                                          image: CachedNetworkImageProvider(
+                                            ppPath,
+                                          ),
                                           fit: BoxFit.cover,
                                         )
                                       : null,
@@ -447,7 +456,8 @@ class _DeleteAccountFlowSheet extends StatefulWidget {
   const _DeleteAccountFlowSheet({required this.onDeleteConfirmed});
 
   @override
-  State<_DeleteAccountFlowSheet> createState() => _DeleteAccountFlowSheetState();
+  State<_DeleteAccountFlowSheet> createState() =>
+      _DeleteAccountFlowSheetState();
 }
 
 class _DeleteAccountFlowSheetState extends State<_DeleteAccountFlowSheet> {
@@ -473,32 +483,47 @@ class _DeleteAccountFlowSheetState extends State<_DeleteAccountFlowSheet> {
           onBack: _goBack,
           onNext: _goNext,
           onSwitchToMonthlyPlan: () async {
-            Navigator.of(context).pop();
+            final rootContext = Navigator.of(
+              context,
+              rootNavigator: true,
+            ).context;
             await Future.microtask(() {});
-            await presentProOffersPaywall();
+            if (!rootContext.mounted) return;
+            await rootContext.runWithProgressDialog(
+              () => presentProOffersPaywall(),
+              message: rootContext.l10n.pleaseWait,
+            );
           },
         );
       case 2:
         return _FinalOfferBottomSheet(
           onBack: _goBack,
           onAcceptOffer: () async {
-            Navigator.of(context).pop();
+            final rootContext = Navigator.of(
+              context,
+              rootNavigator: true,
+            ).context;
             await Future.microtask(() {});
-            await presentDiscountPaywall();
+            if (!rootContext.mounted) return;
+            await rootContext.runWithProgressDialog(
+              () => presentDiscountPaywall(),
+              message: rootContext.l10n.pleaseWait,
+            );
           },
           onConfirmDelete: () async {
-            final ok = await widget.onDeleteConfirmed(_feedback);
-            if (!mounted || !ok) return;
+            if (!mounted) return;
             setState(() => _step = 3);
           },
         );
       default:
         return _CancelledBottomSheet(
           onReactivate: () => Navigator.of(context).pop(),
-          onDone: () {
+          onDone: () async {
+            final ok = await widget.onDeleteConfirmed(_feedback);
+            if (!mounted || !ok) return;
             Navigator.pushNamedAndRemoveUntil(
               context,
-              PageRoutes.goodbye,
+              PageRoutes.login,
               (route) => false,
             );
           },
@@ -514,10 +539,7 @@ class _DeleteAccountBottomSheet extends StatefulWidget {
   final ValueChanged<DeleteAccountFeedback> onNext;
   final DeleteAccountFeedback? initialFeedback;
 
-  const _DeleteAccountBottomSheet({
-    required this.onNext,
-    this.initialFeedback,
-  });
+  const _DeleteAccountBottomSheet({required this.onNext, this.initialFeedback});
 
   @override
   State<_DeleteAccountBottomSheet> createState() =>
@@ -548,7 +570,9 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
     _initializedFromFeedback = true;
     final reasons = _getReasons(context);
     final initialReason = widget.initialFeedback?.reason;
-    _selectedIndex = initialReason == null ? null : reasons.indexOf(initialReason);
+    _selectedIndex = initialReason == null
+        ? null
+        : reasons.indexOf(initialReason);
     if (_selectedIndex == -1) _selectedIndex = null;
     _messageController.text = widget.initialFeedback?.message ?? '';
   }
@@ -642,7 +666,10 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
                       children: [
                         ...List.generate(
                           _getReasons(context).length,
-                          (index) => _buildRadioItem(index, _getReasons(context)[index]),
+                          (index) => _buildRadioItem(
+                            index,
+                            _getReasons(context)[index],
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Padding(
@@ -733,7 +760,8 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
                         child: OutlinedButton(
                           onPressed: () {
                             final reasons = _getReasons(context);
-                            final selectedReason = (_selectedIndex != null &&
+                            final selectedReason =
+                                (_selectedIndex != null &&
                                     _selectedIndex! >= 0 &&
                                     _selectedIndex! < reasons.length)
                                 ? reasons[_selectedIndex!]
@@ -1029,9 +1057,13 @@ class _SpecialOfferBottomSheet extends StatelessWidget {
                         const SizedBox(height: 16),
                         _buildFeatureItem(context.l10n.featureAllCharacters),
                         const SizedBox(height: 12),
-                        _buildFeatureItem(context.l10n.featureUnlimitedVideoCalls),
+                        _buildFeatureItem(
+                          context.l10n.featureUnlimitedVideoCalls,
+                        ),
                         const SizedBox(height: 12),
-                        _buildFeatureItem(context.l10n.featureUnlimitedCharacterEditing),
+                        _buildFeatureItem(
+                          context.l10n.featureUnlimitedCharacterEditing,
+                        ),
                       ],
                     ),
                   ),
@@ -1483,7 +1515,7 @@ class _FinalOfferBottomSheet extends StatelessWidget {
 // ADIM 4: CANCELLED (SAD TO SEE YOU GO) BOTTOM SHEET
 // -----------------------------------------------------------------------------
 class _CancelledBottomSheet extends StatelessWidget {
-  final VoidCallback onDone;
+  final Future<void> Function() onDone;
   final VoidCallback onReactivate;
 
   const _CancelledBottomSheet({
@@ -1647,7 +1679,9 @@ class _CancelledBottomSheet extends StatelessWidget {
                     width: double.infinity,
                     height: 40,
                     child: OutlinedButton(
-                      onPressed: onDone,
+                      onPressed: () async {
+                        await onDone();
+                      },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.white,
                         side: BorderSide(
@@ -1762,6 +1796,3 @@ class _ProfileTextField extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -21,6 +21,93 @@ class NotificationsScreen extends ConsumerStatefulWidget {
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
+  String _localizedLoadErrorText(BuildContext context) {
+    switch (Localizations.localeOf(context).languageCode) {
+      case 'tr':
+        return 'Bildirimler yuklenirken bir hata olustu';
+      case 'de':
+        return 'Beim Laden der Benachrichtigungen ist ein Fehler aufgetreten';
+      case 'es':
+        return 'Se produjo un error al cargar las notificaciones';
+      case 'fr':
+        return 'Une erreur s\'est produite lors du chargement des notifications';
+      case 'hi':
+        return 'Notifications load karte waqt ek hata hua';
+      case 'it':
+        return 'Si e verificato un errore durante il caricamento delle notifiche';
+      case 'ja':
+        return '通知の読み込み中にエラーが発生しました';
+      case 'ko':
+        return '알림을 불러오는 중 오류가 발생했습니다';
+      case 'pt':
+        return 'Ocorreu um erro ao carregar as notificacoes';
+      case 'ru':
+        return 'Произошла ошибка при загрузке уведомлений';
+      case 'zh':
+        return '加载通知时发生错误';
+      default:
+        return 'An error occurred while loading notifications';
+    }
+  }
+
+  String _localizedRetryText(BuildContext context) {
+    switch (Localizations.localeOf(context).languageCode) {
+      case 'tr':
+        return 'Tekrar dene';
+      case 'de':
+        return 'Erneut versuchen';
+      case 'es':
+        return 'Intentar de nuevo';
+      case 'fr':
+        return 'Reessayer';
+      case 'hi':
+        return 'Dobara koshish karein';
+      case 'it':
+        return 'Riprova';
+      case 'ja':
+        return '再試行';
+      case 'ko':
+        return '다시 시도';
+      case 'pt':
+        return 'Tentar novamente';
+      case 'ru':
+        return 'Повторить';
+      case 'zh':
+        return '重试';
+      default:
+        return 'Try Again';
+    }
+  }
+
+  String _localizedEmptyNotificationsText(BuildContext context) {
+    switch (Localizations.localeOf(context).languageCode) {
+      case 'tr':
+        return 'Henuz bildiriminiz yok';
+      case 'de':
+        return 'Sie haben noch keine Benachrichtigungen';
+      case 'es':
+        return 'Aun no tienes notificaciones';
+      case 'fr':
+        return 'Vous n\'avez pas encore de notifications';
+      case 'hi':
+        return 'Aapke paas abhi koi notification nahi hai';
+      case 'it':
+        return 'Non hai ancora notifiche';
+      case 'ja':
+        return 'まだ通知はありません';
+      case 'ko':
+        return '아직 알림이 없습니다';
+      case 'pt':
+        return 'Voce ainda nao tem notificacoes';
+      case 'ru':
+        return 'У вас пока нет уведомлений';
+      case 'zh':
+        return '您还没有通知';
+      default:
+        return 'You have no notifications yet';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -140,76 +227,6 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     }
   }
 
-  /// Silme dialog'unu göster
-  Future<bool> _showDeleteDialog(
-    BuildContext context,
-    int notificationId,
-  ) async {
-    final l10n = context.l10n;
-    return await showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              title: Text(
-                l10n.deleteNotificationConfirmTitle,
-                style: const TextStyle(
-                  fontFamily: 'Geist',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-              ),
-              content: Text(
-                l10n.deleteNotificationConfirmMessage,
-                style: const TextStyle(
-                  fontFamily: 'Geist',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF666666),
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(
-                    l10n.cancel,
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF666666),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop(true);
-                    // Bildirimi sil
-                    await ref
-                        .read(notificationNotifierProvider.notifier)
-                        .deleteNotification(notificationId);
-                  },
-                  child: Text(
-                    l10n.delete,
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ) ??
-        false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -316,7 +333,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'Bildirimler yüklenirken bir hata oluştu',
+                            _localizedLoadErrorText(context),
                             style: const TextStyle(
                               fontFamily: 'Geist',
                               fontSize: 16,
@@ -337,8 +354,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Tekrar Dene',
+                            child: Text(
+                              _localizedRetryText(context),
                               style: TextStyle(
                                 fontFamily: 'Geist',
                                 fontSize: 14,
@@ -361,7 +378,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'Henüz bildiriminiz yok',
+                            _localizedEmptyNotificationsText(context),
                             style: const TextStyle(
                               fontFamily: 'Geist',
                               fontSize: 16,
@@ -408,15 +425,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                 size: 28,
                               ),
                             ),
-                            confirmDismiss: (direction) async {
-                              // Dialog göster ve kullanıcının onayını al
-                              return await _showDeleteDialog(
-                                context,
-                                notification.id,
-                              );
-                            },
-                            onDismissed: (direction) {
-                              // Dialog'da onaylandıysa zaten silindi
+                            onDismissed: (direction) async {
+                              await ref
+                                  .read(notificationNotifierProvider.notifier)
+                                  .deleteNotification(notification.id);
                             },
                             child: _NotificationCard(
                               notification: notification,
@@ -442,7 +454,7 @@ class _NotificationCard extends ConsumerWidget {
     final languageCode = Localizations.localeOf(context).languageCode;
     switch (languageCode) {
       case 'tr':
-        return 'Randevu detaylarini gormek icin dokun';
+        return 'Randevu detaylarini görmek için dokun';
       case 'de':
         return 'Tippen, um Termindetails anzuzeigen';
       case 'es':
@@ -574,7 +586,9 @@ class _NotificationCard extends ConsumerWidget {
             color: const Color(0xFF21BC87).withValues(alpha: 0.10), // %10 Yeşil
             borderRadius: BorderRadius.circular(16), // Figma Radius: 16px
             border: Border.all(
-              color: const Color(0xFF21BC87), // 1px Yeşil Border
+              color: const Color(
+                0xFF21BC87,
+              ).withValues(alpha: 0.5), // 1px Yeşil Border
               width: 1,
             ),
           ),

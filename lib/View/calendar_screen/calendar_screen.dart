@@ -117,7 +117,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
               // 5. Seçilen Tarihteki Randevu Listesi
               if (_selectedDay != null) ...[
-                ..._getAppointmentsForDay(_selectedDay!).asMap().entries.map((entry) {
+                ..._getAppointmentsForDay(_selectedDay!).asMap().entries.map((
+                  entry,
+                ) {
                   final sessionOrder = entry.key + 1;
                   final info = entry.value;
                   return GestureDetector(
