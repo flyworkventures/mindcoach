@@ -352,6 +352,49 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
     }
   }
 
+  /// Ses kaydını API yanıtını beklemeden sohbette göster.
+  void addOptimisticVoiceMessage({
+    required int consultantId,
+    required String localAudioPath,
+    String message = '',
+  }) {
+    final optimistic = MessageModel(
+      messageId: -DateTime.now().millisecondsSinceEpoch,
+      chatId: 0,
+      senderId: 0,
+      sender: 'user',
+      message: message,
+      sentTime: DateTime.now().toIso8601String(),
+      isVoiceMessage: true,
+      voiceURL: localAudioPath,
+      isFile: false,
+    );
+    state = state.copyWith(messages: [...state.messages, optimistic]);
+    _updateChatListLastMessage(consultantId, '[Sesli Mesaj]', true);
+  }
+
+  /// Resmi API yanıtını beklemeden sohbette göster.
+  void addOptimisticImageMessage({
+    required int consultantId,
+    required String localImagePath,
+    String message = '',
+  }) {
+    final optimistic = MessageModel(
+      messageId: -DateTime.now().millisecondsSinceEpoch,
+      chatId: 0,
+      senderId: 0,
+      sender: 'user',
+      message: message,
+      sentTime: DateTime.now().toIso8601String(),
+      isFile: true,
+      fileURL: localImagePath,
+      isVoiceMessage: false,
+    );
+    state = state.copyWith(messages: [...state.messages, optimistic]);
+    final lastMessage = message.trim().isNotEmpty ? message.trim() : '[Resim]';
+    _updateChatListLastMessage(consultantId, lastMessage, true);
+  }
+
   void receiveDummyReply({
     required SpecialistId id,
     String text = "Got it. Tell me more.",

@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
+import 'package:mindcoach/Services/rive_preload_service.dart';
+import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
+import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/routes/video_call_route_args.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
@@ -20,8 +22,6 @@ import 'package:mindcoach/models/message_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:shimmer/shimmer.dart';
-
-import 'package:mindcoach/Services/rive_preload_service.dart';
 
 import '../notifiers/conversation_notifier.dart';
 
@@ -64,7 +64,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       if (!mounted) return;
       try {
         // Önce eski konuşma mesajlarını temizle (A→B geçişinde yanlış mesaj görünmesin)
-        ref.read(conversationsProvider.notifier).clearMessages(widget.specialistId.id);
+        ref
+            .read(conversationsProvider.notifier)
+            .clearMessages(widget.specialistId.id);
         ref.read(conversationsProvider.notifier).clearSelectedImage();
         _lastProcessedImagePath = null;
         if (mounted) {
@@ -76,7 +78,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         debugPrint(" ConversationPage initState hatası: $e");
       }
     });
-
   }
 
   @override
@@ -121,6 +122,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     final conversationState = ref.watch(conversationsProvider);
     final List<MessageModel> allMessages = conversationState.messages;
     final bool isLoadingMessages = conversationState.isLoadingMessages;
+    final bool hasExistingChatThread = ref.watch(
+      chatProvider.select(
+        (chatState) => chatState.chats.any(
+          (chat) => chat.consultantId == widget.specialistId.id,
+        ),
+      ),
+    );
 
     final selectedImage = ref.watch(
       conversationsProvider.select((state) => state.selectedImage),
@@ -174,7 +182,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
                 // ── Messages ──
                 Expanded(
-                  child: (isLoadingMessages && messages.isEmpty)
+                  child:
+                      (isLoadingMessages &&
+                          messages.isEmpty &&
+                          hasExistingChatThread)
                       ? const _ConversationShimmer()
                       : ListView.builder(
                           physics: const ClampingScrollPhysics(),
@@ -252,8 +263,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                   ? CachedNetworkImage(
                       imageUrl: photoURL,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => const SizedBox.shrink(),
-                      errorWidget: (_, __, ___) => Image.asset(
+                      placeholder: (_, _) => const SizedBox.shrink(),
+                      errorWidget: (_, _, _) => Image.asset(
                         'assets/images/profile_avatar.jpeg',
                         fit: BoxFit.cover,
                       ),
@@ -318,7 +329,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             builder: (context, ref, _) {
               return GestureDetector(
                 onTap: () async {
-                  final isPremium = ref.watch(AllProviders.premiumProvider).isPremium;
+                  final isPremium = ref
+                      .watch(AllProviders.premiumProvider)
+                      .isPremium;
                   if (!isPremium) {
                     await RevenueCatUI.presentPaywall();
                   } else {
@@ -336,7 +349,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             builder: (context, ref, _) {
               return GestureDetector(
                 onTap: () async {
-                  final isPremium = ref.watch(AllProviders.premiumProvider).isPremium;
+                  final isPremium = ref
+                      .watch(AllProviders.premiumProvider)
+                      .isPremium;
                   if (!isPremium) {
                     await RevenueCatUI.presentPaywall();
                   } else {
@@ -367,7 +382,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     final canSend = hasText || hasImage;
 
     // Figma'daki tatlı yeşil tonu
-    const primaryGreen = Color(0xFF61D28A);
+    const primaryGreen = Color(0xFF21BC87);
     // Figma'daki %5 opacity border rengi
     final borderColor = Colors.black.withOpacity(0.05);
 
@@ -381,49 +396,66 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           if (isRecording)
             Container(
               margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xFFFFF4F4),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFFFD7D7)),
               ),
               child: Row(
                 children: [
                   Container(
-                    width: 10,
-                    height: 10,
+                    width: 9,
+                    height: 9,
                     decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    _formatDuration(recordingDuration),
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                  const SizedBox(width: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      _formatDuration(recordingDuration),
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF101828),
+                      ),
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 4),
                   if (_recorderController != null)
                     Expanded(
                       child: SizedBox(
-                        height: 30,
+                        height: 26,
                         child: AudioWaveforms(
-                          size: const Size(double.infinity, 30),
+                          size: const Size(double.infinity, 26),
                           recorderController: _recorderController!,
                           waveStyle: const WaveStyle(
-                            waveColor: Colors.grey,
+                            waveColor: Color(0xFFEF4444),
                             extendWaveform: true,
                             showMiddleLine: false,
-                            waveThickness: 2.0,
+                            waveThickness: 2.2,
                           ),
                         ),
                       ),
                     ),
+                  const SizedBox(width: 4),
                   IconButton(
+                    constraints: const BoxConstraints(
+                      minWidth: 28,
+                      minHeight: 28,
+                    ),
+                    padding: EdgeInsets.zero,
                     onPressed: () async {
                       if (mounted) {
                         await ref
@@ -465,8 +497,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Text(
-                    "Image",
+                  Text(
+                    context.l10n.image,
                     style: TextStyle(
                       fontFamily: 'Geist',
                       fontSize: 14,
@@ -589,8 +621,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                           height:
                               42, // Dıştaki 48px, padding 3px alt-üst olunca burası tam 42px kalıyor
                           decoration: BoxDecoration(
-                            // Kayıt anındayken kullanıcının anlaması için kırmızıya dönmesi güzel bir UX katar
-                            color: isRecording ? Colors.red : primaryGreen,
+                            color: primaryGreen,
                             shape: BoxShape.circle,
                           ),
                           child: _isSendingImage
@@ -603,7 +634,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                                     ),
                                   ),
                                 )
-                              : canSend
+                              : (canSend || isRecording)
                               ? SvgPicture.asset(
                                   'assets/icons/ic_send.svg',
                                   width: 20,
@@ -850,6 +881,14 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         return;
       }
 
+      // Ses gönderildiği anda kullanıcı balonunu optimistik olarak göster.
+      ref
+          .read(conversationsProvider.notifier)
+          .addOptimisticVoiceMessage(
+            consultantId: widget.specialistId.id,
+            localAudioPath: audioPath,
+          );
+
       ref
           .read(conversationsProvider.notifier)
           .sendVoiceMessage(
@@ -985,6 +1024,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       final file = File(image.path);
       final messageText = _messageController.text.trim();
 
+      // Resmi anında kullanıcı balonu olarak göster.
+      ref.read(conversationsProvider.notifier).addOptimisticImageMessage(
+        consultantId: widget.specialistId.id,
+        localImagePath: image.path,
+        message: messageText,
+      );
+
       ref
           .read(conversationsProvider.notifier)
           .sendImageMessage(
@@ -1100,7 +1146,9 @@ class _ShimmerBubble extends StatelessWidget {
         children: [
           const _CoachAvatar(photoURL: '', size: 28),
           const SizedBox(width: 8),
-          Flexible(child: Align(alignment: Alignment.centerLeft, child: bubble)),
+          Flexible(
+            child: Align(alignment: Alignment.centerLeft, child: bubble),
+          ),
         ],
       ),
     );
@@ -1212,8 +1260,8 @@ class _CoachAvatar extends StatelessWidget {
             ? CachedNetworkImage(
                 imageUrl: photoURL,
                 fit: BoxFit.cover,
-                placeholder: (_, __) => const SizedBox.shrink(),
-                errorWidget: (_, __, ___) => Container(
+                placeholder: (_, _) => const SizedBox.shrink(),
+                errorWidget: (_, _, _) => Container(
                   color: const Color(0xFFF5F5F5),
                   child: Icon(
                     Icons.person,
@@ -1291,6 +1339,9 @@ class _MessageBubbleState extends State<_MessageBubble> {
         final tempPlayer = audio_players.AudioPlayer();
         Duration? loadedDuration;
         bool durationLoaded = false;
+        final voiceUrl = widget.message.voiceURL!;
+        final isRemote =
+            voiceUrl.startsWith('http://') || voiceUrl.startsWith('https://');
 
         final subscription = tempPlayer.onDurationChanged.listen((duration) {
           if (duration != Duration.zero && !durationLoaded) {
@@ -1300,11 +1351,21 @@ class _MessageBubbleState extends State<_MessageBubble> {
         });
 
         await tempPlayer.setSource(
-          audio_players.UrlSource(widget.message.voiceURL!),
+          isRemote
+              ? audio_players.UrlSource(voiceUrl)
+              : audio_players.DeviceFileSource(voiceUrl),
         );
 
+        // Bazı cihaz/sürümlerde onDurationChanged oynatma başlamadan tetiklenmiyor.
+        // Bu yüzden getDuration() ile aktif polling yapıp süreyi önceden alıyoruz.
         int attempts = 0;
         while (!durationLoaded && attempts < 20 && mounted) {
+          final polled = await tempPlayer.getDuration();
+          if (polled != null && polled != Duration.zero) {
+            loadedDuration = polled;
+            durationLoaded = true;
+            break;
+          }
           await Future.delayed(const Duration(milliseconds: 100));
           attempts++;
         }
@@ -1352,8 +1413,14 @@ class _MessageBubbleState extends State<_MessageBubble> {
           _currentlyPlayingMessageId = widget.message.messageId.toString();
 
           try {
+            final voiceUrl = widget.message.voiceURL!;
+            final isRemote =
+                voiceUrl.startsWith('http://') ||
+                voiceUrl.startsWith('https://');
             await _globalAudioPlayer.setSource(
-              audio_players.UrlSource(widget.message.voiceURL!),
+              isRemote
+                  ? audio_players.UrlSource(voiceUrl)
+                  : audio_players.DeviceFileSource(voiceUrl),
             );
             await _globalAudioPlayer.resume();
             setState(() {
@@ -1385,38 +1452,12 @@ class _MessageBubbleState extends State<_MessageBubble> {
     }
   }
 
-  String _formatMessageTime(dynamic sentTime) {
-    try {
-      DateTime dateTime;
-      if (sentTime == null) {
-        return '';
-      } else if (sentTime is DateTime) {
-        dateTime = sentTime;
-      } else if (sentTime is String) {
-        dateTime = DateTime.parse(sentTime);
-      } else {
-        return '';
-      }
-
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
-
-      final hour = dateTime.hour.toString().padLeft(2, '0');
-      final minute = dateTime.minute.toString().padLeft(2, '0');
-
-      if (messageDate == today) {
-        return '$hour:$minute';
-      } else if (messageDate == today.subtract(const Duration(days: 1))) {
-        return 'Dün $hour:$minute';
-      } else {
-        final day = dateTime.day.toString().padLeft(2, '0');
-        final month = dateTime.month.toString().padLeft(2, '0');
-        return '$day.$month.${dateTime.year} $hour:$minute';
-      }
-    } catch (e) {
-      return '';
-    }
+  String _formatAudioDuration(Duration duration) {
+    if (duration == Duration.zero) return '00:00';
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
   }
 
   @override
@@ -1447,7 +1488,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
             maxWidth: MediaQuery.of(context).size.width * 0.72,
           ),
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
               color: const Color(0xFF21BC87),
               border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
@@ -1485,7 +1526,10 @@ class _MessageBubbleState extends State<_MessageBubble> {
                   maxWidth: MediaQuery.of(context).size.width * 0.72,
                 ),
                 child: Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.05),
                     border: Border.all(
@@ -1523,65 +1567,115 @@ class _MessageBubbleState extends State<_MessageBubble> {
         if (hasImage)
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: CachedNetworkImage(
-              imageUrl: widget.message.fileURL!,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => const SizedBox.shrink(),
-              errorWidget: (_, __, ___) => Container(
-                height: 150,
-                color: Colors.grey[300],
-                child: Icon(Icons.broken_image, color: Colors.grey[600]),
-              ),
-            ),
+            child: (() {
+              final fileUrl = widget.message.fileURL!;
+              final isRemote =
+                  fileUrl.startsWith('http://') ||
+                  fileUrl.startsWith('https://');
+              if (isRemote) {
+                return CachedNetworkImage(
+                  imageUrl: fileUrl,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (_, _) => const SizedBox.shrink(),
+                  errorWidget: (_, _, _) => Container(
+                    height: 150,
+                    color: Colors.grey[300],
+                    child: Icon(Icons.broken_image, color: Colors.grey[600]),
+                  ),
+                );
+              }
+              return Image.file(
+                File(fileUrl),
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) => Container(
+                  height: 150,
+                  color: Colors.grey[300],
+                  child: Icon(Icons.broken_image, color: Colors.grey[600]),
+                ),
+              );
+            })(),
           ),
 
         if (hasVoice) ...[
           if (hasImage) const SizedBox(height: 8),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: _togglePlayPause,
-                child: Icon(
-                  _isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: isMe ? Colors.white : Colors.black87,
-                  size: 24,
-                ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: isMe
+                  ? Colors.white.withValues(alpha: 0.18)
+                  : const Color(0xFFFFFFFF),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isMe
+                    ? Colors.white.withValues(alpha: 0.22)
+                    : const Color(0xFFE4E7EC),
               ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 24,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: List.generate(15, (index) {
-                          return Flexible(
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                GestureDetector(
+                  onTap: _togglePlayPause,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isMe ? Colors.white : const Color(0xFFF2F4F7),
+                    ),
+                    child: Icon(
+                      _isPlaying ? Icons.pause : Icons.play_arrow,
+                      color: isMe ? const Color(0xFF21BC87) : Colors.black87,
+                      size: 18,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: SizedBox(
+                    height: 24,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: List.generate(28, (index) {
+                        return Expanded(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
                             child: Container(
                               width: 2.5,
-                              height: index % 3 == 0
-                                  ? 20.0
-                                  : (index % 2 == 0 ? 12.0 : 8.0),
+                              height: index % 4 == 0
+                                  ? 14.0
+                                  : (index % 2 == 0 ? 10.0 : 7.0),
                               decoration: BoxDecoration(
                                 color: isMe
-                                    ? Colors.white70
-                                    : Color(0xFF96989C),
+                                    ? Colors.white.withValues(alpha: 0.9)
+                                    : const Color(0xFF98A2B3),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
-                          );
-                        }),
-                      ),
+                          ),
+                        );
+                      }),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Text(
+                  _formatAudioDuration(_duration),
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: isMe
+                        ? Colors.white.withValues(alpha: 0.95)
+                        : const Color(0xFF667085),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
 

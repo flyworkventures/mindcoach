@@ -1,6 +1,9 @@
 /// lib/features/appointments/appointments_notifier.dart
+library;
+
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
@@ -77,10 +80,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     }
 
     // İlk state - boş map ile başla, loading true
-    final initialState = AppointmentsState(
-      appointments: {},
-      isLoading: true,
-    );
+    final initialState = AppointmentsState(appointments: {}, isLoading: true);
 
     // ✅ ÖNEMLİ: provider build sırasında state değiştirmiyoruz
     // API'den randevuları çek ve countdown'u widget build bittikten sonra başlatıyoruz.
@@ -105,10 +105,10 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
   /// API'den tüm randevuları yükle
   Future<void> _loadAppointmentsFromAPI() async {
     log("🚀 _loadAppointmentsFromAPI başlatıldı");
-    
+
     final userId = ref.read(AllProviders.userProvider)?.id;
     log("👤 User ID: $userId");
-    
+
     if (userId == null) {
       log("❌ User ID null, randevular yüklenemiyor");
       state = state.copyWith(isLoading: false);
@@ -119,11 +119,11 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
       // Loading başladı
       log("⏳ Randevular yükleniyor...");
       state = state.copyWith(isLoading: true);
-      
+
       log("📞 appointmentRepo.getAllAppointments çağrılıyor...");
       final appointmentsList = await appointmentRepo.getAllAppointments(userId);
       log("📥 getAllAppointments sonucu: ${appointmentsList.length} randevu");
-      
+
       if (appointmentsList.isEmpty) {
         log("ℹ️ API'den randevu bulunamadı");
         state = state.copyWith(isLoading: false);
@@ -132,10 +132,10 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
 
       // Consultant listesini al (specialist name mapping için)
       final consultants = await consultantRepo.getAllConsultant();
-      
+
       // API'den gelen randevuları Map<DateTime, List<AppointmentInfo>> formatına çevir
       final appointmentsMap = <DateTime, List<AppointmentInfo>>{};
-      
+
       for (var appointmentData in appointmentsList) {
         try {
           final appointmentDateStr = appointmentData["appointment_date"];
@@ -143,36 +143,52 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
           final rawStatus = appointmentData["status"];
           final status = rawStatus?.toString().trim().toLowerCase();
           final appointmentId = appointmentData["id"] as int?;
-          
+
           // Debug: Raw data logla
-          log("📋 Raw appointment data: id=$appointmentId, appointment_date=$appointmentDateStr (type: ${appointmentDateStr.runtimeType}), consultant_id=$consultantId, status=$status");
-          
+          log(
+            "📋 Raw appointment data: id=$appointmentId, appointment_date=$appointmentDateStr (type: ${appointmentDateStr.runtimeType}), consultant_id=$consultantId, status=$status",
+          );
+
           // NOT: İptal edilmiş randevuları da yükle (3 saniye geri alma için)
           // Calendar screen'de filtreleme yapılacak
-          
+
           // appointment_date null veya boş mu kontrol et
-          if (appointmentDateStr == null || appointmentDateStr.toString().trim().isEmpty) {
-            log("⚠️ appointment_date null veya boş, randevu atlandı: consultantId=$consultantId");
+          if (appointmentDateStr == null ||
+              appointmentDateStr.toString().trim().isEmpty) {
+            log(
+              "⚠️ appointment_date null veya boş, randevu atlandı: consultantId=$consultantId",
+            );
             continue;
           }
-          
+
           // String'e çevir (eğer değilse)
           final dateStr = appointmentDateStr.toString().trim();
-          
+
           try {
             // ISO format tarihini parse et ve local timezone'a çevir
             final appointmentDateTime = DateTime.parse(dateStr).toLocal();
-            log("✅ Tarih parse edildi: $dateStr -> $appointmentDateTime (local)");
-            
+            log(
+              "✅ Tarih parse edildi: $dateStr -> $appointmentDateTime (local)",
+            );
+
             // Sadece tarih kısmını al (saat bilgisi olmadan) - map key için
-            final dateOnly = DateTime(appointmentDateTime.year, appointmentDateTime.month, appointmentDateTime.day);
-            
+            final dateOnly = DateTime(
+              appointmentDateTime.year,
+              appointmentDateTime.month,
+              appointmentDateTime.day,
+            );
+
             // Consultant ID'den specialist name'i bul
-            final specialistName = await _getSpecialistNameFromConsultantId(consultantId ?? 0, consultants);
-            
+            final specialistName = await _getSpecialistNameFromConsultantId(
+              consultantId ?? 0,
+              consultants,
+            );
+
             // Consultant bilgisini bul (job için)
             String? consultantJob;
-            if (consultants != null && consultantId != null && consultants.isNotEmpty) {
+            if (consultants != null &&
+                consultantId != null &&
+                consultants.isNotEmpty) {
               try {
                 final consultant = consultants.firstWhere(
                   (c) => c.id == consultantId,
@@ -183,28 +199,32 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
                 log("⚠️ Consultant job bulunamadı: $e");
               }
             }
-            
+
             // AppointmentInfo oluştur (tam tarih + saat, status, consultantId, job ve appointmentId ile)
             final appointmentInfo = AppointmentInfo(
               specialistName: specialistName,
-              topicKey: 'feelingGood', // Varsayılan topic (API'de topic bilgisi yoksa)
+              topicKey:
+                  'feelingGood', // Varsayılan topic (API'de topic bilgisi yoksa)
               appointmentDateTime: appointmentDateTime, // Tam tarih + saat
               status: (status != null && status.isNotEmpty)
                   ? status
                   : 'scheduled', // Status bilgisi
               consultantId: consultantId, // Consultant ID
               job: consultantJob, // Consultant'ın görevi
-              appointmentId: appointmentId, // Appointment ID (iptal/geri alma için)
+              appointmentId:
+                  appointmentId, // Appointment ID (iptal/geri alma için)
             );
-            
+
             // Map'e ekle
             if (appointmentsMap.containsKey(dateOnly)) {
               appointmentsMap[dateOnly]!.add(appointmentInfo);
             } else {
               appointmentsMap[dateOnly] = [appointmentInfo];
             }
-            
-            log("✅ Randevu eklendi: dateOnly=$dateOnly, appointmentDateTime=$appointmentDateTime, consultantId=$consultantId");
+
+            log(
+              "✅ Randevu eklendi: dateOnly=$dateOnly, appointmentDateTime=$appointmentDateTime, consultantId=$consultantId",
+            );
           } catch (e, stackTrace) {
             log("❌ Tarih parse hatası: $e");
             log("❌ Stack trace: $stackTrace");
@@ -215,19 +235,16 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
           log("❌ Stack trace: $stackTrace");
         }
       }
-      
+
       // State'i güncelle (loading'i false yap)
-      state = state.copyWith(
-        appointments: appointmentsMap,
-        isLoading: false,
-      );
-      
+      state = state.copyWith(appointments: appointmentsMap, isLoading: false);
+
       // Randevu istatistiklerini hesapla
       final now = DateTime.now();
       int totalAppointments = 0;
       int pastAppointments = 0;
       int upcomingAppointments = 0;
-      
+
       for (final entry in appointmentsMap.entries) {
         for (final info in entry.value) {
           totalAppointments++;
@@ -239,14 +256,14 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
           }
         }
       }
-      
+
       log("✅ RANDEVU İSTATİSTİKLERİ:");
       log("   📊 Toplam randevu: $totalAppointments");
       log("   📅 Geçmiş randevu: $pastAppointments");
       log("   🔮 Gelecek randevu: $upcomingAppointments");
       log("   📆 ${appointmentsMap.length} farklı gün için randevu var");
       log("   ✅ ${appointmentsList.length} randevu API'den yüklendi");
-      
+
       // Countdown'u güncelle
       _tickCountdown();
     } catch (e) {
@@ -256,7 +273,10 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
   }
 
   /// Consultant ID'den specialist name'i döndür
-  Future<String> _getSpecialistNameFromConsultantId(int consultantId, List<ConsultantModel>? consultants) async {
+  Future<String> _getSpecialistNameFromConsultantId(
+    int consultantId,
+    List<ConsultantModel>? consultants,
+  ) async {
     try {
       if (consultants != null && consultants.isNotEmpty) {
         // Consultant ID'ye göre bul
@@ -265,9 +285,10 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
             (c) => c.id == consultantId,
             orElse: () => consultants.first, // Fallback: ilk consultant
           );
-          
+
           // Consultant'ın names map'inden İngilizce ismini al (key olarak kullanılacak)
-          final nameKey = consultant.names['en'] ?? consultant.names.values.first ?? 'aura';
+          final nameKey =
+              consultant.names['en'] ?? consultant.names.values.first ?? 'aura';
           // Name key'ini lowercase'e çevir (specialist name formatı için)
           return nameKey.toString().toLowerCase();
         } catch (e) {
@@ -277,7 +298,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     } catch (e) {
       log("⚠️ Consultant name bulunamadı: $e");
     }
-    
+
     // Fallback: Basit mapping
     switch (consultantId) {
       case 1:
@@ -370,7 +391,8 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
 
         if (info.status?.toLowerCase() == 'cancelled') continue;
 
-        if (bestDateTime == null || appointmentDateTime.isBefore(bestDateTime)) {
+        if (bestDateTime == null ||
+            appointmentDateTime.isBefore(bestDateTime)) {
           bestDateTime = appointmentDateTime;
           bestInfo = info;
         }
@@ -383,29 +405,43 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
   }
 
   void upsertAppointment(DateTime dateTime, AppointmentInfo info) {
-    final newMap = Map<DateTime, List<AppointmentInfo>>.from(state.appointments);
+    final newMap = Map<DateTime, List<AppointmentInfo>>.from(
+      state.appointments,
+    );
 
     // appointmentDateTime varsa onu kullan, yoksa dateTime kullan
     final appointmentDateTime = info.appointmentDateTime ?? dateTime;
     // Sadece tarih kısmını al (saat bilgisi olmadan) - map key için
-    final dateOnly = DateTime(appointmentDateTime.year, appointmentDateTime.month, appointmentDateTime.day);
+    final dateOnly = DateTime(
+      appointmentDateTime.year,
+      appointmentDateTime.month,
+      appointmentDateTime.day,
+    );
 
     // Aynı randevu zaten var mı kontrol et (duplicate önleme)
     final existingList = newMap[dateOnly] ?? [];
-    final isDuplicate = existingList.any((existingInfo) => 
-      existingInfo.consultantId == info.consultantId &&
-      existingInfo.appointmentDateTime?.isAtSameMomentAs(appointmentDateTime) == true
+    final isDuplicate = existingList.any(
+      (existingInfo) =>
+          existingInfo.consultantId == info.consultantId &&
+          existingInfo.appointmentDateTime?.isAtSameMomentAs(
+                appointmentDateTime,
+              ) ==
+              true,
     );
 
     if (!isDuplicate) {
       final list = List<AppointmentInfo>.from(existingList);
       list.add(info);
       newMap[dateOnly] = list;
-      
+
       state = state.copyWith(appointments: newMap);
-      log("✅ Randevu eklendi: dateOnly=$dateOnly, appointmentDateTime=$appointmentDateTime, consultantId=${info.consultantId}");
+      log(
+        "✅ Randevu eklendi: dateOnly=$dateOnly, appointmentDateTime=$appointmentDateTime, consultantId=${info.consultantId}",
+      );
     } else {
-      log("⚠️ Duplicate randevu atlandı: dateOnly=$dateOnly, consultantId=${info.consultantId}");
+      log(
+        "⚠️ Duplicate randevu atlandı: dateOnly=$dateOnly, consultantId=${info.consultantId}",
+      );
     }
 
     _tickCountdown();
@@ -418,6 +454,6 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
 }
 
 final appointmentsProvider =
-NotifierProvider<AppointmentsNotifier, AppointmentsState>(
-  AppointmentsNotifier.new,
-);
+    NotifierProvider<AppointmentsNotifier, AppointmentsState>(
+      AppointmentsNotifier.new,
+    );
