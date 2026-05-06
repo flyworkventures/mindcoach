@@ -20,14 +20,14 @@ PODS:
     - Flutter
   - devicelocale (0.0.1):
     - Flutter
-  - FBAEMKit (18.0.2):
-    - FBSDKCoreKit_Basics (= 18.0.2)
-  - FBSDKCoreKit (18.0.2):
-    - FBAEMKit (= 18.0.2)
-    - FBSDKCoreKit_Basics (= 18.0.2)
-  - FBSDKCoreKit_Basics (18.0.2)
-  - FBSDKLoginKit (18.0.2):
-    - FBSDKCoreKit (= 18.0.2)
+  - FBAEMKit (18.0.3):
+    - FBSDKCoreKit_Basics (= 18.0.3)
+  - FBSDKCoreKit (18.0.3):
+    - FBAEMKit (= 18.0.3)
+    - FBSDKCoreKit_Basics (= 18.0.3)
+  - FBSDKCoreKit_Basics (18.0.3)
+  - FBSDKLoginKit (18.0.3):
+    - FBSDKCoreKit (= 18.0.3)
   - Flutter (1.0.0)
   - flutter_facebook_auth (7.1.2):
     - FBSDKLoginKit (~> 18.0.0)
@@ -290,10 +290,10 @@ SPEC CHECKSUMS:
   audioplayers_darwin: 4f9ca89d92d3d21cec7ec580e78ca888e5fb68bd
   camera_avfoundation: 5675ca25298b6f81fa0a325188e7df62cc217741
   devicelocale: bd64aa714485a8afdaded0892c1e7d5b7f680cf8
-  FBAEMKit: 56a4f5a9607957b547b6458b17a98c5bb2736367
-  FBSDKCoreKit: 54f1240567e16862ab71c53c33dc347db5c524c5
-  FBSDKCoreKit_Basics: eb530cd6a79030dbb11df460aafb2767bcad9028
-  FBSDKLoginKit: 6a70798793e499335a98fab1a758d7da34af196e
+  FBAEMKit: 2a6b529993713c185b02bc36f8c91129bf78dfb0
+  FBSDKCoreKit: 65d7f7a7d6fcc3aa6eb6e093ec737a4184fc6049
+  FBSDKCoreKit_Basics: 7bc9d8fde8f70985fba2ed7c1d07e319f969a991
+  FBSDKLoginKit: 66d20fcb7afcafc0c420477662f96845cd1a5179
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_facebook_auth: d97dc09216aebd99d7ac52360186a630f67bdf18
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99

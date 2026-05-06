@@ -19,7 +19,9 @@ const Color _kPrimaryGreen = Color(0xFF21BC87);
 const Color _kLightGreyText = Color(0xFF96989C);
 
 class CalendarScreen extends ConsumerStatefulWidget {
-  const CalendarScreen({super.key});
+  final DateTime? initialSelectedDate;
+
+  const CalendarScreen({super.key, this.initialSelectedDate});
 
   @override
   ConsumerState<CalendarScreen> createState() => _CalendarScreenState();
@@ -37,7 +39,37 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedDay = _focusedDay;
+    final initialDate = widget.initialSelectedDate?.toLocal();
+    if (initialDate != null) {
+      _focusedDay = DateTime(initialDate.year, initialDate.month, initialDate.day);
+      _selectedDay = _focusedDay;
+      // Bildirimden gelen tarih tek seferlik kullanılsın.
+      Future.microtask(() {
+        if (!mounted) return;
+        ref.read(selectedCalendarDateProvider.notifier).clear();
+      });
+    } else {
+      _selectedDay = _focusedDay;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant CalendarScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final newDate = widget.initialSelectedDate?.toLocal();
+    final oldDate = oldWidget.initialSelectedDate?.toLocal();
+    if (newDate != null && !isSameDay(newDate, oldDate)) {
+      final normalized = DateTime(newDate.year, newDate.month, newDate.day);
+      setState(() {
+        _focusedDay = normalized;
+        _selectedDay = normalized;
+      });
+      // Tarih tüketildi, sonraki normal girişte bugünü açmak için temizle.
+      Future.microtask(() {
+        if (!mounted) return;
+        ref.read(selectedCalendarDateProvider.notifier).clear();
+      });
+    }
   }
 
   // Belirli bir gün için randevuları getiren yardımcı fonksiyon

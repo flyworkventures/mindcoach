@@ -654,5 +654,6 @@
   "videoCallEndDialogCancel": "Отмена",
   "videoCallEndDialogEnd": "Завершить",
   "videoCallRateTitle": "Оценить разговор",
-  "videoCallRateSubtitle": "Оцените видеозвонок"
+  "videoCallRateSubtitle": "Оцените видеозвонок",
+  "premiumStatusInactive": "неактивен"
 }

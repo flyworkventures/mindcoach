@@ -1,11 +1,9 @@
 {
   "@@locale": "tr",
-
   "relaxingSound": "Rahatlatıcı Ses",
   "seeAll": "Tümünü Gör",
   "online": "Çevrimiçi",
   "typeAMessage": "Bir mesaj yazın...",
-
   "premiumHeadlinePart1": "Yargılanmadan,\nsadece ",
   "premiumHeadlineHighlight": "anlaşıldığın",
   "premiumHeadlinePart2": " bir alan.",
@@ -17,7 +15,6 @@
   "premiumCta": "Hemen Başla",
   "premiumPrice": "₺149,99",
   "premiumPricePeriod": "/ay",
-
   "onboardingTitle1": "Bunalmış mı hissediyorsun?",
   "onboardingDesc1": "Sertifikalı bir rehberle dakikalar içinde konuş — ne zaman ihtiyacın olursa.",
   "onboardingTitle2": "Kendi tarzında konuş.",
@@ -25,7 +22,6 @@
   "onboardingTitle3": "Senin için doğru rehberi bul.",
   "onboardingDesc3": "Hedeflerine, programına ve tercihlerine göre eşleş.",
   "swipeToContinue": "Devam etmek için kaydır",
-
   "onboardingTermsPrefix": "MindCoach'a kaydolarak, ",
   "onboardingTermsOfService": "Hizmet Şartlarımızı",
   "onboardingTermsMiddle": " kabul etmiş olursunuz. Verilerinizi nasıl işlediğimizi ",
@@ -33,7 +29,6 @@
   "onboardingTermsAnd": " ve ",
   "onboardingCookiesPolicy": "Çerez Politikamız",
   "onboardingTermsSuffix": " üzerinden öğrenebilirsiniz.",
-
   "nameGenderStepTitle": "Bize biraz kendinden bahset",
   "nameGenderStepSubtitle": "Kısa bir biyografi, diğerlerinin gerçek seni tanımasına yardımcı olur. Eğlenceli ve içten ol.",
   "fullName": "Ad Soyad",
@@ -41,16 +36,13 @@
   "gender": "Cinsiyet",
   "male": "Erkek",
   "female": "Kadın",
-
   "next": "İleri",
   "getStarted": "Başla",
   "findMyCoaches": "Rehberlerimi Bul",
-
   "loginSubtitle": "Rehberini bulmak ve yolculuğuna başlamak için giriş yap. 2 dakika sürer.",
   "continueWithGoogle": "Google ile devam et",
   "continueWithApple": "Apple ile devam et",
   "dataPrivacyNotice": "Verileriniz asla üçüncü taraflarla paylaşılmaz. Hesabınızı istediğiniz zaman silebilirsiniz.",
-
   "approachTitle": "Rehberin sana nasıl yaklaşmalı?",
   "approachSubtitle": "Kişiliğini doğru rehberle eşleştirmemize yardımcı olur",
   "approachPatient": "Sabırlı",
@@ -58,14 +50,12 @@
   "approachConvincing": "İkna Edici",
   "approachEnergetic": "Enerjik",
   "approachHumorous": "Mizahi",
-
   "dobTitle": "Ne zaman doğdun?",
   "dobSubtitle": "Deneyimi yaşına göre kişiselleştiriyoruz.",
   "dobDayLabel": "Gün",
   "dobMonthLabel": "Ay",
   "dobYearLabel": "Yıl",
   "dobErrorInvalid": "Lütfen geçerli bir doğum tarihi seçin.",
-
   "january": "Ocak",
   "february": "Şubat",
   "march": "Mart",
@@ -78,7 +68,6 @@
   "october": "Ekim",
   "november": "Kasım",
   "december": "Aralık",
-
   "januaryShort": "Oca",
   "februaryShort": "Şub",
   "marchShort": "Mar",
@@ -91,7 +80,6 @@
   "octoberShort": "Eki",
   "novemberShort": "Kas",
   "decemberShort": "Ara",
-
   "nameGenderTitle": "Bize biraz kendinden bahset",
   "nameGenderSubtitle": "Böylece rehberin gerçek seni tanıyabilir",
   "nameGenderFullNameLabel": "Ad Soyad",
@@ -100,7 +88,6 @@
   "nameGenderMale": "Erkek",
   "nameGenderFemale": "Kadın",
   "nameGenderPreferNotToSay": "Belirtmek istemiyorum",
-
   "supportAreaTitle": "Hangi alanda destek almak istersin?",
   "supportAreaSubtitle": "Sadece bu alanda uzmanlaşmış rehberleri göstereceğiz",
   "supportAreaIndividual": "Bireysel Gelişim",
@@ -108,7 +95,6 @@
   "supportAreaCareer": "Kariyer",
   "supportAreaEducation": "Eğitim",
   "supportAreaPersonalDevelopment": "Kişisel Gelişim",
-
   "availableDaysTitle": "Hangi günler uygunsun?",
   "availableDaysSubtitle": "Böylece sadece senin müsait olduğun zamanlarda boş olan rehberleri gösteririz",
   "dayMonday": "Pzt",
@@ -118,7 +104,6 @@
   "dayFriday": "Cum",
   "daySaturday": "Cmt",
   "daySunday": "Paz",
-
   "meetingTimeTitle": "Hangi saat senin için en uygun?",
   "meetingTimeSubtitle": "Eşleşen saatleri olan rehberler öne çıkarılacaktır",
   "meetingTimeMorning": "Sabah",
@@ -129,38 +114,33 @@
   "meetingTimeAfternoonRange": "12:00 - 16:00",
   "meetingTimeEveningRange": "16:00 - 21:00",
   "meetingTimeFlexibleRange": "",
-
   "successTitle": "Hesap oluşturuldu",
   "successSubtitle": "Hesabınız başarıyla oluşturuldu. Uygulamanın tadını çıkarın.",
-
   "topicFeelingGood": "İyi Hissetmek",
-
   "appointmentDescription": "{name} ile {topic} hakkında bir toplantınız var.",
   "@appointmentDescription": {
     "placeholders": {
-      "name": { "type": "String" },
-      "topic": { "type": "String" }
+      "name": {
+        "type": "String"
+      },
+      "topic": {
+        "type": "String"
+      }
     }
   },
-
   "quickActions": "Hızlı İşlemler",
-
   "hi": "Merhaba",
   "goodMorning": "Günaydın",
   "goodAfternoon": "Tünaydın",
   "goodEvening": "İyi Akşamlar",
-
   "welcome": "Hoş Geldin",
   "howAreYouFeelIngToday": "Bugün nasıl hissediyorsun?",
   "getStart": "Hadi başlayalım",
-
   "onboardingQuote1": "Tek sınırınız kendinize koyduğunuz sınırlardır.",
   "onboardingQuote2": "Derin bir nefes al ve yolculuğuna başla.",
   "onboardingQuote3": "Ne kadar sessiz olursan, o kadar çok duyabilirsin.",
-
   "someoneWantsToTalkToYou": "Biri seninle konuşmak istiyor.",
   "startTalking": "Konuşmaya Başla",
-
   "moodTerrible": "Berbat",
   "moodBad": "Kötü",
   "moodNeutral": "Nötr",
@@ -170,55 +150,45 @@
   "moodHappy": "Mutlu",
   "moodTired": "Yorgun",
   "moodStressed": "Stresli",
-
   "timeToTrackMood": "Ruh halini takip etme zamanı",
-
   "days": "Gün",
   "hours": "Saat",
   "minutes": "Dakika",
   "seconds": "Saniye",
-
   "timeRemainingTitle": "Bir sonraki toplantının başlamasına kalan süre.",
   "upcomingMeetingTitle": "Yaklaşan Toplantı",
   "noUpcomingMeetings": "Yaklaşan toplantınız yok.",
-
   "takeTheTestNow": "Testi Şimdi Çöz",
   "testDescription": "Zihinsel durumunuzu değerlendirin ve kendiniz hakkında daha fazla bilgi edinin.",
-
   "premiumPlan": "Premium Plan",
   "premiumDescription": "Yapay zeka sohbet botunuzun kilidini açın ve tüm premium özelliklere sahip olun.",
-
   "upgradePlan": "Planı Yükselt",
   "areYouStressed": "Stresli Misin?",
   "areYouAnxious": "Endişeli Misin?",
-
   "questionsForAdults": "Yetişkinler İçin {questionNumber} Soru",
   "@questionsForAdults": {
     "description": "Shows the number of questions for adult mode.",
     "placeholders": {
-      "questionNumber": { "type": "int" }
+      "questionNumber": {
+        "type": "int"
+      }
     }
   },
-
   "statusAssessmentTest": "Durum Değerlendirme Testi",
   "stressScaleTest": "Stres Ölçeği Testi",
   "anxietyScaleTest": "Anksiyete Ölçeği Testi",
-
   "continueButton": "Devam Et",
   "@continueButton": {
     "description": "Primary button label to start the mental test"
   },
-
   "testRule1": "**Geçen haftanızı** değerlendirin.",
   "testRule2": "Testi **haftada bir kez** çözmeniz önerilir.",
   "testRule3": "Testi yarıda bırakırsanız, **kaldığınız yerden devam edebilirsiniz.**",
   "testDisclaimer": "Bu testin sonuçları bireysel ruh sağlığı hakkında fikir verir ancak bir ruh sağlığı profesyoneli ile görüşülen bir teşhis veya önerinin yerini tutmaz.",
-
   "never": "Asla",
   "sometimes": "Bazen ve ara sıra",
   "often": "Sıklıkla",
   "always": "Her zaman",
-
   "stressQ1": "Rahatlamakta ve oluruna bırakmakta zorlandım.",
   "stressQ2": "Olaylara aşırı tepki verme eğilimindeydim.",
   "stressQ3": "Gergin veya endişeli hissettim.",
@@ -244,17 +214,14 @@
   "stressQ23": "Sık sık baş ağrısı veya vücut ağrısı yaşadım.",
   "stressQ24": "Normalde sevdiğim aktiviteleri yapamaz hale geldim.",
   "stressQ25": "Zamanın benden uzaklaştığını veya kaybettiğimi hissettim.",
-
   "stressScaleTitle": "Stres ölçeği testi",
   "yourStressLevelPrefix": "Stres seviyeniz: ",
-
   "stressLevelLow": "Düşük stres",
   "stressLevelLowDescription": "Mevcut stres seviyeniz düşük. Günlük zorlukları iyi yönetiyorsunuz.",
   "stressLevelModerate": "Orta düzey stres",
   "stressLevelModerateDescription": "Stres seviyeniz orta düzeyde. Yönetilebilir, ancak dikkat gerektiriyor.",
   "stressLevelHigh": "Yüksek stres",
   "stressLevelHighDescription": "Stres seviyeniz yüksek. Yavaşlamalı ve vücudunuzu dinlemelisiniz.",
-
   "stressAnalysisIntro": "Testi tamamladığınız için teşekkürler. Sonuçlarınız, günlük yaşamınızda sizi zorlayan ve yorgunluğa neden olabilecek bazı faktörler olduğunu gösteriyor.",
   "stressAnalysisP1Part1": "Bu seviye bir ",
   "stressAnalysisP1Bold1": "'yüksek alarm' ",
@@ -265,9 +232,7 @@
   "stressAnalysisP2Part2": "Bu sonucu, ",
   "stressAnalysisP2Bold2": "tükenmişliğe yol açmadan önce stresinizi yönetmek için bir fırsat olarak görebilirsiniz.",
   "stressAnalysisRemember": "Unutmayın, bu test bir farkındalık aracıdır, tıbbi bir teşhis değildir. Kendinize zaman ayırmak, daha iyi hissetme yolunda ilk adımdır.",
-
   "backToHome": "Ana Sayfaya Dön",
-
   "specialistsScreenTitle": "Mentorlar",
   "specialistAuraName": "Aura",
   "specialistAuraTitle": "Bireysel Mentorluk",
@@ -284,50 +249,48 @@
   "specialistCyraName": "Cyra",
   "specialistCyraTitle": "Akademik Mentor",
   "specialistCyraDescription": "Odaklanma, çalışma alışkanlıkları ve akademik planlama konularında yardımcı olur.",
-
   "chatScreenGreeting": "Merhaba, {name}",
   "@chatScreenGreeting": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "chatScreenTitle": "Sohbetler",
   "chatLastFromYouPrefix": "Sen: ",
-
   "chatDeleteToast": "{name} ile olan sohbet silindi.",
   "@chatDeleteToast": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "askMentor": "{name}'a Sor",
   "@askMentor": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "gallery": "Galeri",
   "camera": "Kamera",
   "document": "Belge",
   "free": "ÜCRETSİZ",
   "calendar": "Takvim",
-
   "profileSettings": "Profil Ayarları",
   "shareWithFriends": "Arkadaşlarınla Paylaş",
   "notifications": "Bildirimler",
   "appointments": "Görüşmeler",
   "faq": "SSS",
-
   "phoneNumber": "Telefon Numarası",
   "logout": "Çıkış Yap",
   "pleaseWait": "Lütfen bekleyin…",
   "deleteAccount": "Hesabı Sil",
   "save": "Kaydet",
   "areYouSureLogout": "Çıkış yapmak istediğinize emin misiniz?",
-
   "deleteProfile": "Profili Sil",
   "cancel": "İptal",
   "delete": "Sil",
@@ -340,56 +303,52 @@
   "allNotificationsDeleted": "Tüm bildirimler başarıyla silindi",
   "noNotificationsToDelete": "Silinecek bildirim yok",
   "errorDeletingNotifications": "Bildirimler silinirken hata oluştu",
-
   "invitePeople": "İnsanları Davet Et",
   "copyLinkInviteFriend": "Arkadaşlarınızı davet etmek için bağlantıyı kopyalayın",
   "share": "Paylaş",
-
   "upcoming": "Yaklaşan",
   "completed": "Tamamlandı",
-
   "relativeToday": "Bugün",
   "relativeTomorrow": "Yarın",
   "relativeYesterday": "Dün",
-
   "relativeDaysAgo": "{count} gün önce",
   "@relativeDaysAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "relativeWeeksAgo": "{count} hafta önce",
   "@relativeWeeksAgo": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "numberOfQuestions": "Soru {currentQuestion} / {totalQuestion}",
   "@numberOfQuestions": {
     "placeholders": {
-      "currentQuestion": { "type": "int" },
-      "totalQuestion": { "type": "int" }
+      "currentQuestion": {
+        "type": "int"
+      },
+      "totalQuestion": {
+        "type": "int"
+      }
     }
   },
-
   "english": "İngilizce",
   "turkish": "Türkçe",
   "german": "Almanca",
   "language": "Dil",
-
   "back": "Geri",
-
   "enterFullNamePrompt": "Lütfen adınızı ve soyadınızı girin.",
   "meetingStarted": "Toplantı Başladı",
   "selectedDate": "Seçilen Tarih",
-
   "newChatStarted": "Yeni Sohbet Başladı",
   "startNewMeeting": "Yeni bir toplantı başlat",
-
   "continueAsGuest": "Misafir Olarak Devam Et",
-
   "jobThoughtAndHabitGuide": "Düşünce ve Alışkanlık Rehberi",
   "jobFamilyAssistant": "Aile Rehberi",
   "jobAdult": "Yetişkin Rehberi",
@@ -400,9 +359,7 @@
   "jobEmotionalBalance": "Duygusal Denge Rehberi",
   "jobDifficultExperiences": "Zor Deneyimler Rehberi",
   "jobResilienceEmpowerment": "Dayanıklılık ve Güçlenme Rehberi",
-
   "noSpecialistsFound": "Uzman bulunamadı",
-
   "featureFamilyConflicts": "Aile Çatışmaları",
   "featureParenting": "Ebeveynlik",
   "featureCommunication": "İletişim",
@@ -411,7 +368,6 @@
   "featureDivorceSupport": "Boşanma Desteği",
   "featureChildBehavior": "Çocuk Davranışı",
   "featureFamilyHarmony": "Aile Uyumu",
-
   "featureStressManagement": "Stres Yönetimi",
   "featureSelfConfidence": "Özgüven",
   "featureLifeBalance": "Yaşam Dengesi",
@@ -420,7 +376,6 @@
   "featureDecisionMaking": "Karar Verme",
   "featureMotivation": "Motivasyon",
   "featurePersonalGrowth": "Kişisel Gelişim",
-
   "featureEmotionalAwareness": "Duygusal Farkındalık",
   "featureSocialSkills": "Sosyal Beceriler",
   "featureSchoolAdaptation": "Okula Uyum",
@@ -429,7 +384,6 @@
   "featureFriendshipBuilding": "Arkadaşlık Kurma",
   "featureFocusAttention": "Odaklanma ve Dikkat",
   "featureBehavioralSupport": "Davranışsal Destek",
-
   "featureIdentityDevelopment": "Kimlik Gelişimi",
   "featurePeerPressure": "Akran Baskısı",
   "featureAcademicStress": "Akademik Stres",
@@ -438,7 +392,6 @@
   "featureAngerManagement": "Öfke Yönetimi",
   "featureFuturePlanning": "Gelecek Planlaması",
   "featureParentCommunication": "Ebeveyn İletişimi",
-
   "featureLoneliness": "Yalnızlık",
   "featureAnxietySupport": "Anksiyete Desteği",
   "featureGriefProcessing": "Yas Süreci",
@@ -447,7 +400,6 @@
   "featureOverthinking": "Aşırı Düşünme",
   "featureSelfDiscovery": "Kendini Keşfetme",
   "featureEmotionalHealing": "Duygusal İyileşme",
-
   "featureTestAnxiety": "Sınav Kaygısı",
   "featureStudyTechniques": "Çalışma Teknikleri",
   "featureTimeManagement": "Zaman Yönetimi",
@@ -456,14 +408,12 @@
   "featureRelaxationMethods": "Gevşeme Yöntemleri",
   "featureExamPreparation": "Sınava Hazırlık",
   "featureConfidenceBuilding": "Özgüven Geliştirme",
-
   "explanationFamilyAssistant": "Aile dinamikleri arasında gezinmenize, çatışmaları çözmenize, ebeveyn-çocuk bağlarını güçlendirmenize ve daha uyumlu bir ev ortamı kurmanıza yardımcı olan bir aile rehberi.",
   "explanationAdult": "Günlük stresi yönetmekten, özgüven inşa etmeye ve yaşam dengesini bulmaya kadar hayatının kontrolünü eline almak isteyen yetişkinler için bir kişisel gelişim rehberi.",
   "explanationChild": "Çocukların yaşlarına uygun teknikler kullanarak duygularını ifade etmelerine, sosyal beceriler geliştirmelerine ve okul hayatına uyum sağlamalarına yardımcı olmak için eğitilmiş nazik ve destekleyici bir rehber.",
   "explanationTeenage": "Kimlik arayışı ve akran baskısından, akademik stres ve dijital refaha kadar gençlik deneyimini anlayan bir rehber.",
   "explanationPersonal": "İçsel huzura odaklanan şefkatli bir kişisel rehber. Huzur ve netlik bulmanız için farkındalık, duygusal iyileşme ve kendini keşfetme konularında size rehberlik eder.",
   "explanationExamAnxiety": "Kanıtlanmış çalışma teknikleri, gevşeme yöntemleri ve özgüven geliştirme egzersizleri ile öğrencilerin sınav kaygısını yenmelerine yardımcı olan uzman bir rehber.",
-
   "explanationFamilyAssistant1": "Derin köklü aile çatışmalarını çözme ve gerilmiş ilişkileri yeniden kurma konusunda uzmanlaşmış özel bir aile rehberi. Boşanma gibi zorlu geçiş süreçlerinde ailelere yol gösterirken, davranışsal değişiklikler yaşayan çocuklara rehberlik eder.",
   "explanationFamilyAssistant2": "En önemli bağları güçlendirmeye odaklanan sıcak ve empatik bir aile rehberi. Çocukların duygusal ve davranışsal gelişimini desteklerken, zor dönemlerin ardından ailelerin iyileşmesine yardımcı olur.",
   "explanationAdult1": "Anlamlı bir değişim arayan yetişkinler için sonuç odaklı bir rehber. Pratik, hedefe yönelik stratejiler aracılığıyla stres yönetimi, yaşam dengesi ve kariyer rehberliğine odaklanır.",
@@ -480,14 +430,12 @@
   "explanationThoughtAndHabitGuide1": "Düşünce yapınızı ve günlük alışkanlıklarınızı dönüştürmeye odaklanan bir rehber. Sınırlayıcı düşünce kalıplarını kırmanıza, güçlendirici rutinler oluşturmanıza ve kanıta dayalı teknikler aracılığıyla kalıcı pozitif değişim yaratmanıza yardımcı olur.",
   "explanationDifficultExperiences1": "Hayatın en zorlu anlarında —kayıp, travma, yas ve belirsizlik— yanınızda yürüyen şefkatli ve deneyimli bir rehber. Zor duyguları işlemenize, zorluklarda anlam bulmanıza ve yenilenen güçle yeniden inşa etmenize yardımcı olur.",
   "explanationResilienceEmpowerment1": "İç gücünüzü keşfetmenize yardımcı olmaya adanmış, motive edici ve güç odaklı bir rehber. Zorluklar, geri adımlar ve geçiş süreçlerinde size rehberlik eder — hayatın getirdiklerine karşı durmak için dayanıklılık ve özgüven inşa eder.",
-
   "filterTitle": "Filtrele",
   "filterCoachingArea": "Rehberlik Alanı",
   "filterExpertise": "Uzmanlık",
   "filterSelectCoachingArea": "Rehberlik Alanı Seç",
   "filterSave": "Kaydet",
   "filterClear": "Temizle",
-
   "coachDetailInformation": "Bilgi",
   "coachDetailUnlimitedMemory": "Sınırsız",
   "coachDetailMemory": "Hafıza",
@@ -499,61 +447,53 @@
   "coachDetailOnline": "Çevrimiçi",
   "coachDetailVerified": "Doğrulandı",
   "coachDetailCreateAppointment": "Randevu oluştur",
-
   "searchSoundHint": "Sesleri, ruh hallerini, tınıları ara..",
   "featuredForYou": "Senin İçin Önerilenler",
   "mostPopular": "En Popüler",
-
   "soundCategoryFocus": "Odak",
   "soundCategorySleep": "Uyku",
   "soundCategoryMeditation": "Meditasyon",
   "soundCategoryRelax": "Rahatlama",
-
   "soundDeepWorkFlow": "Derin Çalışma Akışı",
   "soundDeepWorkFlowSub": "Üretkenliğini artır",
   "soundBinauralBeats": "Binaural Ritimler",
   "soundBinauralBeatsSub": "Beyin dalgalarını ayarla",
   "soundLibraryAmbience": "Kütüphane Ambiyansı",
   "soundLibraryAmbienceSub": "Sessiz çalışma atmosferi",
-
   "soundRainOnWindow": "Cama Vuran Yağmur",
   "soundRainOnWindowSub": "Huzurlu bir uykuya dal",
   "soundOceanWaves": "Okyanus Dalgaları",
   "soundOceanWavesSub": "Seni sakinleştirecek ritmik dalgalar",
   "soundDeepSpaceDrone": "Derin Uzay Uğultusu",
   "soundDeepSpaceDroneSub": "Kozmik ambiyans yolculuğu",
-
   "soundTibetanBowls": "Tibet Çanakları",
   "soundTibetanBowlsSub": "Kadim iyileştirici titreşimler",
   "soundForestBirds": "Orman Kuşları",
   "soundForestBirdsSub": "Doğanın sabah melodisi",
   "soundMorningZen": "Sabah Zeni",
   "soundMorningZenSub": "Güne bilinçli başla",
-
   "soundFireplaceCrackle": "Şömine Çatırtısı",
   "soundFireplaceCrackleSub": "Sıcak ve samimi hisler",
   "soundGentleStream": "Hafif Akarsu",
   "soundGentleStreamSub": "Akan suyun dinginliği",
   "soundSoftPiano": "Hafif Piyano",
   "soundSoftPianoSub": "Rahatlamak için zarif melodiler",
-
   "quickMessage": "Hızlı Mesaj",
   "chatMessage": "Mesaj",
   "chatHistory": "Geçmiş",
   "noChatHistory": "Henüz sohbet geçmişi yok",
-
   "calling": "Aranıyor...",
-
   "image": "Görsel",
   "coachesTitle": "Rehberler",
   "searchAtMindcoach": "Mindcoach'ta Ara",
   "noResultsFound": "\"{query}\" için sonuç bulunamadı",
   "@noResultsFound": {
     "placeholders": {
-      "query": { "type": "String" }
+      "query": {
+        "type": "String"
+      }
     }
   },
-
   "premiumTryFree": "Mind Coach Premium'u\n1 hafta ücretsiz dene",
   "premiumUnlimitedAccess": "Sınırsız erişim elde et ve fırsatlardan yararlan",
   "premiumFeatureSkipAds": "Reklamları Atla",
@@ -568,18 +508,14 @@
   "premiumPlanAnnual": "Yıllık",
   "premiumPlanMonthly": "Aylık",
   "premiumPlanPerYearAfterTrial": "7 günlük denemeden sonra yıllık",
-
   "goodbyeTitle": "Seni Özleyeceğiz ",
   "goodbyeSubtitle": "Hesabını sildiğin için üzgünüz.\nSeni tekrar görmeyi umuyoruz...",
   "goBack": "Geri Git",
-
   "profileFromGallery": "Galeriden Seç",
   "profileFromCamera": "Fotoğraf Çek",
   "profilePhotoUpdated": "Profil fotoğrafı güncellendi",
-
   "logoutDialogTitle": "Çıkış yapmak üzeresiniz",
   "logoutDialogSubtitle": "Yakında tekrar görüşmek üzere! Nefes egzersizlerini özleyeceğiz.",
-
   "sectionAccountSettings": "HESAP AYARLARI",
   "sectionGeneral": "GENEL",
   "menuItemPremium": "Premium",
@@ -588,7 +524,6 @@
   "premiumStatusActive": "aktif",
   "linkCopied": "Bağlantı kopyalandı!",
   "shareFriend": "Arkadaşınla Paylaş",
-
   "errorMessageFailed": "Mesaj gönderilemedi",
   "errorImageFailed": "Görsel gönderilemedi",
   "errorVoiceFileNotFound": "Ses dosyası bulunamadı",
@@ -609,27 +544,17 @@
   "errorPhotoUpload": "Profil fotoğrafı yüklenemedi",
   "errorGeneral": "Bir hata oluştu",
   "recordingStatus": "Kaydediliyor...",
-
   "email": "E-posta",
   "emailHint": "ornek@eposta.com",
   "messageOptionalHint": "Varsa mesajınızı yazın.",
-
   "appLanguage": "Uygulama Dili",
-
   "moodTrackerSubtitle": "Küçük bir kontrol büyük fark yaratır",
-
   "moodDescCalm": "Zihninizde hissettiğiniz bu huzur en büyük gücünüzdür. Bu anın tadını çıkarın ve dengeli kalın.",
-
   "moodDescHappy": "Pozitif enerjin bulaşıcı! Neşeni yaymaya ve bu harika hissin tadını çıkarmaya devam et.",
-
   "moodDescNeutral": "Sakin bir ruh hali tamamen normaldir. Kendinle bir an için bağlantı kurmayı dene.",
-
   "moodDescTired": "Bedenin sana dinlenmeni söylüyor. Bir mola ver ve enerji topla — bunu hak ediyorsun.",
-
   "moodDescStressed": "Derin bir nefes al. Yavaşlamak ve işleri adım adım ele almak tamamen normaldir.",
-
   "todaysSessions": "Bugünkü seanslar",
-
   "makeAnAppointment": "Randevu Al",
   "testResult": "Test sonucu",
   "mentalTest": "Zihinsel Test",
@@ -672,21 +597,29 @@
   "findCoachMatchedFor": "{area} için {count} rehber eşleşti",
   "@findCoachMatchedFor": {
     "placeholders": {
-      "count": { "type": "int" },
-      "area": { "type": "String" }
+      "count": {
+        "type": "int"
+      },
+      "area": {
+        "type": "String"
+      }
     }
   },
   "findCoachTitle": "Rehberini bul",
   "findCoachSwipeToBrowse": "Göz atmak için kaydır - {schedule}",
   "@findCoachSwipeToBrowse": {
     "placeholders": {
-      "schedule": { "type": "String" }
+      "schedule": {
+        "type": "String"
+      }
     }
   },
   "findCoachYearsExperience": "{count} yıl deneyim",
   "@findCoachYearsExperience": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "findCoachSkip": "Atla",
@@ -695,8 +628,12 @@
   "stepOf": "Adım {current} / {total}",
   "@stepOf": {
     "placeholders": {
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "trialEndedTitle": "Süren doldu",
@@ -718,5 +655,6 @@
   "videoCallEndDialogCancel": "Vazgeç",
   "videoCallEndDialogEnd": "Bitir",
   "videoCallRateTitle": "Görüşmeyi Puanla",
-  "videoCallRateSubtitle": "Görüntülü görüşmeyi değerlendir"
+  "videoCallRateSubtitle": "Görüntülü görüşmeyi değerlendir",
+  "premiumStatusInactive": "pasif"
 }

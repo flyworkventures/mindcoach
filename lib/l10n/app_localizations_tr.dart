@@ -1769,4 +1769,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => 'Görüntülü görüşmeyi değerlendir';
+
+  @override
+  String get premiumStatusInactive => 'pasif';
 }

@@ -11,3 +11,19 @@ class BottomNavNotifier extends Notifier<int> {
 
   void reset() => state = 0;
 }
+
+final selectedCalendarDateProvider =
+    NotifierProvider<SelectedCalendarDateNotifier, DateTime?>(
+      SelectedCalendarDateNotifier.new,
+    );
+
+class SelectedCalendarDateNotifier extends Notifier<DateTime?> {
+  @override
+  DateTime? build() => null;
+
+  void setDate(DateTime date) {
+    state = DateTime(date.year, date.month, date.day);
+  }
+
+  void clear() => state = null;
+}

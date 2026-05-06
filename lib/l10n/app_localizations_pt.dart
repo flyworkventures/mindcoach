@@ -1791,4 +1791,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => 'Avalie a chamada de vídeo';
+
+  @override
+  String get premiumStatusInactive => 'inativo';
 }

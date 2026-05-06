@@ -1795,4 +1795,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => 'Valuta la videochiamata';
+
+  @override
+  String get premiumStatusInactive => 'inattivo';
 }

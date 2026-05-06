@@ -3411,6 +3411,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Evaluate the video call'**
   String get videoCallRateSubtitle;
+
+  /// No description provided for @premiumStatusInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'inactive'**
+  String get premiumStatusInactive;
 }
 
 class _AppLocalizationsDelegate

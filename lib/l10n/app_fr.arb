@@ -654,5 +654,6 @@
   "videoCallEndDialogCancel": "Annuler",
   "videoCallEndDialogEnd": "Terminer",
   "videoCallRateTitle": "Noter la conversation",
-  "videoCallRateSubtitle": "Évaluez l'appel vidéo"
+  "videoCallRateSubtitle": "Évaluez l'appel vidéo",
+  "premiumStatusInactive": "inactif"
 }

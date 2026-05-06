@@ -1791,4 +1791,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => 'Evalúa la videollamada';
+
+  @override
+  String get premiumStatusInactive => 'inactivo';
 }

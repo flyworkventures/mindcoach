@@ -654,5 +654,6 @@
   "videoCallEndDialogCancel": "キャンセル",
   "videoCallEndDialogEnd": "終了",
   "videoCallRateTitle": "会話を評価",
-  "videoCallRateSubtitle": "ビデオ通話を評価してください"
+  "videoCallRateSubtitle": "ビデオ通話を評価してください",
+  "premiumStatusInactive": "無効"
 }

@@ -654,5 +654,6 @@
   "videoCallEndDialogCancel": "Abbrechen",
   "videoCallEndDialogEnd": "Beenden",
   "videoCallRateTitle": "Gespräch bewerten",
-  "videoCallRateSubtitle": "Bewerte den Videoanruf"
+  "videoCallRateSubtitle": "Bewerte den Videoanruf",
+  "premiumStatusInactive": "inaktiv"
 }

@@ -1796,4 +1796,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => 'Оцените видеозвонок';
+
+  @override
+  String get premiumStatusInactive => 'неактивен';
 }

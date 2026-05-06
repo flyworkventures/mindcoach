@@ -654,5 +654,6 @@
   "videoCallEndDialogCancel": "취소",
   "videoCallEndDialogEnd": "종료",
   "videoCallRateTitle": "대화 평가",
-  "videoCallRateSubtitle": "영상 통화를 평가해 주세요"
+  "videoCallRateSubtitle": "영상 통화를 평가해 주세요",
+  "premiumStatusInactive": "비활성"
 }

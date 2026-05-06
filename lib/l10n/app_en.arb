@@ -655,5 +655,6 @@
   "videoCallEndDialogCancel": "Cancel",
   "videoCallEndDialogEnd": "End",
   "videoCallRateTitle": "Rate Conversation",
-  "videoCallRateSubtitle": "Evaluate the video call"
+  "videoCallRateSubtitle": "Evaluate the video call",
+  "premiumStatusInactive": "inactive"
 }

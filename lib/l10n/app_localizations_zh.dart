@@ -1702,4 +1702,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => '请评价本次视频通话';
+
+  @override
+  String get premiumStatusInactive => '未激活';
 }

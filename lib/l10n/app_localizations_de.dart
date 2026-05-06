@@ -1800,4 +1800,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => 'Bewerte den Videoanruf';
+
+  @override
+  String get premiumStatusInactive => 'inaktiv';
 }

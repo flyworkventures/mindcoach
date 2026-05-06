@@ -101,18 +101,16 @@ class _AppointmentDetailScreenState
 
     // Randevu zamanı gelmiş mi kontrol et (5 dakika tolerans)
     if (timeDifference.inMinutes < -5) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(context.l10n.errorAppointmentExpired)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.errorAppointmentExpired)),
+      );
       return;
     }
 
     // Randevu henüz gelmemişse uyarı göster
     if (timeDifference.inMinutes > 5) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.errorAppointmentNotYet),
-        ),
+        SnackBar(content: Text(context.l10n.errorAppointmentNotYet)),
       );
       return;
     }
@@ -132,9 +130,9 @@ class _AppointmentDetailScreenState
       // ConsultantModel henüz yüklenmemişse, tekrar dene
       final consultantId = widget.appointment.consultantId;
       if (consultantId == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(context.l10n.errorConsultantNotFound)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.errorConsultantNotFound)),
+        );
         return;
       }
 
@@ -156,9 +154,9 @@ class _AppointmentDetailScreenState
 
         _consultantModel = consultant;
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(context.l10n.errorConsultantLoadFailed)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.errorConsultantLoadFailed)),
+        );
         return;
       }
     }
@@ -293,8 +291,9 @@ class _AppointmentDetailScreenState
                                 ? CachedNetworkImage(
                                     imageUrl: photoURL,
                                     fit: BoxFit.cover,
-                                    placeholder: (_, __) => const SizedBox.shrink(),
-                                    errorWidget: (_, __, ___) => Container(
+                                    placeholder: (_, _) =>
+                                        const SizedBox.shrink(),
+                                    errorWidget: (_, _, _) => Container(
                                       color: Colors.grey[300],
                                       child: const Icon(Icons.person),
                                     ),

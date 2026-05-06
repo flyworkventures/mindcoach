@@ -1718,4 +1718,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => '영상 통화를 평가해 주세요';
+
+  @override
+  String get premiumStatusInactive => '비활성';
 }

@@ -654,5 +654,6 @@
   "videoCallEndDialogCancel": "取消",
   "videoCallEndDialogEnd": "结束",
   "videoCallRateTitle": "评价对话",
-  "videoCallRateSubtitle": "请评价本次视频通话"
+  "videoCallRateSubtitle": "请评价本次视频通话",
+  "premiumStatusInactive": "未激活"
 }

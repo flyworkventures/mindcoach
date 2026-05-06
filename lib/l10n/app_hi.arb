@@ -654,5 +654,6 @@
   "videoCallEndDialogCancel": "रद्द करें",
   "videoCallEndDialogEnd": "समाप्त करें",
   "videoCallRateTitle": "बातचीत को रेट करें",
-  "videoCallRateSubtitle": "वीडियो कॉल का मूल्यांकन करें"
+  "videoCallRateSubtitle": "वीडियो कॉल का मूल्यांकन करें",
+  "premiumStatusInactive": "निष्क्रिय"
 }

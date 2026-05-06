@@ -34,6 +34,35 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   final ImagePicker _picker = ImagePicker();
   bool _isUploadingPhoto = false;
 
+  String _extractUserEmail(UserModel? user) {
+    if (user == null) return '';
+    final isGuest = (user.credential.toLowerCase()) == 'guest';
+    final data = user.credentialData;
+    String? emailFromCredential;
+
+    if (data is Map) {
+      emailFromCredential = data['email']?.toString();
+    } else if (data is String && data.trim().isNotEmpty) {
+      try {
+        final decoded = jsonDecode(data);
+        if (decoded is Map) {
+          emailFromCredential = decoded['email']?.toString();
+        }
+      } catch (_) {}
+    }
+
+    final idString = user.id.toString().padLeft(5, '0');
+    final idLastFive = idString.length > 5
+        ? idString.substring(idString.length - 5)
+        : idString;
+
+    if (isGuest) return '$idLastFive@mindcoach.com';
+    if (emailFromCredential != null && emailFromCredential.trim().isNotEmpty) {
+      return emailFromCredential.trim();
+    }
+    return '$idLastFive@mindcoach.com';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -45,12 +74,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
         text: user.age != null ? user.age.toString() : '',
       );
 
-      String email = '';
-      if (user.credentialData != null && user.credentialData is Map) {
-        final credentialData = user.credentialData as Map;
-        email = credentialData['email']?.toString() ?? '';
-      }
-      _emailController = TextEditingController(text: email);
+      _emailController = TextEditingController(text: _extractUserEmail(user));
     } else {
       _nameController = TextEditingController();
       _emailController = TextEditingController();
@@ -209,6 +233,12 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = ref.watch(AllProviders.userProvider);
+    final currentEmail = _extractUserEmail(currentUser);
+    if (_emailController.text != currentEmail) {
+      _emailController.text = currentEmail;
+    }
+
     final media = MediaQuery.of(context);
     final isSmallHeight = media.size.height < 700;
     final l10n = context.l10n;

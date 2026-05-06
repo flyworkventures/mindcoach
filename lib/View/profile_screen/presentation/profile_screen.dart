@@ -181,11 +181,14 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                             await showFutureProgressDialog<void>(
                               context: rootCtx,
                               message: l10n.pleaseWait,
-                              action: () =>
-                                  ref.read(AllProviders.authProvider.notifier).logout(),
+                              action: () => ref
+                                  .read(AllProviders.authProvider.notifier)
+                                  .logout(),
                             );
                           } else {
-                            await ref.read(AllProviders.authProvider.notifier).logout();
+                            await ref
+                                .read(AllProviders.authProvider.notifier)
+                                .logout();
                           }
                           navigatorKey.currentState?.pushNamedAndRemoveUntil(
                             PageRoutes.login,
@@ -430,8 +433,12 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                       iconAsset:
                           'assets/icons/ic_award.svg', // Varsa premium menü ikonu
                       title: l10n.menuItemPremium,
-                      trailingText: l10n.premiumStatusActive,
-                      trailingTextColor: primaryGreen,
+                      trailingText: isPremium
+                          ? l10n.premiumStatusActive
+                          : l10n.premiumStatusInactive,
+                      trailingTextColor: isPremium
+                          ? primaryGreen
+                          : textSecondary,
                       onTap: () async {
                         await RevenueCatUI.presentPaywall();
                       },
@@ -642,8 +649,9 @@ class _ShareFriendBottomSheet extends StatelessWidget {
   /// Twitter, vb.) paylaşabilir.
   Future<void> _shareLink(BuildContext context) async {
     final RenderBox? box = context.findRenderObject() as RenderBox?;
-    final Rect? sharePositionOrigin =
-        box != null ? box.localToGlobal(Offset.zero) & box.size : null;
+    final Rect? sharePositionOrigin = box != null
+        ? box.localToGlobal(Offset.zero) & box.size
+        : null;
     await SharePlus.instance.share(
       ShareParams(
         text: shareUrl,

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mindcoach/View/appointments/appointment_detail_screen.dart';
 import 'package:mindcoach/View/appointments/appointments_notifier.dart';
+import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
@@ -552,11 +552,13 @@ class _NotificationCard extends ConsumerWidget {
       if (!context.mounted) return;
       final info = _findAppointmentById(ref, appointmentId);
       if (info == null) return;
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => AppointmentDetailScreen(appointment: info),
-        ),
-      );
+      final appointmentDate = info.appointmentDateTime;
+      if (appointmentDate == null) return;
+      ref
+          .read(selectedCalendarDateProvider.notifier)
+          .setDate(appointmentDate);
+      ref.read(bottomNavProvider.notifier).setTab(2);
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }, message: context.l10n.pleaseWait);
   }
 

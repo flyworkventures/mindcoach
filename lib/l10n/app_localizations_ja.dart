@@ -1713,4 +1713,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get videoCallRateSubtitle => 'ビデオ通話を評価してください';
+
+  @override
+  String get premiumStatusInactive => '無効';
 }

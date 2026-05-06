@@ -252,14 +252,6 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
     }
   }
 
-  static const List<Widget> _pages = [
-    HomeScreen(),
-    SpecialistsScreen(),
-    CalendarScreen(),
-    ChatScreen(),
-    ProfileView(),
-  ];
-
   static const List<String> _iconAssets = [
     'assets/icons/ic_home.svg',
     'assets/icons/ic_coaches.svg',
@@ -271,6 +263,14 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
   @override
   Widget build(BuildContext context) {
     final selectedIndex = ref.watch(bottomNavProvider);
+    final selectedCalendarDate = ref.watch(selectedCalendarDateProvider);
+    final pages = <Widget>[
+      const HomeScreen(),
+      const SpecialistsScreen(),
+      CalendarScreen(initialSelectedDate: selectedCalendarDate),
+      const ChatScreen(),
+      const ProfileView(),
+    ];
 
     // Listen to notification changes and show new ones ONLY when new notifications are added
     ref.listen<NotificationState>(notificationNotifierProvider, (
@@ -303,7 +303,7 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
     return Scaffold(
       extendBody: true, // Sayfa içeriğinin navbar altına kadar inmesini sağlar
       backgroundColor: Colors.white,
-      body: _pages[selectedIndex],
+      body: pages[selectedIndex],
       bottomNavigationBar: _bottomNavBar(selectedIndex),
     );
   }
