@@ -236,8 +236,9 @@ class _VideoCallRealtimeScreenState
     }
     if (!mounted) return;
 
-    // 🎬 PREMIUM KONTROLÜ: Görüntülü görüşme sadece premium kullanıcılara açık
-    if (!ref.read(AllProviders.premiumProvider).isPremium) {
+    // 🎬 PREMIUM KONTROLÜ:
+    // FindCoachStep trial akışında (isTrial=true) 1 dk deneme izni verilir.
+    if (!widget.isTrial && !ref.read(AllProviders.premiumProvider).isPremium) {
       await presentProOffersPaywall();
       if (mounted) Navigator.of(context).pop();
       return;
@@ -839,7 +840,7 @@ class _VideoCallRealtimeScreenState
       _visemeTimers.add(
         Timer(Duration(milliseconds: delayMs), () {
           if (!mounted) return;
-          if (_callState != _CallState.speaking || _isMuted) {
+          if (_callState != _CallState.speaking) {
             return;
           }
           // Timeline tetikleri PCM'den önce de çalışabilir; !_riveAudioActive
@@ -917,7 +918,7 @@ class _VideoCallRealtimeScreenState
   }
 
   void _driveRealtimeVisemeFromRms(int rms) {
-    if (_callState != _CallState.speaking || _isMuted) return;
+    if (_callState != _CallState.speaking) return;
 
     // Timeline açıkken: yalnızca timeline hamlesi yapıldıktan sonra kısa
     // bir süre RMS'i bastır — üst üste yazma "dudak iptal" ediyormuş gibi
@@ -990,7 +991,7 @@ class _VideoCallRealtimeScreenState
       () {
         _realtimeVisemeApplyTimer = null;
         if (!mounted) return;
-        if (_callState != _CallState.speaking || _isMuted) return;
+        if (_callState != _CallState.speaking) return;
         final int id = _pendingRealtimeVisemeId;
         if (id == _visemeApplied) return;
 
@@ -1008,7 +1009,7 @@ class _VideoCallRealtimeScreenState
                 () {
                   _realtimeVisemeApplyTimer = null;
                   if (!mounted) return;
-                  if (_callState != _CallState.speaking || _isMuted) {
+                  if (_callState != _CallState.speaking) {
                     return;
                   }
                   if (_pendingRealtimeVisemeId != 0) return;
@@ -1034,22 +1035,41 @@ class _VideoCallRealtimeScreenState
   Future<void> _maybeStartTrialTimer() async {
     if (!widget.isTrial) return;
     if (_trialTimer != null && _trialTimer!.isActive) return;
-    final remaining = await TrialQuotaService.instance
-        .videoTrialSecondsRemaining();
-    if (!mounted) return;
-    if (remaining <= 0) {
-      await _onTrialExpired();
-      return;
+    try {
+      final remaining = await TrialQuotaService.instance
+          .videoTrialSecondsRemaining();
+      if (!mounted) return;
+      if (remaining <= 0) {
+        await _onTrialExpired();
+        return;
+      }
+      _videoTrialBudgetSeconds = remaining.clamp(
+        1,
+        TrialQuotaService.videoTrialSecondLimit,
+      );
+      _trialTimer?.cancel();
+      _trialTimer = Timer(
+        Duration(seconds: _videoTrialBudgetSeconds),
+        () {
+          if (mounted) {
+            unawaited(_onTrialExpired());
+          }
+        },
+      );
+    } catch (e) {
+      // Trial servisi error'u ise, güvenli için 60 sn timer başlat
+      if (!mounted) return;
+      _videoTrialBudgetSeconds = TrialQuotaService.videoTrialSecondLimit;
+      _trialTimer?.cancel();
+      _trialTimer = Timer(
+        Duration(seconds: _videoTrialBudgetSeconds),
+        () {
+          if (mounted) {
+            unawaited(_onTrialExpired());
+          }
+        },
+      );
     }
-    _videoTrialBudgetSeconds = remaining.clamp(
-      1,
-      TrialQuotaService.videoTrialSecondLimit,
-    );
-    _trialTimer?.cancel();
-    _trialTimer = Timer(
-      Duration(seconds: _videoTrialBudgetSeconds),
-      _onTrialExpired,
-    );
   }
 
   Future<void> _persistVideoTrialUsageOnce() async {
@@ -1738,7 +1758,8 @@ class _VideoCallRealtimeScreenState
   }
 
   void _syncRiveTalk() {
-    final bool shouldTalk = _callState == _CallState.speaking && !_isMuted;
+    // Mute kullanıcı mic'ini kapatır; AI animasyonları etkilenmemeli.
+    final bool shouldTalk = _callState == _CallState.speaking;
 
     // When state leaves speaking: close mouth and reset audio-active flag.
     // When entering speaking: do NOT open the mouth yet — wait for the first
@@ -1952,36 +1973,25 @@ class _VideoCallRealtimeScreenState
       );
     } else {
       final CameraController c = controller;
-      // Kamerayı PIP kutusuna taşırmadan, en-boy oranını koruyarak ve zoomsuz sığdırır.
-      inner = SizedBox.expand(
-        child: FittedBox(
-          fit: BoxFit
-              .cover, // Kutuyu doldurur, taşan kısımları otomatik merkezden keser
-          alignment: Alignment.center,
-          child: SizedBox(
-            // Kamera sensörü genelde yatay (landscape) olduğu için portre modunda width/height yer değiştirir
-            width: c.value.previewSize!.height,
-            height: c.value.previewSize!.width,
-            child: CameraPreview(c),
-          ),
+      // Kameranın kendi preview boyutu — FittedBox cover ile PIP kutusuna sığar.
+      // Kasmayı azaltmak için ekstra wrapping/border/overlay yok.
+      inner = FittedBox(
+        fit: BoxFit.cover,
+        alignment: Alignment.center,
+        child: SizedBox(
+          width: c.value.previewSize!.height,
+          height: c.value.previewSize!.width,
+          child: CameraPreview(c),
         ),
       );
     }
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16.w),
-      child: Container(
-        width: 88.w,
-        height: 120.h,
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.2),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.25),
-            width: 1,
-          ),
-        ),
-        // RepaintBoundary ve Center etrafında fazladan radius/taşma problemleri olmaması için
-        child: RepaintBoundary(child: inner),
+    // RepaintBoundary en dışta: UI'nin geri kalanı (Rive avatar, blur, vs.)
+    // yeniden çizildiğinde kamera tekrar render edilmiyor.
+    return RepaintBoundary(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16.w),
+        child: SizedBox(width: 88.w, height: 120.h, child: inner),
       ),
     );
   }

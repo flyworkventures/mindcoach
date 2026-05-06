@@ -511,10 +511,11 @@ class _SpecialistDetailScreenState
                 onTap: () async {
                   final premiumState = ref.read(AllProviders.premiumProvider);
                   late final bool isTrial;
-                  if (premiumState.isPremium) {
-                    isTrial = false;
-                  } else if (widget.isTrial) {
+                  // FindCoachStep'ten gelen her görüşme 1 dk trial — premium olsun olmasın.
+                  if (widget.isTrial) {
                     isTrial = true;
+                  } else if (premiumState.isPremium) {
+                    isTrial = false;
                   } else {
                     await presentProOffersPaywall();
                     return;

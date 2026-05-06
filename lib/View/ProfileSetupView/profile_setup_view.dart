@@ -279,8 +279,9 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
                         if (!canProceed) return;
 
                         if (_currentPage == stepCount - 1) {
-                          navigatorKey.currentState?.pushNamed(
+                          navigatorKey.currentState?.pushNamedAndRemoveUntil(
                             PageRoutes.findCoach,
+                            (a) => false,
                           );
                           return;
                         }
