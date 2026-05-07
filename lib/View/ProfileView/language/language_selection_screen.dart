@@ -40,9 +40,7 @@ class _LanguageSelectionScreenState
   }
 
   void _save() {
-    ref
-        .read(localeProvider.notifier)
-        .setLocale(Locale(_selectedCode));
+    ref.read(localeProvider.notifier).setLocale(Locale(_selectedCode));
     Navigator.of(context).pop();
   }
 
@@ -77,9 +75,10 @@ class _LanguageSelectionScreenState
         children: [
           Expanded(
             child: ListView.separated(
+              physics: const ClampingScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               itemCount: _languages.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
+              separatorBuilder: (_, _) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final item = _languages[index];
                 final isSelected = _selectedCode == item.code;
@@ -133,10 +132,7 @@ class _LanguageTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           children: [
-            Text(
-              item.flag,
-              style: const TextStyle(fontSize: 24),
-            ),
+            Text(item.flag, style: const TextStyle(fontSize: 24)),
             const SizedBox(width: 10),
             Text(
               item.name,

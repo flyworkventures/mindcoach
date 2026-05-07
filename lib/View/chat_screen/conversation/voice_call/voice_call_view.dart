@@ -1108,8 +1108,8 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
               onTap: _isMuted ? null : _requestBargeIn,
               behavior: HitTestBehavior.opaque,
               child: SizedBox(
-                width: 280,
-                height: 280,
+                width: 300,
+                height: 300,
                 child: AnimatedBuilder(
                   animation: _pulseCtrl,
                   builder: (context, _) {
@@ -1121,16 +1121,16 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
                       alignment: Alignment.center,
                       children: [
                         Container(
-                          width: 280,
-                          height: 280,
+                          width: 300,
+                          height: 300,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: color.withOpacity(0.08 + 0.10 * t),
                           ),
                         ),
                         Container(
-                          width: 250,
-                          height: 250,
+                          width: 270,
+                          height: 270,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: color.withOpacity(0.16 + 0.12 * t),
@@ -1145,12 +1145,6 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
                             color: const Color(0xFF5ED085),
                             shape: BoxShape.circle,
                             border: Border.all(color: color, width: 4),
-                            image: photoURL.isNotEmpty
-                                ? DecorationImage(
-                                    image: NetworkImage(photoURL),
-                                    fit: BoxFit.cover,
-                                  )
-                                : null,
                             boxShadow: [
                               BoxShadow(
                                 color: color.withOpacity(0.35),
@@ -1165,7 +1159,23 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
                                   size: 100,
                                   color: Colors.white54,
                                 )
-                              : null,
+                              : ClipOval(
+                                  child: Transform.translate(
+                                    offset: const Offset(0, 12),
+                                    child: SizedBox.expand(
+                                      child: Image.network(
+                                        photoURL,
+                                        fit: BoxFit.contain,
+                                        alignment: Alignment.center,
+                                        errorBuilder: (_, _, _) => const Icon(
+                                          Icons.person_rounded,
+                                          size: 100,
+                                          color: Colors.white54,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                         ),
                       ],
                     );

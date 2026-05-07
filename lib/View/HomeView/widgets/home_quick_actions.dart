@@ -105,9 +105,15 @@ class _QuickActionCoachTile extends ConsumerWidget {
                         color: const Color(0xFFE8E8E8),
                         width: 1,
                       ),
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(coach.photoURL),
-                        fit: BoxFit.cover,
+                    ),
+                    child: ClipOval(
+                      child: Transform.translate(
+                        offset: const Offset(0, 4),
+                        child: Image(
+                          image: CachedNetworkImageProvider(coach.photoURL),
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,
+                        ),
                       ),
                     ),
                   ),
@@ -167,12 +173,13 @@ class _QuickActionCoachTile extends ConsumerWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.star_rounded,
-                        size: 18,
+                      SvgPicture.asset(
+                        "assets/icons/star.svg",
+                        width: 18,
+                        height: 18,
                         color: Color(0xFFFFCC00),
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 2),
                       Text(
                         coach.rating.toStringAsFixed(2),
                         style: const TextStyle(

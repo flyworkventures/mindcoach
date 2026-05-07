@@ -244,7 +244,10 @@ class _QuickMessageCard extends ConsumerWidget {
                     ),
                   ),
                   width: double.infinity,
-                  child: _coachImage(coach.photoURL),
+                  child: _coachImage(
+                    coach.photoURL,
+                    isMale: _hasMaleRole(coach.roles),
+                  ),
                 ),
               ),
             ),
@@ -320,7 +323,7 @@ class _QuickMessageCard extends ConsumerWidget {
     );
   }
 
-  Widget _coachImage(String url) {
+  Widget _coachImage(String url, {bool isMale = false}) {
     final isSvg = url.toLowerCase().endsWith('.svg');
 
     Widget fallback() => Container(
@@ -338,10 +341,15 @@ class _QuickMessageCard extends ConsumerWidget {
     return CachedNetworkImage(
       imageUrl: url,
       fit: BoxFit.cover,
-      alignment: Alignment.topCenter,
+      alignment: isMale ? const Alignment(0, -0.15) : Alignment.topCenter,
       errorWidget: (_, _, _) => fallback(),
       placeholder: (_, _) => const SizedBox.shrink(),
     );
+  }
+
+  bool _hasMaleRole(List? roles) {
+    if (roles == null || roles.isEmpty) return false;
+    return roles.any((r) => r.toString().toLowerCase() == 'male');
   }
 }
 
@@ -354,11 +362,11 @@ class _HistoryChatTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final consultantModel = _resolveConsultant(ref, item);
+    final isMale = _hasMaleRole(consultantModel.roles);
     return InkWell(
       onTap: () {
         ref.read(chatProvider.notifier).markChatRead(item.id);
-
-        final consultantModel = _resolveConsultant(ref, item);
         Navigator.pushNamed(
           context,
           PageRoutes.conversationScreen,
@@ -378,17 +386,21 @@ class _HistoryChatTile extends ConsumerWidget {
                 border: Border.all(color: const Color(0xFF21BC87), width: 2),
               ),
               child: ClipOval(
-                child: item.avatarPath.startsWith('http')
-                    ? CachedNetworkImage(
-                        imageUrl: item.avatarPath,
-                        fit: BoxFit.cover,
-                        errorWidget: (_, _, _) => Image.asset(
-                          'assets/images/profile_avatar.jpeg',
-                          fit: BoxFit.cover,
-                        ),
-                        placeholder: (_, _) => const SizedBox.shrink(),
-                      )
-                    : Image.asset(item.avatarPath, fit: BoxFit.cover),
+                child: Transform.translate(
+                  offset: Offset(0, isMale ? 0 : 4),
+                  child: item.avatarPath.startsWith('http')
+                      ? CachedNetworkImage(
+                          imageUrl: item.avatarPath,
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,
+                          errorWidget: (_, _, _) => Image.asset(
+                            'assets/images/profile_avatar.jpeg',
+                            fit: BoxFit.contain,
+                          ),
+                          placeholder: (_, _) => const SizedBox.shrink(),
+                        )
+                      : Image.asset(item.avatarPath, fit: BoxFit.contain),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -448,6 +460,11 @@ class _HistoryChatTile extends ConsumerWidget {
       features: [],
       job: '',
     );
+  }
+
+  bool _hasMaleRole(List? roles) {
+    if (roles == null || roles.isEmpty) return false;
+    return roles.any((r) => r.toString().toLowerCase() == 'male');
   }
 }
 
