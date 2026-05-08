@@ -764,7 +764,10 @@ class _SpecialistDetailScreenState
             Padding(
               padding: const EdgeInsets.only(left: 4.0),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF21BC87).withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(999),

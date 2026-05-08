@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:in_app_notification/in_app_notification.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:mindcoach/View/splash/splash.dart';
-import 'package:mindcoach/core/utils/device_utils.dart';
-import 'package:mindcoach/core/utils/app_constants.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:mindcoach/Riverpod/Providers/premium_provider.dart';
+import 'package:mindcoach/View/ProfileSetupView/steps/find_coach_step.dart';
+import 'package:mindcoach/View/splash/splash.dart';
+import 'package:mindcoach/core/utils/app_constants.dart';
+import 'package:mindcoach/core/utils/device_utils.dart';
 import 'package:mindcoach/models/premium_state.dart';
 
 import '../core/config/size_config.dart';
@@ -38,12 +40,16 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     // Initialize premium provider with device ID and check status
     ref.listen(premiumProvider, (previous, next) {
-      debugPrint('🔐 Premium status: ${next.isPremium}, Days: ${next.daysRemaining}');
+      debugPrint(
+        '🔐 Premium status: ${next.isPremium}, Days: ${next.daysRemaining}',
+      );
     });
 
     final locale = ref.watch(localeProvider);
     // Gerçek locale kodunu göster (sistem locale dahil)
-    final currentLanguageCode = ref.read(localeProvider.notifier).getLanguageCode();
+    final currentLanguageCode = ref
+        .read(localeProvider.notifier)
+        .getLanguageCode();
     debugPrint("Locale: $currentLanguageCode");
 
     return FutureBuilder<String>(
@@ -51,38 +57,32 @@ class _MyAppState extends ConsumerState<MyApp> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
           );
         }
 
         return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MindCoach',
-      navigatorKey: navigatorKey,
-      locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      //routes: AppRouter.routes,
-      home: const Splash(),
-      onGenerateRoute: AppRouter.generateRoute,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2BD383),
-        ),
-        textTheme: GoogleFonts.quicksandTextTheme(),
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      builder: (context, child) {
-        SizeConfig.init(context);
-        return InAppNotification(
-          child: child!,
-        );
-      },
+          debugShowCheckedModeBanner: false,
+          title: 'MindCoach',
+          navigatorKey: navigatorKey,
+          locale: locale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          //routes: AppRouter.routes,
+          home: const Splash(),
+          onGenerateRoute: AppRouter.generateRoute,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF2BD383),
+            ),
+            textTheme: GoogleFonts.quicksandTextTheme(),
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          builder: (context, child) {
+            SizeConfig.init(context);
+            return InAppNotification(child: child!);
+          },
         );
       },
     );
@@ -118,38 +118,48 @@ class _MyAppState extends ConsumerState<MyApp> {
   /// Backend may have more recent premium status than local cache
   Future<void> _syncPremiumWithBackend(String deviceId, WidgetRef ref) async {
     try {
-      final response = await http.get(
-        Uri.parse('${AppConstants.baseURL}/api/v1/premium/device-status/$deviceId'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      ).timeout(
-        const Duration(seconds: 5),
-        onTimeout: () {
-          throw Exception('Backend premium status check timeout');
-        },
-      );
+      final response = await http
+          .get(
+            Uri.parse(
+              '${AppConstants.baseURL}/api/v1/premium/device-status/$deviceId',
+            ),
+            headers: {'Content-Type': 'application/json'},
+          )
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {
+              throw Exception('Backend premium status check timeout');
+            },
+          );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['success'] == true) {
-          debugPrint('✅ Backend premium status: isPremium=${data['isPremium']}, daysRemaining=${data['daysRemaining']}');
+          debugPrint(
+            '✅ Backend premium status: isPremium=${data['isPremium']}, daysRemaining=${data['daysRemaining']}',
+          );
 
           // Update local premium state if backend has different status
           if (data['isPremium'] == true && data['expiryDate'] != null) {
             final expiryDate = DateTime.parse(data['expiryDate']);
-            ref.read(premiumProvider.notifier).setPremiumState(PremiumState(
-              isPremium: true,
-              expiryDate: expiryDate,
-              deviceId: deviceId,
-              isPurchased: data['planId'] != 'trial',
-              daysRemaining: data['daysRemaining'] ?? 0,
-            ));
+            ref
+                .read(premiumProvider.notifier)
+                .setPremiumState(
+                  PremiumState(
+                    isPremium: true,
+                    expiryDate: expiryDate,
+                    deviceId: deviceId,
+                    isPurchased: data['planId'] != 'trial',
+                    daysRemaining: data['daysRemaining'] ?? 0,
+                  ),
+                );
             debugPrint('   → Updated local premium state from backend');
           }
         }
       } else {
-        debugPrint('⚠️ Backend premium status check failed: ${response.statusCode}');
+        debugPrint(
+          '⚠️ Backend premium status check failed: ${response.statusCode}',
+        );
       }
     } catch (e) {
       debugPrint('⚠️ Backend premium sync failed (non-blocking): $e');

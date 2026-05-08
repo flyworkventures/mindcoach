@@ -48,6 +48,7 @@ class AppConstants {
   // Video Call endpoint
   static const String videoCallURL = "/video-call";
   static const String videoCallRateURL = "/video-call/rate";
+  static const String videoCallInsightsURL = "/video-call/insights";
 
   // Notification endpoints
   static const String getNotificationsURL = "/notifications";

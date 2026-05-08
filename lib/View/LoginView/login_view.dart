@@ -7,10 +7,13 @@ import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/View/OnboardView/presentation/widgets/onboarding_terms_text.dart';
 import 'package:mindcoach/View/auth/domain/social_login_provider.dart';
+import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'package:mindcoach/app/my_app.dart';
 import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
+import 'package:mindcoach/core/utils/local_db_keys.dart';
+import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 import 'package:mindcoach/core/widgets/future_progress_dialog.dart';
 import 'package:mindcoach/models/user_model.dart';
@@ -45,9 +48,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
           return;
         }
 
-        debugPrint('[LoginView] Login basarili: id=${userModel.id}, '
-            'username=${userModel.username}, '
-            'answerData=${userModel.answerData != null}');
+        debugPrint(
+          '[LoginView] Login basarili: id=${userModel.id}, '
+          'username=${userModel.username}, '
+          'answerData=${userModel.answerData != null}',
+        );
 
         // 2. Guest kullanicilari icin profil tamamlamaya gerek yok
         if (provider == SocialLoginProvider.guest) {
@@ -73,12 +78,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
         // 5. Onboarding sorularindaki cevaplari backend'e gonder
         debugPrint('[LoginView] Profil tamamlaniyor...');
         final profileState = ref.read(AllControllers.profileSetupProvider);
-        debugPrint('[LoginView] ProfileState: '
-            'fullName="${profileState.fullName}", '
-            'gender=${profileState.gender}, '
-            'supportArea=${profileState.supportArea}, '
-            'meetingTime=${profileState.meetingTime}, '
-            'days=${profileState.availableDays.map((e) => e.name).toList()}');
+        debugPrint(
+          '[LoginView] ProfileState: '
+          'fullName="${profileState.fullName}", '
+          'gender=${profileState.gender}, '
+          'supportArea=${profileState.supportArea}, '
+          'meetingTime=${profileState.meetingTime}, '
+          'days=${profileState.availableDays.map((e) => e.name).toList()}',
+        );
 
         await _completeProfileWithStoredData();
         debugPrint('[LoginView] Profil tamamlandi → navbar');
@@ -109,6 +116,22 @@ class _LoginViewState extends ConsumerState<LoginView> {
       PageRoutes.navbar,
       (route) => false,
     );
+    _maybeOpenPendingPaywallAfterLogin();
+  }
+
+  Future<void> _maybeOpenPendingPaywallAfterLogin() async {
+    final db = LocalDbService();
+    final shouldOpen =
+        await db.getBool(key: LocalDbKeys.pendingPaywallAfterLogin) ?? false;
+    if (!shouldOpen) return;
+
+    // Bir kez göster ve flag'i hemen temizle.
+    await db.setBool(key: LocalDbKeys.pendingPaywallAfterLogin, value: false);
+
+    // Navbar'ın yerleşmesi için kısa bekleme.
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    if (!mounted) return;
+    await presentProOffersPaywall();
   }
 
   @override

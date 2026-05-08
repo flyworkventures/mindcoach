@@ -1,0 +1,5 @@
+"NSCameraUsageDescription" = "A camera mostra sua previa durante chamadas de video com especialistas no Mindcoach.";
+"NSLocationWhenInUseUsageDescription" = "Sua localizacao e usada para enviar notificacoes relevantes com base na sua area enquanto voce usa o app.";
+"NSMicrophoneUsageDescription" = "Seu microfone e usado para gravar e enviar mensagens de voz dentro do app.";
+"NSPhotoLibraryAddUsageDescription" = "Sua biblioteca de fotos e usada para que voce possa escolher fotos para enviar e compartilhar no app.";
+"NSPhotoLibraryUsageDescription" = "Sua biblioteca de fotos e usada para que voce possa escolher fotos para enviar e compartilhar no app.";

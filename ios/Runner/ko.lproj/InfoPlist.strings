@@ -1,0 +1,5 @@
+"NSCameraUsageDescription" = "Mindcoach에서 코치와의 영상 통화 중 미리보기를 표시하기 위해 카메라를 사용합니다.";
+"NSLocationWhenInUseUsageDescription" = "앱 사용 중 지역에 맞는 알림을 보내기 위해 위치 정보를 사용합니다.";
+"NSMicrophoneUsageDescription" = "앱 내에서 음성 메시지를 녹음하고 전송하기 위해 마이크를 사용합니다.";
+"NSPhotoLibraryAddUsageDescription" = "앱에서 업로드하고 공유할 사진을 선택할 수 있도록 사진 보관함을 사용합니다.";
+"NSPhotoLibraryUsageDescription" = "앱에서 업로드하고 공유할 사진을 선택할 수 있도록 사진 보관함을 사용합니다.";

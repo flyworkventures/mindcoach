@@ -1,0 +1,5 @@
+"NSCameraUsageDescription" = "Kamera, Mindcoach uygulamasinda uzmanlarla yaptiginiz goruntulu gorusmelerde onizlemenizi gostermek icin kullanilir.";
+"NSLocationWhenInUseUsageDescription" = "Konumunuz, uygulamayi kullanirken bulundugunuz bolgeye uygun bildirimler gonderebilmemiz icin kullanilir.";
+"NSMicrophoneUsageDescription" = "Mikrofonunuz, uygulama icinde sesli mesaj kaydetmek ve gondermek icin kullanilir.";
+"NSPhotoLibraryAddUsageDescription" = "Fotograf kutuphaneniz, uygulamada yuklemek ve paylasmak uzere fotograf secmeniz icin kullanilir.";
+"NSPhotoLibraryUsageDescription" = "Fotograf kutuphaneniz, uygulamada yuklemek ve paylasmak uzere fotograf secmeniz icin kullanilir.";

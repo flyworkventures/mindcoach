@@ -1,0 +1,5 @@
+"NSCameraUsageDescription" = "Die Kamera zeigt Ihre Vorschau waehrend Videoanrufen mit Coaches in Mindcoach an.";
+"NSLocationWhenInUseUsageDescription" = "Ihr Standort wird verwendet, um Ihnen waehrend der App-Nutzung relevante Benachrichtigungen fuer Ihre Region zu senden.";
+"NSMicrophoneUsageDescription" = "Ihr Mikrofon wird verwendet, um Sprachnachrichten in der App aufzunehmen und zu senden.";
+"NSPhotoLibraryAddUsageDescription" = "Ihre Fotomediathek wird verwendet, damit Sie Fotos zum Hochladen und Teilen in der App auswaehlen koennen.";
+"NSPhotoLibraryUsageDescription" = "Ihre Fotomediathek wird verwendet, damit Sie Fotos zum Hochladen und Teilen in der App auswaehlen koennen.";

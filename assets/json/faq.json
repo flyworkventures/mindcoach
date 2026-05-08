@@ -5,12 +5,30 @@
       "question": {
         "en": "How does this app work?",
         "tr": "Bu uygulama nasıl çalışıyor?",
-        "de": "Wie funktioniert diese App?"
+        "de": "Wie funktioniert diese App?",
+        "it": "Come funziona questa app?",
+        "fr": "Comment fonctionne cette application ?",
+        "ja": "このアプリはどのように動作しますか？",
+        "es": "¿Cómo funciona esta aplicación?",
+        "ru": "Как работает это приложение?",
+        "ko": "이 앱은 어떻게 작동하나요?",
+        "hi": "यह ऐप कैसे काम करता है?",
+        "pt": "Como este aplicativo funciona?",
+        "zh": "这个应用是如何工作的？"
       },
       "answer": {
         "en": "Our app uses artificial intelligence to analyze your emotional state through your written or spoken inputs. It provides personalized insights, mood tracking, and mental-wellness exercises designed to help you better understand and manage your emotions.",
         "tr": "Uygulama, yazılı veya sesli girdilerinize göre duygusal durumunuzu analiz etmek için yapay zekâ kullanır. Daha iyi anlamanıza ve duygularınızı yönetmenize yardımcı olacak kişiselleştirilmiş içgörüler, duygu takibi ve mental iyi oluş egzersizleri sunar.",
-        "de": "Unsere App nutzt künstliche Intelligenz, um Ihren emotionalen Zustand anhand Ihrer schriftlichen oder gesprochenen Eingaben zu analysieren. Sie bietet personalisierte Einblicke, Stimmungstracking und mentale Wellness-Übungen, die Ihnen helfen, Ihre Emotionen besser zu verstehen und zu bewältigen."
+        "de": "Unsere App nutzt künstliche Intelligenz, um Ihren emotionalen Zustand anhand Ihrer schriftlichen oder gesprochenen Eingaben zu analysieren. Sie bietet personalisierte Einblicke, Stimmungstracking und mentale Wellness-Übungen, die Ihnen helfen, Ihre Emotionen besser zu verstehen und zu bewältigen.",
+        "it": "La nostra app usa l'intelligenza artificiale per analizzare il tuo stato emotivo attraverso input scritti o vocali. Offre insight personalizzati, monitoraggio dell'umore ed esercizi di benessere mentale per aiutarti a comprendere e gestire meglio le emozioni.",
+        "fr": "Notre application utilise l'intelligence artificielle pour analyser votre état émotionnel à partir de vos entrées écrites ou vocales. Elle propose des analyses personnalisées, un suivi de l'humeur et des exercices de bien-être mental pour vous aider à mieux comprendre et gérer vos émotions.",
+        "ja": "このアプリは、文章や音声の入力をもとにAIであなたの感情状態を分析します。感情をよりよく理解し管理できるよう、個別のインサイト、気分トラッキング、メンタルウェルネスのエクササイズを提供します。",
+        "es": "Nuestra app utiliza inteligencia artificial para analizar tu estado emocional a través de tus entradas escritas o habladas. Ofrece información personalizada, seguimiento del estado de ánimo y ejercicios de bienestar mental diseñados para ayudarte a comprender y gestionar mejor tus emociones.",
+        "ru": "Наше приложение использует искусственный интеллект, чтобы анализировать ваше эмоциональное состояние по письменным или голосовым сообщениям. Оно предлагает персонализированные рекомендации, отслеживание настроения и упражнения для ментального благополучия, которые помогают лучше понимать и управлять эмоциями.",
+        "ko": "저희 앱은 작성하거나 말한 입력을 바탕으로 인공지능이 감정 상태를 분석합니다. 감정을 더 잘 이해하고 관리할 수 있도록 개인화된 인사이트, 기분 추적, 정신 건강 운동을 제공합니다.",
+        "hi": "हमारा ऐप आपके लिखित या बोले गए इनपुट के आधार पर आपकी भावनात्मक स्थिति का विश्लेषण करने के लिए कृत्रिम बुद्धिमत्ता का उपयोग करता है। यह व्यक्तिगत सुझाव, मूड ट्रैकिंग और मानसिक स्वास्थ्य अभ्यास प्रदान करता है, ताकि आप अपनी भावनाओं को बेहतर समझ और संभाल सकें।",
+        "pt": "Nosso aplicativo usa inteligência artificial para analisar seu estado emocional por meio de entradas escritas ou faladas. Ele oferece insights personalizados, acompanhamento de humor e exercícios de bem-estar mental para ajudar você a entender e gerenciar melhor suas emoções.",
+        "zh": "我们的应用通过你的文字或语音输入，使用人工智能分析你的情绪状态。它提供个性化洞察、情绪追踪和心理健康练习，帮助你更好地理解和管理情绪。"
       }
     },
     {
@@ -18,12 +36,30 @@
       "question": {
         "en": "Can this app replace a real psychologist?",
         "tr": "Bu uygulama gerçek bir psikoloğun yerini alabilir mi?",
-        "de": "Kann diese App einen echten Psychologen ersetzen?"
+        "de": "Kann diese App einen echten Psychologen ersetzen?",
+        "it": "Questa app può sostituire un vero psicologo?",
+        "fr": "Cette application peut-elle remplacer un vrai psychologue ?",
+        "ja": "このアプリは実際の心理士の代わりになりますか？",
+        "es": "¿Esta aplicación puede reemplazar a un psicólogo real?",
+        "ru": "Может ли это приложение заменить настоящего психолога?",
+        "ko": "이 앱이 실제 심리학자를 대체할 수 있나요?",
+        "hi": "क्या यह ऐप एक वास्तविक मनोवैज्ञानिक की जगह ले सकता है?",
+        "pt": "Este app pode substituir um psicólogo real?",
+        "zh": "这个应用可以替代真正的心理学家吗？"
       },
       "answer": {
         "en": "No. This app is not a substitute for professional therapy. Its purpose is to offer emotional support, increase self-awareness, and guide you toward healthier mental habits.",
         "tr": "Hayır. Bu uygulama profesyonel terapinin yerini tutmaz. Amacı duygusal destek sunmak, farkındalığınızı artırmak ve daha sağlıklı zihinsel alışkanlıklara yönlendirmektir.",
-        "de": "Nein. Diese App ist kein Ersatz für professionelle Therapie. Ihr Zweck ist es, emotionale Unterstützung zu bieten, das Selbstbewusstsein zu stärken und zu gesünderen mentalen Gewohnheiten zu führen."
+        "de": "Nein. Diese App ist kein Ersatz für professionelle Therapie. Ihr Zweck ist es, emotionale Unterstützung zu bieten, das Selbstbewusstsein zu stärken und zu gesünderen mentalen Gewohnheiten zu führen.",
+        "it": "No. Questa app non sostituisce una terapia professionale. Il suo scopo è offrire supporto emotivo, aumentare la consapevolezza di sé e guidarti verso abitudini mentali più sane.",
+        "fr": "Non. Cette application ne remplace pas une thérapie professionnelle. Son objectif est d'offrir un soutien émotionnel, d'augmenter la conscience de soi et de vous guider vers des habitudes mentales plus saines.",
+        "ja": "いいえ。このアプリは専門的なセラピーの代替ではありません。目的は、感情的なサポートを提供し、自己認識を高め、より健全なメンタル習慣へ導くことです。",
+        "es": "No. Esta aplicación no sustituye a una terapia profesional. Su objetivo es ofrecer apoyo emocional, aumentar la autoconciencia y guiarte hacia hábitos mentales más saludables.",
+        "ru": "Нет. Это приложение не заменяет профессиональную терапию. Его цель — дать эмоциональную поддержку, повысить осознанность и направить вас к более здоровым ментальным привычкам.",
+        "ko": "아니요. 이 앱은 전문 치료를 대체하지 않습니다. 감정적 지원을 제공하고 자기 인식을 높이며 더 건강한 정신 습관으로 안내하는 것이 목적입니다.",
+        "hi": "नहीं। यह ऐप पेशेवर थेरेपी का विकल्प नहीं है। इसका उद्देश्य भावनात्मक सहयोग देना, आत्म-जागरूकता बढ़ाना और आपको अधिक स्वस्थ मानसिक आदतों की ओर मार्गदर्शन करना है।",
+        "pt": "Não. Este aplicativo não substitui terapia profissional. Seu objetivo é oferecer apoio emocional, aumentar a autoconsciência e orientar você para hábitos mentais mais saudáveis.",
+        "zh": "不能。该应用不能替代专业心理治疗。它的目的是提供情感支持、提升自我认知，并引导你形成更健康的心理习惯。"
       }
     },
     {
@@ -31,12 +67,30 @@
       "question": {
         "en": "Are my conversations and data private?",
         "tr": "Konuşmalarım ve verilerim gizli mi?",
-        "de": "Sind meine Gespräche und Daten privat?"
+        "de": "Sind meine Gespräche und Daten privat?",
+        "it": "Le mie conversazioni e i miei dati sono privati?",
+        "fr": "Mes conversations et mes données sont-elles privées ?",
+        "ja": "私の会話やデータは非公開ですか？",
+        "es": "¿Mis conversaciones y datos son privados?",
+        "ru": "Мои разговоры и данные конфиденциальны?",
+        "ko": "내 대화와 데이터는 비공개인가요?",
+        "hi": "क्या मेरी बातचीत और डेटा निजी हैं?",
+        "pt": "Minhas conversas e dados são privados?",
+        "zh": "我的对话和数据是私密的吗？"
       },
       "answer": {
         "en": "Absolutely. All conversations and personal data are encrypted and securely stored. We comply with international privacy standards including GDPR. Your information is never shared with third parties.",
         "tr": "Kesinlikle. Tüm konuşmalarınız ve kişisel verileriniz şifrelenir ve güvenli şekilde saklanır. GDPR dahil uluslararası gizlilik standartlarına uyuyoruz. Bilgileriniz üçüncü kişilerle asla paylaşılmaz.",
-        "de": "Absolut. Alle Gespräche und persönlichen Daten werden verschlüsselt und sicher gespeichert. Wir entsprechen internationalen Datenschutzstandards wie der DSGVO. Ihre Informationen werden niemals an Dritte weitergegeben."
+        "de": "Absolut. Alle Gespräche und persönlichen Daten werden verschlüsselt und sicher gespeichert. Wir entsprechen internationalen Datenschutzstandards wie der DSGVO. Ihre Informationen werden niemals an Dritte weitergegeben.",
+        "it": "Assolutamente sì. Tutte le conversazioni e i dati personali sono crittografati e archiviati in modo sicuro. Rispettiamo gli standard internazionali sulla privacy, incluso il GDPR. Le tue informazioni non vengono mai condivise con terze parti.",
+        "fr": "Absolument. Toutes les conversations et les données personnelles sont chiffrées et stockées de manière sécurisée. Nous respectons les normes internationales de confidentialité, y compris le RGPD. Vos informations ne sont jamais partagées avec des tiers.",
+        "ja": "はい。すべての会話と個人データは暗号化され、安全に保存されます。GDPRを含む国際的なプライバシー基準に準拠しています。あなたの情報が第三者と共有されることはありません。",
+        "es": "Por supuesto. Todas las conversaciones y los datos personales están cifrados y almacenados de forma segura. Cumplimos con estándares internacionales de privacidad, incluido el GDPR. Tu información nunca se comparte con terceros.",
+        "ru": "Безусловно. Все разговоры и персональные данные шифруются и надежно хранятся. Мы соблюдаем международные стандарты конфиденциальности, включая GDPR. Ваша информация никогда не передается третьим лицам.",
+        "ko": "물론입니다. 모든 대화와 개인 데이터는 암호화되어 안전하게 저장됩니다. GDPR을 포함한 국제 개인정보 보호 기준을 준수합니다. 귀하의 정보는 제3자와 절대 공유되지 않습니다.",
+        "hi": "बिल्कुल। सभी बातचीत और व्यक्तिगत डेटा एन्क्रिप्टेड और सुरक्षित रूप से संग्रहीत किए जाते हैं। हम GDPR सहित अंतरराष्ट्रीय गोपनीयता मानकों का पालन करते हैं। आपकी जानकारी कभी भी तीसरे पक्ष के साथ साझा नहीं की जाती।",
+        "pt": "Com certeza. Todas as conversas e dados pessoais são criptografados e armazenados com segurança. Cumprimos padrões internacionais de privacidade, incluindo o GDPR. Suas informações nunca são compartilhadas com terceiros.",
+        "zh": "当然。所有对话和个人数据都会被加密并安全存储。我们遵守包括 GDPR 在内的国际隐私标准。你的信息绝不会与第三方共享。"
       }
     },
     {
@@ -44,12 +98,30 @@
       "question": {
         "en": "Who can use this app?",
         "tr": "Bu uygulamayı kimler kullanabilir?",
-        "de": "Wer kann diese App nutzen?"
+        "de": "Wer kann diese App nutzen?",
+        "it": "Chi può usare questa app?",
+        "fr": "Qui peut utiliser cette application ?",
+        "ja": "このアプリは誰が使えますか？",
+        "es": "¿Quién puede usar esta aplicación?",
+        "ru": "Кто может пользоваться этим приложением?",
+        "ko": "누가 이 앱을 사용할 수 있나요?",
+        "hi": "इस ऐप का उपयोग कौन कर सकता है?",
+        "pt": "Quem pode usar este aplicativo?",
+        "zh": "谁可以使用这个应用？"
       },
       "answer": {
         "en": "The app is suitable for individuals aged 16 and older who are experiencing stress, anxiety, low motivation, or emotional imbalance.",
         "tr": "Uygulama, 16 yaş ve üzeri; stres, kaygı, düşük motivasyon veya duygusal dengesizlik yaşayan bireyler için uygundur.",
-        "de": "Die App ist für Personen ab 16 Jahren geeignet, die Stress, Angst, geringe Motivation oder emotionale Unausgeglichenheit erleben."
+        "de": "Die App ist für Personen ab 16 Jahren geeignet, die Stress, Angst, geringe Motivation oder emotionale Unausgeglichenheit erleben.",
+        "it": "L'app è adatta a persone dai 16 anni in su che vivono stress, ansia, bassa motivazione o squilibrio emotivo.",
+        "fr": "L'application convient aux personnes de 16 ans et plus qui ressentent du stress, de l'anxiété, un manque de motivation ou un déséquilibre émotionnel.",
+        "ja": "このアプリは、ストレス、不安、意欲低下、感情の不安定さを感じている16歳以上の方に適しています。",
+        "es": "La aplicación es adecuada para personas de 16 años o más que experimentan estrés, ansiedad, baja motivación o desequilibrio emocional.",
+        "ru": "Приложение подходит для людей от 16 лет, испытывающих стресс, тревогу, низкую мотивацию или эмоциональный дисбаланс.",
+        "ko": "이 앱은 스트레스, 불안, 낮은 동기부여 또는 감정적 불균형을 겪는 16세 이상 사용자에게 적합합니다.",
+        "hi": "यह ऐप 16 वर्ष या उससे अधिक आयु के उन लोगों के लिए उपयुक्त है जो तनाव, चिंता, कम प्रेरणा या भावनात्मक असंतुलन का अनुभव करते हैं।",
+        "pt": "O aplicativo é indicado para pessoas com 16 anos ou mais que estejam passando por estresse, ansiedade, baixa motivação ou desequilíbrio emocional.",
+        "zh": "该应用适合16岁及以上、正在经历压力、焦虑、动力不足或情绪失衡的人群。"
       }
     },
     {
@@ -57,12 +129,30 @@
       "question": {
         "en": "How does the AI generate its suggestions?",
         "tr": "Yapay zeka önerilerini nasıl oluşturuyor?",
-        "de": "Wie erstellt die KI ihre Vorschläge?"
+        "de": "Wie erstellt die KI ihre Vorschläge?",
+        "it": "Come fa l'IA a generare i suoi suggerimenti?",
+        "fr": "Comment l'IA génère-t-elle ses suggestions ?",
+        "ja": "AIはどのように提案を生成しますか？",
+        "es": "¿Cómo genera la IA sus sugerencias?",
+        "ru": "Как ИИ формирует свои рекомендации?",
+        "ko": "AI는 어떻게 추천을 생성하나요?",
+        "hi": "AI अपने सुझाव कैसे बनाता है?",
+        "pt": "Como a IA gera suas sugestões?",
+        "zh": "AI 是如何生成建议的？"
       },
       "answer": {
         "en": "The AI is trained on emotional language patterns and psychological research. It learns from your interactions and mood trends to provide personalized recommendations.",
         "tr": "Yapay zekâ, duygusal dil kalıpları ve psikolojik araştırmalarla eğitilmiştir. Etkileşimlerinizden ve duygu trendlerinizden öğrenerek kişiselleştirilmiş öneriler sunar.",
-        "de": "Die KI ist auf emotionale Sprachmuster und psychologische Forschung trainiert. Sie lernt aus Ihren Interaktionen und Stimmungsmustern, um personalisierte Empfehlungen zu geben."
+        "de": "Die KI ist auf emotionale Sprachmuster und psychologische Forschung trainiert. Sie lernt aus Ihren Interaktionen und Stimmungsmustern, um personalisierte Empfehlungen zu geben.",
+        "it": "L'IA è addestrata su modelli di linguaggio emotivo e ricerche psicologiche. Impara dalle tue interazioni e dai trend dell'umore per fornire consigli personalizzati.",
+        "fr": "L'IA est entraînée sur des modèles de langage émotionnel et des recherches psychologiques. Elle apprend de vos interactions et de l'évolution de votre humeur pour proposer des recommandations personnalisées.",
+        "ja": "AIは感情言語のパターンと心理学研究にもとづいて学習しています。あなたのやり取りや気分の傾向から学び、パーソナライズされた提案を提供します。",
+        "es": "La IA está entrenada con patrones de lenguaje emocional e investigación psicológica. Aprende de tus interacciones y tendencias de estado de ánimo para ofrecer recomendaciones personalizadas.",
+        "ru": "ИИ обучен на эмоциональных языковых паттернах и психологических исследованиях. Он учится на ваших взаимодействиях и динамике настроения, чтобы давать персонализированные рекомендации.",
+        "ko": "AI는 감정 언어 패턴과 심리학 연구를 기반으로 학습되었습니다. 사용자의 상호작용과 기분 추세를 학습해 개인화된 추천을 제공합니다.",
+        "hi": "AI को भावनात्मक भाषा पैटर्न और मनोवैज्ञानिक शोध पर प्रशिक्षित किया गया है। यह आपकी बातचीत और मूड ट्रेंड से सीखकर व्यक्तिगत सुझाव देता है।",
+        "pt": "A IA é treinada com padrões de linguagem emocional e pesquisas psicológicas. Ela aprende com suas interações e tendências de humor para fornecer recomendações personalizadas.",
+        "zh": "AI 基于情绪语言模式和心理学研究进行训练。它会从你的互动和情绪趋势中学习，提供个性化建议。"
       }
     },
     {
@@ -70,12 +160,30 @@
       "question": {
         "en": "Is the app free to use?",
         "tr": "Uygulama ücretsiz mi?",
-        "de": "Ist die App kostenlos?"
+        "de": "Ist die App kostenlos?",
+        "it": "L'app è gratuita?",
+        "fr": "L'application est-elle gratuite ?",
+        "ja": "このアプリは無料で使えますか？",
+        "es": "¿La aplicación es gratuita?",
+        "ru": "Приложение бесплатное?",
+        "ko": "이 앱은 무료인가요?",
+        "hi": "क्या यह ऐप मुफ्त है?",
+        "pt": "O aplicativo é gratuito?",
+        "zh": "这个应用可以免费使用吗？"
       },
       "answer": {
         "en": "The app offers free basic features. Premium plans unlock advanced analytics and personalized mental-wellness tools.",
         "tr": "Uygulama temel özellikleri ücretsiz sunar. Premium plan ise gelişmiş analizler ve kişisel mental destek araçları sunar.",
-        "de": "Die App bietet grundlegende Funktionen kostenlos an. Premium-Pläne schalten erweiterte Analysen und personalisierte mentale Wellness-Tools frei."
+        "de": "Die App bietet grundlegende Funktionen kostenlos an. Premium-Pläne schalten erweiterte Analysen und personalisierte mentale Wellness-Tools frei.",
+        "it": "L'app offre funzionalità di base gratuite. I piani Premium sbloccano analisi avanzate e strumenti personalizzati per il benessere mentale.",
+        "fr": "L'application propose des fonctionnalités de base gratuites. Les offres Premium débloquent des analyses avancées et des outils personnalisés de bien-être mental.",
+        "ja": "アプリの基本機能は無料で利用できます。プレミアムプランでは、高度な分析やパーソナライズされたメンタルウェルネス機能が利用可能になります。",
+        "es": "La aplicación ofrece funciones básicas gratuitas. Los planes Premium desbloquean análisis avanzados y herramientas personalizadas de bienestar mental.",
+        "ru": "Приложение предлагает базовые функции бесплатно. Премиум-планы открывают расширенную аналитику и персонализированные инструменты для ментального благополучия.",
+        "ko": "앱은 기본 기능을 무료로 제공합니다. 프리미엄 플랜에서는 고급 분석과 개인 맞춤형 정신 건강 도구를 사용할 수 있습니다.",
+        "hi": "ऐप बुनियादी सुविधाएँ मुफ्त में देता है। प्रीमियम प्लान उन्नत विश्लेषण और व्यक्तिगत मानसिक स्वास्थ्य टूल्स को अनलॉक करता है।",
+        "pt": "O aplicativo oferece recursos básicos gratuitos. Os planos Premium desbloqueiam análises avançadas e ferramentas personalizadas de bem-estar mental.",
+        "zh": "应用提供免费的基础功能。高级方案可解锁高级分析和个性化心理健康工具。"
       }
     },
     {
@@ -83,12 +191,30 @@
       "question": {
         "en": "Can I use this app in an emergency?",
         "tr": "Acil durumlarda bu uygulamayı kullanabilir miyim?",
-        "de": "Kann ich diese App in einem Notfall nutzen?"
+        "de": "Kann ich diese App in einem Notfall nutzen?",
+        "it": "Posso usare questa app in caso di emergenza?",
+        "fr": "Puis-je utiliser cette application en cas d'urgence ?",
+        "ja": "緊急時にこのアプリを使えますか？",
+        "es": "¿Puedo usar esta aplicación en una emergencia?",
+        "ru": "Могу ли я использовать это приложение в экстренной ситуации?",
+        "ko": "응급 상황에서 이 앱을 사용할 수 있나요?",
+        "hi": "क्या मैं आपातकाल में इस ऐप का उपयोग कर सकता/सकती हूँ?",
+        "pt": "Posso usar este aplicativo em uma emergência?",
+        "zh": "在紧急情况下我可以使用这个应用吗？"
       },
       "answer": {
         "en": "No. The app is not intended for crisis situations. In emergencies, please contact local emergency services or a mental-health hotline.",
         "tr": "Hayır. Bu uygulama kriz durumları için tasarlanmamıştır. Acil bir durumda lütfen yerel acil hatlarıyla iletişime geçin.",
-        "de": "Nein. Diese App ist nicht für Krisensituationen gedacht. Bitte kontaktieren Sie im Notfall die örtlichen Notdienste oder eine psychologische Hotline."
+        "de": "Nein. Diese App ist nicht für Krisensituationen gedacht. Bitte kontaktieren Sie im Notfall die örtlichen Notdienste oder eine psychologische Hotline.",
+        "it": "No. L'app non è pensata per situazioni di crisi. In caso di emergenza, contatta i servizi di emergenza locali o una linea di supporto psicologico.",
+        "fr": "Non. L'application n'est pas destinée aux situations de crise. En cas d'urgence, veuillez contacter les services d'urgence locaux ou une ligne d'assistance en santé mentale.",
+        "ja": "いいえ。このアプリは危機的状況向けではありません。緊急時は、地域の緊急サービスまたはメンタルヘルスのホットラインに連絡してください。",
+        "es": "No. La aplicación no está diseñada para situaciones de crisis. En una emergencia, contacta con los servicios de emergencia locales o una línea de ayuda en salud mental.",
+        "ru": "Нет. Приложение не предназначено для кризисных ситуаций. В экстренных случаях обратитесь в местные службы спасения или на горячую линию психологической помощи.",
+        "ko": "아니요. 이 앱은 위기 상황을 위한 것이 아닙니다. 응급 상황에서는 지역 응급 서비스 또는 정신건강 핫라인에 연락하세요.",
+        "hi": "नहीं। यह ऐप संकट की स्थितियों के लिए नहीं बनाया गया है। आपातकाल में स्थानीय आपातकालीन सेवाओं या मानसिक स्वास्थ्य हेल्पलाइन से संपर्क करें।",
+        "pt": "Não. O aplicativo não é destinado a situações de crise. Em emergências, entre em contato com os serviços locais de emergência ou uma linha de apoio em saúde mental.",
+        "zh": "不能。该应用不适用于危机情况。遇到紧急情况，请联系当地急救服务或心理健康热线。"
       }
     },
     {
@@ -96,12 +222,30 @@
       "question": {
         "en": "On which platforms is the app available?",
         "tr": "Uygulama hangi platformlarda mevcut?",
-        "de": "Auf welchen Plattformen ist die App verfügbar?"
+        "de": "Auf welchen Plattformen ist die App verfügbar?",
+        "it": "Su quali piattaforme è disponibile l'app?",
+        "fr": "Sur quelles plateformes l'application est-elle disponible ?",
+        "ja": "このアプリはどのプラットフォームで利用できますか？",
+        "es": "¿En qué plataformas está disponible la aplicación?",
+        "ru": "На каких платформах доступно приложение?",
+        "ko": "이 앱은 어떤 플랫폼에서 사용할 수 있나요?",
+        "hi": "यह ऐप किन प्लेटफ़ॉर्म पर उपलब्ध है?",
+        "pt": "Em quais plataformas o aplicativo está disponível?",
+        "zh": "这个应用可在哪些平台使用？"
       },
       "answer": {
         "en": "The app is available on iOS and Android. A web version is currently under development.",
         "tr": "Uygulama iOS ve Android’de mevcuttur. Web sürümü geliştirme aşamasındadır.",
-        "de": "Die App ist auf iOS und Android verfügbar. Eine Webversion befindet sich in der Entwicklung."
+        "de": "Die App ist auf iOS und Android verfügbar. Eine Webversion befindet sich in der Entwicklung.",
+        "it": "L'app è disponibile su iOS e Android. Una versione web è attualmente in sviluppo.",
+        "fr": "L'application est disponible sur iOS et Android. Une version web est actuellement en cours de développement.",
+        "ja": "このアプリはiOSとAndroidで利用できます。Web版は現在開発中です。",
+        "es": "La aplicación está disponible en iOS y Android. Actualmente se está desarrollando una versión web.",
+        "ru": "Приложение доступно на iOS и Android. Веб-версия сейчас находится в разработке.",
+        "ko": "이 앱은 iOS와 Android에서 사용할 수 있습니다. 웹 버전은 현재 개발 중입니다.",
+        "hi": "यह ऐप iOS और Android पर उपलब्ध है। वेब संस्करण वर्तमान में विकासाधीन है।",
+        "pt": "O aplicativo está disponível para iOS e Android. Uma versão web está em desenvolvimento.",
+        "zh": "该应用可在 iOS 和 Android 上使用。网页版目前正在开发中。"
       }
     },
     {
@@ -109,12 +253,30 @@
       "question": {
         "en": "Does the AI really understand my emotions?",
         "tr": "Yapay zekâ duygularımı gerçekten anlıyor mu?",
-        "de": "Versteht die KI wirklich meine Emotionen?"
+        "de": "Versteht die KI wirklich meine Emotionen?",
+        "it": "L'IA capisce davvero le mie emozioni?",
+        "fr": "L'IA comprend-elle vraiment mes émotions ?",
+        "ja": "AIは本当に私の感情を理解していますか？",
+        "es": "¿La IA realmente entiende mis emociones?",
+        "ru": "Действительно ли ИИ понимает мои эмоции?",
+        "ko": "AI가 정말로 제 감정을 이해하나요?",
+        "hi": "क्या AI वास्तव में मेरी भावनाओं को समझता है?",
+        "pt": "A IA realmente entende minhas emoções?",
+        "zh": "AI 真的能理解我的情绪吗？"
       },
       "answer": {
         "en": "The AI recognizes emotional tones and patterns, but it is still an artificial system and cannot fully replicate human empathy.",
         "tr": "Yapay zekâ duygusal tonları ve kalıpları tanır, ancak hâlâ yapay bir sistemdir ve insan empatisini tamamen taklit edemez.",
-        "de": "Die KI erkennt emotionale Töne und Muster, ist jedoch ein künstliches System und kann menschliche Empathie nicht vollständig ersetzen."
+        "de": "Die KI erkennt emotionale Töne und Muster, ist jedoch ein künstliches System und kann menschliche Empathie nicht vollständig ersetzen.",
+        "it": "L'IA riconosce toni e schemi emotivi, ma è comunque un sistema artificiale e non può replicare completamente l'empatia umana.",
+        "fr": "L'IA reconnaît les tonalités et les schémas émotionnels, mais reste un système artificiel et ne peut pas reproduire totalement l'empathie humaine.",
+        "ja": "AIは感情のトーンやパターンを認識できますが、あくまで人工システムであり、人間の共感を完全に再現することはできません。",
+        "es": "La IA reconoce tonos y patrones emocionales, pero sigue siendo un sistema artificial y no puede replicar completamente la empatía humana.",
+        "ru": "ИИ распознает эмоциональные оттенки и паттерны, но это все же искусственная система, которая не может полностью воспроизвести человеческую эмпатию.",
+        "ko": "AI는 감정의 톤과 패턴을 인식하지만, 여전히 인공 시스템이므로 인간의 공감을 완전히 재현할 수는 없습니다.",
+        "hi": "AI भावनात्मक स्वर और पैटर्न पहचान सकता है, लेकिन यह अभी भी एक कृत्रिम प्रणाली है और मानव सहानुभूति की पूरी तरह नकल नहीं कर सकता।",
+        "pt": "A IA reconhece tons e padrões emocionais, mas ainda é um sistema artificial e não consegue reproduzir totalmente a empatia humana.",
+        "zh": "AI 能识别情绪语气和模式，但它仍然是人工系统，无法完全复制人类共情能力。"
       }
     },
     {
@@ -122,12 +284,30 @@
       "question": {
         "en": "How can I get the most out of the app?",
         "tr": "Uygulamadan en iyi şekilde nasıl yararlanabilirim?",
-        "de": "Wie kann ich das Beste aus der App herausholen?"
+        "de": "Wie kann ich das Beste aus der App herausholen?",
+        "it": "Come posso ottenere il massimo dall'app?",
+        "fr": "Comment tirer le meilleur parti de l'application ?",
+        "ja": "このアプリを最大限に活用するにはどうすればよいですか？",
+        "es": "¿Cómo puedo aprovechar al máximo la aplicación?",
+        "ru": "Как получить максимум пользы от приложения?",
+        "ko": "앱을 최대한 활용하려면 어떻게 해야 하나요?",
+        "hi": "मैं ऐप का अधिकतम लाभ कैसे उठा सकता/सकती हूँ?",
+        "pt": "Como posso aproveitar ao máximo o aplicativo?",
+        "zh": "我如何最大化利用这个应用？"
       },
       "answer": {
         "en": "Use the app consistently: log your mood daily, chat with the AI, and complete recommended exercises to improve self-awareness.",
         "tr": "Uygulamayı düzenli kullanın: her gün duygu durumunuzu kaydedin, yapay zekâ ile sohbet edin ve önerilen egzersizleri tamamlayın.",
-        "de": "Nutzen Sie die App regelmäßig: protokollieren Sie täglich Ihre Stimmung, chatten Sie mit der KI und machen Sie die empfohlenen Übungen."
+        "de": "Nutzen Sie die App regelmäßig: protokollieren Sie täglich Ihre Stimmung, chatten Sie mit der KI und machen Sie die empfohlenen Übungen.",
+        "it": "Usa l'app con costanza: registra ogni giorno il tuo umore, chatta con l'IA e completa gli esercizi consigliati per migliorare la consapevolezza di te.",
+        "fr": "Utilisez l'application régulièrement : notez votre humeur chaque jour, échangez avec l'IA et réalisez les exercices recommandés pour améliorer votre connaissance de soi.",
+        "ja": "アプリを継続的に使いましょう。毎日気分を記録し、AIと会話し、推奨エクササイズを実施することで自己理解を深められます。",
+        "es": "Usa la aplicación de forma constante: registra tu estado de ánimo a diario, conversa con la IA y completa los ejercicios recomendados para mejorar tu autoconocimiento.",
+        "ru": "Используйте приложение регулярно: ежедневно отмечайте настроение, общайтесь с ИИ и выполняйте рекомендуемые упражнения для развития самопонимания.",
+        "ko": "앱을 꾸준히 사용하세요: 매일 기분을 기록하고, AI와 대화하며, 추천된 운동을 완료해 자기 인식을 높이세요.",
+        "hi": "ऐप का लगातार उपयोग करें: रोज़ अपना मूड दर्ज करें, AI से चैट करें और सुझाए गए अभ्यास पूरे करें ताकि आत्म-जागरूकता बढ़े।",
+        "pt": "Use o aplicativo com consistência: registre seu humor diariamente, converse com a IA e conclua os exercícios recomendados para melhorar o autoconhecimento.",
+        "zh": "持续使用应用：每天记录情绪，与 AI 对话，并完成推荐练习，以提升自我认知。"
       }
     }
   ]

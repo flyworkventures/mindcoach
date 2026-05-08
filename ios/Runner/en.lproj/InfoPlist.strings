@@ -1,0 +1,5 @@
+"NSCameraUsageDescription" = "The camera shows your preview during video calls with coaches in Mindcoach.";
+"NSLocationWhenInUseUsageDescription" = "Your location is used to send you relevant notifications based on your area while using the app.";
+"NSMicrophoneUsageDescription" = "Your microphone is used to record and send voice messages within the app.";
+"NSPhotoLibraryAddUsageDescription" = "Your photo library is used so you can choose photos to upload and share in the app.";
+"NSPhotoLibraryUsageDescription" = "Your photo library is used so you can choose photos to upload and share in the app.";

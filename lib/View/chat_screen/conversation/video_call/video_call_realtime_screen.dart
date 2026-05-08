@@ -14,10 +14,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_pcm_sound/flutter_pcm_sound.dart' as pcm;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mindcoach/Riverpod/Providers/premium_provider.dart' as AllProviders;
+import 'package:mindcoach/Riverpod/Providers/premium_provider.dart'
+    as AllProviders;
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/Services/rive_preload_service.dart';
 import 'package:mindcoach/View/specialists_screen/specialists_notifier.dart';
+import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_trial_insights_screen.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
@@ -201,6 +203,7 @@ class _VideoCallRealtimeScreenState
     'mindcoach/voice_audio_session',
   );
   final HttpService _httpService = HttpService();
+  final List<Map<String, String>> _transcriptTurns = [];
 
   @override
   void initState() {
@@ -1048,27 +1051,21 @@ class _VideoCallRealtimeScreenState
         TrialQuotaService.videoTrialSecondLimit,
       );
       _trialTimer?.cancel();
-      _trialTimer = Timer(
-        Duration(seconds: _videoTrialBudgetSeconds),
-        () {
-          if (mounted) {
-            unawaited(_onTrialExpired());
-          }
-        },
-      );
+      _trialTimer = Timer(Duration(seconds: _videoTrialBudgetSeconds), () {
+        if (mounted) {
+          unawaited(_onTrialExpired());
+        }
+      });
     } catch (e) {
       // Trial servisi error'u ise, güvenli için 60 sn timer başlat
       if (!mounted) return;
       _videoTrialBudgetSeconds = TrialQuotaService.videoTrialSecondLimit;
       _trialTimer?.cancel();
-      _trialTimer = Timer(
-        Duration(seconds: _videoTrialBudgetSeconds),
-        () {
-          if (mounted) {
-            unawaited(_onTrialExpired());
-          }
-        },
-      );
+      _trialTimer = Timer(Duration(seconds: _videoTrialBudgetSeconds), () {
+        if (mounted) {
+          unawaited(_onTrialExpired());
+        }
+      });
     }
   }
 
@@ -1090,70 +1087,15 @@ class _VideoCallRealtimeScreenState
     await _terminateRealtimeForTrialExpiry();
     await _persistVideoTrialUsageOnce();
     if (!mounted) return;
-    final l10n = context.l10n;
-
-    await showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return PopScope(
-          canPop: false,
-          child: AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            title: Text(
-              l10n.trialEndedTitle,
-              style: const TextStyle(
-                fontFamily: 'Geist',
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
-            content: Text(
-              l10n.trialEndedMessage,
-              style: const TextStyle(
-                fontFamily: 'Geist',
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF555555),
-                height: 1.4,
-              ),
-            ),
-            actions: [
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF21BC87),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(
-                    l10n.trialEndedAction,
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => VideoCallTrialInsightsScreen(
+          specialist: widget.specialist,
+          durationSeconds: _secondsElapsed,
+          transcriptTurns: List<Map<String, String>>.from(_transcriptTurns),
+        ),
+      ),
     );
-
-    if (!mounted) return;
-    await _endCall(navigateToLogin: true);
   }
 
   Future<void> _terminateRealtimeForTrialExpiry() async {
@@ -1272,6 +1214,7 @@ class _VideoCallRealtimeScreenState
 
   void _handleJson(Map<String, dynamic> msg) {
     final type = msg['type'] as String? ?? '';
+    _captureTranscriptTurn(type, msg);
     switch (type) {
       case 'connection_success':
         _onRealtimeConnectionReady();
@@ -1331,6 +1274,45 @@ class _VideoCallRealtimeScreenState
         _setError();
         break;
     }
+  }
+
+  void _captureTranscriptTurn(String type, Map<String, dynamic> msg) {
+    String role = '';
+    if (type.contains('user')) {
+      role = 'user';
+    } else if (type.contains('ai') || type.contains('assistant')) {
+      role = 'assistant';
+    } else {
+      final rawRole = msg['role']?.toString().toLowerCase() ?? '';
+      if (rawRole.contains('user')) {
+        role = 'user';
+      } else if (rawRole.contains('assistant') || rawRole.contains('ai')) {
+        role = 'assistant';
+      }
+    }
+
+    if (role.isEmpty) return;
+
+    final possibleText = <dynamic>[
+      msg['text'],
+      msg['transcript'],
+      msg['content'],
+      msg['message'],
+      msg['response'],
+      msg['assistantText'],
+      msg['userText'],
+    ];
+    String? text;
+    for (final value in possibleText) {
+      final current = value?.toString().trim();
+      if (current != null && current.isNotEmpty) {
+        text = current;
+        break;
+      }
+    }
+
+    if (text == null || text.isEmpty) return;
+    _transcriptTurns.add({'role': role, 'text': text});
   }
 
   void _enqueuePcmBytes(Uint8List bytes) {
