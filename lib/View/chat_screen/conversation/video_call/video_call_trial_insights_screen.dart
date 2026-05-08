@@ -591,6 +591,36 @@ class TrialActivatedScreen extends StatefulWidget {
 class _TrialActivatedScreenState extends State<TrialActivatedScreen> {
   bool _switchOn = false;
   bool _didComplete = false;
+  String get _langCode =>
+      Localizations.localeOf(context).languageCode.toLowerCase();
+
+  String _t({
+    required String tr,
+    required String en,
+    required String de,
+    required String es,
+    required String fr,
+    required String hi,
+    required String it,
+    required String ja,
+    required String ko,
+    required String pt,
+    required String ru,
+    required String zh,
+  }) {
+    if (_langCode.startsWith('tr')) return tr;
+    if (_langCode.startsWith('de')) return de;
+    if (_langCode.startsWith('es')) return es;
+    if (_langCode.startsWith('fr')) return fr;
+    if (_langCode.startsWith('hi')) return hi;
+    if (_langCode.startsWith('it')) return it;
+    if (_langCode.startsWith('ja')) return ja;
+    if (_langCode.startsWith('ko')) return ko;
+    if (_langCode.startsWith('pt')) return pt;
+    if (_langCode.startsWith('ru')) return ru;
+    if (_langCode.startsWith('zh')) return zh;
+    return en;
+  }
 
   @override
   void initState() {
@@ -624,9 +654,22 @@ class _TrialActivatedScreenState extends State<TrialActivatedScreen> {
           children: [
             _TrialToggleVisual(isOn: _switchOn),
             const SizedBox(height: 16),
-            const Text(
-              '3-day free trial',
-              style: TextStyle(
+            Text(
+              _t(
+                tr: '3 günlük ücretsiz deneme',
+                en: '3-day free trial',
+                de: '3 Tage kostenlos testen',
+                es: 'prueba gratis de 3 dias',
+                fr: 'essai gratuit de 3 jours',
+                hi: '3 दिन का मुफ्त ट्रायल',
+                it: 'prova gratuita di 3 giorni',
+                ja: '3日間無料トライアル',
+                ko: '3일 무료 체험',
+                pt: 'teste gratis de 3 dias',
+                ru: '3-дневный бесплатный пробный период',
+                zh: '3天免费试用',
+              ),
+              style: const TextStyle(
                 fontFamily: 'Geist',
                 fontSize: 42 / 2,
                 fontWeight: FontWeight.w700,
@@ -634,9 +677,22 @@ class _TrialActivatedScreenState extends State<TrialActivatedScreen> {
                 letterSpacing: -0.2,
               ),
             ),
-            const Text(
-              'activated',
-              style: TextStyle(
+            Text(
+              _t(
+                tr: 'aktif',
+                en: 'activated',
+                de: 'aktiviert',
+                es: 'activado',
+                fr: 'active',
+                hi: 'सक्रिय',
+                it: 'attivato',
+                ja: '有効化',
+                ko: '활성화됨',
+                pt: 'ativado',
+                ru: 'активировано',
+                zh: '已激活',
+              ),
+              style: const TextStyle(
                 fontFamily: 'Geist',
                 fontSize: 58 / 2,
                 fontWeight: FontWeight.w700,

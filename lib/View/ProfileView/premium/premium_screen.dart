@@ -297,12 +297,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
         // 5. Başarı mesajı
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('🎉 Premium Activated! Enjoy all features.'),
-              duration: Duration(seconds: 3),
-            ),
-          );
+          
           // Kapat
           Future.delayed(const Duration(milliseconds: 500), () {
             if (mounted) Navigator.pop(context);
