@@ -1361,6 +1361,428 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ein motivierender und stärkeorientierter Begleiter, der dir hilft, deine innere Kraft zu entdecken. Begleitet dich durch Herausforderungen, Rückschläge und Übergangsphasen — und baut die Resilienz und das Selbstvertrauen auf, um allem zu begegnen, was das Leben bringt.';
 
   @override
+  String get explanationFamilyAssistant3 =>
+      'Ein erfahrener Familienbegleiter, der hilft, belastete Beziehungen zu reparieren und das Vertrauen zwischen Eltern und Kindern mit Empathie und Geduld wiederherzustellen.';
+
+  @override
+  String get explanationFamilyAssistant4 =>
+      'Ein lösungsorientierter Familienbegleiter, der dir hilft, gesunde Grenzen zu setzen, die Kommunikation zu verbessern und ein friedliches Zuhause zu schaffen.';
+
+  @override
+  String get explanationFamilyAssistant5 =>
+      'Ein weiser und geduldiger Begleiter für Familien, die mit Scheidung, Trennung oder großen Lebensübergängen umgehen — mit Mitgefühl und Klarheit.';
+
+  @override
+  String get explanationFamilyAssistant6 =>
+      'Ein fürsorglicher Begleiter, der Kinder durch Verhaltensherausforderungen unterstützt und Eltern mit praktischen, evidenzbasierten Strategien ausrüstet.';
+
+  @override
+  String get explanationFamilyAssistant7 =>
+      'Ein ganzheitlicher Familienbegleiter, der emotionale, kommunikative und strukturelle Ansätze integriert, um dauerhafte Harmonie ins Zuhause zu bringen.';
+
+  @override
+  String get explanationFamilyAssistant8 =>
+      'Ein warmer und stärkender Begleiter, der Familien hilft, vergangene Wunden zu heilen und stärkere, widerstandsfähigere Bindungen aufzubauen.';
+
+  @override
+  String get explanationFamilyAssistant9 =>
+      'Ein pragmatischer Familienbegleiter, der sich auf alltägliche Erziehungslösungen, Konfliktlösung und konsistente Routinen konzentriert.';
+
+  @override
+  String get explanationFamilyAssistant10 =>
+      'Ein mitfühlender Begleiter für Patchwork-Familien, Stiefeltern und einzigartige Haushaltsstrukturen, die nach Balance und Verbindung suchen.';
+
+  @override
+  String get explanationFamilyAssistant11 =>
+      'Ein sanfter und geschickter Begleiter, der Familien hilft, Trauer, Verlust und große Veränderungen zu verarbeiten, während die emotionale Sicherheit aller bewahrt wird.';
+
+  @override
+  String get explanationFamilyAssistant12 =>
+      'Ein langfristig orientierter Begleiter, der sich der Pflege tief verbundener, emotional gesunder Familien über Generationen hinweg widmet.';
+
+  @override
+  String get explanationThoughtAndHabitGuide2 =>
+      'Ein praktischer Begleiter, der dir hilft, einschränkende Denkmuster mit evidenzbasierten kognitiven Techniken zu erkennen und umzugestalten.';
+
+  @override
+  String get explanationThoughtAndHabitGuide3 =>
+      'Ein geduldiger Mentor, spezialisiert auf Gewohnheitsbildung — hilft dir, kleine tägliche Routinen aufzubauen, die zu dauerhaften Veränderungen werden.';
+
+  @override
+  String get explanationThoughtAndHabitGuide4 =>
+      'Ein fokussierter Begleiter, der negative Selbstgespräche durch achtsamkeitsbasierte Praktiken in ausgewogenes, konstruktives Denken verwandelt.';
+
+  @override
+  String get explanationThoughtAndHabitGuide5 =>
+      'Ein motivierender Begleiter, der Mindset-Veränderungen mit umsetzbaren Gewohnheiten für messbares persönliches Wachstum verbindet.';
+
+  @override
+  String get explanationThoughtAndHabitGuide6 =>
+      'Ein reflektierender Begleiter, der dir hilft, die Kernüberzeugungen aufzudecken, die dein Verhalten antreiben — und sie absichtsvoll neu zu schreiben.';
+
+  @override
+  String get explanationThoughtAndHabitGuide7 =>
+      'Ein stärkender Begleiter, der sich darauf konzentriert, Grübelzyklen zu durchbrechen und durch geerdetes Bewusstsein im gegenwärtigen Moment zu ersetzen.';
+
+  @override
+  String get explanationThoughtAndHabitGuide8 =>
+      'Ein strukturierter Coach, der dir hilft, Morgenroutinen, Deep-Work-Gewohnheiten und Erholungsrituale aufzubauen, die dein Leben verändern.';
+
+  @override
+  String get explanationThoughtAndHabitGuide9 =>
+      'Ein mitfühlender Begleiter, der dich unterstützt, Perfektionismus loszulassen und Fortschritt über Leistung zu stellen.';
+
+  @override
+  String get explanationThoughtAndHabitGuide10 =>
+      'Ein lösungsorientierter Begleiter, der mentale Schleifen entwirrt und klare, nachhaltige Wege nach vorn schafft.';
+
+  @override
+  String get explanationThoughtAndHabitGuide11 =>
+      'Ein weiser Mentor für jene, die ihre täglichen Gewohnheiten mit ihren tiefsten Werten und ihrer langfristigen Vision in Einklang bringen wollen.';
+
+  @override
+  String get explanationThoughtAndHabitGuide12 =>
+      'Ein geerdeter Begleiter, der dir hilft, durch Gedanken- und Gewohnheitsarbeit ein ruhigeres, klareres und absichtsvolleres Innenleben aufzubauen.';
+
+  @override
+  String get explanationAdult3 =>
+      'Ein praktischer, ergebnisorientierter Begleiter für Erwachsene, die berufliche Übergänge und Work-Life-Balance-Herausforderungen meistern.';
+
+  @override
+  String get explanationAdult4 =>
+      'Ein stärkender Begleiter, der Erwachsenen hilft, Sinn, Motivation und Klarheit im Alltag wiederzuentdecken.';
+
+  @override
+  String get explanationAdult5 =>
+      'Ein weiser Mentor für Erwachsene, die tieferes Selbstverständnis, emotionale Regulation und sinnvolles persönliches Wachstum suchen.';
+
+  @override
+  String get explanationAdult6 =>
+      'Ein fokussierter Begleiter, der Erwachsene durch hochbelastende Karrieren, Entscheidungsmüdigkeit und Burnout-Erholung unterstützt.';
+
+  @override
+  String get explanationAdult7 =>
+      'Ein geerdeter Begleiter für Erwachsene, die Stress bewältigen, Selbstvertrauen aufbauen und mit Absicht leben wollen.';
+
+  @override
+  String get explanationAdult8 =>
+      'Ein ganzheitlicher Begleiter, der mentale, emotionale und praktische Strategien für das Wohlbefinden Erwachsener integriert.';
+
+  @override
+  String get explanationAdult9 =>
+      'Ein mitfühlender Begleiter für Erwachsene, die mit Lebensmittefragen, Identitätswandel oder neuen Lebensabschnitten umgehen.';
+
+  @override
+  String get explanationAdult10 =>
+      'Ein geschickter Motivator, der Erwachsenen hilft, Absichten durch Verantwortung und strukturierten Fortschritt in Handeln umzusetzen.';
+
+  @override
+  String get explanationAdult11 =>
+      'Ein reflektierender Begleiter für Erwachsene, die Work-Life-Balance, gesunde Grenzen und authentische Beziehungen suchen.';
+
+  @override
+  String get explanationAdult12 =>
+      'Ein langfristiger Wachstumspartner — unterstützt Erwachsene durch Karriere, Beziehungen und persönliche Evolution.';
+
+  @override
+  String get explanationChild3 =>
+      'Ein verspielter und sanfter Begleiter, der Kindern hilft, ihre Emotionen durch altersgerechte Geschichten und Übungen zu erkennen und zu benennen.';
+
+  @override
+  String get explanationChild4 =>
+      'Ein geduldiger Begleiter, der schüchterne oder ängstliche Kinder darin unterstützt, sich auszudrücken und soziales Selbstvertrauen aufzubauen.';
+
+  @override
+  String get explanationChild5 =>
+      'Ein kreativer Begleiter, der mit fantasievollem Spiel hilft, Gefühle zu verarbeiten und Ängste sicher zu überwinden.';
+
+  @override
+  String get explanationChild6 =>
+      'Ein fürsorglicher Begleiter für Kinder, die sich an Schule, neue Umgebungen oder Familienveränderungen anpassen.';
+
+  @override
+  String get explanationChild7 =>
+      'Ein ermutigender Begleiter, der die Konzentration, Selbstkontrolle und das Verhaltensbewusstsein von Kindern durch positive Verstärkung aufbaut.';
+
+  @override
+  String get explanationChild8 =>
+      'Ein warmer und freudvoller Begleiter, der Kindern hilft, gesunde Freundschaften aufzubauen und soziale Herausforderungen zu meistern.';
+
+  @override
+  String get explanationChild9 =>
+      'Ein geschickter Begleiter für Kinder mit Verhaltenskämpfen, sensorischen Bedürfnissen oder Aufmerksamkeitsschwierigkeiten.';
+
+  @override
+  String get explanationChild10 =>
+      'Ein beruhigender Begleiter für Kinder, die Ängste, Albträume oder Sorgen haben — hilft ihnen, sich sicher und verstanden zu fühlen.';
+
+  @override
+  String get explanationChild11 =>
+      'Ein kreativer Geschichtenerzähler-Begleiter, der Kindern hilft, große Gefühle und schwierige Situationen sanft zu verarbeiten.';
+
+  @override
+  String get explanationChild12 =>
+      'Ein langfristiger Entwicklungsbegleiter, der das emotionale, soziale und kognitive Wachstum von Kindern ganzheitlich unterstützt.';
+
+  @override
+  String get explanationTeenage3 =>
+      'Ein nahbarer Begleiter, der die Sprache von Teenagern spricht — unterstützt Identitätserkundung und den Aufbau echten Selbstvertrauens.';
+
+  @override
+  String get explanationTeenage4 =>
+      'Ein nicht-wertender Begleiter für Teenager, die mit Gruppendruck, sozialen Dramen oder Identitätsfragen konfrontiert sind.';
+
+  @override
+  String get explanationTeenage5 =>
+      'Ein fokussierter akademischer Lebensbegleiter, der Teenagern hilft, Schule, Sozialleben und Selbstpflege ohne Burnout auszubalancieren.';
+
+  @override
+  String get explanationTeenage6 =>
+      'Ein digital-wellbeing-bewusster Begleiter, der Teenagern hilft, gesunde Grenzen zu sozialen Medien und Bildschirmen zu setzen.';
+
+  @override
+  String get explanationTeenage7 =>
+      'Ein stärkender Begleiter für Teenager, die lernen, Wut, Frustration und große Emotionen konstruktiv zu bewältigen.';
+
+  @override
+  String get explanationTeenage8 =>
+      'Ein praktischer Begleiter, der Teenagern hilft, ihre Zukunft — Studium, Karriere, Auszeiten — mit Neugier und Klarheit zu planen.';
+
+  @override
+  String get explanationTeenage9 =>
+      'Ein geduldiger Vermittler, der hilft, die Kommunikation zwischen Eltern und Teenagern zu verbessern und Vertrauen zu Hause wiederaufzubauen.';
+
+  @override
+  String get explanationTeenage10 =>
+      'Ein selbstvertrauensaufbauender Begleiter, der Teenager bei Körperbild-, Selbstwert- oder Identitätskämpfen unterstützt.';
+
+  @override
+  String get explanationTeenage11 =>
+      'Ein mitfühlender Begleiter für Teenager, die mit Einsamkeit, Angst oder Missverständnissen kämpfen.';
+
+  @override
+  String get explanationTeenage12 =>
+      'Ein ganzheitlicher Teenager-Begleiter, der sich auf langfristige emotionale Gesundheit, Resilienz und authentischen Selbstausdruck konzentriert.';
+
+  @override
+  String get explanationPersonal3 =>
+      'Ein reflektierender Begleiter für jene, die durch Tagebuchschreiben, Achtsamkeit und innere Arbeit tieferes Selbstverständnis suchen.';
+
+  @override
+  String get explanationPersonal4 =>
+      'Ein beruhigender Begleiter, der dir hilft, mit geerdeten, evidenzbasierten Techniken durch Angst zu navigieren.';
+
+  @override
+  String get explanationPersonal5 =>
+      'Ein mitfühlender Begleiter für jene, die Trauer, Verlust oder große Lebensübergänge verarbeiten.';
+
+  @override
+  String get explanationPersonal6 =>
+      'Ein achtsamer Begleiter, der Atmung, Meditation und Präsenzpraktiken für tägliches inneres Wohlbefinden lehrt.';
+
+  @override
+  String get explanationPersonal7 =>
+      'Ein auf Schlaf und Erholung fokussierter Begleiter, der dir hilft, erholsame Nächte und energiereiche Tage zu gestalten.';
+
+  @override
+  String get explanationPersonal8 =>
+      'Ein durchdachter Begleiter für jene in Grübelzyklen — hilft dir, mentale Klarheit und Leichtigkeit zu finden.';
+
+  @override
+  String get explanationPersonal9 =>
+      'Ein erkundender Begleiter, der deine Reise der Selbstentdeckung unterstützt — Sinn, Werte und Richtung finden.';
+
+  @override
+  String get explanationPersonal10 =>
+      'Ein heilungsorientierter Begleiter für jene mit emotionalen Wunden — hilft dir, sie behutsam zu verarbeiten und loszulassen.';
+
+  @override
+  String get explanationPersonal11 =>
+      'Ein sanfter Begleiter für jene, die sich einsam oder getrennt fühlen — bietet Präsenz, Perspektive und warme Unterstützung.';
+
+  @override
+  String get explanationPersonal12 =>
+      'Ein langfristiger Begleiter für das Innenleben, der dein fortlaufendes emotionales Wachstum, Heilung und Selbstmeisterschaft unterstützt.';
+
+  @override
+  String get explanationExamAnxiety3 =>
+      'Ein beruhigender Begleiter, der Schülern hilft, Prüfungspanik in fokussierte, selbstbewusste Leistung zu verwandeln.';
+
+  @override
+  String get explanationExamAnxiety4 =>
+      'Ein Lerntechnik-Experte, der effiziente Methoden, Gedächtnistools und aktive Wiederholungsstrategien lehrt.';
+
+  @override
+  String get explanationExamAnxiety5 =>
+      'Ein praktischer Zeitmanagement-Coach, der Schülern hilft, Lernpläne zu erstellen und einzuhalten.';
+
+  @override
+  String get explanationExamAnxiety6 =>
+      'Ein druckabbauender Begleiter, der Atmung, Erdung und Visualisierung lehrt, um Leistungsangst zu reduzieren.';
+
+  @override
+  String get explanationExamAnxiety7 =>
+      'Ein konzentrationsfördernder Begleiter für Schüler, die mit Konzentration, Ablenkung oder Aufschieben kämpfen.';
+
+  @override
+  String get explanationExamAnxiety8 =>
+      'Ein entspannungsfokussierter Begleiter, der nachhaltige Strategien lehrt, um unter akademischem Druck ruhig zu bleiben.';
+
+  @override
+  String get explanationExamAnxiety9 =>
+      'Ein strukturierter Prüfungsvorbereitungs-Begleiter, der Schüler Schritt für Schritt durch bewährte Vorbereitungsrahmen führt.';
+
+  @override
+  String get explanationExamAnxiety10 =>
+      'Ein selbstvertrauensaufbauender Begleiter, der Schülern hilft, an ihre Fähigkeiten zu glauben und ihrer Vorbereitung zu vertrauen.';
+
+  @override
+  String get explanationExamAnxiety11 =>
+      'Ein ermutigender Begleiter für Schüler, die vor wichtigen Prüfungen wie Universitätszugang mit Selbstzweifeln kämpfen.';
+
+  @override
+  String get explanationExamAnxiety12 =>
+      'Ein langfristiger akademischer Wohlfühl-Begleiter, der Resilienz für jahrelange Schulherausforderungen aufbaut, nicht nur für eine Prüfung.';
+
+  @override
+  String get explanationEmotionalBalance2 =>
+      'Ein beruhigender Begleiter, der dich lehrt, Emotionen mit praktischen Achtsamkeitstools zu erkennen, zu benennen und zu regulieren.';
+
+  @override
+  String get explanationEmotionalBalance3 =>
+      'Ein geerdeter Begleiter für jene, die sich überwältigt fühlen — hilft, innere Stabilität und Klarheit wiederherzustellen.';
+
+  @override
+  String get explanationEmotionalBalance4 =>
+      'Ein weiser Begleiter, der dich mit Geduld und bewährten Techniken durch emotionale Höhen und Tiefen unterstützt.';
+
+  @override
+  String get explanationEmotionalBalance5 =>
+      'Ein mitfühlender Begleiter für jene, die alles tief fühlen — kanalisiert Sensibilität in Stärke.';
+
+  @override
+  String get explanationEmotionalBalance6 =>
+      'Ein achtsamer Begleiter, der sich auf den Aufbau emotionaler Resilienz durch tägliche Bewusstseinspraktiken konzentriert.';
+
+  @override
+  String get explanationEmotionalBalance7 =>
+      'Ein reflektierender Begleiter, der dir hilft, unausgesprochene Gefühle zu verarbeiten und dich mit deinem authentischen Selbst wieder zu verbinden.';
+
+  @override
+  String get explanationEmotionalBalance8 =>
+      'Ein ausgeglichener Begleiter, der lehrt, Wut, Traurigkeit, Angst und Freude ohne Unterdrückung gesund auszudrücken.';
+
+  @override
+  String get explanationEmotionalBalance9 =>
+      'Ein Selbstentdeckungs-Begleiter, der dich unterstützt, die Muster hinter deinen emotionalen Reaktionen zu verstehen.';
+
+  @override
+  String get explanationEmotionalBalance10 =>
+      'Ein friedlicher Begleiter, der dir hilft, von emotionalem Chaos zu zentrierter Ruhe zu gelangen — eine Praxis nach der anderen.';
+
+  @override
+  String get explanationEmotionalBalance11 =>
+      'Ein angstbewusster Begleiter, der emotionale Regulation mit praktischen Werkzeugen für alltägliche Herausforderungen kombiniert.';
+
+  @override
+  String get explanationEmotionalBalance12 =>
+      'Ein langfristiger innerer Balance-Begleiter, der dein emotionales Wohlbefinden durch alle Lebensjahreszeiten unterstützt.';
+
+  @override
+  String get explanationDifficultExperiences2 =>
+      'Ein mitfühlender Begleiter, der dich mit Geduld und Sorgfalt durch Trauer, Trauma und die schwersten Kapitel des Lebens begleitet.';
+
+  @override
+  String get explanationDifficultExperiences3 =>
+      'Ein traumainformierter Begleiter, der dir hilft, schmerzhafte Erfahrungen sicher und in deinem eigenen Tempo zu verarbeiten.';
+
+  @override
+  String get explanationDifficultExperiences4 =>
+      'Ein sanfter Begleiter für jene, die einen Verlust betrauern — bietet Präsenz, Perspektive und Werkzeuge zur Heilung.';
+
+  @override
+  String get explanationDifficultExperiences5 =>
+      'Ein angstbewusster Begleiter, der dir hilft, Halt zu finden, wenn das Leben unsicher oder überwältigend ist.';
+
+  @override
+  String get explanationDifficultExperiences6 =>
+      'Ein warmer Begleiter für jene, die sich in ihrem Schmerz allein fühlen — erinnert dich daran, dass Heilung in Verbindung geschieht.';
+
+  @override
+  String get explanationDifficultExperiences7 =>
+      'Ein selbstvertrauenswiederaufbauender Begleiter für jene, deren Selbstwert durch Schwierigkeiten erschüttert wurde.';
+
+  @override
+  String get explanationDifficultExperiences8 =>
+      'Ein geschickter Begleiter, der hilft, intensive Emotionen während und nach schwierigen Erfahrungen zu regulieren.';
+
+  @override
+  String get explanationDifficultExperiences9 =>
+      'Ein achtsamer Begleiter, der Präsenz als Gegenmittel zu spiralartigen Gedanken über die Vergangenheit lehrt.';
+
+  @override
+  String get explanationDifficultExperiences10 =>
+      'Ein Selbstentdeckungs-Begleiter für jene, die nach großen Lebensumwälzungen Identität und Sinn wiederaufbauen.';
+
+  @override
+  String get explanationDifficultExperiences11 =>
+      'Ein geduldiger Begleiter, der langfristige emotionale Heilung unterstützt, ohne den Prozess zu hetzen oder abzukürzen.';
+
+  @override
+  String get explanationDifficultExperiences12 =>
+      'Ein resilienzbildender Begleiter, der dir hilft, durch Schwierigkeiten Kraft, Sinn und neue Hoffnung zu finden.';
+
+  @override
+  String get explanationResilienceEmpowerment2 =>
+      'Ein motivierender Begleiter, der dir hilft, unerschütterliches Selbstvertrauen und Vertrauen in deine Fähigkeiten aufzubauen.';
+
+  @override
+  String get explanationResilienceEmpowerment3 =>
+      'Ein wachstumsorientierter Begleiter, der Rückschläge in Trittsteine und Hindernisse in Chancen verwandelt.';
+
+  @override
+  String get explanationResilienceEmpowerment4 =>
+      'Ein Selbstentdeckungs-Begleiter, der dir hilft, verborgene Stärken zu entdecken und dich mit deiner authentischen Kraft auszurichten.';
+
+  @override
+  String get explanationResilienceEmpowerment5 =>
+      'Ein klarheitsfördernder Begleiter für jene, die vor großen Entscheidungen stehen — hilft dir, dir selbst zu vertrauen und mit Selbstvertrauen zu handeln.';
+
+  @override
+  String get explanationResilienceEmpowerment6 =>
+      'Ein achtsamer Begleiter, der Präsenz mit Stärkung verbindet — hilft dir, auf Lebensherausforderungen zu reagieren, statt zu reagieren.';
+
+  @override
+  String get explanationResilienceEmpowerment7 =>
+      'Ein selbstwertorientierter Begleiter, der dir hilft, harte Selbstkritik durch echten Selbstrespekt zu ersetzen.';
+
+  @override
+  String get explanationResilienceEmpowerment8 =>
+      'Ein selbstvertrauensaufbauender Begleiter für jene, die in neue Rollen, Karrieren oder Lebensabschnitte eintreten.';
+
+  @override
+  String get explanationResilienceEmpowerment9 =>
+      'Ein praktischer Begleiter, der dir hilft, gestärkt aus Enttäuschung, Ablehnung oder Misserfolg hervorzugehen.';
+
+  @override
+  String get explanationResilienceEmpowerment10 =>
+      'Ein stärkender langfristiger Begleiter, der sich dem Aufbau dauerhafter Stärke, Mut und Selbstvertrauen widmet.';
+
+  @override
+  String get explanationResilienceEmpowerment11 =>
+      'Ein weiser Mentor, der dir hilft, in deiner Wahrheit aufrecht zu stehen, feste Grenzen zu setzen und deine Energie zu schützen.';
+
+  @override
+  String get explanationResilienceEmpowerment12 =>
+      'Ein ganzheitlicher Resilienzbegleiter, der deine fortlaufende Reise des Wachstums, Mutes und der Selbststärkung unterstützt.';
+
+  @override
+  String get roleMale => 'Männlich';
+
+  @override
+  String get roleFemale => 'Weiblich';
+
+  @override
   String get filterTitle => 'Filtern';
 
   @override

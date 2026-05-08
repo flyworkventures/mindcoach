@@ -1358,6 +1358,428 @@ class AppLocalizationsIt extends AppLocalizations {
       'Una guida motivante e orientata alla forza, dedicata ad aiutarti a scoprire il tuo potere interiore. Ti guida attraverso sfide, battute d\'arresto e transizioni — costruendo la resilienza e la fiducia per affrontare tutto ciò che la vita porta.';
 
   @override
+  String get explanationFamilyAssistant3 =>
+      'Una guida familiare esperta che aiuta a riparare relazioni tese e ricostruire la fiducia tra genitori e figli con empatia e pazienza.';
+
+  @override
+  String get explanationFamilyAssistant4 =>
+      'Una guida familiare orientata alle soluzioni che ti aiuta a stabilire confini sani, migliorare la comunicazione e creare un ambiente domestico pacifico.';
+
+  @override
+  String get explanationFamilyAssistant5 =>
+      'Una guida saggia e paziente per famiglie che attraversano divorzio, separazione o grandi transizioni di vita con compassione e chiarezza.';
+
+  @override
+  String get explanationFamilyAssistant6 =>
+      'Una guida premurosa che supporta i bambini attraverso sfide comportamentali e fornisce ai genitori strategie pratiche basate sull\'evidenza.';
+
+  @override
+  String get explanationFamilyAssistant7 =>
+      'Una guida familiare olistica che integra approcci emotivi, comunicativi e strutturali per portare armonia duratura in casa.';
+
+  @override
+  String get explanationFamilyAssistant8 =>
+      'Una guida calda e potenziante che aiuta le famiglie a guarire ferite passate e costruire legami più forti e resilienti.';
+
+  @override
+  String get explanationFamilyAssistant9 =>
+      'Una guida familiare pragmatica focalizzata su soluzioni genitoriali quotidiane, risoluzione dei conflitti e routine coerenti.';
+
+  @override
+  String get explanationFamilyAssistant10 =>
+      'Una guida compassionevole per famiglie miste, genitori adottivi e strutture familiari uniche in cerca di equilibrio e connessione.';
+
+  @override
+  String get explanationFamilyAssistant11 =>
+      'Una guida gentile e abile che aiuta le famiglie a elaborare lutto, perdita e grandi cambiamenti preservando la sicurezza emotiva di tutti.';
+
+  @override
+  String get explanationFamilyAssistant12 =>
+      'Una guida a lungo termine dedicata a coltivare famiglie profondamente connesse ed emotivamente sane attraverso le generazioni.';
+
+  @override
+  String get explanationThoughtAndHabitGuide2 =>
+      'Una guida pratica che ti aiuta a identificare e riformulare schemi di pensiero limitanti attraverso tecniche cognitive basate sull\'evidenza.';
+
+  @override
+  String get explanationThoughtAndHabitGuide3 =>
+      'Un mentore paziente specializzato nella formazione di abitudini — ti aiuta a costruire piccole routine quotidiane che si trasformano in cambiamenti duraturi.';
+
+  @override
+  String get explanationThoughtAndHabitGuide4 =>
+      'Una guida focalizzata che trasforma il dialogo interno negativo in pensiero equilibrato e costruttivo attraverso pratiche di consapevolezza.';
+
+  @override
+  String get explanationThoughtAndHabitGuide5 =>
+      'Una guida motivante che abbina cambiamenti di mentalità ad abitudini concrete per una crescita personale misurabile.';
+
+  @override
+  String get explanationThoughtAndHabitGuide6 =>
+      'Una guida riflessiva che ti aiuta a scoprire le convinzioni fondamentali che guidano i tuoi comportamenti — e a riscriverle con intenzione.';
+
+  @override
+  String get explanationThoughtAndHabitGuide7 =>
+      'Una guida potenziante focalizzata sul rompere cicli di rimuginio e sostituirli con consapevolezza radicata nel momento presente.';
+
+  @override
+  String get explanationThoughtAndHabitGuide8 =>
+      'Un coach strutturato che ti aiuta a costruire routine mattutine, abitudini di lavoro profondo e rituali di recupero che trasformano la tua vita.';
+
+  @override
+  String get explanationThoughtAndHabitGuide9 =>
+      'Una guida compassionevole che ti supporta nel lasciar andare il perfezionismo e abbracciare il progresso sopra la prestazione.';
+
+  @override
+  String get explanationThoughtAndHabitGuide10 =>
+      'Una guida orientata alle soluzioni che districa loop mentali e crea percorsi chiari e sostenibili in avanti.';
+
+  @override
+  String get explanationThoughtAndHabitGuide11 =>
+      'Un mentore saggio per chi vuole allineare le proprie abitudini quotidiane con i propri valori più profondi e visione a lungo termine.';
+
+  @override
+  String get explanationThoughtAndHabitGuide12 =>
+      'Una guida radicata che ti aiuta a costruire una vita interiore più calma, chiara e intenzionale attraverso il lavoro su pensieri e abitudini.';
+
+  @override
+  String get explanationAdult3 =>
+      'Una guida pratica e orientata ai risultati per adulti che navigano transizioni di carriera e sfide di equilibrio vita-lavoro.';
+
+  @override
+  String get explanationAdult4 =>
+      'Una guida potenziante che aiuta gli adulti a riscoprire scopo, motivazione e chiarezza nella loro vita quotidiana.';
+
+  @override
+  String get explanationAdult5 =>
+      'Un mentore saggio per adulti in cerca di una più profonda comprensione di sé, regolazione emotiva e crescita personale significativa.';
+
+  @override
+  String get explanationAdult6 =>
+      'Una guida focalizzata che supporta gli adulti in carriere ad alta pressione, fatica decisionale e recupero dal burnout.';
+
+  @override
+  String get explanationAdult7 =>
+      'Una guida radicata per adulti che vogliono gestire lo stress, costruire fiducia in sé e vivere con intenzione.';
+
+  @override
+  String get explanationAdult8 =>
+      'Una guida olistica che integra strategie mentali, emotive e pratiche per il benessere degli adulti.';
+
+  @override
+  String get explanationAdult9 =>
+      'Una guida compassionevole per adulti che navigano domande di mezza età, cambiamenti di identità o nuovi capitoli.';
+
+  @override
+  String get explanationAdult10 =>
+      'Un motivatore esperto che aiuta gli adulti a trasformare le intenzioni in azioni attraverso responsabilità e progresso strutturato.';
+
+  @override
+  String get explanationAdult11 =>
+      'Una guida riflessiva per adulti in cerca di equilibrio vita-lavoro, confini sani e relazioni autentiche.';
+
+  @override
+  String get explanationAdult12 =>
+      'Un partner di crescita a lungo termine — supportando gli adulti attraverso carriera, relazioni ed evoluzione personale.';
+
+  @override
+  String get explanationChild3 =>
+      'Una guida giocosa e gentile che aiuta i bambini a identificare e nominare le loro emozioni attraverso storie ed esercizi adatti all\'età.';
+
+  @override
+  String get explanationChild4 =>
+      'Una guida paziente esperta nel supportare bambini timidi o ansiosi a esprimersi e costruire fiducia sociale.';
+
+  @override
+  String get explanationChild5 =>
+      'Una guida creativa che usa il gioco fantasioso per aiutare i bambini a elaborare sentimenti e superare paure in sicurezza.';
+
+  @override
+  String get explanationChild6 =>
+      'Una guida premurosa per bambini che si adattano alla scuola, a nuovi ambienti o cambiamenti familiari.';
+
+  @override
+  String get explanationChild7 =>
+      'Una guida incoraggiante che costruisce focus, autocontrollo e consapevolezza comportamentale dei bambini attraverso il rinforzo positivo.';
+
+  @override
+  String get explanationChild8 =>
+      'Una guida calda e gioiosa che aiuta i bambini a costruire amicizie sane e navigare sfide sociali.';
+
+  @override
+  String get explanationChild9 =>
+      'Una guida abile per bambini che affrontano lotte comportamentali, bisogni sensoriali o difficoltà di attenzione.';
+
+  @override
+  String get explanationChild10 =>
+      'Una guida rassicurante per bambini che vivono paure, incubi o ansia — aiutandoli a sentirsi sicuri e compresi.';
+
+  @override
+  String get explanationChild11 =>
+      'Una guida creativa narratrice che aiuta i bambini a elaborare grandi sentimenti e situazioni difficili con dolcezza.';
+
+  @override
+  String get explanationChild12 =>
+      'Una guida di sviluppo a lungo termine che supporta la crescita emotiva, sociale e cognitiva dei bambini in modo olistico.';
+
+  @override
+  String get explanationTeenage3 =>
+      'Una guida accessibile che parla la lingua degli adolescenti — supportando l\'esplorazione dell\'identità e costruendo vera fiducia in sé.';
+
+  @override
+  String get explanationTeenage4 =>
+      'Una guida non giudicante per adolescenti che affrontano pressione dei coetanei, drammi sociali o domande di identità.';
+
+  @override
+  String get explanationTeenage5 =>
+      'Una guida focalizzata sulla vita accademica che aiuta gli adolescenti a bilanciare scuola, vita sociale e cura di sé senza burnout.';
+
+  @override
+  String get explanationTeenage6 =>
+      'Una guida consapevole del benessere digitale che aiuta gli adolescenti a stabilire confini sani con i social media e gli schermi.';
+
+  @override
+  String get explanationTeenage7 =>
+      'Una guida potenziante per adolescenti che imparano a gestire rabbia, frustrazione e grandi emozioni in modo costruttivo.';
+
+  @override
+  String get explanationTeenage8 =>
+      'Una guida pratica che aiuta gli adolescenti a pianificare il loro futuro — università, carriera, anni sabbatici — con curiosità e chiarezza.';
+
+  @override
+  String get explanationTeenage9 =>
+      'Un mediatore paziente che aiuta a migliorare la comunicazione genitore-adolescente e ricostruire la fiducia in casa.';
+
+  @override
+  String get explanationTeenage10 =>
+      'Una guida costruttrice di fiducia che supporta adolescenti che affrontano lotte di immagine corporea, autostima o identità.';
+
+  @override
+  String get explanationTeenage11 =>
+      'Una guida compassionevole per adolescenti che navigano solitudine, ansia o sentirsi incompresi.';
+
+  @override
+  String get explanationTeenage12 =>
+      'Una guida adolescente olistica focalizzata sulla salute emotiva a lungo termine, resilienza ed espressione autentica di sé.';
+
+  @override
+  String get explanationPersonal3 =>
+      'Una guida riflessiva per chi cerca una più profonda comprensione di sé attraverso journaling, consapevolezza e lavoro interiore.';
+
+  @override
+  String get explanationPersonal4 =>
+      'Una guida calmante che ti aiuta a navigare l\'ansia con tecniche radicate e basate sull\'evidenza.';
+
+  @override
+  String get explanationPersonal5 =>
+      'Una compagna compassionevole per chi elabora lutto, perdita o grandi transizioni di vita.';
+
+  @override
+  String get explanationPersonal6 =>
+      'Una guida consapevole che insegna respirazione, meditazione e pratiche di presenza per la pace interiore quotidiana.';
+
+  @override
+  String get explanationPersonal7 =>
+      'Una guida focalizzata su sonno e recupero che ti aiuta a costruire notti riposanti e giornate energiche.';
+
+  @override
+  String get explanationPersonal8 =>
+      'Una guida ponderata per chi è bloccato in cicli di rimuginio, aiutandoti a trovare chiarezza mentale e leggerezza.';
+
+  @override
+  String get explanationPersonal9 =>
+      'Una guida esplorativa che supporta il tuo viaggio di scoperta di sé — trovare significato, valori e direzione.';
+
+  @override
+  String get explanationPersonal10 =>
+      'Una guida focalizzata sulla guarigione per chi porta ferite emotive, aiutandoti a elaborarle e rilasciarle con cura.';
+
+  @override
+  String get explanationPersonal11 =>
+      'Una guida gentile per chi si sente solo o disconnesso, offrendo presenza, prospettiva e supporto caloroso.';
+
+  @override
+  String get explanationPersonal12 =>
+      'Una guida di vita interiore a lungo termine che supporta la tua crescita emotiva continua, guarigione e padronanza di sé.';
+
+  @override
+  String get explanationExamAnxiety3 =>
+      'Una guida calmante che aiuta gli studenti a trasformare il panico da esame in performance focalizzata e sicura.';
+
+  @override
+  String get explanationExamAnxiety4 =>
+      'Un esperto di tecniche di studio che insegna metodi efficienti, strumenti di memoria e strategie di richiamo attivo.';
+
+  @override
+  String get explanationExamAnxiety5 =>
+      'Un coach pratico di gestione del tempo che aiuta gli studenti a pianificare programmi di studio e rispettarli.';
+
+  @override
+  String get explanationExamAnxiety6 =>
+      'Una guida di sollievo dalla pressione che insegna respirazione, ancoraggio e visualizzazione per ridurre l\'ansia da prestazione.';
+
+  @override
+  String get explanationExamAnxiety7 =>
+      'Una guida costruttrice di concentrazione per studenti che lottano con concentrazione, distrazione o procrastinazione.';
+
+  @override
+  String get explanationExamAnxiety8 =>
+      'Una guida focalizzata sul rilassamento che insegna strategie sostenibili per rimanere calmi sotto pressione accademica.';
+
+  @override
+  String get explanationExamAnxiety9 =>
+      'Una guida strutturata di preparazione agli esami che porta gli studenti passo dopo passo attraverso quadri di preparazione comprovati.';
+
+  @override
+  String get explanationExamAnxiety10 =>
+      'Una guida costruttrice di fiducia che aiuta gli studenti a credere nelle proprie capacità e fidarsi della loro preparazione.';
+
+  @override
+  String get explanationExamAnxiety11 =>
+      'Una guida incoraggiante per studenti che combattono il dubbio di sé prima di test ad alto rischio come l\'ammissione universitaria.';
+
+  @override
+  String get explanationExamAnxiety12 =>
+      'Una guida di benessere accademico a lungo termine che costruisce resilienza per anni di sfide scolastiche, non solo un esame.';
+
+  @override
+  String get explanationEmotionalBalance2 =>
+      'Una guida calmante che ti insegna a riconoscere, nominare e regolare le emozioni con strumenti pratici di consapevolezza.';
+
+  @override
+  String get explanationEmotionalBalance3 =>
+      'Una guida radicata per chi si sente sopraffatto — aiutando a ripristinare stabilità interiore e chiarezza.';
+
+  @override
+  String get explanationEmotionalBalance4 =>
+      'Una guida saggia che ti supporta attraverso alti e bassi emotivi con pazienza e tecniche comprovate.';
+
+  @override
+  String get explanationEmotionalBalance5 =>
+      'Una guida compassionevole per chi sente tutto profondamente — incanalando la sensibilità in forza.';
+
+  @override
+  String get explanationEmotionalBalance6 =>
+      'Una guida consapevole focalizzata sulla costruzione della resilienza emotiva attraverso pratiche quotidiane di consapevolezza.';
+
+  @override
+  String get explanationEmotionalBalance7 =>
+      'Una guida riflessiva che ti aiuta a elaborare sentimenti non espressi e riconnetterti con il tuo vero sé.';
+
+  @override
+  String get explanationEmotionalBalance8 =>
+      'Una guida equilibrata che insegna modi sani di esprimere rabbia, tristezza, paura e gioia senza repressione.';
+
+  @override
+  String get explanationEmotionalBalance9 =>
+      'Una guida di scoperta di sé che ti supporta nel comprendere gli schemi dietro le tue reazioni emotive.';
+
+  @override
+  String get explanationEmotionalBalance10 =>
+      'Una guida pacifica che ti aiuta a passare dal caos emotivo alla calma centrata, una pratica alla volta.';
+
+  @override
+  String get explanationEmotionalBalance11 =>
+      'Una guida consapevole dell\'ansia che abbina la regolazione emotiva a strumenti pratici per le sfide quotidiane.';
+
+  @override
+  String get explanationEmotionalBalance12 =>
+      'Una guida di equilibrio interiore a lungo termine che supporta il tuo benessere emotivo attraverso le stagioni della vita.';
+
+  @override
+  String get explanationDifficultExperiences2 =>
+      'Una guida compassionevole che cammina al tuo fianco attraverso lutto, trauma e i capitoli più difficili della vita con pazienza e cura.';
+
+  @override
+  String get explanationDifficultExperiences3 =>
+      'Una guida informata sul trauma che ti aiuta a elaborare esperienze dolorose in sicurezza, al tuo ritmo.';
+
+  @override
+  String get explanationDifficultExperiences4 =>
+      'Una guida gentile per chi è in lutto per una perdita — offrendo presenza, prospettiva e strumenti per guarire.';
+
+  @override
+  String get explanationDifficultExperiences5 =>
+      'Una guida consapevole dell\'ansia che ti aiuta a trovare terreno solido quando la vita sembra incerta o sopraffacente.';
+
+  @override
+  String get explanationDifficultExperiences6 =>
+      'Una guida calorosa per chi si sente solo nel proprio dolore — ricordandoti che la guarigione avviene nella connessione.';
+
+  @override
+  String get explanationDifficultExperiences7 =>
+      'Una guida ricostruttrice di fiducia per chi ha l\'autostima scossa dalle difficoltà.';
+
+  @override
+  String get explanationDifficultExperiences8 =>
+      'Una guida abile che aiuta a regolare emozioni intense che emergono durante e dopo esperienze difficili.';
+
+  @override
+  String get explanationDifficultExperiences9 =>
+      'Una guida consapevole che insegna la presenza come antidoto a pensieri a spirale sul passato.';
+
+  @override
+  String get explanationDifficultExperiences10 =>
+      'Una guida di scoperta di sé per chi ricostruisce identità e significato dopo grandi sconvolgimenti di vita.';
+
+  @override
+  String get explanationDifficultExperiences11 =>
+      'Una guida paziente che supporta la guarigione emotiva a lungo termine senza affrettare o accorciare il processo.';
+
+  @override
+  String get explanationDifficultExperiences12 =>
+      'Una guida costruttrice di resilienza che ti aiuta a trovare forza, significato e speranza rinnovata attraverso le difficoltà.';
+
+  @override
+  String get explanationResilienceEmpowerment2 =>
+      'Una guida motivante che ti aiuta a costruire fiducia in sé incrollabile e fiducia nelle tue capacità.';
+
+  @override
+  String get explanationResilienceEmpowerment3 =>
+      'Una guida focalizzata sulla crescita che trasforma battute d\'arresto in pietre miliari e ostacoli in opportunità.';
+
+  @override
+  String get explanationResilienceEmpowerment4 =>
+      'Una guida di scoperta di sé che ti aiuta a scoprire forze nascoste e allinearti con il tuo potere autentico.';
+
+  @override
+  String get explanationResilienceEmpowerment5 =>
+      'Una guida costruttrice di chiarezza per chi affronta grandi decisioni — aiutandoti a fidarti di te stesso e agire con fiducia.';
+
+  @override
+  String get explanationResilienceEmpowerment6 =>
+      'Una guida consapevole che abbina presenza ed empowerment, aiutandoti a rispondere — non reagire — alle sfide della vita.';
+
+  @override
+  String get explanationResilienceEmpowerment7 =>
+      'Una guida focalizzata sull\'autostima che ti aiuta a sostituire l\'autocritica dura con vero rispetto di sé.';
+
+  @override
+  String get explanationResilienceEmpowerment8 =>
+      'Una guida costruttrice di fiducia per chi entra in nuovi ruoli, carriere o capitoli di vita.';
+
+  @override
+  String get explanationResilienceEmpowerment9 =>
+      'Una guida pratica che ti aiuta a rialzarti più forte da delusione, rifiuto o fallimento.';
+
+  @override
+  String get explanationResilienceEmpowerment10 =>
+      'Una guida potenziante a lungo termine dedicata ad aiutarti a costruire forza, coraggio e fiducia in sé duraturi.';
+
+  @override
+  String get explanationResilienceEmpowerment11 =>
+      'Un mentore saggio che ti aiuta a stare in piedi nella tua verità, stabilire confini fermi e proteggere la tua energia.';
+
+  @override
+  String get explanationResilienceEmpowerment12 =>
+      'Una guida di resilienza olistica che supporta il tuo viaggio continuo di crescita, coraggio e auto-empowerment.';
+
+  @override
+  String get roleMale => 'Maschio';
+
+  @override
+  String get roleFemale => 'Femmina';
+
+  @override
   String get filterTitle => 'Filtra';
 
   @override

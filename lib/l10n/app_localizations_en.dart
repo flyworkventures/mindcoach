@@ -1343,6 +1343,428 @@ class AppLocalizationsEn extends AppLocalizations {
       'A motivating and strength-focused guide dedicated to helping you discover your inner power. Guides you through challenges, setbacks, and transitions — building the resilience and confidence to face whatever life brings.';
 
   @override
+  String get explanationFamilyAssistant3 =>
+      'An experienced family guide who helps repair strained relationships and rebuild trust between parents and children with empathy and patience.';
+
+  @override
+  String get explanationFamilyAssistant4 =>
+      'A solution-focused family guide who helps you set healthy boundaries, improve communication, and create a peaceful home environment.';
+
+  @override
+  String get explanationFamilyAssistant5 =>
+      'A wise and patient guide for families navigating divorce, separation, or major life transitions with compassion and clarity.';
+
+  @override
+  String get explanationFamilyAssistant6 =>
+      'A nurturing guide who supports children through behavioral challenges while equipping parents with practical, evidence-based strategies.';
+
+  @override
+  String get explanationFamilyAssistant7 =>
+      'A holistic family guide who integrates emotional, communicational, and structural approaches to bring lasting harmony to your home.';
+
+  @override
+  String get explanationFamilyAssistant8 =>
+      'A warm and empowering guide who helps families heal from past wounds and build stronger, more resilient bonds.';
+
+  @override
+  String get explanationFamilyAssistant9 =>
+      'A pragmatic family guide focused on day-to-day parenting solutions, conflict resolution, and consistent routines.';
+
+  @override
+  String get explanationFamilyAssistant10 =>
+      'A compassionate guide for blended families, step-parents, and unique household structures seeking balance and connection.';
+
+  @override
+  String get explanationFamilyAssistant11 =>
+      'A gentle and skilled guide who helps families process grief, loss, and major change while preserving emotional safety for everyone.';
+
+  @override
+  String get explanationFamilyAssistant12 =>
+      'A long-term focused guide invested in cultivating deeply connected, emotionally healthy families across generations.';
+
+  @override
+  String get explanationThoughtAndHabitGuide2 =>
+      'A practical guide who helps you identify and reshape limiting thought patterns through evidence-based cognitive techniques.';
+
+  @override
+  String get explanationThoughtAndHabitGuide3 =>
+      'A patient mentor specializing in habit formation — helping you build small daily routines that compound into lasting change.';
+
+  @override
+  String get explanationThoughtAndHabitGuide4 =>
+      'A focused guide who turns negative self-talk into balanced, constructive thinking through mindful awareness practices.';
+
+  @override
+  String get explanationThoughtAndHabitGuide5 =>
+      'A motivating guide who pairs mindset shifts with actionable habits for measurable personal growth.';
+
+  @override
+  String get explanationThoughtAndHabitGuide6 =>
+      'A reflective guide who helps you uncover the core beliefs driving your behaviors — and rewrite them with intention.';
+
+  @override
+  String get explanationThoughtAndHabitGuide7 =>
+      'An empowering guide focused on breaking cycles of overthinking and replacing them with grounded, present-moment awareness.';
+
+  @override
+  String get explanationThoughtAndHabitGuide8 =>
+      'A structured coach who helps you build morning routines, deep-work habits, and recovery rituals that transform your life.';
+
+  @override
+  String get explanationThoughtAndHabitGuide9 =>
+      'A compassionate guide who supports you in dropping perfectionism and embracing progress over performance.';
+
+  @override
+  String get explanationThoughtAndHabitGuide10 =>
+      'A solution-oriented guide who untangles mental loops and creates clear, sustainable paths forward.';
+
+  @override
+  String get explanationThoughtAndHabitGuide11 =>
+      'A wise mentor for those wanting to align their daily habits with their deepest values and long-term vision.';
+
+  @override
+  String get explanationThoughtAndHabitGuide12 =>
+      'A grounded guide who helps you build a calmer, clearer, more intentional inner life through thought and habit work.';
+
+  @override
+  String get explanationAdult3 =>
+      'A practical, results-driven guide for adults navigating career transitions and life-balance challenges.';
+
+  @override
+  String get explanationAdult4 =>
+      'An empowering guide who helps adults rediscover purpose, motivation, and clarity in their daily lives.';
+
+  @override
+  String get explanationAdult5 =>
+      'A wise mentor for adults seeking deeper self-understanding, emotional regulation, and meaningful personal growth.';
+
+  @override
+  String get explanationAdult6 =>
+      'A focused guide who supports adults through high-pressure careers, decision fatigue, and burnout recovery.';
+
+  @override
+  String get explanationAdult7 =>
+      'A grounded guide for adults wanting to manage stress, build self-confidence, and live with intention.';
+
+  @override
+  String get explanationAdult8 =>
+      'A holistic guide who integrates mental, emotional, and practical strategies for adult well-being.';
+
+  @override
+  String get explanationAdult9 =>
+      'A compassionate guide for adults navigating midlife questions, identity shifts, or starting fresh chapters.';
+
+  @override
+  String get explanationAdult10 =>
+      'A skilled motivator helping adults turn intentions into action through accountability and structured progress.';
+
+  @override
+  String get explanationAdult11 =>
+      'A reflective guide for adults seeking work–life balance, healthy boundaries, and authentic relationships.';
+
+  @override
+  String get explanationAdult12 =>
+      'A long-term partner in growth — supporting adults through career, relationships, and personal evolution.';
+
+  @override
+  String get explanationChild3 =>
+      'A playful and gentle guide who helps children identify and name their emotions through age-appropriate stories and exercises.';
+
+  @override
+  String get explanationChild4 =>
+      'A patient guide skilled at supporting shy or anxious children to express themselves and build social confidence.';
+
+  @override
+  String get explanationChild5 =>
+      'A creative guide who uses imaginative play to help kids process feelings and overcome fears safely.';
+
+  @override
+  String get explanationChild6 =>
+      'A nurturing guide for children adapting to school, new environments, or family changes.';
+
+  @override
+  String get explanationChild7 =>
+      'An encouraging guide who builds children\'s focus, self-control, and behavioral awareness through positive reinforcement.';
+
+  @override
+  String get explanationChild8 =>
+      'A warm and joyful guide who helps children build healthy friendships and navigate social challenges.';
+
+  @override
+  String get explanationChild9 =>
+      'A skilled guide for children dealing with behavioral struggles, sensory needs, or attention difficulties.';
+
+  @override
+  String get explanationChild10 =>
+      'A reassuring guide for children experiencing fears, nightmares, or anxiety — helping them feel safe and understood.';
+
+  @override
+  String get explanationChild11 =>
+      'A creative storytelling guide who helps children process big feelings and tough situations gently.';
+
+  @override
+  String get explanationChild12 =>
+      'A long-term developmental guide who supports children\'s emotional, social, and cognitive growth holistically.';
+
+  @override
+  String get explanationTeenage3 =>
+      'A relatable guide who speaks the language of teens — supporting identity exploration and building real self-confidence.';
+
+  @override
+  String get explanationTeenage4 =>
+      'A non-judgmental guide for teens facing peer pressure, social drama, or identity questions.';
+
+  @override
+  String get explanationTeenage5 =>
+      'A focused academic-life guide who helps teens balance schoolwork, social life, and self-care without burnout.';
+
+  @override
+  String get explanationTeenage6 =>
+      'A digital-wellness aware guide who helps teens build healthy boundaries with social media and screens.';
+
+  @override
+  String get explanationTeenage7 =>
+      'An empowering guide for teens learning to manage anger, frustration, and big emotions constructively.';
+
+  @override
+  String get explanationTeenage8 =>
+      'A practical guide who helps teens plan their future — college, career, gap years — with curiosity and clarity.';
+
+  @override
+  String get explanationTeenage9 =>
+      'A patient mediator who helps improve parent-teen communication and rebuild trust at home.';
+
+  @override
+  String get explanationTeenage10 =>
+      'A confidence-building guide who supports teens facing body image, self-esteem, or identity struggles.';
+
+  @override
+  String get explanationTeenage11 =>
+      'A compassionate guide for teens navigating loneliness, anxiety, or feeling misunderstood.';
+
+  @override
+  String get explanationTeenage12 =>
+      'A holistic teen guide focused on long-term emotional health, resilience, and authentic self-expression.';
+
+  @override
+  String get explanationPersonal3 =>
+      'A reflective guide for those seeking deeper self-understanding through journaling, mindfulness, and inner work.';
+
+  @override
+  String get explanationPersonal4 =>
+      'A calming guide who helps you move through anxiety with grounded, evidence-based techniques.';
+
+  @override
+  String get explanationPersonal5 =>
+      'A compassionate companion for those processing grief, loss, or major life transitions.';
+
+  @override
+  String get explanationPersonal6 =>
+      'A mindful guide who teaches breathing, meditation, and presence practices for daily inner peace.';
+
+  @override
+  String get explanationPersonal7 =>
+      'A sleep and recovery focused guide who helps you build restful nights and energized days.';
+
+  @override
+  String get explanationPersonal8 =>
+      'A thoughtful guide for those caught in cycles of overthinking, helping you find mental clarity and ease.';
+
+  @override
+  String get explanationPersonal9 =>
+      'An exploratory guide who supports your journey of self-discovery — finding meaning, values, and direction.';
+
+  @override
+  String get explanationPersonal10 =>
+      'A healing-focused guide for those carrying emotional wounds, helping you process and release with care.';
+
+  @override
+  String get explanationPersonal11 =>
+      'A gentle guide for those feeling lonely or disconnected, offering presence, perspective, and warm support.';
+
+  @override
+  String get explanationPersonal12 =>
+      'A long-term inner-life guide supporting your ongoing emotional growth, healing, and self-mastery.';
+
+  @override
+  String get explanationExamAnxiety3 =>
+      'A calming guide who helps students transform exam panic into focused, confident performance.';
+
+  @override
+  String get explanationExamAnxiety4 =>
+      'A study-skills expert who teaches efficient techniques, memory tools, and active recall strategies.';
+
+  @override
+  String get explanationExamAnxiety5 =>
+      'A practical time-management coach who helps students plan study schedules and stick to them.';
+
+  @override
+  String get explanationExamAnxiety6 =>
+      'A pressure-relief guide who teaches breathing, grounding, and visualization to reduce performance anxiety.';
+
+  @override
+  String get explanationExamAnxiety7 =>
+      'A focus-building guide for students struggling with concentration, distraction, or procrastination.';
+
+  @override
+  String get explanationExamAnxiety8 =>
+      'A relaxation-focused guide who teaches sustainable strategies for staying calm under academic pressure.';
+
+  @override
+  String get explanationExamAnxiety9 =>
+      'A structured exam-prep guide who walks students through proven preparation frameworks step by step.';
+
+  @override
+  String get explanationExamAnxiety10 =>
+      'A confidence-building guide who helps students believe in their abilities and trust their preparation.';
+
+  @override
+  String get explanationExamAnxiety11 =>
+      'An encouraging guide for students battling self-doubt before high-stakes tests like university entrance.';
+
+  @override
+  String get explanationExamAnxiety12 =>
+      'A long-term academic wellness guide who builds resilience for years of school challenges, not just one exam.';
+
+  @override
+  String get explanationEmotionalBalance2 =>
+      'A calming guide who teaches you to recognize, name, and regulate emotions with practical mindfulness tools.';
+
+  @override
+  String get explanationEmotionalBalance3 =>
+      'A grounded guide for those feeling overwhelmed — helping restore inner steadiness and clarity.';
+
+  @override
+  String get explanationEmotionalBalance4 =>
+      'A wise guide who supports you through emotional ups and downs with patience and proven techniques.';
+
+  @override
+  String get explanationEmotionalBalance5 =>
+      'A compassionate guide for those who feel everything deeply — channeling sensitivity into strength.';
+
+  @override
+  String get explanationEmotionalBalance6 =>
+      'A mindful guide focused on building emotional resilience through daily awareness practices.';
+
+  @override
+  String get explanationEmotionalBalance7 =>
+      'A reflective guide who helps you process unspoken feelings and reconnect with your authentic self.';
+
+  @override
+  String get explanationEmotionalBalance8 =>
+      'A balanced guide who teaches healthy ways to express anger, sadness, fear, and joy without suppression.';
+
+  @override
+  String get explanationEmotionalBalance9 =>
+      'A self-discovery guide who supports you in understanding the patterns behind your emotional reactions.';
+
+  @override
+  String get explanationEmotionalBalance10 =>
+      'A peaceful guide who helps you move from emotional chaos to centered calm, one practice at a time.';
+
+  @override
+  String get explanationEmotionalBalance11 =>
+      'An anxiety-aware guide who pairs emotional regulation with practical tools for everyday challenges.';
+
+  @override
+  String get explanationEmotionalBalance12 =>
+      'A long-term inner-balance guide supporting your emotional well-being through life\'s seasons.';
+
+  @override
+  String get explanationDifficultExperiences2 =>
+      'A compassionate guide who walks beside you through grief, trauma, and life\'s hardest chapters with patience and care.';
+
+  @override
+  String get explanationDifficultExperiences3 =>
+      'A trauma-informed guide who helps you process painful experiences safely, at your own pace.';
+
+  @override
+  String get explanationDifficultExperiences4 =>
+      'A gentle guide for those mourning a loss — offering presence, perspective, and tools for healing.';
+
+  @override
+  String get explanationDifficultExperiences5 =>
+      'An anxiety-aware guide who helps you find ground when life feels uncertain or overwhelming.';
+
+  @override
+  String get explanationDifficultExperiences6 =>
+      'A warm guide for those feeling alone in their pain — reminding you that healing happens in connection.';
+
+  @override
+  String get explanationDifficultExperiences7 =>
+      'A confidence-rebuilding guide for those whose self-worth has been shaken by hardship.';
+
+  @override
+  String get explanationDifficultExperiences8 =>
+      'A skilled guide who helps regulate intense emotions that arise during and after difficult experiences.';
+
+  @override
+  String get explanationDifficultExperiences9 =>
+      'A mindful guide who teaches presence as an antidote to spiraling thoughts about the past.';
+
+  @override
+  String get explanationDifficultExperiences10 =>
+      'A self-discovery guide for those rebuilding identity and meaning after major life upheavals.';
+
+  @override
+  String get explanationDifficultExperiences11 =>
+      'A patient guide who supports long-term emotional healing without rushing or shortcutting the process.';
+
+  @override
+  String get explanationDifficultExperiences12 =>
+      'A resilience-building guide who helps you find strength, meaning, and renewed hope through hardship.';
+
+  @override
+  String get explanationResilienceEmpowerment2 =>
+      'A motivating guide who helps you build unshakable self-confidence and trust in your abilities.';
+
+  @override
+  String get explanationResilienceEmpowerment3 =>
+      'A growth-focused guide who turns setbacks into stepping stones and obstacles into opportunities.';
+
+  @override
+  String get explanationResilienceEmpowerment4 =>
+      'A self-discovery guide who helps you uncover hidden strengths and align with your authentic power.';
+
+  @override
+  String get explanationResilienceEmpowerment5 =>
+      'A clarity-building guide for those facing big decisions — helping you trust yourself and act with confidence.';
+
+  @override
+  String get explanationResilienceEmpowerment6 =>
+      'A mindful guide who pairs presence with empowerment, helping you respond — not react — to life\'s challenges.';
+
+  @override
+  String get explanationResilienceEmpowerment7 =>
+      'A self-esteem focused guide who helps you replace harsh self-criticism with genuine self-respect.';
+
+  @override
+  String get explanationResilienceEmpowerment8 =>
+      'A confidence-building guide for those stepping into new roles, careers, or chapters of life.';
+
+  @override
+  String get explanationResilienceEmpowerment9 =>
+      'A practical guide who helps you bounce back stronger from disappointment, rejection, or failure.';
+
+  @override
+  String get explanationResilienceEmpowerment10 =>
+      'An empowering long-term guide invested in helping you build lasting strength, courage, and self-trust.';
+
+  @override
+  String get explanationResilienceEmpowerment11 =>
+      'A wise mentor who helps you stand tall in your truth, set firm boundaries, and protect your energy.';
+
+  @override
+  String get explanationResilienceEmpowerment12 =>
+      'A holistic resilience guide who supports your ongoing journey of growth, courage, and self-empowerment.';
+
+  @override
+  String get roleMale => 'Male';
+
+  @override
+  String get roleFemale => 'Female';
+
+  @override
   String get filterTitle => 'Filter';
 
   @override

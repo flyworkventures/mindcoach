@@ -1280,6 +1280,363 @@ class AppLocalizationsZh extends AppLocalizations {
       '一位致力于帮助您发现内在力量的激励型、以优势为中心的指导师。引导您走过挑战、挫折和过渡期——建立面对生活所带来一切的韧性和自信。';
 
   @override
+  String get explanationFamilyAssistant3 =>
+      '经验丰富的家庭指导师，以同理心和耐心帮助修复紧张关系，重建父母与子女之间的信任。';
+
+  @override
+  String get explanationFamilyAssistant4 =>
+      '以解决方案为导向的家庭指导师，帮助您建立健康界限、改善沟通并营造和谐家庭环境。';
+
+  @override
+  String get explanationFamilyAssistant5 =>
+      '智慧而耐心的指导师，以同情心和清晰的视角陪伴正在经历离婚、分居或重大人生过渡的家庭。';
+
+  @override
+  String get explanationFamilyAssistant6 =>
+      '充满关爱的指导师，支持孩子应对行为挑战，并为父母提供基于实证的实用策略。';
+
+  @override
+  String get explanationFamilyAssistant7 => '整体性家庭指导师，整合情感、沟通和结构化方法，为家庭带来持久和谐。';
+
+  @override
+  String get explanationFamilyAssistant8 =>
+      '温暖且赋能的指导师，帮助家庭治愈过去的创伤，建立更牢固、更具韧性的纽带。';
+
+  @override
+  String get explanationFamilyAssistant9 =>
+      '务实的家庭指导师，专注于日常育儿解决方案、冲突解决和一致的日常规律。';
+
+  @override
+  String get explanationFamilyAssistant10 =>
+      '富有同情心的指导师，为再婚家庭、继父母及独特家庭结构寻求平衡与连接。';
+
+  @override
+  String get explanationFamilyAssistant11 =>
+      '温柔且熟练的指导师，帮助家庭在维护每个人情感安全的同时，处理悲伤、失去和重大变化。';
+
+  @override
+  String get explanationFamilyAssistant12 => '长期专注的指导师，致力于跨代培养深度连接、情感健康的家庭。';
+
+  @override
+  String get explanationThoughtAndHabitGuide2 =>
+      '实用指导师，帮助您通过基于实证的认知技术识别并重塑限制性思维模式。';
+
+  @override
+  String get explanationThoughtAndHabitGuide3 =>
+      '专注于习惯养成的耐心导师——帮助您建立小型日常规律，逐步演变为持久变化。';
+
+  @override
+  String get explanationThoughtAndHabitGuide4 =>
+      '专注的指导师，通过正念练习将消极的内在对话转化为平衡、建设性的思考。';
+
+  @override
+  String get explanationThoughtAndHabitGuide5 =>
+      '激励型指导师，将思维转变与可操作的习惯结合，实现可衡量的个人成长。';
+
+  @override
+  String get explanationThoughtAndHabitGuide6 =>
+      '反思型指导师，帮助您发现驱动行为的核心信念——并以意图重新书写它们。';
+
+  @override
+  String get explanationThoughtAndHabitGuide7 =>
+      '赋能指导师，专注于打破过度思考的循环，并以扎根于当下的觉察取而代之。';
+
+  @override
+  String get explanationThoughtAndHabitGuide8 =>
+      '结构化教练，帮助您建立晨间例程、深度工作习惯和恢复仪式，转变您的生活。';
+
+  @override
+  String get explanationThoughtAndHabitGuide9 =>
+      '富有同情心的指导师，支持您放下完美主义，拥抱进步而非表现。';
+
+  @override
+  String get explanationThoughtAndHabitGuide10 =>
+      '以解决方案为导向的指导师，理顺心智循环，创造清晰、可持续的前进道路。';
+
+  @override
+  String get explanationThoughtAndHabitGuide11 =>
+      '智慧导师，帮助希望将日常习惯与最深层价值观和长期愿景对齐的人。';
+
+  @override
+  String get explanationThoughtAndHabitGuide12 =>
+      '扎根的指导师，通过思维和习惯的工作，帮助您建立更平静、清晰、有意图的内在生活。';
+
+  @override
+  String get explanationAdult3 => '实用、以结果为导向的指导师，为应对职业转换和工作生活平衡挑战的成年人提供支持。';
+
+  @override
+  String get explanationAdult4 => '赋能指导师，帮助成年人在日常生活中重新发现目的、动力和清晰度。';
+
+  @override
+  String get explanationAdult5 => '智慧导师，为寻求更深自我理解、情绪调节和有意义个人成长的成年人提供支持。';
+
+  @override
+  String get explanationAdult6 => '专注的指导师，支持成年人应对高压职业、决策疲劳和倦怠恢复。';
+
+  @override
+  String get explanationAdult7 => '扎根的指导师，为想要管理压力、建立自信并有意识生活的成年人提供支持。';
+
+  @override
+  String get explanationAdult8 => '整体性指导师，整合心理、情感和实用策略，促进成年人的福祉。';
+
+  @override
+  String get explanationAdult9 => '富有同情心的指导师，为应对中年问题、身份转变或开启新篇章的成年人提供支持。';
+
+  @override
+  String get explanationAdult10 => '熟练的激励者，通过问责制和结构化进展帮助成年人将意图转化为行动。';
+
+  @override
+  String get explanationAdult11 => '反思型指导师，为寻求工作生活平衡、健康界限和真实关系的成年人提供支持。';
+
+  @override
+  String get explanationAdult12 => '长期成长伙伴——支持成年人贯穿职业、关系和个人发展。';
+
+  @override
+  String get explanationChild3 => '活泼且温柔的指导师，通过适合年龄的故事和练习帮助孩子识别和命名情绪。';
+
+  @override
+  String get explanationChild4 => '耐心的指导师，擅长支持害羞或焦虑的孩子表达自我并建立社交信心。';
+
+  @override
+  String get explanationChild5 => '富有创造力的指导师，使用想象游戏帮助孩子安全地处理感受并克服恐惧。';
+
+  @override
+  String get explanationChild6 => '充满关爱的指导师，为适应学校、新环境或家庭变化的孩子提供支持。';
+
+  @override
+  String get explanationChild7 => '鼓励型指导师，通过积极强化建立孩子的专注力、自我控制和行为意识。';
+
+  @override
+  String get explanationChild8 => '温暖快乐的指导师，帮助孩子建立健康友谊并应对社交挑战。';
+
+  @override
+  String get explanationChild9 => '熟练的指导师，为面临行为挣扎、感官需求或注意力困难的孩子提供支持。';
+
+  @override
+  String get explanationChild10 => '安抚型指导师，为经历恐惧、噩梦或焦虑的孩子提供支持——帮助他们感到安全和被理解。';
+
+  @override
+  String get explanationChild11 => '富有创造力的故事讲述者指导师，温柔地帮助孩子处理大情绪和困难情况。';
+
+  @override
+  String get explanationChild12 => '长期发展指导师，整体性地支持儿童的情感、社交和认知成长。';
+
+  @override
+  String get explanationTeenage3 => '亲切的指导师，说青少年的语言——支持身份探索和建立真正的自信。';
+
+  @override
+  String get explanationTeenage4 => '无评判的指导师，为面临同伴压力、社交剧情或身份问题的青少年提供支持。';
+
+  @override
+  String get explanationTeenage5 => '专注的学业生活指导师，帮助青少年平衡学业、社交生活和自我关怀，避免倦怠。';
+
+  @override
+  String get explanationTeenage6 => '数字健康意识的指导师，帮助青少年与社交媒体和屏幕建立健康界限。';
+
+  @override
+  String get explanationTeenage7 => '赋能指导师，为学习建设性管理愤怒、挫折和大情绪的青少年提供支持。';
+
+  @override
+  String get explanationTeenage8 => '实用指导师，帮助青少年以好奇和清晰规划未来——大学、职业、间隔年。';
+
+  @override
+  String get explanationTeenage9 => '耐心的调解者，帮助改善亲子沟通，重建家庭信任。';
+
+  @override
+  String get explanationTeenage10 => '建立自信的指导师，支持面临身体形象、自尊或身份挣扎的青少年。';
+
+  @override
+  String get explanationTeenage11 => '富有同情心的指导师，为应对孤独、焦虑或感到被误解的青少年提供支持。';
+
+  @override
+  String get explanationTeenage12 => '整体性青少年指导师，专注于长期情感健康、韧性和真实自我表达。';
+
+  @override
+  String get explanationPersonal3 => '反思型指导师，为寻求通过日记、正念和内在工作获得更深自我理解的人提供支持。';
+
+  @override
+  String get explanationPersonal4 => '镇静型指导师，帮助您以扎根、基于实证的技术应对焦虑。';
+
+  @override
+  String get explanationPersonal5 => '富有同情心的伙伴，为处理悲伤、失去或重大人生过渡的人提供支持。';
+
+  @override
+  String get explanationPersonal6 => '正念指导师，教授呼吸、冥想和当下临在练习，带来日常内在平静。';
+
+  @override
+  String get explanationPersonal7 => '专注于睡眠和恢复的指导师，帮助您建立安眠的夜晚和精力充沛的白天。';
+
+  @override
+  String get explanationPersonal8 => '深思熟虑的指导师，为陷入过度思考循环的人提供支持，帮助找到心智清晰和轻盈。';
+
+  @override
+  String get explanationPersonal9 => '探索型指导师，支持您的自我发现之旅——寻找意义、价值观和方向。';
+
+  @override
+  String get explanationPersonal10 => '专注于疗愈的指导师，为承载情感伤痕的人提供支持——帮助您细心处理并释放它们。';
+
+  @override
+  String get explanationPersonal11 => '温柔的指导师，为感到孤独或脱节的人提供临在、视角和温暖支持。';
+
+  @override
+  String get explanationPersonal12 => '长期内在生活指导师，支持您持续的情感成长、疗愈和自我精通。';
+
+  @override
+  String get explanationExamAnxiety3 => '镇静型指导师，帮助学生将考试恐慌转化为专注、自信的表现。';
+
+  @override
+  String get explanationExamAnxiety4 => '学习技能专家，教授高效方法、记忆工具和主动回忆策略。';
+
+  @override
+  String get explanationExamAnxiety5 => '实用的时间管理教练，帮助学生规划学习时间表并坚持执行。';
+
+  @override
+  String get explanationExamAnxiety6 => '缓解压力的指导师，教授呼吸、扎根和可视化以减少表现焦虑。';
+
+  @override
+  String get explanationExamAnxiety7 => '建立专注力的指导师，为面临注意力、分心或拖延挣扎的学生提供支持。';
+
+  @override
+  String get explanationExamAnxiety8 => '专注于放松的指导师，教授可持续策略，在学业压力下保持冷静。';
+
+  @override
+  String get explanationExamAnxiety9 => '结构化的考试准备指导师，引导学生逐步通过经过验证的准备框架。';
+
+  @override
+  String get explanationExamAnxiety10 => '建立自信的指导师，帮助学生相信自己的能力并信任自己的准备。';
+
+  @override
+  String get explanationExamAnxiety11 =>
+      '鼓励型指导师，为高风险考试（如大学入学）前与自我怀疑作斗争的学生提供支持。';
+
+  @override
+  String get explanationExamAnxiety12 => '长期学业幸福指导师，建立面对多年学校挑战的韧性，而非仅一次考试。';
+
+  @override
+  String get explanationEmotionalBalance2 => '镇静型指导师，教您通过实用的正念工具识别、命名和调节情绪。';
+
+  @override
+  String get explanationEmotionalBalance3 =>
+      '扎根的指导师，为感到不堪重负的人提供支持——帮助恢复内在稳定和清晰。';
+
+  @override
+  String get explanationEmotionalBalance4 => '智慧指导师，以耐心和经过验证的技术陪伴您度过情感起伏。';
+
+  @override
+  String get explanationEmotionalBalance5 =>
+      '富有同情心的指导师，为深刻感受一切的人提供支持——将敏感性转化为力量。';
+
+  @override
+  String get explanationEmotionalBalance6 => '正念指导师，专注于通过日常意识练习建立情感韧性。';
+
+  @override
+  String get explanationEmotionalBalance7 => '反思型指导师，帮助您处理未表达的感受，重新与真实自我连接。';
+
+  @override
+  String get explanationEmotionalBalance8 => '平衡的指导师，教授不压抑地健康表达愤怒、悲伤、恐惧和喜悦。';
+
+  @override
+  String get explanationEmotionalBalance9 => '自我发现指导师，支持您理解情感反应背后的模式。';
+
+  @override
+  String get explanationEmotionalBalance10 =>
+      '和平的指导师，帮助您从情感混乱过渡到中心化的平静，一次一个练习。';
+
+  @override
+  String get explanationEmotionalBalance11 => '焦虑意识的指导师，将情绪调节与日常挑战的实用工具结合。';
+
+  @override
+  String get explanationEmotionalBalance12 => '长期内在平衡指导师，支持您贯穿生命季节的情感福祉。';
+
+  @override
+  String get explanationDifficultExperiences2 =>
+      '富有同情心的指导师，以耐心和关怀陪伴您度过悲伤、创伤和生命中最艰难的章节。';
+
+  @override
+  String get explanationDifficultExperiences3 =>
+      '创伤知情指导师，帮助您按照自己的节奏安全地处理痛苦的经历。';
+
+  @override
+  String get explanationDifficultExperiences4 =>
+      '温柔的指导师，为正在哀悼失去的人提供临在、视角和疗愈工具。';
+
+  @override
+  String get explanationDifficultExperiences5 =>
+      '焦虑意识的指导师，帮助您在生活感到不确定或不堪重负时找到立足点。';
+
+  @override
+  String get explanationDifficultExperiences6 =>
+      '温暖的指导师，为在痛苦中感到孤独的人提供支持——提醒您疗愈在连接中发生。';
+
+  @override
+  String get explanationDifficultExperiences7 => '重建信心的指导师，为因困难而自我价值动摇的人提供支持。';
+
+  @override
+  String get explanationDifficultExperiences8 => '熟练的指导师，帮助调节困难经历期间和之后产生的强烈情绪。';
+
+  @override
+  String get explanationDifficultExperiences9 => '正念指导师，教授临在作为对过去螺旋思维的解药。';
+
+  @override
+  String get explanationDifficultExperiences10 =>
+      '自我发现指导师，为在重大生活动荡后重建身份和意义的人提供支持。';
+
+  @override
+  String get explanationDifficultExperiences11 => '耐心的指导师，支持长期情感疗愈，不催促或缩短过程。';
+
+  @override
+  String get explanationDifficultExperiences12 =>
+      '建立韧性的指导师，帮助您通过困难找到力量、意义和重燃的希望。';
+
+  @override
+  String get explanationResilienceEmpowerment2 =>
+      '激励型指导师，帮助您建立坚不可摧的自信和对自己能力的信任。';
+
+  @override
+  String get explanationResilienceEmpowerment3 =>
+      '专注于成长的指导师，将挫折转化为垫脚石，将障碍转化为机遇。';
+
+  @override
+  String get explanationResilienceEmpowerment4 => '自我发现指导师，帮助您发现隐藏的力量并与真实力量对齐。';
+
+  @override
+  String get explanationResilienceEmpowerment5 =>
+      '建立清晰度的指导师，为面临重大决策的人提供支持——帮助您信任自己并自信行动。';
+
+  @override
+  String get explanationResilienceEmpowerment6 =>
+      '正念指导师，将临在与赋能结合，帮助您回应——而非反应——生活的挑战。';
+
+  @override
+  String get explanationResilienceEmpowerment7 =>
+      '专注于自尊的指导师，帮助您用真正的自我尊重取代严厉的自我批评。';
+
+  @override
+  String get explanationResilienceEmpowerment8 =>
+      '建立信心的指导师，为进入新角色、职业或生活篇章的人提供支持。';
+
+  @override
+  String get explanationResilienceEmpowerment9 => '实用指导师，帮助您从失望、拒绝或失败中更强大地反弹。';
+
+  @override
+  String get explanationResilienceEmpowerment10 =>
+      '赋能的长期指导师，致力于帮助您建立持久的力量、勇气和自信。';
+
+  @override
+  String get explanationResilienceEmpowerment11 =>
+      '智慧导师，帮助您在自己的真理中坚定站立，设定坚固界限并保护您的能量。';
+
+  @override
+  String get explanationResilienceEmpowerment12 =>
+      '整体性韧性指导师，支持您持续的成长、勇气和自我赋能之旅。';
+
+  @override
+  String get roleMale => '男性';
+
+  @override
+  String get roleFemale => '女性';
+
+  @override
   String get filterTitle => '筛选';
 
   @override

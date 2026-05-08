@@ -1339,6 +1339,428 @@ class AppLocalizationsTr extends AppLocalizations {
       'İç gücünüzü keşfetmenize yardımcı olmaya adanmış, motive edici ve güç odaklı bir rehber. Zorluklar, geri adımlar ve geçiş süreçlerinde size rehberlik eder — hayatın getirdiklerine karşı durmak için dayanıklılık ve özgüven inşa eder.';
 
   @override
+  String get explanationFamilyAssistant3 =>
+      'Anne-baba ile çocuklar arasındaki güveni yeniden inşa etmek ve gergin ilişkileri onarmak konusunda derin deneyime sahip empatik bir aile rehberi.';
+
+  @override
+  String get explanationFamilyAssistant4 =>
+      'Sağlıklı sınırlar belirlemenize, iletişimi iyileştirmenize ve huzurlu bir ev ortamı yaratmanıza yardımcı olan çözüm odaklı bir aile rehberi.';
+
+  @override
+  String get explanationFamilyAssistant5 =>
+      'Boşanma, ayrılık veya büyük yaşam geçişleri yaşayan ailelere şefkat ve netlikle eşlik eden bilge ve sabırlı bir rehber.';
+
+  @override
+  String get explanationFamilyAssistant6 =>
+      'Çocukları davranışsal zorluklarda destekleyen ve ebeveynlere kanıta dayalı, pratik stratejiler kazandıran şefkatli bir rehber.';
+
+  @override
+  String get explanationFamilyAssistant7 =>
+      'Eve kalıcı uyum getirmek için duygusal, iletişimsel ve yapısal yaklaşımları birleştiren bütüncül bir aile rehberi.';
+
+  @override
+  String get explanationFamilyAssistant8 =>
+      'Geçmiş yaraları iyileştirmek ve daha güçlü, daha dayanıklı bağlar kurmak için ailelere yol gösteren ılık ve güçlendirici bir rehber.';
+
+  @override
+  String get explanationFamilyAssistant9 =>
+      'Günlük ebeveynlik çözümleri, çatışma yönetimi ve tutarlı rutinler oluşturma konusunda pragmatik bir aile rehberi.';
+
+  @override
+  String get explanationFamilyAssistant10 =>
+      'Denge ve bağlılık arayan üvey aileler, üvey ebeveynler ve farklı hane yapıları için şefkatli bir rehber.';
+
+  @override
+  String get explanationFamilyAssistant11 =>
+      'Aile bireylerinin duygusal güvenliğini koruyarak yas, kayıp ve büyük değişimleri işlemelerine yardımcı olan nazik ve becerikli bir rehber.';
+
+  @override
+  String get explanationFamilyAssistant12 =>
+      'Kuşaklar boyu derin bağlı, duygusal olarak sağlıklı aileler yetiştirmeye odaklanan uzun vadeli bir rehber.';
+
+  @override
+  String get explanationThoughtAndHabitGuide2 =>
+      'Sınırlayıcı düşünce kalıplarını fark etmenize ve kanıta dayalı bilişsel tekniklerle yeniden şekillendirmenize yardımcı olan pratik bir rehber.';
+
+  @override
+  String get explanationThoughtAndHabitGuide3 =>
+      'Alışkanlık oluşumunda uzmanlaşmış sabırlı bir mentor — küçük günlük rutinleri kalıcı değişime dönüştürmenize yardımcı olur.';
+
+  @override
+  String get explanationThoughtAndHabitGuide4 =>
+      'Olumsuz iç sesi farkındalık temelli pratiklerle dengeli, yapıcı düşünmeye dönüştüren odaklanmış bir rehber.';
+
+  @override
+  String get explanationThoughtAndHabitGuide5 =>
+      'Zihniyet değişimlerini eyleme dönüştüren alışkanlıklarla birleştirip ölçülebilir kişisel gelişim sağlayan motive edici bir rehber.';
+
+  @override
+  String get explanationThoughtAndHabitGuide6 =>
+      'Davranışlarınızı yöneten temel inançları keşfetmenize ve onları niyetle yeniden yazmanıza yardımcı olan yansıtıcı bir rehber.';
+
+  @override
+  String get explanationThoughtAndHabitGuide7 =>
+      'Aşırı düşünme döngülerini kırıp yerine sağlam, an\'da kalma farkındalığını yerleştirmeye odaklı güçlendirici bir rehber.';
+
+  @override
+  String get explanationThoughtAndHabitGuide8 =>
+      'Hayatınızı dönüştüren sabah rutinleri, derin çalışma alışkanlıkları ve dinlenme ritüelleri kurmanıza yardımcı olan yapılandırılmış bir koç.';
+
+  @override
+  String get explanationThoughtAndHabitGuide9 =>
+      'Mükemmeliyetçiliği bırakmanıza ve performans yerine ilerlemeyi kucaklamanıza destek olan şefkatli bir rehber.';
+
+  @override
+  String get explanationThoughtAndHabitGuide10 =>
+      'Zihinsel döngüleri çözüp ilerleyen, sürdürülebilir net yollar oluşturan çözüm odaklı bir rehber.';
+
+  @override
+  String get explanationThoughtAndHabitGuide11 =>
+      'Günlük alışkanlıklarınızı en derin değerleriniz ve uzun vadeli vizyonunuzla hizalamak için bilge bir mentor.';
+
+  @override
+  String get explanationThoughtAndHabitGuide12 =>
+      'Düşünce ve alışkanlık çalışmasıyla daha sakin, daha net, daha niyetli bir iç dünya inşa etmenize yardımcı olan sağlam bir rehber.';
+
+  @override
+  String get explanationAdult3 =>
+      'Kariyer geçişleri ve yaşam dengesi zorlukları yaşayan yetişkinler için pratik, sonuç odaklı bir rehber.';
+
+  @override
+  String get explanationAdult4 =>
+      'Yetişkinlerin günlük yaşamlarında amaç, motivasyon ve netliği yeniden keşfetmelerine yardımcı olan güçlendirici bir rehber.';
+
+  @override
+  String get explanationAdult5 =>
+      'Daha derin öz anlayış, duygusal düzenleme ve anlamlı kişisel gelişim arayan yetişkinler için bilge bir mentor.';
+
+  @override
+  String get explanationAdult6 =>
+      'Yüksek baskılı kariyerler, karar yorgunluğu ve tükenmişlik iyileşmesinde yetişkinleri destekleyen odaklanmış bir rehber.';
+
+  @override
+  String get explanationAdult7 =>
+      'Stresi yönetmek, öz güven inşa etmek ve niyetli yaşamak isteyen yetişkinler için sağlam temelli bir rehber.';
+
+  @override
+  String get explanationAdult8 =>
+      'Yetişkin refahı için zihinsel, duygusal ve pratik stratejileri birleştiren bütüncül bir rehber.';
+
+  @override
+  String get explanationAdult9 =>
+      'Orta yaş soruları, kimlik değişimleri ya da yeni başlangıçlar yaşayan yetişkinler için şefkatli bir rehber.';
+
+  @override
+  String get explanationAdult10 =>
+      'Hesap verebilirlik ve yapılandırılmış ilerleme ile yetişkinlerin niyetlerini eyleme dönüştürmelerine yardımcı olan becerikli bir motivator.';
+
+  @override
+  String get explanationAdult11 =>
+      'İş-yaşam dengesi, sağlıklı sınırlar ve otantik ilişkiler arayan yetişkinler için yansıtıcı bir rehber.';
+
+  @override
+  String get explanationAdult12 =>
+      'Yetişkinlere kariyer, ilişkiler ve kişisel evrim sürecinde destek olan uzun vadeli bir gelişim ortağı.';
+
+  @override
+  String get explanationChild3 =>
+      'Çocukların duygularını yaşa uygun hikayeler ve egzersizlerle tanımlayıp adlandırmasına yardımcı olan oyuncu ve nazik bir rehber.';
+
+  @override
+  String get explanationChild4 =>
+      'Çekingen veya kaygılı çocukların kendilerini ifade etmesine ve sosyal güven inşa etmesine destek olan sabırlı bir rehber.';
+
+  @override
+  String get explanationChild5 =>
+      'Yaratıcı oyunla çocukların duygularını işlemesine ve korkularıyla güvenle yüzleşmesine yardımcı olan yaratıcı bir rehber.';
+
+  @override
+  String get explanationChild6 =>
+      'Okula, yeni ortamlara veya aile değişimlerine uyum sağlayan çocuklar için şefkatli bir rehber.';
+
+  @override
+  String get explanationChild7 =>
+      'Pozitif pekiştirme ile çocukların odak, öz kontrol ve davranışsal farkındalığını geliştiren cesaretlendirici bir rehber.';
+
+  @override
+  String get explanationChild8 =>
+      'Çocukların sağlıklı arkadaşlıklar kurmasına ve sosyal zorluklarla başa çıkmasına yardımcı olan sıcak ve neşeli bir rehber.';
+
+  @override
+  String get explanationChild9 =>
+      'Davranış zorlukları, duyusal ihtiyaçlar veya dikkat sorunları yaşayan çocuklar için becerikli bir rehber.';
+
+  @override
+  String get explanationChild10 =>
+      'Korkular, kabuslar veya kaygı yaşayan çocuklar için güven veren bir rehber — kendilerini güvende ve anlaşılmış hissetmelerine yardımcı olur.';
+
+  @override
+  String get explanationChild11 =>
+      'Çocukların büyük duyguları ve zor durumları nazikçe işlemesine yardımcı olan yaratıcı hikaye anlatıcı bir rehber.';
+
+  @override
+  String get explanationChild12 =>
+      'Çocukların duygusal, sosyal ve bilişsel gelişimini bütüncül olarak destekleyen uzun vadeli gelişim rehberi.';
+
+  @override
+  String get explanationTeenage3 =>
+      'Gençlerin dilinden konuşan tanıdık bir rehber — kimlik keşfini ve gerçek özgüven inşasını destekler.';
+
+  @override
+  String get explanationTeenage4 =>
+      'Akran baskısı, sosyal dramalar veya kimlik soruları yaşayan gençler için yargılamayan bir rehber.';
+
+  @override
+  String get explanationTeenage5 =>
+      'Tükenmişliğe düşmeden okul, sosyal yaşam ve öz bakımı dengelemeye yardımcı olan akademik-yaşam odaklı bir rehber.';
+
+  @override
+  String get explanationTeenage6 =>
+      'Sosyal medya ve ekranlarla sağlıklı sınırlar kurmak isteyen gençler için dijital iyi oluş duyarlı bir rehber.';
+
+  @override
+  String get explanationTeenage7 =>
+      'Öfke, hayal kırıklığı ve büyük duyguları yapıcı şekilde yönetmeyi öğrenen gençler için güçlendirici bir rehber.';
+
+  @override
+  String get explanationTeenage8 =>
+      'Geleceği — üniversite, kariyer, ara yıl — merak ve netlikle planlamasına yardımcı olan pratik bir rehber.';
+
+  @override
+  String get explanationTeenage9 =>
+      'Anne-baba ile genç arasındaki iletişimi iyileştirip evdeki güveni yeniden inşa etmeye yardımcı olan sabırlı bir arabulucu.';
+
+  @override
+  String get explanationTeenage10 =>
+      'Beden imajı, öz saygı veya kimlik mücadelesi yaşayan gençleri destekleyen güven inşa edici bir rehber.';
+
+  @override
+  String get explanationTeenage11 =>
+      'Yalnızlık, kaygı veya anlaşılmama hisleri yaşayan gençler için şefkatli bir rehber.';
+
+  @override
+  String get explanationTeenage12 =>
+      'Uzun vadeli duygusal sağlık, dayanıklılık ve otantik kendini ifadeye odaklı bütüncül bir genç rehberi.';
+
+  @override
+  String get explanationPersonal3 =>
+      'Günlük tutma, farkındalık ve iç çalışma yoluyla daha derin öz anlayış arayanlar için yansıtıcı bir rehber.';
+
+  @override
+  String get explanationPersonal4 =>
+      'Kaygıdan, sağlam ve kanıta dayalı tekniklerle çıkmanıza yardımcı olan sakinleştirici bir rehber.';
+
+  @override
+  String get explanationPersonal5 =>
+      'Yas, kayıp veya büyük yaşam geçişleri yaşayanlar için şefkatli bir yol arkadaşı.';
+
+  @override
+  String get explanationPersonal6 =>
+      'Günlük iç huzur için nefes, meditasyon ve an\'da kalma pratikleri öğreten farkındalık temelli bir rehber.';
+
+  @override
+  String get explanationPersonal7 =>
+      'Dinlendirici geceler ve enerjik günler inşa etmenize yardımcı olan uyku ve toparlanma odaklı bir rehber.';
+
+  @override
+  String get explanationPersonal8 =>
+      'Aşırı düşünme döngüsünde kalanlar için zihinsel netlik ve hafiflik bulmaya yardımcı olan düşünceli bir rehber.';
+
+  @override
+  String get explanationPersonal9 =>
+      'Anlam, değer ve yön bulmak için öz keşif yolculuğunuza eşlik eden meraklı bir rehber.';
+
+  @override
+  String get explanationPersonal10 =>
+      'Duygusal yaralar taşıyanlar için şefkatle işleyip serbest bırakmaya yardımcı olan iyileşme odaklı bir rehber.';
+
+  @override
+  String get explanationPersonal11 =>
+      'Yalnız veya kopuk hisseden kişiler için varlık, perspektif ve sıcak destek sunan nazik bir rehber.';
+
+  @override
+  String get explanationPersonal12 =>
+      'Sürekli duygusal gelişim, iyileşme ve öz ustalık için uzun vadeli iç-yaşam rehberi.';
+
+  @override
+  String get explanationExamAnxiety3 =>
+      'Sınav paniğini odaklı, kendine güvenli performansa dönüştürmeye yardımcı olan sakinleştirici bir rehber.';
+
+  @override
+  String get explanationExamAnxiety4 =>
+      'Verimli teknikler, hafıza araçları ve aktif geri çağırma stratejileri öğreten ders çalışma uzmanı.';
+
+  @override
+  String get explanationExamAnxiety5 =>
+      'Öğrencilere çalışma programı planlayıp ona bağlı kalmayı öğreten pratik bir zaman yönetimi koçu.';
+
+  @override
+  String get explanationExamAnxiety6 =>
+      'Performans kaygısını azaltmak için nefes, topraklanma ve görselleştirme öğreten baskı azaltıcı bir rehber.';
+
+  @override
+  String get explanationExamAnxiety7 =>
+      'Konsantrasyon, dikkat dağılması veya erteleme ile mücadele eden öğrenciler için odak inşa edici bir rehber.';
+
+  @override
+  String get explanationExamAnxiety8 =>
+      'Akademik baskı altında sakin kalmak için sürdürülebilir stratejiler öğreten gevşeme odaklı bir rehber.';
+
+  @override
+  String get explanationExamAnxiety9 =>
+      'Öğrencileri kanıtlanmış hazırlık çerçeveleriyle adım adım hazırlığa yönlendiren yapılandırılmış bir sınav koçu.';
+
+  @override
+  String get explanationExamAnxiety10 =>
+      'Öğrencilerin yeteneklerine inanıp hazırlıklarına güvenmelerine yardımcı olan güven inşa edici bir rehber.';
+
+  @override
+  String get explanationExamAnxiety11 =>
+      'Üniversite girişi gibi yüksek riskli sınavlar öncesi öz şüpheyle savaşan öğrenciler için cesaretlendirici bir rehber.';
+
+  @override
+  String get explanationExamAnxiety12 =>
+      'Tek bir sınav değil, yıllarca okul zorlukları için dayanıklılık inşa eden uzun vadeli akademik refah rehberi.';
+
+  @override
+  String get explanationEmotionalBalance2 =>
+      'Duyguları tanıyıp adlandırma ve pratik farkındalık araçlarıyla düzenleme öğreten sakinleştirici bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance3 =>
+      'Bunalmış hissedenler için iç dengeyi ve netliği yeniden kazanmaya yardımcı olan sağlam bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance4 =>
+      'Duygusal iniş çıkışlarda sabır ve kanıtlanmış tekniklerle size eşlik eden bilge bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance5 =>
+      'Her şeyi derinden hissedenler için duyarlılığı güce dönüştüren şefkatli bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance6 =>
+      'Günlük farkındalık pratikleriyle duygusal dayanıklılık inşa etmeye odaklı farkındalık temelli bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance7 =>
+      'Söylenmeyen duyguları işlemenize ve otantik benliğinizle yeniden bağlanmanıza yardımcı olan yansıtıcı bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance8 =>
+      'Öfke, üzüntü, korku ve sevinci bastırmadan sağlıklı yollarla ifade etmeyi öğreten dengeli bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance9 =>
+      'Duygusal tepkilerinizin altındaki kalıpları anlamanıza destek olan öz keşif rehberi.';
+
+  @override
+  String get explanationEmotionalBalance10 =>
+      'Duygusal kaostan merkezli dinginliğe geçmenize tek bir pratikle yardımcı olan huzurlu bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance11 =>
+      'Duygusal düzenlemeyi günlük zorluklar için pratik araçlarla birleştiren kaygı duyarlı bir rehber.';
+
+  @override
+  String get explanationEmotionalBalance12 =>
+      'Hayatın mevsimleri boyunca duygusal iyi oluşunuza destek olan uzun vadeli iç denge rehberi.';
+
+  @override
+  String get explanationDifficultExperiences2 =>
+      'Yas, travma ve hayatın en zor bölümlerinde sabır ve özenle yanınızda yürüyen şefkatli bir rehber.';
+
+  @override
+  String get explanationDifficultExperiences3 =>
+      'Acı verici deneyimleri kendi tempokuzda güvenle işlemenize yardımcı olan travma bilgili bir rehber.';
+
+  @override
+  String get explanationDifficultExperiences4 =>
+      'Kayıp yaşayanlar için varlık, perspektif ve iyileşme araçları sunan nazik bir rehber.';
+
+  @override
+  String get explanationDifficultExperiences5 =>
+      'Hayat belirsiz ya da bunaltıcı geldiğinde topraklanmanıza yardımcı olan kaygı bilinçli bir rehber.';
+
+  @override
+  String get explanationDifficultExperiences6 =>
+      'Acısında yalnız hissedenler için sıcak bir rehber — iyileşmenin bağlantı içinde olduğunu hatırlatır.';
+
+  @override
+  String get explanationDifficultExperiences7 =>
+      'Zorluklarla öz değeri sarsılanlar için yeniden inşa edici bir rehber.';
+
+  @override
+  String get explanationDifficultExperiences8 =>
+      'Zor deneyimler sırasında ve sonrasında ortaya çıkan yoğun duyguları düzenlemeye yardımcı olan becerikli bir rehber.';
+
+  @override
+  String get explanationDifficultExperiences9 =>
+      'Geçmişe dair sarmal düşüncelere panzehir olarak an\'da kalmayı öğreten farkındalık temelli bir rehber.';
+
+  @override
+  String get explanationDifficultExperiences10 =>
+      'Büyük yaşam altüst oluşları sonrası kimlik ve anlamı yeniden inşa edenler için öz keşif rehberi.';
+
+  @override
+  String get explanationDifficultExperiences11 =>
+      'Süreci hızlandırmadan veya kısa kesmeden uzun vadeli duygusal iyileşmeyi destekleyen sabırlı bir rehber.';
+
+  @override
+  String get explanationDifficultExperiences12 =>
+      'Zorluklar yoluyla güç, anlam ve yenilenmiş umut bulmanıza yardımcı olan dayanıklılık inşa edici rehber.';
+
+  @override
+  String get explanationResilienceEmpowerment2 =>
+      'Sarsılmaz öz güven ve yeteneklerinize duyduğunuz inancı inşa etmenize yardımcı olan motive edici bir rehber.';
+
+  @override
+  String get explanationResilienceEmpowerment3 =>
+      'Geri adımları basamağa, engelleri fırsata dönüştüren büyüme odaklı bir rehber.';
+
+  @override
+  String get explanationResilienceEmpowerment4 =>
+      'Gizli güçlerinizi keşfetmenize ve otantik gücünüzle hizalanmanıza yardımcı olan öz keşif rehberi.';
+
+  @override
+  String get explanationResilienceEmpowerment5 =>
+      'Büyük kararlarla yüzleşenler için kendinize güvenip cesurca hareket etmenizi sağlayan netlik rehberi.';
+
+  @override
+  String get explanationResilienceEmpowerment6 =>
+      'Hayatın zorluklarına tepki vermek yerine yanıt vermenizi sağlayan, farkındalığı güçlendirmeyle eşleştiren bir rehber.';
+
+  @override
+  String get explanationResilienceEmpowerment7 =>
+      'Sert öz eleştiriyi gerçek öz saygıyla değiştirmenize yardımcı olan öz saygı odaklı bir rehber.';
+
+  @override
+  String get explanationResilienceEmpowerment8 =>
+      'Yeni rollere, kariyerlere veya yaşam bölümlerine adım atanlar için güven inşa edici bir rehber.';
+
+  @override
+  String get explanationResilienceEmpowerment9 =>
+      'Hayal kırıklığı, reddedilme veya başarısızlıktan daha güçlü çıkmanıza yardımcı olan pratik bir rehber.';
+
+  @override
+  String get explanationResilienceEmpowerment10 =>
+      'Kalıcı güç, cesaret ve öz güven inşa etmenize adanmış güçlendirici uzun vadeli bir rehber.';
+
+  @override
+  String get explanationResilienceEmpowerment11 =>
+      'Kendi gerçeğinizde dik durmanıza, sağlam sınırlar koymanıza ve enerjinizi korumanıza yardımcı olan bilge bir mentor.';
+
+  @override
+  String get explanationResilienceEmpowerment12 =>
+      'Sürekli büyüme, cesaret ve öz güçlenme yolculuğunuza destek olan bütüncül bir dayanıklılık rehberi.';
+
+  @override
+  String get roleMale => 'Erkek';
+
+  @override
+  String get roleFemale => 'Kadın';
+
+  @override
   String get filterTitle => 'Filtrele';
 
   @override

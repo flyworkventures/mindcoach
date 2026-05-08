@@ -1289,6 +1289,405 @@ class AppLocalizationsJa extends AppLocalizations {
       'あなたが内なる力を発見するために尽力する、励ましと強さに焦点を当てたガイド。困難、挫折、移行期を通じて導き——人生が何をもたらしても立ち向かうための回復力と自信を育てます。';
 
   @override
+  String get explanationFamilyAssistant3 =>
+      '緊張した関係を修復し、共感と忍耐をもって親子間の信頼を再構築する経験豊富な家族ガイド。';
+
+  @override
+  String get explanationFamilyAssistant4 =>
+      '解決志向の家族ガイドで、健全な境界線を設け、コミュニケーションを改善し、平和な家庭環境を作るのを助けます。';
+
+  @override
+  String get explanationFamilyAssistant5 =>
+      '離婚、別居、または大きな人生の移行期を慈悲と明晰さで歩む家族のための賢明で忍耐強いガイド。';
+
+  @override
+  String get explanationFamilyAssistant6 =>
+      '子どもたちの行動的課題を支援し、親に実証に基づく実践的戦略を提供する思いやりのあるガイド。';
+
+  @override
+  String get explanationFamilyAssistant7 =>
+      '感情的、コミュニケーション的、構造的アプローチを統合し、家庭に持続的な調和をもたらす総合的家族ガイド。';
+
+  @override
+  String get explanationFamilyAssistant8 =>
+      '家族が過去の傷を癒し、より強く、より回復力のある絆を築くのを助ける温かく力を与えるガイド。';
+
+  @override
+  String get explanationFamilyAssistant9 =>
+      '日常の子育て解決策、対立解決、一貫したルーティンに焦点を当てた実用的な家族ガイド。';
+
+  @override
+  String get explanationFamilyAssistant10 =>
+      'バランスとつながりを求めるブレンドファミリー、継父母、独自の家族構造のための思いやりあるガイド。';
+
+  @override
+  String get explanationFamilyAssistant11 =>
+      '全員の感情的安全を保ちながら、家族が悲しみ、喪失、大きな変化を処理するのを助ける優しく熟練したガイド。';
+
+  @override
+  String get explanationFamilyAssistant12 =>
+      '世代を超えて深くつながり、感情的に健康な家族を育むことに専念する長期視野のガイド。';
+
+  @override
+  String get explanationThoughtAndHabitGuide2 =>
+      '実証に基づく認知的技術を通じて、制限的な思考パターンを特定し再形成するのを助ける実用的なガイド。';
+
+  @override
+  String get explanationThoughtAndHabitGuide3 =>
+      '習慣形成を専門とする忍耐強いメンター——小さな日常のルーティンが持続的な変化につながるのを助けます。';
+
+  @override
+  String get explanationThoughtAndHabitGuide4 =>
+      'マインドフルネス実践を通じて、否定的な内的対話をバランスのとれた建設的な思考に変える焦点を絞ったガイド。';
+
+  @override
+  String get explanationThoughtAndHabitGuide5 =>
+      'マインドセットの変化と実行可能な習慣を組み合わせ、測定可能な個人成長をもたらす励ましのガイド。';
+
+  @override
+  String get explanationThoughtAndHabitGuide6 =>
+      'あなたの行動を駆動する核心的信念を発見し、意図を持って書き換えるのを助ける反省的なガイド。';
+
+  @override
+  String get explanationThoughtAndHabitGuide7 =>
+      '考えすぎのサイクルを断ち切り、地に足のついた現在の意識に置き換えることに焦点を当てた力を与えるガイド。';
+
+  @override
+  String get explanationThoughtAndHabitGuide8 =>
+      '朝のルーティン、深い仕事の習慣、回復の儀式を構築するのを助ける構造化されたコーチで、人生を変えます。';
+
+  @override
+  String get explanationThoughtAndHabitGuide9 =>
+      '完璧主義を手放し、パフォーマンスよりも進歩を受け入れるのを支援する思いやりあるガイド。';
+
+  @override
+  String get explanationThoughtAndHabitGuide10 =>
+      'メンタルループを解きほぐし、明確で持続可能な前進の道を作る解決志向のガイド。';
+
+  @override
+  String get explanationThoughtAndHabitGuide11 =>
+      '日常の習慣を最も深い価値観と長期ビジョンに沿わせたい人のための賢明なメンター。';
+
+  @override
+  String get explanationThoughtAndHabitGuide12 =>
+      '思考と習慣の作業を通じて、より穏やかで明確で意図的な内なる生活を築くのを助ける地に足のついたガイド。';
+
+  @override
+  String get explanationAdult3 =>
+      'キャリア移行とワークライフバランスの課題に取り組む大人のための実用的、結果志向のガイド。';
+
+  @override
+  String get explanationAdult4 => '大人が日常生活で目的、動機、明晰さを再発見するのを助ける力を与えるガイド。';
+
+  @override
+  String get explanationAdult5 => 'より深い自己理解、感情調整、意味のある個人成長を求める大人のための賢明なメンター。';
+
+  @override
+  String get explanationAdult6 =>
+      '高プレッシャーのキャリア、決定疲れ、燃え尽き症候群からの回復を通じて大人を支援する焦点を絞ったガイド。';
+
+  @override
+  String get explanationAdult7 => 'ストレスを管理し、自信を築き、意図を持って生きたい大人のための地に足のついたガイド。';
+
+  @override
+  String get explanationAdult8 => '大人の幸福のために精神的、感情的、実用的戦略を統合する総合的ガイド。';
+
+  @override
+  String get explanationAdult9 =>
+      '中年の問題、アイデンティティの変化、新しい章の始まりに取り組む大人のための思いやりあるガイド。';
+
+  @override
+  String get explanationAdult10 =>
+      '責任と構造化された進歩を通じて、大人が意図を行動に変えるのを助ける熟練したモチベーター。';
+
+  @override
+  String get explanationAdult11 => 'ワークライフバランス、健全な境界、本物の関係を求める大人のための反省的ガイド。';
+
+  @override
+  String get explanationAdult12 => '長期的な成長パートナー——キャリア、関係、個人の進化を通じて大人を支援します。';
+
+  @override
+  String get explanationChild3 =>
+      '年齢に適した物語と練習を通じて、子どもたちが感情を識別し名付けるのを助ける遊び心のある優しいガイド。';
+
+  @override
+  String get explanationChild4 =>
+      '内気または不安な子どもたちが自分を表現し、社会的自信を築くのをサポートする忍耐強いガイド。';
+
+  @override
+  String get explanationChild5 =>
+      '想像力豊かな遊びを使って、子どもたちが感情を処理し、安全に恐怖を克服するのを助ける創造的なガイド。';
+
+  @override
+  String get explanationChild6 => '学校、新しい環境、家族の変化に適応する子どもたちのための思いやりあるガイド。';
+
+  @override
+  String get explanationChild7 => 'ポジティブな強化を通じて、子どもたちの集中力、自己制御、行動意識を築く励ましのガイド。';
+
+  @override
+  String get explanationChild8 =>
+      '子どもたちが健全な友情を築き、社会的課題を乗り越えるのを助ける温かく喜びに満ちたガイド。';
+
+  @override
+  String get explanationChild9 => '行動的苦闘、感覚的ニーズ、注意力の問題に直面する子どもたちのための熟練したガイド。';
+
+  @override
+  String get explanationChild10 =>
+      '恐怖、悪夢、不安を経験する子どもたちのための安心させるガイド——彼らが安全で理解されていると感じるのを助けます。';
+
+  @override
+  String get explanationChild11 => '子どもたちが大きな感情と困難な状況を優しく処理するのを助ける創造的な物語家ガイド。';
+
+  @override
+  String get explanationChild12 => '子どもたちの感情的、社会的、認知的成長を総合的に支援する長期発達ガイド。';
+
+  @override
+  String get explanationTeenage3 =>
+      'ティーンエイジャーの言語を話す身近なガイド——アイデンティティ探求と本物の自信構築をサポートします。';
+
+  @override
+  String get explanationTeenage4 =>
+      '仲間からの圧力、社会的ドラマ、アイデンティティの問題に直面するティーンエイジャーのための非批判的ガイド。';
+
+  @override
+  String get explanationTeenage5 =>
+      '燃え尽きずに学校、社会生活、セルフケアのバランスを取るのを助ける焦点を絞った学業生活ガイド。';
+
+  @override
+  String get explanationTeenage6 =>
+      'ティーンがソーシャルメディアと画面と健全な境界を設けるのを助けるデジタルウェルビーイング意識のあるガイド。';
+
+  @override
+  String get explanationTeenage7 =>
+      '怒り、フラストレーション、大きな感情を建設的に管理することを学ぶティーンのための力を与えるガイド。';
+
+  @override
+  String get explanationTeenage8 =>
+      'ティーンが好奇心と明晰さを持って未来——大学、キャリア、ギャップイヤー——を計画するのを助ける実用的ガイド。';
+
+  @override
+  String get explanationTeenage9 =>
+      '親子間のコミュニケーションを改善し、家での信頼を再構築するのを助ける忍耐強い仲介者。';
+
+  @override
+  String get explanationTeenage10 =>
+      'ボディイメージ、自尊心、アイデンティティの闘いに直面するティーンを支援する自信構築ガイド。';
+
+  @override
+  String get explanationTeenage11 =>
+      '孤独、不安、または理解されないと感じることに取り組むティーンのための思いやりあるガイド。';
+
+  @override
+  String get explanationTeenage12 => '長期的な感情的健康、回復力、本物の自己表現に焦点を当てた総合的なティーンガイド。';
+
+  @override
+  String get explanationPersonal3 =>
+      'ジャーナリング、マインドフルネス、内的作業を通じてより深い自己理解を求める人のための反省的ガイド。';
+
+  @override
+  String get explanationPersonal4 => '地に足のついた、実証に基づく技術で不安を乗り越えるのを助ける落ち着いたガイド。';
+
+  @override
+  String get explanationPersonal5 => '悲しみ、喪失、または大きな人生の移行を処理する人のための思いやりある仲間。';
+
+  @override
+  String get explanationPersonal6 => '日常の内なる平和のための呼吸、瞑想、現在の練習を教える注意深いガイド。';
+
+  @override
+  String get explanationPersonal7 => '安らかな夜とエネルギッシュな日々を築くのを助ける睡眠と回復に焦点を当てたガイド。';
+
+  @override
+  String get explanationPersonal8 =>
+      '考えすぎのサイクルにとらわれた人のための思慮深いガイドで、メンタルの明晰さと軽さを見つけるのを助けます。';
+
+  @override
+  String get explanationPersonal9 => '自己発見の旅をサポートする探索的なガイド——意味、価値観、方向を見つけます。';
+
+  @override
+  String get explanationPersonal10 =>
+      '感情的な傷を抱える人のための癒しに焦点を当てたガイド——慎重に処理し解放するのを助けます。';
+
+  @override
+  String get explanationPersonal11 =>
+      '孤独や切り離されていると感じる人のための優しいガイドで、存在感、視点、温かいサポートを提供します。';
+
+  @override
+  String get explanationPersonal12 =>
+      'あなたの継続的な感情的成長、癒し、自己マスタリーをサポートする長期的な内的生活ガイド。';
+
+  @override
+  String get explanationExamAnxiety3 =>
+      '学生が試験のパニックを集中した自信あるパフォーマンスに変えるのを助ける落ち着いたガイド。';
+
+  @override
+  String get explanationExamAnxiety4 => '効率的な技術、記憶ツール、能動的回想戦略を教える学習スキル専門家。';
+
+  @override
+  String get explanationExamAnxiety5 => '学生が学習スケジュールを計画し守るのを助ける実用的な時間管理コーチ。';
+
+  @override
+  String get explanationExamAnxiety6 =>
+      'パフォーマンス不安を減らすための呼吸、グラウンディング、視覚化を教える圧力緩和ガイド。';
+
+  @override
+  String get explanationExamAnxiety7 => '集中、注意散漫、先延ばしに苦しむ学生のための集中力構築ガイド。';
+
+  @override
+  String get explanationExamAnxiety8 =>
+      '学業的圧力下で落ち着きを保つための持続可能な戦略を教えるリラクゼーション焦点ガイド。';
+
+  @override
+  String get explanationExamAnxiety9 =>
+      '実証された準備フレームワークを通じて学生を段階的に導く構造化された試験準備ガイド。';
+
+  @override
+  String get explanationExamAnxiety10 => '学生が自分の能力を信じ、準備を信頼するのを助ける自信構築ガイド。';
+
+  @override
+  String get explanationExamAnxiety11 =>
+      '大学入試のような重要なテスト前に自己疑念と戦う学生のための励ましのガイド。';
+
+  @override
+  String get explanationExamAnxiety12 =>
+      '1回の試験ではなく、何年もの学校の課題のための回復力を築く長期学業福祉ガイド。';
+
+  @override
+  String get explanationEmotionalBalance2 =>
+      '実用的なマインドフルネスツールで感情を認識し、名付け、調整することを教える落ち着いたガイド。';
+
+  @override
+  String get explanationEmotionalBalance3 =>
+      '圧倒されていると感じる人のための地に足のついたガイド——内なる安定と明晰さの回復を助けます。';
+
+  @override
+  String get explanationEmotionalBalance4 =>
+      '忍耐と実証された技術であなたを感情的な浮き沈みに通して支える賢明なガイド。';
+
+  @override
+  String get explanationEmotionalBalance5 =>
+      'すべてを深く感じる人のための思いやりあるガイド——感受性を強さに導きます。';
+
+  @override
+  String get explanationEmotionalBalance6 =>
+      '日常の意識実践を通じて感情的回復力を築くことに焦点を当てた注意深いガイド。';
+
+  @override
+  String get explanationEmotionalBalance7 =>
+      '未表現の感情を処理し、本物の自分と再びつながるのを助ける反省的ガイド。';
+
+  @override
+  String get explanationEmotionalBalance8 =>
+      '怒り、悲しみ、恐怖、喜びを抑圧せずに健全に表現する方法を教えるバランスのとれたガイド。';
+
+  @override
+  String get explanationEmotionalBalance9 =>
+      '感情的反応の背後にあるパターンを理解するのを支援する自己発見ガイド。';
+
+  @override
+  String get explanationEmotionalBalance10 =>
+      '感情的混乱から中心化された落ち着きへ、一度に1つの練習で移行するのを助ける平和なガイド。';
+
+  @override
+  String get explanationEmotionalBalance11 =>
+      '感情調整と日常の課題のための実用的ツールを組み合わせた不安認識ガイド。';
+
+  @override
+  String get explanationEmotionalBalance12 =>
+      '人生の季節を通じてあなたの感情的福祉をサポートする長期的な内なるバランスガイド。';
+
+  @override
+  String get explanationDifficultExperiences2 =>
+      '悲しみ、トラウマ、人生の最も困難な章を忍耐と思いやりをもってあなたの隣を歩む思いやりあるガイド。';
+
+  @override
+  String get explanationDifficultExperiences3 =>
+      'あなたのペースで安全に痛みを伴う経験を処理するのを助けるトラウマインフォームドガイド。';
+
+  @override
+  String get explanationDifficultExperiences4 =>
+      '喪失を悼む人のための優しいガイド——存在感、視点、癒しのツールを提供します。';
+
+  @override
+  String get explanationDifficultExperiences5 =>
+      '人生が不確かまたは圧倒的に感じるとき、足場を見つけるのを助ける不安認識ガイド。';
+
+  @override
+  String get explanationDifficultExperiences6 =>
+      '痛みの中で孤独を感じる人のための温かいガイド——癒しはつながりの中で起こることを思い出させます。';
+
+  @override
+  String get explanationDifficultExperiences7 => '困難によって自尊心が揺らいだ人のための信頼回復ガイド。';
+
+  @override
+  String get explanationDifficultExperiences8 =>
+      '困難な経験中および後に生じる強烈な感情を調整するのを助ける熟練したガイド。';
+
+  @override
+  String get explanationDifficultExperiences9 =>
+      '過去についての螺旋状の思考の解毒剤として現在性を教える注意深いガイド。';
+
+  @override
+  String get explanationDifficultExperiences10 =>
+      '大きな人生の激変後にアイデンティティと意味を再構築する人のための自己発見ガイド。';
+
+  @override
+  String get explanationDifficultExperiences11 =>
+      'プロセスを急いだり短くしたりせずに長期的な感情的癒しをサポートする忍耐強いガイド。';
+
+  @override
+  String get explanationDifficultExperiences12 =>
+      '困難を通じて力、意味、新たな希望を見つけるのを助ける回復力構築ガイド。';
+
+  @override
+  String get explanationResilienceEmpowerment2 =>
+      '揺るぎない自信とあなたの能力への信頼を築くのを助ける励ましのガイド。';
+
+  @override
+  String get explanationResilienceEmpowerment3 => '挫折を踏み石に、障害を機会に変える成長焦点ガイド。';
+
+  @override
+  String get explanationResilienceEmpowerment4 =>
+      '隠された強みを発見し、本物の力と整列するのを助ける自己発見ガイド。';
+
+  @override
+  String get explanationResilienceEmpowerment5 =>
+      '大きな決断に直面する人のための明晰さ構築ガイド——自分自身を信頼し、自信を持って行動するのを助けます。';
+
+  @override
+  String get explanationResilienceEmpowerment6 =>
+      '存在感とエンパワーメントを組み合わせた注意深いガイドで、人生の課題に反応するのではなく応答するのを助けます。';
+
+  @override
+  String get explanationResilienceEmpowerment7 =>
+      '厳しい自己批判を本物の自己尊重に置き換えるのを助ける自尊心焦点ガイド。';
+
+  @override
+  String get explanationResilienceEmpowerment8 =>
+      '新しい役割、キャリア、人生の章に踏み出す人のための自信構築ガイド。';
+
+  @override
+  String get explanationResilienceEmpowerment9 =>
+      '失望、拒絶、失敗からより強く跳ね返るのを助ける実用的ガイド。';
+
+  @override
+  String get explanationResilienceEmpowerment10 =>
+      '持続的な力、勇気、自信を築くことに専念する力を与える長期ガイド。';
+
+  @override
+  String get explanationResilienceEmpowerment11 =>
+      'あなたの真実に堂々と立ち、確固たる境界を設定し、エネルギーを保護するのを助ける賢明なメンター。';
+
+  @override
+  String get explanationResilienceEmpowerment12 =>
+      '成長、勇気、自己エンパワーメントの継続的な旅をサポートする総合的な回復力ガイド。';
+
+  @override
+  String get roleMale => '男性';
+
+  @override
+  String get roleFemale => '女性';
+
+  @override
   String get filterTitle => 'フィルター';
 
   @override
