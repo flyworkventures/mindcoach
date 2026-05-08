@@ -438,7 +438,7 @@ class _SpecialistDetailScreenState
                           ],
 
                           // Alt Navigation Bar çakışmasını engellemek için boşluk
-                          SizedBox(height: 100 + bottomPadding),
+                          SizedBox(height: bottomPadding),
                         ],
                       ),
                     ),

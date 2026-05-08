@@ -105,138 +105,141 @@ class _VideoCallTrialInsightsScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        bottom: false,
-        child: FutureBuilder<VideoCallInsightsResult>(
-          future: _future,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(color: Color(0xFF21BC87)),
-              );
-            }
-            final data = snapshot.data!;
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Column(
-                children: [
-                  _TopCoachCard(
-                    coachName: _coachName(),
-                    photoUrl: _detailPhotoUrl(widget.specialist.photoURL),
-                    greeting: data.greeting,
-                  ),
-                  const SizedBox(height: 2),
-                  _StatsRow(
-                    durationSeconds: widget.durationSeconds,
-                    score: data.mindfulnessScore,
-                  ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEAEAEA),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: ListView.separated(
-                        itemCount: data.highlights.length,
-                        separatorBuilder: (_, _) => const SizedBox(height: 8),
-                        itemBuilder: (context, index) {
-                          final item = data.highlights[index];
-                          final isBlurred = index >= 3;
-                          return _HighlightCard(
-                            item: item,
-                            isBlurred: isBlurred,
-                          );
-                        },
-                      ),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          bottom: false,
+          child: FutureBuilder<VideoCallInsightsResult>(
+            future: _future,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(color: Color(0xFF21BC87)),
+                );
+              }
+              final data = snapshot.data!;
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Column(
+                  children: [
+                    _TopCoachCard(
+                      coachName: _coachName(),
+                      photoUrl: _detailPhotoUrl(widget.specialist.photoURL),
+                      greeting: data.greeting,
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    width: double.infinity,
-                    height: 54,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xFF21BC87),
-                          blurRadius: 10,
-                          offset: Offset(0, 0),
-                          spreadRadius: 0,
-                        ),
-                      ],
+                    const SizedBox(height: 2),
+                    _StatsRow(
+                      durationSeconds: widget.durationSeconds,
+                      score: data.mindfulnessScore,
                     ),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF21BC87),
-                        foregroundColor: Colors.white,
-                        shadowColor: Colors.transparent,
-                        elevation: 0,
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: Container(
                         padding: const EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEAEAEA),
                           borderRadius: BorderRadius.circular(16),
                         ),
+                        child: ListView.separated(
+                          itemCount: data.highlights.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
+                          itemBuilder: (context, index) {
+                            final item = data.highlights[index];
+                            final isBlurred = index >= 3;
+                            return _HighlightCard(
+                              item: item,
+                              isBlurred: isBlurred,
+                            );
+                          },
+                        ),
                       ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      height: 54,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFF21BC87),
+                            blurRadius: 10,
+                            offset: Offset(0, 0),
+                            spreadRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF21BC87),
+                          foregroundColor: Colors.white,
+                          shadowColor: Colors.transparent,
+                          elevation: 0,
+                          padding: const EdgeInsets.all(10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        onPressed: () {
+                          _openTrialActivatedPage(openPaywallAfterLogin: true);
+                        },
+                        child: Text(
+                          _t(
+                            tr: 'Daha fazlası için Premium satın al',
+                            en: 'Buy Premium for more',
+                            de: 'Premium kaufen fuer mehr Inhalte',
+                            es: 'Compra Premium para ver mas',
+                            fr: 'Passe a Premium pour en voir plus',
+                            hi: 'और देखने के लिए Premium खरीदें',
+                            it: 'Acquista Premium per saperne di piu',
+                            ja: '続きを見るにはPremiumを購入',
+                            ko: '더 보려면 Premium을 구매하세요',
+                            pt: 'Compre Premium para ver mais',
+                            ru: 'Купите Premium, чтобы увидеть больше',
+                            zh: '购买 Premium 以查看更多内容',
+                          ),
+                          style: const TextStyle(
+                            fontFamily: 'Geist',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    TextButton(
                       onPressed: () {
-                        _openTrialActivatedPage(openPaywallAfterLogin: true);
+                        _openTrialActivatedPage(openPaywallAfterLogin: false);
                       },
                       child: Text(
                         _t(
-                          tr: 'Daha fazlası için Premium satın al',
-                          en: 'Buy Premium for more',
-                          de: 'Premium kaufen fuer mehr Inhalte',
-                          es: 'Compra Premium para ver mas',
-                          fr: 'Passe a Premium pour en voir plus',
-                          hi: 'और देखने के लिए Premium खरीदें',
-                          it: 'Acquista Premium per saperne di piu',
-                          ja: '続きを見るにはPremiumを購入',
-                          ko: '더 보려면 Premium을 구매하세요',
-                          pt: 'Compre Premium para ver mais',
-                          ru: 'Купите Premium, чтобы увидеть больше',
-                          zh: '购买 Premium 以查看更多内容',
+                          tr: 'Satın almadan devam et',
+                          en: 'Continue without purchase',
+                          de: 'Ohne Kauf fortfahren',
+                          es: 'Continuar sin comprar',
+                          fr: 'Continuer sans achat',
+                          hi: 'खरीद के बिना जारी रखें',
+                          it: 'Continua senza acquisto',
+                          ja: '購入せずに続行',
+                          ko: '구매 없이 계속하기',
+                          pt: 'Continuar sem comprar',
+                          ru: 'Продолжить без покупки',
+                          zh: '不购买继续',
                         ),
                         style: const TextStyle(
                           fontFamily: 'Geist',
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: Color(0xFF3B3D40),
                         ),
                       ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      _openTrialActivatedPage(openPaywallAfterLogin: false);
-                    },
-                    child: Text(
-                      _t(
-                        tr: 'Satın almadan devam et',
-                        en: 'Continue without purchase',
-                        de: 'Ohne Kauf fortfahren',
-                        es: 'Continuar sin comprar',
-                        fr: 'Continuer sans achat',
-                        hi: 'खरीद के बिना जारी रखें',
-                        it: 'Continua senza acquisto',
-                        ja: '購入せずに続行',
-                        ko: '구매 없이 계속하기',
-                        pt: 'Continuar sem comprar',
-                        ru: 'Продолжить без покупки',
-                        zh: '不购买继续',
-                      ),
-                      style: const TextStyle(
-                        fontFamily: 'Geist',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF3B3D40),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

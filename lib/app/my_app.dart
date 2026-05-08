@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:mindcoach/Riverpod/Providers/premium_provider.dart';
-import 'package:mindcoach/View/ProfileSetupView/steps/find_coach_step.dart';
 import 'package:mindcoach/View/splash/splash.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/device_utils.dart';

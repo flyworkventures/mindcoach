@@ -22,6 +22,8 @@ class AvatarDataBindingPage extends StatefulWidget {
 }
 
 class _AvatarDataBindingPageState extends State<AvatarDataBindingPage> {
+  static const double _visemeBlendDurationMs = 70.0;
+
   late final FileLoader _fileLoader;
   RiveWidgetController? _controller;
   ViewModelInstance? _viewModel;
@@ -87,7 +89,7 @@ class _AvatarDataBindingPageState extends State<AvatarDataBindingPage> {
     // İlk açılışta ağzı kapalı başlasın
     _updateRiveProperty("talk", false);
     _updateRiveProperty("visemeNum", 0.0);
-    _updateRiveProperty("duration", 200.0);
+    _updateRiveProperty("duration", _visemeBlendDurationMs);
   }
 
   void _updateRiveProperty(String name, dynamic value) {
@@ -203,7 +205,7 @@ class _AvatarDataBindingPageState extends State<AvatarDataBindingPage> {
 
     _updateRiveProperty("talk", false);
     _updateRiveProperty("visemeNum", 0.0);
-    _updateRiveProperty("duration", 200.0);
+    _updateRiveProperty("duration", _visemeBlendDurationMs);
   }
 
   // =========================
@@ -222,7 +224,7 @@ class _AvatarDataBindingPageState extends State<AvatarDataBindingPage> {
     // TEK VISEME TEST MODU:
     _updateRiveProperty("talk", false);
 
-    _updateRiveProperty("duration", 200.0);
+    _updateRiveProperty("duration", _visemeBlendDurationMs);
     _updateRiveProperty("visemeNum", v.toDouble());
 
     Future.delayed(const Duration(milliseconds: 30), () {
@@ -249,7 +251,7 @@ class _AvatarDataBindingPageState extends State<AvatarDataBindingPage> {
     setState(() => _isVisemeLooping = true);
 
     _updateRiveProperty("talk", true);
-    _updateRiveProperty("duration", 200.0);
+    _updateRiveProperty("duration", _visemeBlendDurationMs);
 
     _visemeLoopTimer?.cancel();
     _visemeLoopTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
@@ -409,7 +411,7 @@ class _AvatarDataBindingPageState extends State<AvatarDataBindingPage> {
                   setState(() => _selectedViseme = 0);
                   _updateRiveProperty("talk", false);
                   _updateRiveProperty("visemeNum", 0.0);
-                  _updateRiveProperty("duration", 200.0);
+                  _updateRiveProperty("duration", _visemeBlendDurationMs);
                 },
                 child: const Text("RESET"),
               ),

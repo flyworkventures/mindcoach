@@ -223,6 +223,62 @@ class LocalNotificationService {
     }
   }
 
+  /// Schedule a one-time notification at an exact local date-time.
+  Future<void> scheduleOneTimeNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledTime,
+    String? payload,
+  }) async {
+    if (!_isInitialized) {
+      await initialize();
+    }
+
+    try {
+      const androidDetails = AndroidNotificationDetails(
+        'appointment_reminders',
+        'Randevu Hatirlaticilari',
+        channelDescription: 'Randevular icin tek seferlik hatirlatmalar',
+        importance: Importance.high,
+        priority: Priority.high,
+        showWhen: true,
+        enableVibration: true,
+        playSound: true,
+      );
+
+      const iosDetails = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
+
+      const notificationDetails = NotificationDetails(
+        android: androidDetails,
+        iOS: iosDetails,
+      );
+
+      final tzScheduled = tz.TZDateTime.from(scheduledTime, tz.local);
+
+      await _notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tzScheduled,
+        notificationDetails,
+        payload: payload,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+
+      debugPrint(
+        '[LOCAL_NOTIF] ✅ Scheduled one-time notification: ID=$id, Time=$tzScheduled',
+      );
+    } catch (e) {
+      debugPrint('[LOCAL_NOTIF] ❌ Error scheduling one-time notification: $e');
+      rethrow;
+    }
+  }
+
   Future<void> cancelNotification(int id) async {
     try {
       await _notificationsPlugin.cancel(id);

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/Services/NotificationsService/local_notification_service.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
 import 'package:mindcoach/core/repo/appointment_repo.dart';
@@ -49,6 +50,7 @@ class AppointmentsState {
 }
 
 class AppointmentsNotifier extends Notifier<AppointmentsState> {
+  static const String _appointmentReminderPayloadPrefix = 'appointment_reminder_30m:';
   Timer? _timer;
   AppointmentRepo? _appointmentRepo;
   ConsultantRepo? _consultantRepo;
@@ -238,6 +240,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
 
       // State'i güncelle (loading'i false yap)
       state = state.copyWith(appointments: appointmentsMap, isLoading: false);
+      unawaited(_syncThirtyMinuteReminderNotifications(appointmentsMap));
 
       // Randevu istatistiklerini hesapla
       final now = DateTime.now();
@@ -445,11 +448,138 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     }
 
     _tickCountdown();
+    unawaited(_syncThirtyMinuteReminderNotifications(newMap));
   }
 
   /// Randevuları yeniden yükle (public method)
   Future<void> refresh() async {
     await _loadAppointmentsFromAPI();
+  }
+
+  int _reminderNotificationId(AppointmentInfo info, DateTime appointmentDateTime) {
+    final int base = info.appointmentId ?? appointmentDateTime.millisecondsSinceEpoch;
+    return 700000000 + (base % 100000000);
+  }
+
+  Future<void> _syncThirtyMinuteReminderNotifications(
+    Map<DateTime, List<AppointmentInfo>> appointmentsMap,
+  ) async {
+    try {
+      final service = LocalNotificationService();
+      await service.initialize();
+
+      final pending = await service.getPendingNotifications();
+      for (final req in pending) {
+        final payload = req.payload ?? '';
+        if (payload.startsWith(_appointmentReminderPayloadPrefix)) {
+          await service.cancelNotification(req.id);
+        }
+      }
+
+      final now = DateTime.now();
+      final userLang =
+          (ref.read(AllProviders.userProvider)?.nativeLang ?? 'en')
+              .toLowerCase()
+              .trim();
+      for (final entry in appointmentsMap.entries) {
+        for (final info in entry.value) {
+          if (info.status?.toLowerCase() == 'cancelled') continue;
+          final appointmentDateTime = info.appointmentDateTime ?? entry.key;
+          final reminderTime = appointmentDateTime.subtract(
+            const Duration(minutes: 30),
+          );
+
+          if (!reminderTime.isAfter(now)) continue;
+
+          final id = _reminderNotificationId(info, appointmentDateTime);
+          final specialistName =
+              info.specialistName.isNotEmpty ? info.specialistName : 'uzmaniniz';
+
+          await service.scheduleOneTimeNotification(
+            id: id,
+            title: _appointmentReminderTitle(userLang),
+            body: _appointmentReminderBody(userLang, specialistName),
+            scheduledTime: reminderTime,
+            payload: '$_appointmentReminderPayloadPrefix$id',
+          );
+        }
+      }
+    } catch (e) {
+      log('⚠️ 30dk randevu bildirimi planlanamadi: $e');
+    }
+  }
+
+  String _appointmentReminderTitle(String lang) {
+    switch (_normalizeLang(lang)) {
+      case 'tr':
+        return 'Randevu hatirlatmasi';
+      case 'de':
+        return 'Termin-Erinnerung';
+      case 'es':
+        return 'Recordatorio de cita';
+      case 'fr':
+        return 'Rappel de rendez-vous';
+      case 'hi':
+        return 'Appointment reminder';
+      case 'it':
+        return 'Promemoria appuntamento';
+      case 'ja':
+        return '予約リマインダー';
+      case 'ko':
+        return '예약 알림';
+      case 'pt':
+        return 'Lembrete de consulta';
+      case 'ru':
+        return 'Напоминание о встрече';
+      case 'zh':
+        return '预约提醒';
+      default:
+        return 'Appointment reminder';
+    }
+  }
+
+  String _appointmentReminderBody(String lang, String specialistName) {
+    switch (_normalizeLang(lang)) {
+      case 'tr':
+        return '$specialistName ile gorusmenize 30 dakika kaldi.';
+      case 'de':
+        return 'Ihr Termin mit $specialistName beginnt in 30 Minuten.';
+      case 'es':
+        return 'Tu cita con $specialistName comienza en 30 minutos.';
+      case 'fr':
+        return 'Votre rendez-vous avec $specialistName commence dans 30 minutes.';
+      case 'hi':
+        return 'Your appointment with $specialistName starts in 30 minutes.';
+      case 'it':
+        return 'Il tuo appuntamento con $specialistName inizia tra 30 minuti.';
+      case 'ja':
+        return '$specialistName との予約は30分後に始まります。';
+      case 'ko':
+        return '$specialistName 님과의 예약이 30분 후에 시작됩니다.';
+      case 'pt':
+        return 'Sua consulta com $specialistName comeca em 30 minutos.';
+      case 'ru':
+        return 'Ваша встреча с $specialistName начнётся через 30 минут.';
+      case 'zh':
+        return '您与 $specialistName 的预约将在 30 分钟后开始。';
+      default:
+        return 'Your appointment with $specialistName starts in 30 minutes.';
+    }
+  }
+
+  String _normalizeLang(String lang) {
+    if (lang.startsWith('tr')) return 'tr';
+    if (lang.startsWith('de')) return 'de';
+    if (lang.startsWith('es')) return 'es';
+    if (lang.startsWith('fr')) return 'fr';
+    if (lang.startsWith('hi')) return 'hi';
+    if (lang.startsWith('it')) return 'it';
+    if (lang.startsWith('ja')) return 'ja';
+    if (lang.startsWith('ko')) return 'ko';
+    if (lang.startsWith('pt')) return 'pt';
+    if (lang.startsWith('ru')) return 'ru';
+    if (lang.startsWith('zh')) return 'zh';
+    return 'en';
   }
 }
 

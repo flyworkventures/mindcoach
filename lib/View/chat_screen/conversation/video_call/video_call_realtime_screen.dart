@@ -145,12 +145,15 @@ class _VideoCallRealtimeScreenState
   /// Rive ~1 sn "takılı" kalıyordu.
   static const double _riveTalkCloseBlendMs = 26;
 
-  /// Viseme şekil geçişi (ms); çok düşük olursa titreme, bu değer ~1.5 frame.
-  static const double _riveVisemeBlendMs = 26;
+  /// Viseme şekil geçişi (ms); düşük değer = daha hızlı ağız hareketi.
+  static const double _riveVisemeBlendMs = 8;
+  /// Server timeline gecikme ölçeği.
+  /// 150-200ms aralığını yaklaşık 22-30ms bandına çeker (turbo akış).
+  static const double _visemeTimelineDelayScale = 0.15;
 
   /// RMS'ten viseme uygulama gecikmesi; her yeni örnekte timer **yeniden**
   /// kurulur → ses süresince saniyede çok daha sık tetiklenir.
-  static const int _realtimeVisemeDebounceMs = 5;
+  static const int _realtimeVisemeDebounceMs = 1;
 
   /// PCM chunk içi RMS penceresi (ms). Küçük = aynı ses süresinde çok daha
   /// fazla dudak güncellemesi (kullanıcı isteği: başlangıç–bitiş arası yoğun).
@@ -822,17 +825,28 @@ class _VideoCallRealtimeScreenState
   }
 
   void _scheduleVisemeTimers(Map<String, dynamic> msg) {
-    final List<dynamic> timeline = (msg['timeline'] as List<dynamic>?) ?? [];
+    final List<dynamic> timeline =
+        (msg['timeline'] as List<dynamic>?) ??
+        (msg['visemes'] as List<dynamic>?) ??
+        [];
     final int startOffsetMs = (msg['startOffsetMs'] as num?)?.toInt() ?? 0;
 
     int futureCount = 0;
     int lastFutureDelayMs = 0;
 
     for (final entry in timeline) {
-      final int timeMs = (entry['t'] as num).toInt();
-      final int id = (entry['id'] as num).toInt();
+      if (entry is! Map) continue;
+      final dynamic idRaw = entry['id'];
+      if (idRaw is! num) continue;
+      final int id = idRaw.toInt();
+      final dynamic tRaw = entry['t'];
+      final dynamic timeRaw = entry['time'];
+      final int timeMs = tRaw is num
+          ? tRaw.toInt()
+          : (timeRaw is num ? (timeRaw * 1000).round() : 0);
 
-      final int delayMs = timeMs - startOffsetMs;
+      final int rawDelayMs = timeMs - startOffsetMs;
+      final int delayMs = (rawDelayMs * _visemeTimelineDelayScale).round();
       if (delayMs < 0) {
         _visemeApplied = id;
         continue;
@@ -901,19 +915,24 @@ class _VideoCallRealtimeScreenState
     final vm = _riveViewModel;
     if (vm != null) {
       // ViewModel (DataBind) path
+      bool applied = false;
       try {
-        vm.number(key)?.value = value;
-        return;
+        final n = vm.number(key);
+        if (n != null) {
+          n.value = value;
+          applied = true;
+        }
       } catch (_) {}
       try {
         for (final prop in vm.properties) {
           if (prop.name == key) {
             (prop as dynamic).value = value;
-            return;
+            applied = true;
+            break;
           }
         }
       } catch (_) {}
-      return;
+      if (applied) return;
     }
     // StateMachine inputs path
     if (key == 'visemeNum') _smVisemeNum?.value = value;
@@ -935,7 +954,7 @@ class _VideoCallRealtimeScreenState
       }
       final lastTl = _lastVisemeFromTimelineAt;
       if (lastTl != null &&
-          DateTime.now().difference(lastTl).inMilliseconds < 85) {
+          DateTime.now().difference(lastTl).inMilliseconds < 15) {
         return;
       }
     }
@@ -945,8 +964,8 @@ class _VideoCallRealtimeScreenState
     // sönüm. Release alpha'yı yükseltmek hece sınırlarındaki kısa sessizlikleri
     // koruyup ağzı her hecede yeniden tetiklemeye yarar — sürekli açık kalmaz,
     // titreyerek hızlı bir konuşma izlenimi verir.
-    const double attackAlpha = 0.70; // amplitüde anında tepki
-    const double releaseAlpha = 0.32; // hızlı sönüm — heceler arası kapanma
+    const double attackAlpha = 0.90; // amplitüde çok hızlı tepki
+    const double releaseAlpha = 0.65; // daha hızlı sönüm — tempo düşmesin
     final double rmsD = rms.toDouble();
     if (rmsD > _rmsSmoothed) {
       _rmsSmoothed = _rmsSmoothed * (1 - attackAlpha) + rmsD * attackAlpha;
@@ -970,15 +989,15 @@ class _VideoCallRealtimeScreenState
     // sıçrasın. Bu sayede saniyede çok daha fazla mouth-shape değişimi
     // ekrana düşer ve hızlı konuşma izlenimi güçlenir.
     int targetId;
-    if (smoothRms < 150) {
+    if (smoothRms < 110) {
       targetId = 0; // tam sessizlik / cümle sonu
-    } else if (smoothRms < 450) {
+    } else if (smoothRms < 280) {
       targetId = 2; // hafif açıklık (rest pozisyonuna yakın)
-    } else if (smoothRms < 1000) {
+    } else if (smoothRms < 650) {
       targetId = 5; // küçük ünlü
-    } else if (smoothRms < 1900) {
+    } else if (smoothRms < 1250) {
       targetId = 7; // orta ünlü
-    } else if (smoothRms < 3000) {
+    } else if (smoothRms < 2100) {
       targetId = 10; // güçlü ünlü
     } else {
       targetId = 15; // tam açık (vurgulu ünlü)
@@ -1004,11 +1023,11 @@ class _VideoCallRealtimeScreenState
           final appliedAt = _visemeAppliedAt;
           if (appliedAt != null) {
             final heldMs = DateTime.now().difference(appliedAt).inMilliseconds;
-            if (heldMs < 26) {
+            if (heldMs < 6) {
               // Henüz erken — kararı reschedule et, RMS hâlâ düşükse sonraki
               // değerlendirmede tekrar 0 görür ve kapatır.
               _realtimeVisemeApplyTimer = Timer(
-                Duration(milliseconds: 26 - heldMs),
+                Duration(milliseconds: 6 - heldMs),
                 () {
                   _realtimeVisemeApplyTimer = null;
                   if (!mounted) return;
@@ -1763,19 +1782,24 @@ class _VideoCallRealtimeScreenState
   void _setRiveBool(String key, bool value) {
     final vm = _riveViewModel;
     if (vm != null) {
+      bool applied = false;
       try {
-        vm.boolean(key)?.value = value;
-        return;
+        final b = vm.boolean(key);
+        if (b != null) {
+          b.value = value;
+          applied = true;
+        }
       } catch (_) {}
       try {
         for (final prop in vm.properties) {
           if (prop.name == key) {
             (prop as dynamic).value = value;
-            return;
+            applied = true;
+            break;
           }
         }
       } catch (_) {}
-      return;
+      if (applied) return;
     }
     // StateMachine inputs path
     if (key == 'talk') _smTalk?.value = value;
@@ -1811,69 +1835,74 @@ class _VideoCallRealtimeScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          Positioned.fill(child: _buildVideoCard()),
-          Column(
-            children: [
-              SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 12.h,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildTopChip(
-                        leading: SvgPicture.asset("assets/icons/recor.svg"),
-                        label: widget.isTrial
-                            ? (_timer != null
-                                  ? _formatTrialRemaining(
-                                      (_videoTrialBudgetSeconds -
-                                              _secondsElapsed)
-                                          .clamp(0, _videoTrialBudgetSeconds),
-                                    )
-                                  : _formatTrialRemaining(
-                                      _videoTrialBudgetSeconds,
-                                    ))
-                            : _formatElapsed(_secondsElapsed),
-                        isTimer: true,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildTopChip(
-                            leading: SvgPicture.asset(
-                              "assets/icons/ic_lcok3.svg",
-                              width: 14.w,
-                              height: 14.h,
-                              fit: BoxFit.scaleDown,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
+    return PopScope(
+      // Sadece trial akışında geri kapalı olsun.
+      // Login/premium akışında kullanıcı geri dönebilsin.
+      canPop: !widget.isTrial,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            Positioned.fill(child: _buildVideoCard()),
+            Column(
+              children: [
+                SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 12.h,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildTopChip(
+                          leading: SvgPicture.asset("assets/icons/recor.svg"),
+                          label: widget.isTrial
+                              ? (_timer != null
+                                    ? _formatTrialRemaining(
+                                        (_videoTrialBudgetSeconds -
+                                                _secondsElapsed)
+                                            .clamp(0, _videoTrialBudgetSeconds),
+                                      )
+                                    : _formatTrialRemaining(
+                                        _videoTrialBudgetSeconds,
+                                      ))
+                              : _formatElapsed(_secondsElapsed),
+                          isTimer: true,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildTopChip(
+                              leading: SvgPicture.asset(
+                                "assets/icons/ic_lcok3.svg",
+                                width: 14.w,
+                                height: 14.h,
+                                fit: BoxFit.scaleDown,
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
+                                ),
                               ),
+                              label: l10n.videoCallEncrypted,
                             ),
-                            label: l10n.videoCallEncrypted,
-                          ),
-                          SizedBox(height: 8.h),
-                          _buildSelfPreview(),
-                        ],
-                      ),
-                    ],
+                            SizedBox(height: 8.h),
+                            _buildSelfPreview(),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const Spacer(),
-              _buildBottomPanel(context),
-            ],
-          ),
-        ],
+                const Spacer(),
+                _buildBottomPanel(context),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
