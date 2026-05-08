@@ -146,18 +146,21 @@ class _VideoCallRealtimeScreenState
   static const double _riveTalkCloseBlendMs = 26;
 
   /// Viseme şekil geçişi (ms); düşük değer = daha hızlı ağız hareketi.
-  static const double _riveVisemeBlendMs = 8;
+  static const double _riveVisemeBlendMs = 20;
   /// Server timeline gecikme ölçeği.
-  /// 150-200ms aralığını yaklaşık 22-30ms bandına çeker (turbo akış).
-  static const double _visemeTimelineDelayScale = 0.15;
+  /// Eski videocall_view.dart'ta frame.time direkt kullanılıyordu (1.0).
+  /// Agresif sıkıştırma frame'leri Rive blend süresinden hızlı tetikliyor
+  /// ve ağız donmuş gibi görünüyordu — server zamanlamasını koruyoruz.
+  static const double _visemeTimelineDelayScale = 1.0;
 
-  /// RMS'ten viseme uygulama gecikmesi; her yeni örnekte timer **yeniden**
-  /// kurulur → ses süresince saniyede çok daha sık tetiklenir.
-  static const int _realtimeVisemeDebounceMs = 1;
+  /// RMS'ten viseme uygulama throttle'ı: yeni viseme isteği geldiğinde
+  /// timer zaten kuyruktaysa skip → saniyede maksimum 1000/X update.
+  /// 120ms = saniyede ~8 update (sakin ağız tempo).
+  static const int _realtimeVisemeDebounceMs = 120;
 
-  /// PCM chunk içi RMS penceresi (ms). Küçük = aynı ses süresinde çok daha
-  /// fazla dudak güncellemesi (kullanıcı isteği: başlangıç–bitiş arası yoğun).
-  static const int _visemeRmsWindowMs = 12;
+  /// PCM chunk içi RMS penceresi (ms). 40ms'de saniyede ~25 örnek →
+  /// throttle ile birlikte ağız hareketi sakin ve kontrollü.
+  static const int _visemeRmsWindowMs = 40;
   static const int _bargeInMinAiSpeakingMs = 450;
   static const int _bargeInRmsThresholdEarpiece = 2200;
   static const int _bargeInRmsThresholdSpeaker = 3200;
@@ -946,7 +949,7 @@ class _VideoCallRealtimeScreenState
     // bir süre RMS'i bastır — üst üste yazma "dudak iptal" ediyormuş gibi
     // görünür. Süre dolunca veya timeline sessiz kaldığında RMS tail'i devralır.
     if (_visemeTimelineActive) {
-      if (!_riveAudioActive && rms > 220) {
+      if (!_riveAudioActive && rms > 180) {
         _riveAudioActive = true;
         _setRiveBool('talk', true);
         _setRiveNumber('duration', _riveTalkOpenBlendMs);
@@ -954,18 +957,17 @@ class _VideoCallRealtimeScreenState
       }
       final lastTl = _lastVisemeFromTimelineAt;
       if (lastTl != null &&
-          DateTime.now().difference(lastTl).inMilliseconds < 15) {
+          DateTime.now().difference(lastTl).inMilliseconds < 8) {
         return;
       }
     }
 
     // ── Asymmetric envelope follower (attack/release) ───────────────────────
-    // "Hızlı konuşma" hissi: yükselişte çok hızlı tepki + düşüşte de hızlı
-    // sönüm. Release alpha'yı yükseltmek hece sınırlarındaki kısa sessizlikleri
-    // koruyup ağzı her hecede yeniden tetiklemeye yarar — sürekli açık kalmaz,
-    // titreyerek hızlı bir konuşma izlenimi verir.
-    const double attackAlpha = 0.90; // amplitüde çok hızlı tepki
-    const double releaseAlpha = 0.65; // daha hızlı sönüm — tempo düşmesin
+    // Sakin tempo: yükselişe orta tepki, düşüşte yavaş sönüm. Smoothed RMS
+    // değeri yavaş değiştiği için viseme id'si daha az atlar — ağız sürekli
+    // şekil değiştirmiyor, doğal duruş süreleri korunuyor.
+    const double attackAlpha = 0.45; // yumuşak yükseliş tepkisi
+    const double releaseAlpha = 0.20; // yavaş sönüm — kapalıya hızla dönmesin
     final double rmsD = rms.toDouble();
     if (rmsD > _rmsSmoothed) {
       _rmsSmoothed = _rmsSmoothed * (1 - attackAlpha) + rmsD * attackAlpha;
@@ -976,7 +978,7 @@ class _VideoCallRealtimeScreenState
 
     // Open mouth the first time real audio arrives (PCM gerçekten yürüdüğünde).
     // Daha düşük eşik → ağız sesin başlangıcına anında reaksiyon verir.
-    if (!_riveAudioActive && smoothRms > 130) {
+    if (!_riveAudioActive && smoothRms > 90) {
       _riveAudioActive = true;
       _setRiveBool('talk', true);
       _setRiveNumber('duration', _riveTalkOpenBlendMs);
@@ -984,30 +986,28 @@ class _VideoCallRealtimeScreenState
     }
     if (!_riveAudioActive) return;
 
-    // ── 6-level viseme mapping ──
-    // Eşikler düşürüldü: küçük amplitüd dalgalanmaları bile farklı viseme'ye
-    // sıçrasın. Bu sayede saniyede çok daha fazla mouth-shape değişimi
-    // ekrana düşer ve hızlı konuşma izlenimi güçlenir.
+    // ── 5-level viseme mapping (geniş bantlar) ──
+    // Daha az level = aynı ses bandında ağız id'si daha sık aynı kalır,
+    // viseme update'leri ile birlikte sakin ağız tempo.
     int targetId;
-    if (smoothRms < 110) {
+    if (smoothRms < 120) {
       targetId = 0; // tam sessizlik / cümle sonu
-    } else if (smoothRms < 280) {
-      targetId = 2; // hafif açıklık (rest pozisyonuna yakın)
-    } else if (smoothRms < 650) {
-      targetId = 5; // küçük ünlü
-    } else if (smoothRms < 1250) {
-      targetId = 7; // orta ünlü
-    } else if (smoothRms < 2100) {
+    } else if (smoothRms < 450) {
+      targetId = 2; // hafif açıklık
+    } else if (smoothRms < 1000) {
+      targetId = 6; // orta ünlü
+    } else if (smoothRms < 1800) {
       targetId = 10; // güçlü ünlü
     } else {
       targetId = 15; // tam açık (vurgulu ünlü)
     }
 
-    // Her yeni RMS örneğinde debounce timer'ı yeniden kur: aksi halde
-    // "timer zaten kuyrukta" ile saniyede birkaç güncellemeyle sınırlanıyordu.
+    // THROTTLE: Timer kuyruktaysa skip — yeniden kurma. Bu şekilde saniyede
+    // maksimum (1000 / _realtimeVisemeDebounceMs) viseme update fire eder.
+    // Timer fire ettiğinde son _pendingRealtimeVisemeId uygulanır.
     _pendingRealtimeVisemeId = targetId;
     if (targetId == _visemeApplied) return;
-    _realtimeVisemeApplyTimer?.cancel();
+    if (_realtimeVisemeApplyTimer != null) return;
     _realtimeVisemeApplyTimer = Timer(
       Duration(milliseconds: _realtimeVisemeDebounceMs),
       () {
@@ -1018,16 +1018,17 @@ class _VideoCallRealtimeScreenState
         if (id == _visemeApplied) return;
 
         // ── Closed hold-time ──
-        // Kısa tutuldu: yoğun konuşmada heceler arası kapanma da görünsün.
+        // Heceler arası kapanma 60ms tutuldu: kapalı pozda belirgin duruş,
+        // ağız sürekli açılıp kapanmıyor — sakin tempo.
         if (id == 0 && _visemeApplied != 0) {
           final appliedAt = _visemeAppliedAt;
           if (appliedAt != null) {
             final heldMs = DateTime.now().difference(appliedAt).inMilliseconds;
-            if (heldMs < 6) {
+            if (heldMs < 60) {
               // Henüz erken — kararı reschedule et, RMS hâlâ düşükse sonraki
               // değerlendirmede tekrar 0 görür ve kapatır.
               _realtimeVisemeApplyTimer = Timer(
-                Duration(milliseconds: 6 - heldMs),
+                Duration(milliseconds: 60 - heldMs),
                 () {
                   _realtimeVisemeApplyTimer = null;
                   if (!mounted) return;
