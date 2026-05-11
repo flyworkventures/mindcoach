@@ -1703,7 +1703,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get filterSave => '保存';
 
   @override
-  String get filterClear => 'Clear';
+  String get filterClear => 'クリア';
 
   @override
   String get coachDetailInformation => '情報';

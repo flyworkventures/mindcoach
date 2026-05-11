@@ -1801,7 +1801,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get filterSave => 'Enregistrer';
 
   @override
-  String get filterClear => 'Clear';
+  String get filterClear => 'Effacer';
 
   @override
   String get coachDetailInformation => 'Informations';

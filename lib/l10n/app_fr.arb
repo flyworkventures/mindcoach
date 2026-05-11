@@ -541,6 +541,7 @@
   "filterExpertise": "Expertise",
   "filterSelectCoachingArea": "Sélectionner un domaine de guidage",
   "filterSave": "Enregistrer",
+  "filterClear": "Effacer",
   "coachDetailInformation": "Informations",
   "coachDetailUnlimitedMemory": "Illimité",
   "coachDetailMemory": "Mémoire",

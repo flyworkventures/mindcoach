@@ -1793,7 +1793,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get filterSave => 'Guardar';
 
   @override
-  String get filterClear => 'Clear';
+  String get filterClear => 'Limpiar';
 
   @override
   String get coachDetailInformation => 'Información';

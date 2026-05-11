@@ -541,6 +541,7 @@
   "filterExpertise": "전문성",
   "filterSelectCoachingArea": "가이드 분야 선택",
   "filterSave": "저장",
+  "filterClear": "지우기",
   "coachDetailInformation": "정보",
   "coachDetailUnlimitedMemory": "무제한",
   "coachDetailMemory": "기억력",

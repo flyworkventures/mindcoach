@@ -541,6 +541,7 @@
   "filterExpertise": "专业知识",
   "filterSelectCoachingArea": "选择指导领域",
   "filterSave": "保存",
+  "filterClear": "清除",
   "coachDetailInformation": "信息",
   "coachDetailUnlimitedMemory": "无限制",
   "coachDetailMemory": "记忆能力",

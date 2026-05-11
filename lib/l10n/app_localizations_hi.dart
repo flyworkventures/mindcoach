@@ -1781,7 +1781,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get filterSave => 'सहेजें';
 
   @override
-  String get filterClear => 'Clear';
+  String get filterClear => 'Saaf karen';
 
   @override
   String get coachDetailInformation => 'जानकारी';

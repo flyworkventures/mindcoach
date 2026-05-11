@@ -541,6 +541,7 @@
   "filterExpertise": "Expertise",
   "filterSelectCoachingArea": "Begleitung-Bereich auswählen",
   "filterSave": "Speichern",
+  "filterClear": "Loeschen",
   "coachDetailInformation": "Information",
   "coachDetailUnlimitedMemory": "Unbegrenzt",
   "coachDetailMemory": "Speicher",

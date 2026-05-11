@@ -4,8 +4,8 @@ import 'package:mindcoach/l10n/app_localizations.dart';
 class AppConstants {
   static const String defaultPpUrl =
       "https://mindcoach.b-cdn.net/1024x1024.jpg";
-  static const String baseURL = 'https://mindcoach.fly-work.com';
-  static const String wsBaseURL = 'ws://mindcoach.fly-work.com/realtime';
+  static const String baseURL = 'http://192.168.1.10:3020';
+  static const String wsBaseURL = 'ws://192.168.1.10:3020/realtime';
   static const String onesignalId = "b3ba2ab4-03a9-45dc-a303-f0a92d7d1410";
   static const String googleAuth = "/auth/google";
   static const String facebookAuth = "/auth/facebook";

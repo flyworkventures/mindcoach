@@ -1796,7 +1796,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get filterSave => 'Сохранить';
 
   @override
-  String get filterClear => 'Clear';
+  String get filterClear => 'Очистить';
 
   @override
   String get coachDetailInformation => 'Информация';

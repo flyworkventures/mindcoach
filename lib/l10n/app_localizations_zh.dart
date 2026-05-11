@@ -1652,7 +1652,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get filterSave => '保存';
 
   @override
-  String get filterClear => 'Clear';
+  String get filterClear => '清除';
 
   @override
   String get coachDetailInformation => '信息';

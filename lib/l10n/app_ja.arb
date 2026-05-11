@@ -541,6 +541,7 @@
   "filterExpertise": "専門知識",
   "filterSelectCoachingArea": "ガイドング分野を選択",
   "filterSave": "保存",
+  "filterClear": "クリア",
   "coachDetailInformation": "情報",
   "coachDetailUnlimitedMemory": "無制限",
   "coachDetailMemory": "記憶力",

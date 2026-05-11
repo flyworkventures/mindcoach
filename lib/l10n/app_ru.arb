@@ -541,6 +541,7 @@
   "filterExpertise": "Экспертиза",
   "filterSelectCoachingArea": "Выберите направление наставничества",
   "filterSave": "Сохранить",
+  "filterClear": "Очистить",
   "coachDetailInformation": "Информация",
   "coachDetailUnlimitedMemory": "Неограниченно",
   "coachDetailMemory": "Память",

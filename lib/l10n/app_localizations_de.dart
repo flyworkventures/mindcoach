@@ -1798,7 +1798,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get filterSave => 'Speichern';
 
   @override
-  String get filterClear => 'Clear';
+  String get filterClear => 'Loeschen';
 
   @override
   String get coachDetailInformation => 'Information';

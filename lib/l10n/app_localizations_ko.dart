@@ -1729,7 +1729,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get filterSave => '저장';
 
   @override
-  String get filterClear => 'Clear';
+  String get filterClear => '지우기';
 
   @override
   String get coachDetailInformation => '정보';
