@@ -99,9 +99,11 @@ class _NameGenderStepState extends State<NameGenderStep> {
             child: TextFormField(
               controller: _nameController,
               onChanged: widget.onFullNameChanged,
+              maxLength: 25,
               cursorColor: const Color(0xFF21BC87),
               decoration: InputDecoration(
                 hintText: NameGenderStrings.fullNameHint(context),
+                counterText: '',
                 hintStyle: GoogleFonts.quicksand(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,

@@ -145,18 +145,20 @@ class _VideoCallRealtimeScreenState
   /// Rive ~1 sn "takılı" kalıyordu.
   static const double _riveTalkCloseBlendMs = 26;
 
-  /// Viseme şekil geçişi (ms); düşük değer = daha hızlı ağız hareketi.
-  static const double _riveVisemeBlendMs = 20;
+  /// Viseme şekil geçişi (ms).
+  static const double _riveVisemeBlendMs = 24;
+
+  /// Server timeline'dan ardışık viseme'ler arasında zorunlu minimum aralık.
+  /// 63ms = saniyede ~16 değişim.
+  static const int _visemeTimelineMinGapMs = 63;
   /// Server timeline gecikme ölçeği.
   /// Eski videocall_view.dart'ta frame.time direkt kullanılıyordu (1.0).
   /// Agresif sıkıştırma frame'leri Rive blend süresinden hızlı tetikliyor
   /// ve ağız donmuş gibi görünüyordu — server zamanlamasını koruyoruz.
   static const double _visemeTimelineDelayScale = 1.0;
 
-  /// RMS'ten viseme uygulama throttle'ı: yeni viseme isteği geldiğinde
-  /// timer zaten kuyruktaysa skip → saniyede maksimum 1000/X update.
-  /// 120ms = saniyede ~8 update (sakin ağız tempo).
-  static const int _realtimeVisemeDebounceMs = 120;
+  /// RMS'ten viseme uygulama throttle'ı. 63ms = saniyede ~16 update.
+  static const int _realtimeVisemeDebounceMs = 63;
 
   /// PCM chunk içi RMS penceresi (ms). 40ms'de saniyede ~25 örnek →
   /// throttle ile birlikte ağız hareketi sakin ve kontrollü.
@@ -188,6 +190,20 @@ class _VideoCallRealtimeScreenState
   double _rmsSmoothed = 0.0;
   int _visemeApplied = 0;
   DateTime? _visemeAppliedAt;
+  /// Force-close sonrası kısa lockout: backend silent-tail PCM chunk'ları
+  /// yolluyorsa ağız hemen tekrar açılmasın diye 400ms boyunca düşük RMS
+  /// re-open'larını yoksay.
+  DateTime? _forceCloseLockedUntil;
+  static const int _forceCloseLockoutMs = 400;
+  static const int _forceCloseLockoutRmsOverride = 600;
+
+  /// Son anlamlı konuşma RMS'inin alındığı zaman. Backend silent-tail PCM
+  /// yollamaya devam etse bile (queue boşalmadan), bu zaman üzerinden
+  /// 180ms geçtiyse ağzı zorla kapat. Native kuyruk drain'ini beklemek
+  /// "ağız bittikten sonra oynuyor" sorununu doğuruyordu.
+  DateTime? _lastSpeechRmsAt;
+  static const int _speechRmsThreshold = 250;
+  static const int _silenceCloseAfterMs = 180;
   Timer? _realtimeVisemeApplyTimer;
   int _pendingRealtimeVisemeId = 0;
   // Phoneme-based timeline timers (from server Rhubarb map).
@@ -603,6 +619,18 @@ class _VideoCallRealtimeScreenState
 
   void _signalNativePcmDrainedIfIdle(int remainingFrames) {
     if (remainingFrames != 0) return;
+
+    // Ağız senkronu için: oyun-anı drain. PCM kuyruğu hem Dart hem native
+    // tarafta gerçekten boşaldığında ağzı derhal kapat — backend'in
+    // `ai_response_complete` mesajını beklemeden. Aksi halde son chunk
+    // bittikten sonra timeline timer'ları (wall-clock) "ağız havada" oynamaya
+    // devam ediyordu.
+    if (_pcmTotalSamples == 0 &&
+        _riveAudioActive &&
+        _callState == _CallState.speaking) {
+      _forceCloseMouthForSilence();
+    }
+
     // Aksi halde konuşmalar arası native "0" event'i yanlışlıkla bekleyeni
     // erken serbest bırakır.
     if (!_pcmDrainInFlight) return;
@@ -610,6 +638,37 @@ class _VideoCallRealtimeScreenState
     if (c == null || c.isCompleted) return;
     c.complete();
     _nativePcmDrainedCompleter = null;
+  }
+
+  /// Ses bitmesine rağmen ağız oynuyorsa anında durdur:
+  /// - Tüm timeline timer'larını iptal et.
+  /// - Smoothed RMS'i sıfırla.
+  /// - Rive `visemeNum=0` VE `talk=false` set et. Rive state machine
+  ///   "konuşuyor" durumunda baked-in idle ağız animasyonu çalıştırıyor
+  ///   olabilir; sadece visemeNum=0 yetmiyor, talk'u da kapatmamız gerek.
+  ///   Yeni PCM chunk geldiğinde `_driveRealtimeVisemeFromRms` zaten
+  ///   talk=true'yu geri set edecek.
+  void _forceCloseMouthForSilence() {
+    for (final t in _visemeTimers) {
+      t.cancel();
+    }
+    _visemeTimers.clear();
+    _visemeTimelineActive = false;
+    _lastVisemeFromTimelineAt = null;
+    _realtimeVisemeApplyTimer?.cancel();
+    _realtimeVisemeApplyTimer = null;
+    _pendingRealtimeVisemeId = 0;
+    _rmsSmoothed = 0.0;
+    _visemeApplied = 0;
+    _visemeAppliedAt = DateTime.now();
+    _setRiveNumber('duration', _riveTalkCloseBlendMs);
+    _setRiveNumber('visemeNum', 0);
+    _setRiveBool('talk', false);
+    _riveAudioActive = false;
+    _lastSpeechRmsAt = null;
+    _forceCloseLockedUntil = DateTime.now().add(
+      const Duration(milliseconds: _forceCloseLockoutMs),
+    );
   }
 
   /// Dart kuyruğu boşaldıktan sonra hoparlördeki gerçek PCM bitişini bekle.
@@ -837,11 +896,23 @@ class _VideoCallRealtimeScreenState
     int futureCount = 0;
     int lastFutureDelayMs = 0;
 
+    // ── Quantization ──
+    // Timeline'da birbirine çok yakın phoneme'ler ağız titremesi yaratıyordu.
+    // Önceki tetik zamanından _visemeTimelineMinGapMs geçmediyse ve id de aynı
+    // bandda kalıyorsa atla. Son uygulanan id'yi de takip et ki ardışık
+    // aynı id'ler boşa timer yaratmasın.
+    int lastScheduledDelayMs = -1 << 30;
+    int lastScheduledId = -1;
+
     for (final entry in timeline) {
       if (entry is! Map) continue;
       final dynamic idRaw = entry['id'];
       if (idRaw is! num) continue;
-      final int id = idRaw.toInt();
+      // 3-band quantize: backend hangi phoneme id'sini yollarsa yollasın,
+      // sadece kapalı (0) / orta (6) / açık (14) görünecek. Ağız "her phoneme
+      // için farklı şekil" yapmaz, sakin akar.
+      final int rawId = idRaw.toInt();
+      final int id = rawId == 0 ? 0 : (rawId <= 7 ? 6 : 14);
       final dynamic tRaw = entry['t'];
       final dynamic timeRaw = entry['time'];
       final int timeMs = tRaw is num
@@ -854,6 +925,20 @@ class _VideoCallRealtimeScreenState
         _visemeApplied = id;
         continue;
       }
+
+      // Önceki schedule'a çok yakın aynı id → boşa harcanır. Atla.
+      if (id == lastScheduledId &&
+          delayMs - lastScheduledDelayMs < _visemeTimelineMinGapMs) {
+        continue;
+      }
+      // Farklı id ama çok yakın geliyorsa: ağız flicker'ı önlemek için
+      // bu entry'yi de atla (timeline'ı seyreltiyoruz).
+      if (delayMs - lastScheduledDelayMs < _visemeTimelineMinGapMs) {
+        continue;
+      }
+      lastScheduledDelayMs = delayMs;
+      lastScheduledId = id;
+
       futureCount++;
       if (delayMs > lastFutureDelayMs) lastFutureDelayMs = delayMs;
 
@@ -863,11 +948,27 @@ class _VideoCallRealtimeScreenState
           if (_callState != _CallState.speaking) {
             return;
           }
-          // Timeline tetikleri PCM'den önce de çalışabilir; !_riveAudioActive
-          // ile atlamak dudakları uzun süre donduruyordu.
+          // Wall-clock timer'lar gerçek audio playback bitse de fire ediyor.
+          // Native PCM kuyruğu boşaldıysa (`_riveAudioActive == false`,
+          // `_forceCloseMouthForSilence` tarafından düşürüldü), bu tetiği
+          // tamamen yoksay — yoksa ses bittikten sonra "ağız havada" oynuyor.
+          if (!_riveAudioActive) return;
+          // ── Runtime gap-check ──
+          // Schedule sırasında quantize ettik ama timer'ların gerçek fire
+          // zamanı kayabilir (Dart event-loop, system load). Burada da
+          // koruma: son apply'dan _visemeTimelineMinGapMs geçmediyse atla.
+          // Aynı id zaten uygulanmışsa hiç dokunma.
+          final now = DateTime.now();
+          if (id == _visemeApplied) return;
+          final lastApplied = _visemeAppliedAt;
+          if (lastApplied != null &&
+              now.difference(lastApplied).inMilliseconds <
+                  _visemeTimelineMinGapMs) {
+            return;
+          }
           _visemeApplied = id;
-          _visemeAppliedAt = DateTime.now();
-          _lastVisemeFromTimelineAt = DateTime.now();
+          _visemeAppliedAt = now;
+          _lastVisemeFromTimelineAt = now;
           _setRiveNumber('visemeNum', id.toDouble());
           _setRiveNumber('duration', _riveVisemeBlendMs);
         }),
@@ -945,6 +1046,26 @@ class _VideoCallRealtimeScreenState
   void _driveRealtimeVisemeFromRms(int rms) {
     if (_callState != _CallState.speaking) return;
 
+    // ── Force-close lockout ──
+    // Az önce ağzı zorla kapattıysak (ses bitti), backend hâlâ silent-tail
+    // PCM yolluyorsa o chunk'lar ağzı tekrar açmasın. Yalnızca gerçek bir
+    // yeni cümle (yüksek RMS) lockout'u override edebilir.
+    final lockUntil = _forceCloseLockedUntil;
+    if (lockUntil != null) {
+      if (DateTime.now().isBefore(lockUntil)) {
+        if (rms < _forceCloseLockoutRmsOverride) {
+          // Tail silinciye kadar agresif şekilde bastır. Smoothed'a da
+          // yansıtma ki envelope follower düşük tutsun.
+          _rmsSmoothed = 0.0;
+          return;
+        }
+        // Yeterince yüksek RMS — gerçek yeni utterance, lockout'u kaldır.
+        _forceCloseLockedUntil = null;
+      } else {
+        _forceCloseLockedUntil = null;
+      }
+    }
+
     // Timeline açıkken: yalnızca timeline hamlesi yapıldıktan sonra kısa
     // bir süre RMS'i bastır — üst üste yazma "dudak iptal" ediyormuş gibi
     // görünür. Süre dolunca veya timeline sessiz kaldığında RMS tail'i devralır.
@@ -963,11 +1084,12 @@ class _VideoCallRealtimeScreenState
     }
 
     // ── Asymmetric envelope follower (attack/release) ───────────────────────
-    // Sakin tempo: yükselişe orta tepki, düşüşte yavaş sönüm. Smoothed RMS
-    // değeri yavaş değiştiği için viseme id'si daha az atlar — ağız sürekli
-    // şekil değiştirmiyor, doğal duruş süreleri korunuyor.
-    const double attackAlpha = 0.45; // yumuşak yükseliş tepkisi
-    const double releaseAlpha = 0.20; // yavaş sönüm — kapalıya hızla dönmesin
+    // Attack orta, release ılımlı. Çok hızlı release (0.55) heceler arası
+    // micro-pause'larda ağzı kapatıp tekrar açıyordu (flicker). PCM kuyruğu
+    // gerçekten bittiğinde zaten `_forceCloseMouthForSilence` anında kapatıyor;
+    // burası sadece konuşma içi yumuşak takip yapmalı.
+    const double attackAlpha = 0.35; // yükselişte yumuşak takip
+    const double releaseAlpha = 0.30; // sönümde sakin takip
     final double rmsD = rms.toDouble();
     if (rmsD > _rmsSmoothed) {
       _rmsSmoothed = _rmsSmoothed * (1 - attackAlpha) + rmsD * attackAlpha;
@@ -975,6 +1097,11 @@ class _VideoCallRealtimeScreenState
       _rmsSmoothed = _rmsSmoothed * (1 - releaseAlpha) + rmsD * releaseAlpha;
     }
     final int smoothRms = _rmsSmoothed.round();
+
+    // Son "anlamlı konuşma" zamanını izle — silence watchdog buna bakıyor.
+    if (smoothRms >= _speechRmsThreshold) {
+      _lastSpeechRmsAt = DateTime.now();
+    }
 
     // Open mouth the first time real audio arrives (PCM gerçekten yürüdüğünde).
     // Daha düşük eşik → ağız sesin başlangıcına anında reaksiyon verir.
@@ -989,17 +1116,24 @@ class _VideoCallRealtimeScreenState
     // ── 5-level viseme mapping (geniş bantlar) ──
     // Daha az level = aynı ses bandında ağız id'si daha sık aynı kalır,
     // viseme update'leri ile birlikte sakin ağız tempo.
+    // ── Hysteresis: sessizlik bandı ──
+    // Ağız KAPALI iken: açmak için smoothRms > 220 olmalı.
+    // Ağız AÇIK iken: kapatmak için smoothRms < 140'a düşmesi gerekir.
+    // Ortadaki 140..220 gri bölgede mevcut durum korunur → heceler arası
+    // micro-pause'larda flicker olmaz.
+    final bool mouthOpen = _visemeApplied != 0;
+    final int silenceThreshold = mouthOpen ? 140 : 220;
+
+    // ── 3 seviye ──
+    // 5 seviye (0/2/6/10/15) görsel olarak çok fazla varyasyon yaratıyordu.
+    // 3 seviye: kapalı / orta / açık. Ağız daha az "şekil değiştirir".
     int targetId;
-    if (smoothRms < 120) {
-      targetId = 0; // tam sessizlik / cümle sonu
-    } else if (smoothRms < 450) {
-      targetId = 2; // hafif açıklık
-    } else if (smoothRms < 1000) {
-      targetId = 6; // orta ünlü
-    } else if (smoothRms < 1800) {
-      targetId = 10; // güçlü ünlü
+    if (smoothRms < silenceThreshold) {
+      targetId = 0; // kapalı
+    } else if (smoothRms < 900) {
+      targetId = 6; // orta
     } else {
-      targetId = 15; // tam açık (vurgulu ünlü)
+      targetId = 14; // açık
     }
 
     // THROTTLE: Timer kuyruktaysa skip — yeniden kurma. Bu şekilde saniyede
@@ -1017,35 +1151,9 @@ class _VideoCallRealtimeScreenState
         final int id = _pendingRealtimeVisemeId;
         if (id == _visemeApplied) return;
 
-        // ── Closed hold-time ──
-        // Heceler arası kapanma 60ms tutuldu: kapalı pozda belirgin duruş,
-        // ağız sürekli açılıp kapanmıyor — sakin tempo.
-        if (id == 0 && _visemeApplied != 0) {
-          final appliedAt = _visemeAppliedAt;
-          if (appliedAt != null) {
-            final heldMs = DateTime.now().difference(appliedAt).inMilliseconds;
-            if (heldMs < 60) {
-              // Henüz erken — kararı reschedule et, RMS hâlâ düşükse sonraki
-              // değerlendirmede tekrar 0 görür ve kapatır.
-              _realtimeVisemeApplyTimer = Timer(
-                Duration(milliseconds: 60 - heldMs),
-                () {
-                  _realtimeVisemeApplyTimer = null;
-                  if (!mounted) return;
-                  if (_callState != _CallState.speaking) {
-                    return;
-                  }
-                  if (_pendingRealtimeVisemeId != 0) return;
-                  _visemeApplied = 0;
-                  _visemeAppliedAt = DateTime.now();
-                  _setRiveNumber('visemeNum', 0);
-                  _setRiveNumber('duration', _riveVisemeBlendMs);
-                },
-              );
-              return;
-            }
-          }
-        }
+        // Kapanış için artificial hold kaldırıldı: ağız ses bitince anında
+        // 0'a düşsün. Önceki 60ms gecikme, sesin son hecesi bittikten sonra
+        // ağzın "bir kare daha açık" görünmesine yol açıyordu.
 
         _visemeApplied = id;
         _visemeAppliedAt = DateTime.now();
@@ -1187,6 +1295,25 @@ class _VideoCallRealtimeScreenState
 
     final stallMs = DateTime.now().difference(base).inMilliseconds;
 
+    // ── Kısa eşik: ağzı erken kapat ──
+    // İki bağımsız tetikleyici:
+    //   1) PCM kuyruğu boş ve son chunk >=80ms önce → klasik drain bitti.
+    //   2) RMS-bazlı: son "anlamlı konuşma" üzerinden 180ms geçti.
+    //      Backend silent-tail PCM yollamaya devam ediyor olsa bile
+    //      (queue boşalmıyor ama gerçek ses bitti) bu yakalar.
+    if (_riveAudioActive) {
+      final lastSpeech = _lastSpeechRmsAt;
+      final speechStallMs = lastSpeech == null
+          ? 1 << 30
+          : DateTime.now().difference(lastSpeech).inMilliseconds;
+      final bool queueEmptyAndStale = _pcmTotalSamples == 0 && stallMs >= 80;
+      final bool speechSilentTooLong =
+          speechStallMs >= _silenceCloseAfterMs;
+      if (queueEmptyAndStale || speechSilentTooLong) {
+        _forceCloseMouthForSilence();
+      }
+    }
+
     // Yazılım kuyruğunda çalınmayı bekleyen örnek varken ASLA drain / flush
     // yapma. Chunk'lar geç gelince "playback stuck" sanılıp kuyruk atılıyor
     // ve ses ortadan kesiliyordu.
@@ -1208,7 +1335,7 @@ class _VideoCallRealtimeScreenState
   void _armAiPlaybackIdleMonitor() {
     _cancelAiPlaybackIdleMonitor();
     _lastAiPcmReceivedAt = null;
-    _aiPlaybackIdleTimer = Timer.periodic(const Duration(milliseconds: 200), (
+    _aiPlaybackIdleTimer = Timer.periodic(const Duration(milliseconds: 80), (
       _,
     ) {
       _evaluateAiPlaybackIdleFallback();

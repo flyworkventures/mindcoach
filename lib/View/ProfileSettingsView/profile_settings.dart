@@ -374,6 +374,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                       label: l10n.fullName,
                       hintText: l10n.enterYourFullName,
                       controller: _nameController,
+                      maxLength: 25,
                       prefixIcon: SvgPicture.asset(
                         "assets/icons/ic_settings_profile.svg",
                       ),
@@ -1755,6 +1756,7 @@ class _ProfileTextField extends StatelessWidget {
   final Widget prefixIcon;
   final bool isReadOnly;
   final TextInputType keyboardType;
+  final int? maxLength;
 
   const _ProfileTextField({
     required this.label,
@@ -1763,6 +1765,7 @@ class _ProfileTextField extends StatelessWidget {
     required this.prefixIcon,
     this.isReadOnly = false,
     this.keyboardType = TextInputType.text,
+    this.maxLength,
   });
 
   @override
@@ -1803,6 +1806,7 @@ class _ProfileTextField extends StatelessWidget {
                   controller: controller,
                   readOnly: isReadOnly,
                   keyboardType: keyboardType,
+                  maxLength: maxLength,
                   style: textStyle,
                   decoration: InputDecoration(
                     hintText: hintText,
@@ -1815,6 +1819,7 @@ class _ProfileTextField extends StatelessWidget {
                     border: InputBorder.none,
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
+                    counterText: '',
                   ),
                 ),
               ),

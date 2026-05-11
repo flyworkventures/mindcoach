@@ -42,7 +42,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     } else if (Platform.isAndroid) {
       // Android için Google Play Store linki
       urlStr =
-          'https://play.google.com/store/apps/details?id=com.flywork.mindcoachapp';
+          'https://play.google.com/store/apps/details?id=com.flywork.mindcoach';
     }
 
     if (urlStr.isNotEmpty) {

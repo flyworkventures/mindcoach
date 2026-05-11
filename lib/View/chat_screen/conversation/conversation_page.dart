@@ -179,7 +179,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               children: [
                 _buildAppBar(context),
                 const Divider(height: 1, color: Color(0xFF96989C)),
-
                 // ── Messages ──
                 Expanded(
                   child:
@@ -196,7 +195,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                             vertical: 8,
                           ),
                           itemBuilder: (context, index) {
-                            // Typing indicator at top (index 0 in reversed list)
                             if (isWaiting && index == 0) {
                               return _TypingIndicator(
                                 photoURL: widget.specialistId.photoURL,
@@ -1025,11 +1023,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       final messageText = _messageController.text.trim();
 
       // Resmi anında kullanıcı balonu olarak göster.
-      ref.read(conversationsProvider.notifier).addOptimisticImageMessage(
-        consultantId: widget.specialistId.id,
-        localImagePath: image.path,
-        message: messageText,
-      );
+      ref
+          .read(conversationsProvider.notifier)
+          .addOptimisticImageMessage(
+            consultantId: widget.specialistId.id,
+            localImagePath: image.path,
+            message: messageText,
+          );
 
       ref
           .read(conversationsProvider.notifier)
@@ -1315,7 +1315,9 @@ class _MessageBubbleState extends State<_MessageBubble> {
       }
     });
     _globalAudioPlayer.onDurationChanged.listen((duration) {
-      if (mounted && duration != Duration.zero) {
+      if (mounted &&
+          duration != Duration.zero &&
+          _currentlyPlayingMessageId == widget.message.messageId.toString()) {
         setState(() {
           _duration = duration;
         });

@@ -29,16 +29,16 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.931696780726-biaflamvl7qjda6efls9mcjt63spgdso</string>
+				<string>com.googleusercontent.apps.705277804468-1o6rltu0c8voqma3lkvmdda031aq6gf3</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>GIDClientID</key>
-	<string>931696780726-biaflamvl7qjda6efls9mcjt63spgdso.apps.googleusercontent.com</string>
+	<string>705277804468-1o6rltu0c8voqma3lkvmdda031aq6gf3.apps.googleusercontent.com</string>
 	<key>GIDServerClientID</key>
-	<string>931696780726-3b9p8a9t0di2bkr7s3olir10oh00roba.apps.googleusercontent.com</string>
+	<string>705277804468-b3a82f9k2c3moht7m388lf7mkgu5oo9u.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -74,10 +74,7 @@
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKWebViewJavaScriptCanOpenWindowsAutomatically</key>
 	<true/>
