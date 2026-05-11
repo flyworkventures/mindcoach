@@ -12,7 +12,28 @@
           "package_name": "com.flywork.mindcoach"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "705277804468-44as6uuepouglaudcgna3j22lu8bvbqr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flywork.mindcoach",
+            "certificate_hash": "584b19663715d7e261637c5faa09f8027755f7cc"
+          }
+        },
+        {
+          "client_id": "705277804468-q90n9hvaoovkrbq3d5n1qqaq0j6m1l11.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flywork.mindcoach",
+            "certificate_hash": "797e061486c96489875f291e25814a04f650702a"
+          }
+        },
+        {
+          "client_id": "705277804468-apmhk9tueifqj824v9eq58c8d8lr2up3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB5d3_twAlwh1tOHwFnOY9ERIXOsQfI8XI"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "705277804468-apmhk9tueifqj824v9eq58c8d8lr2up3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "705277804468-0h6o4amg21fn428s15nf1nvb5npk3ct8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flywork.mindcoachapp"
+              }
+            }
+          ]
         }
       }
     }
