@@ -2140,4 +2140,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => '비활성';
+
+  @override
+  String get appointmentConflictSameTime => '이 시간에 이미 다른 코치와 예약이 있습니다.';
+
+  @override
+  String get appointmentConflictSameCoach => '이 코치와 이미 예약이 있습니다.';
 }

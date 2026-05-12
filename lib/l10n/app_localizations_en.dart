@@ -2199,4 +2199,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => 'inactive';
+
+  @override
+  String get appointmentConflictSameTime =>
+      'You already have an appointment at this time with another coach.';
+
+  @override
+  String get appointmentConflictSameCoach =>
+      'You already have an appointment with this coach.';
 }

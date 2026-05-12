@@ -15,9 +15,6 @@ import 'package:mindcoach/http/http_service.dart';
 
 
 class AuthRepository {
-  // Google Sign-In instance with serverClientId for Android
-  // Server Client ID from iOS Info.plist: 137535160742-let1k5rhqu6ecqmlpj91g7336gctc8mt.apps.googleusercontent.com
-  // Android Client ID: 137535160742-pai7kjdb0nlr4lm9r1j4tc0o7ulpinli.apps.googleusercontent.com
   static bool _initialized = false;
   
   Future<void> _ensureInitialized() async {
@@ -25,8 +22,7 @@ class AuthRepository {
       if (Platform.isAndroid) {
         try {
           await GoogleSignIn.instance.initialize(
-            clientId: "931696780726-vcrf18tiqf3kim8dr5s0g8qhnuvbpip0.apps.googleusercontent.com",
-            serverClientId: "931696780726-3b9p8a9t0di2bkr7s3olir10oh00roba.apps.googleusercontent.com",
+            serverClientId: "705277804468-apmhk9tueifqj824v9eq58c8d8lr2up3.apps.googleusercontent.com",
           );
           debugPrint("✅ [Google Sign-In] Android initialization successful");
         } catch (e) {
@@ -132,8 +128,8 @@ Future<dynamic> googleSignIn() async{
         debugPrint("❌ [Google Sign-In] ========================================");
         debugPrint("❌ [Google Sign-In] 1. Google Cloud Console'a gidin:");
         debugPrint("❌ [Google Sign-In]    https://console.cloud.google.com/apis/credentials");
-        debugPrint("❌ [Google Sign-In] 2. OAuth Client ID'yi bulun:");
-        debugPrint("❌ [Google Sign-In]    931696780726-9bg4g80lakc05sf5do9a3r3pdru90sj6");
+        debugPrint("❌ [Google Sign-In] 2. OAuth Client ID'yi bulun (proje: mindcoach-748a6):");
+        debugPrint("❌ [Google Sign-In]    705277804468-44as6uuepouglaudcgna3j22lu8bvbqr");
         debugPrint("❌ [Google Sign-In] 3. Package name: com.flywork.mindcoach (TAM OLARAK)");
         debugPrint("❌ [Google Sign-In] 4. Aşağıdaki SHA key'leri EKLEYİN:");
         debugPrint("❌ [Google Sign-In]    DEBUG SHA-1:   C7:A6:48:26:D6:91:7C:31:B6:3E:0E:A9:3D:0A:44:90:EE:9A:5F:FA");

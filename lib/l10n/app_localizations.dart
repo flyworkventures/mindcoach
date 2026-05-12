@@ -4053,6 +4053,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'inactive'**
   String get premiumStatusInactive;
+
+  /// No description provided for @appointmentConflictSameTime.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have an appointment at this time with another coach.'**
+  String get appointmentConflictSameTime;
+
+  /// No description provided for @appointmentConflictSameCoach.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have an appointment with this coach.'**
+  String get appointmentConflictSameCoach;
 }
 
 class _AppLocalizationsDelegate

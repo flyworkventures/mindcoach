@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "Завершить",
   "videoCallRateTitle": "Оценить разговор",
   "videoCallRateSubtitle": "Оцените видеозвонок",
-  "premiumStatusInactive": "неактивен"
+  "premiumStatusInactive": "неактивен",
+  "appointmentConflictSameTime": "У вас уже есть запись на это время с другим коучем.",
+  "appointmentConflictSameCoach": "У вас уже есть запись к этому коучу."
 }

@@ -2199,4 +2199,12 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => 'निष्क्रिय';
+
+  @override
+  String get appointmentConflictSameTime =>
+      'इस समय आपकी पहले से किसी अन्य कोच के साथ अपॉइंटमेंट है।';
+
+  @override
+  String get appointmentConflictSameCoach =>
+      'इस कोच के साथ आपकी पहले से एक अपॉइंटमेंट है।';
 }

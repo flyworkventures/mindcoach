@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "終了",
   "videoCallRateTitle": "会話を評価",
   "videoCallRateSubtitle": "ビデオ通話を評価してください",
-  "premiumStatusInactive": "無効"
+  "premiumStatusInactive": "無効",
+  "appointmentConflictSameTime": "この時間帯には別のコーチとの予約があります。",
+  "appointmentConflictSameCoach": "このコーチとの予約がすでにあります。"
 }

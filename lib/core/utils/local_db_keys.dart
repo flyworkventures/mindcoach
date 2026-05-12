@@ -44,4 +44,9 @@ class LocalDbKeys {
 
   /// Kullanıcı satın alma premium mi (true) yoksa trial (false)
   static String isPremiumPurchased = "isPremiumPurchased";
+
+  /// Bu cihazda daha önce 3 günlük trial verildi mi.
+  /// clearPremiumStatus tarafından SİLİNMEZ — trial bittikten sonra
+  /// kullanıcı uygulamayı kapatıp açtığında yeniden trial verilmesini engeller.
+  static String hasUsedTrial = "hasUsedTrial";
 }

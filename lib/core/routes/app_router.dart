@@ -7,7 +7,6 @@ import 'package:mindcoach/View/ProfileView/appointment/appointment_screen.dart';
 import 'package:mindcoach/View/ProfileView/faq/faq_screen.dart';
 import 'package:mindcoach/View/ProfileView/language/language_selection_screen.dart';
 import 'package:mindcoach/View/ProfileView/notifications/notifications_screen.dart';
-import 'package:mindcoach/View/ProfileView/premium/premium_screen.dart';
 import 'package:mindcoach/View/ProfileView/presentation/goodbye_screen.dart';
 import 'package:mindcoach/View/ProfileView/presentation/invite_screen.dart';
 import 'package:mindcoach/View/chat_screen/conversation/conversation_page.dart';
@@ -39,7 +38,6 @@ class AppRouter {
     PageRoutes.faq: (_) => const FaqScreen(),
     PageRoutes.appointments: (_) => const AppointmentsScreen(),
     PageRoutes.notifications: (_) => const NotificationsScreen(),
-    PageRoutes.premimum: (_) => const PremiumScreen(),
     PageRoutes.videoCallView: (_) => const Scaffold(
       body: Center(child: Text('Hata: ConsultantModel bekleniyor')),
     ),
@@ -150,9 +148,6 @@ class AppRouter {
 
       case PageRoutes.notifications:
         return _page(const NotificationsScreen(), settings);
-
-      case PageRoutes.premimum:
-        return _page(const PremiumScreen(), settings);
 
       /// CHAT & CALLS
       case PageRoutes.conversationScreen:

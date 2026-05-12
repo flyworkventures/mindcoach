@@ -2115,4 +2115,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => '無効';
+
+  @override
+  String get appointmentConflictSameTime => 'この時間帯には別のコーチとの予約があります。';
+
+  @override
+  String get appointmentConflictSameCoach => 'このコーチとの予約がすでにあります。';
 }

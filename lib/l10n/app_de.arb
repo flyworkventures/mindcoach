@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "Beenden",
   "videoCallRateTitle": "Gespräch bewerten",
   "videoCallRateSubtitle": "Bewerte den Videoanruf",
-  "premiumStatusInactive": "inaktiv"
+  "premiumStatusInactive": "inaktiv",
+  "appointmentConflictSameTime": "Sie haben bereits einen Termin zu dieser Zeit mit einem anderen Coach.",
+  "appointmentConflictSameCoach": "Sie haben bereits einen Termin mit diesem Coach."
 }

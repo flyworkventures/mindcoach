@@ -36,40 +36,62 @@ void main() async {
   runApp(ProviderScope(child: MyApp()));
 }
 
-/// Device-based premium systemi başlat
-/// İlk launch'da 3 günlük trial'ı aktivat ve backend'e kaydet
+/// Device-based premium systemi başlat.
+/// 3 günlük trial cihaz başına SADECE BİR KEZ verilir.
+/// Source of truth: backend (device_id bazlı, persist eder).
+/// Backend ulaşılamazsa: local fallback — hasUsedTrial flag'i ile tek seferlik garantisi.
 Future<void> _initializePremiumSystem() async {
   try {
-    // Device ID'yi oluştur veya al
     final deviceId = await DeviceUtils.getDeviceId();
     debugPrint('📱 Device ID: $deviceId');
 
-    // Local DB'de premium durumu kontrol et
     final localDb = LocalDbService();
+
+    // 1) Önce backend'i dene (authoritative). Backend cihaz daha önce trial almışsa
+    //    yenisini vermez, mevcut status'unu döner (expired ise isPremium:false).
+    final backendSynced = await _syncPremiumWithBackend(deviceId, localDb);
+    if (backendSynced) return;
+
+    // 2) Backend ulaşılamadı → local fallback.
+    final hasUsedTrial = await localDb.getHasUsedTrial();
     final isActive = await localDb.isPremiumActive();
 
-    // Eğer active değilse ve premium data yoksa, 3 günlük trial'ı aktivat
-    if (!isActive) {
-      final expiryDate = DateTime.now().add(const Duration(days: 3));
-      await localDb.setPremiumStartDate(DateTime.now());
-      await localDb.setPremiumExpiryDate(expiryDate);
-      await localDb.setIsPremiumPurchased(false);
-
-      debugPrint(
-        '✅ 3-day trial premium activated locally for device: $deviceId',
-      );
+    if (isActive) {
+      debugPrint('ℹ️ Local premium aktif, backend sync ertelendi.');
+      return;
     }
 
-    // Backend'e device'i register et (non-blocking)
-    _registerDeviceWithBackend(deviceId);
+    if (hasUsedTrial) {
+      // Trial daha önce verilmiş ve bitmiş — bir daha verme.
+      debugPrint('🚫 Trial daha önce kullanılmış, yeniden verilmiyor.');
+      return;
+    }
+
+    // İlk kez: 3 günlük trial ver ve flag'i kalıcı set et.
+    final expiryDate = DateTime.now().add(const Duration(days: 3));
+    await localDb.setPremiumStartDate(DateTime.now());
+    await localDb.setPremiumExpiryDate(expiryDate);
+    await localDb.setIsPremiumPurchased(false);
+    await localDb.setHasUsedTrial(true);
+
+    debugPrint(
+      '✅ 3-day trial premium activated locally for device: $deviceId (backend offline fallback)',
+    );
   } catch (e) {
     debugPrint('⚠️ Premium initialization error: $e');
   }
 }
 
-/// Backend'e device'i register et (3-day trial oluştur)
-/// Non-blocking: başarısız olsa bile app çalışmaya devam etsin
-Future<void> _registerDeviceWithBackend(String deviceId) async {
+/// Backend'i source of truth olarak kullanır:
+///  - Yeni cihaz → backend 3 günlük trial verir, local'a yazarız.
+///  - Mevcut cihaz, trial aktif → backend mevcut expiry'i döner, local'i sync ederiz.
+///  - Mevcut cihaz, trial bitmiş → backend isPremium:false döner, local'i temizleriz
+///    ve hasUsedTrial=true set ederiz (bir daha trial verilmesin).
+/// Return: true = senkronize edildi, false = backend'e ulaşılamadı (fallback'e geç).
+Future<bool> _syncPremiumWithBackend(
+  String deviceId,
+  LocalDbService localDb,
+) async {
   try {
     final response = await http
         .post(
@@ -77,25 +99,50 @@ Future<void> _registerDeviceWithBackend(String deviceId) async {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({'deviceId': deviceId}),
         )
-        .timeout(
-          const Duration(seconds: 5),
-          onTimeout: () {
-            throw Exception('Backend device registration timeout');
-          },
-        );
+        .timeout(const Duration(seconds: 5));
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data['success'] == true) {
-        debugPrint('✅ Device registered with backend: $deviceId');
-        debugPrint('   → Trial expires in ${data['daysRemaining']} days');
-      }
-    } else {
-      debugPrint('⚠️ Backend registration failed: ${response.statusCode}');
+    if (response.statusCode != 200) {
+      debugPrint('⚠️ Backend status ${response.statusCode}, local fallback.');
+      return false;
     }
+
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    if (data['success'] != true) return false;
+
+    final bool isPremium = data['isPremium'] == true;
+    final String? expiryStr = data['expiryDate'] as String?;
+    final bool isTrial = data['isTrial'] == true || data['planId'] == 'trial';
+
+    if (isPremium && expiryStr != null) {
+      final expiryDate = DateTime.tryParse(expiryStr);
+      if (expiryDate != null) {
+        await localDb.setPremiumExpiryDate(expiryDate);
+        await localDb.setIsPremiumPurchased(!isTrial);
+        // Backend trial verdiyse / hala trialdaysa flag'i set et.
+        if (isTrial) {
+          await localDb.setHasUsedTrial(true);
+          // Start date yoksa şimdi set et (sadece bilgi amaçlı).
+          final existingStart = await localDb.getPremiumStartDate();
+          if (existingStart == null) {
+            await localDb.setPremiumStartDate(DateTime.now());
+          }
+        }
+        debugPrint(
+          '✅ Backend sync: premium aktif (${data['daysRemaining']} gün kaldı, trial=$isTrial).',
+        );
+        return true;
+      }
+    }
+
+    // Backend açıkça "premium yok / expired" dedi → local'i temizle, ama
+    // hasUsedTrial=true kalsın (trial bu cihazda zaten kullanılmış).
+    await localDb.clearPremiumStatus();
+    await localDb.setHasUsedTrial(true);
+    debugPrint('ℹ️ Backend sync: premium yok / expired, local temizlendi.');
+    return true;
   } catch (e) {
-    debugPrint('⚠️ Backend device registration failed (non-blocking): $e');
-    // Hata bile olsa app çalışmaya devam etsin
+    debugPrint('⚠️ Backend sync failed, local fallback: $e');
+    return false;
   }
 }
 

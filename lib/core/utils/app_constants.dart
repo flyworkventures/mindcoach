@@ -42,6 +42,7 @@ class AppConstants {
       "/appointments/$appointmentId";
   static String reactivateAppointmentURL(int appointmentId) =>
       "/appointments/$appointmentId/reactivate";
+  static const String createAppointmentURL = "/appointments/webhook";
 
   // Video Call endpoint
   static const String videoCallURL = "/video-call";

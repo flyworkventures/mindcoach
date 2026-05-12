@@ -8,8 +8,8 @@ import 'package:intl/intl.dart';
 
 import '../../core/utils/context_l10n_extensions.dart';
 import '../../core/utils/job_convert.dart';
+import '../chat_screen/conversation/video_call/video_call_realtime_screen.dart';
 import '../specialists_screen/specialists_notifier.dart';
-import 'appointment_video_call_screen.dart';
 import 'appointments_ui_provider.dart';
 
 const Color _kLightGreyText = Color(0xFF96989C);
@@ -206,12 +206,29 @@ class AppointmentCardUi extends ConsumerWidget {
                           behavior: HitTestBehavior.opaque,
                           onTap: canStartNow
                               ? () {
+                                  final cId = item.info.consultantId;
+                                  if (cId == null) return;
+                                  final consultantsState = ref.read(
+                                    specialistsProvider,
+                                  );
+                                  final consultants =
+                                      consultantsState.specialists;
+                                  if (consultants == null ||
+                                      consultants.isEmpty)
+                                    return;
+                                  final c = consultants
+                                      .cast<dynamic>()
+                                      .firstWhere(
+                                        (e) => e.id == cId,
+                                        orElse: () => null,
+                                      );
+                                  if (c == null) return;
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (_) =>
-                                          AppointmentVideoCallScreen(
-                                            appointment: item.info,
-                                          ),
+                                      builder: (_) => VideoCallRealtimeScreen(
+                                        specialist: c,
+                                        isTrial: false,
+                                      ),
                                     ),
                                   );
                                 }

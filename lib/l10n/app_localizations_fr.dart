@@ -2228,4 +2228,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => 'inactif';
+
+  @override
+  String get appointmentConflictSameTime =>
+      'Vous avez déjà un rendez-vous à cette heure avec un autre coach.';
+
+  @override
+  String get appointmentConflictSameCoach =>
+      'Vous avez déjà un rendez-vous avec ce coach.';
 }

@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "Termina",
   "videoCallRateTitle": "Valuta la conversazione",
   "videoCallRateSubtitle": "Valuta la videochiamata",
-  "premiumStatusInactive": "inattivo"
+  "premiumStatusInactive": "inattivo",
+  "appointmentConflictSameTime": "Hai già un appuntamento a quest'ora con un altro coach.",
+  "appointmentConflictSameCoach": "Hai già un appuntamento con questo coach."
 }

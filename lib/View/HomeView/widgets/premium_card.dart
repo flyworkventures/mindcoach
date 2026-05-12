@@ -14,7 +14,10 @@ class PremiumCard extends ConsumerWidget {
     final premiumState = ref.watch(AllProviders.premiumProvider);
     final l = context.l10n;
 
-    if (premiumState.isPremium) return const SizedBox.shrink();
+    // Banner sadece kullanıcı premium'u SATIN ALDIYSA gizlenir.
+    // Trial sürümünde (isPremium=true & isPurchased=false) yine görünür ki
+    // kullanıcıyı paid'e dönüşmeye teşvik etsin.
+    if (premiumState.isPurchased) return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),

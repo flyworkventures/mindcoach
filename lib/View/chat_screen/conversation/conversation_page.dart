@@ -12,6 +12,7 @@ import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/Services/rive_preload_service.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
+import 'package:mindcoach/View/specialists_screen/specialist_detail_screen.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/routes/video_call_route_args.dart';
@@ -32,7 +33,16 @@ String? _currentlyPlayingMessageId;
 class ConversationScreen extends ConsumerStatefulWidget {
   final ConsultantModel specialistId;
 
-  const ConversationScreen({super.key, required this.specialistId});
+  /// Bu ekran bir SpecialistDetailScreen üzerinden açıldıysa true olur.
+  /// AppBar'daki avatar/isim alanına basıldığında yeni bir detay sayfası
+  /// push'lamak yerine geri pop ederek loop'u engelleriz.
+  final bool fromDetail;
+
+  const ConversationScreen({
+    super.key,
+    required this.specialistId,
+    this.fromDetail = false,
+  });
 
   @override
   ConsumerState<ConversationScreen> createState() => _ConversationScreenState();
@@ -248,77 +258,112 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           ),
           const SizedBox(width: 12),
 
-          // Coach avatar — circular, green border
-          Container(
-            width: 43,
-            height: 43,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF21BC87), width: 2),
-            ),
-            child: ClipOval(
-              child: photoURL.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: photoURL,
-                      fit: BoxFit.cover,
-                      placeholder: (_, _) => const SizedBox.shrink(),
-                      errorWidget: (_, _, _) => Image.asset(
-                        'assets/images/profile_avatar.jpeg',
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Image.asset(
-                      'assets/images/profile_avatar.jpeg',
-                      fit: BoxFit.cover,
-                    ),
-            ),
-          ),
-          const SizedBox(width: 10),
-
-          // Name + Online
+          // Avatar + Name area — tıklanınca SpecialistDetailScreen açılır.
+          // Geri, sesli, görüntülü butonları bu alanın dışında kaldığı için
+          // kendi tap target'ları korunur.
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontFamily: 'Geist',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                    height: 20 / 16,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                // Bu ConversationScreen detaydan açıldıysa loop'u engellemek
+                // için yeni detay push'lamak yerine geri pop ederiz.
+                if (widget.fromDetail) {
+                  Navigator.pop(context);
+                  return;
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    settings: const RouteSettings(
+                      name: PageRoutes.specialistDetail,
+                    ),
+                    builder: (_) => SpecialistDetailScreen(
+                      specialist: widget.specialistId,
+                      fromConversation: true,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 2),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFF2BD383),
-                        borderRadius: BorderRadius.circular(9999),
-                      ),
-                      height: 4,
-                      width: 4,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      l.online,
-                      style: const TextStyle(
-                        fontFamily: 'Geist',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        height: 16 / 12,
+                );
+              },
+              child: Row(
+                children: [
+                  // Coach avatar — circular, green border
+                  Container(
+                    width: 43,
+                    height: 43,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFF21BC87),
+                        width: 2,
                       ),
                     ),
-                  ],
-                ),
-              ],
+                    child: ClipOval(
+                      child: photoURL.isNotEmpty
+                          ? CachedNetworkImage(
+                              imageUrl: photoURL,
+                              fit: BoxFit.cover,
+                              placeholder: (_, _) => const SizedBox.shrink(),
+                              errorWidget: (_, _, _) => Image.asset(
+                                'assets/images/profile_avatar.jpeg',
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Image.asset(
+                              'assets/images/profile_avatar.jpeg',
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Name + Online
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          name,
+                          style: const TextStyle(
+                            fontFamily: 'Geist',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                            height: 20 / 16,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xFF2BD383),
+                                borderRadius: BorderRadius.circular(9999),
+                              ),
+                              height: 4,
+                              width: 4,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              l.online,
+                              style: const TextStyle(
+                                fontFamily: 'Geist',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                                height: 16 / 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 

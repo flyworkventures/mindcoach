@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "Bitir",
   "videoCallRateTitle": "Görüşmeyi Puanla",
   "videoCallRateSubtitle": "Görüntülü görüşmeyi değerlendir",
-  "premiumStatusInactive": "pasif"
+  "premiumStatusInactive": "pasif",
+  "appointmentConflictSameTime": "Bu saatte başka bir rehberle zaten randevunuz var.",
+  "appointmentConflictSameCoach": "Bu rehberle zaten bir randevunuz var."
 }

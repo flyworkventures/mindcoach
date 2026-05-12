@@ -102,7 +102,8 @@ class LocalDbService {
     );
   }
 
-  /// Premium durumunu sil (trial sona erdi)
+  /// Premium durumunu sil (trial sona erdi).
+  /// NOT: hasUsedTrial flag'ine DOKUNMAZ — trial bittikten sonra tekrar verilmesini engellemek için.
   Future<bool> clearPremiumStatus() async {
     final prefs = await SharedPreferences.getInstance();
     bool success = true;
@@ -110,6 +111,16 @@ class LocalDbService {
     success &= await prefs.remove(LocalDbKeys.premiumStartDate);
     success &= await prefs.remove(LocalDbKeys.isPremiumPurchased);
     return success;
+  }
+
+  /// Bu cihazda daha önce 3 günlük trial verildi mi.
+  Future<bool> getHasUsedTrial() async {
+    return await getBool(key: LocalDbKeys.hasUsedTrial) ?? false;
+  }
+
+  /// "Trial daha önce verildi" flag'ini set et (tekrar trial verilmesini engeller).
+  Future<bool> setHasUsedTrial(bool value) async {
+    return setBool(key: LocalDbKeys.hasUsedTrial, value: value);
   }
 
 }

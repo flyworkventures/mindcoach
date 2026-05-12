@@ -1,3 +1,6 @@
+/// `copyWith` içinde "argüman verilmedi" ile "null geçildi"yi ayırt etmek için sentinel.
+const Object _unsetExpiry = Object();
+
 /// Premium durumunu temsil eden model
 class PremiumState {
   /// Kullanıcı premium mi (trial + purchased combined)
@@ -58,17 +61,21 @@ class PremiumState {
     );
   }
 
-  /// Kopyala ve birkaç değeri değiştir
+  /// Kopyala ve birkaç değeri değiştir.
+  /// NOT: `expiryDate` için sentinel default kullanıldı — explicit `null` geçildiğinde
+  /// expiry temizlenebilir (default davranış: mevcut değeri koru).
   PremiumState copyWith({
     bool? isPremium,
-    DateTime? expiryDate,
+    Object? expiryDate = _unsetExpiry,
     String? deviceId,
     bool? isPurchased,
     int? daysRemaining,
   }) {
     return PremiumState(
       isPremium: isPremium ?? this.isPremium,
-      expiryDate: expiryDate ?? this.expiryDate,
+      expiryDate: identical(expiryDate, _unsetExpiry)
+          ? this.expiryDate
+          : expiryDate as DateTime?,
       deviceId: deviceId ?? this.deviceId,
       isPurchased: isPurchased ?? this.isPurchased,
       daysRemaining: daysRemaining ?? this.daysRemaining,

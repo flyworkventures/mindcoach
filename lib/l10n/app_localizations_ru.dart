@@ -2221,4 +2221,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => 'неактивен';
+
+  @override
+  String get appointmentConflictSameTime =>
+      'У вас уже есть запись на это время с другим коучем.';
+
+  @override
+  String get appointmentConflictSameCoach =>
+      'У вас уже есть запись к этому коучу.';
 }

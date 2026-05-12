@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,16 +7,31 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/View/appointments/appointments_notifier.dart';
+import 'package:mindcoach/View/chat_screen/conversation/conversation_page.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
 import 'package:mindcoach/core/repo/consultant_repo.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/routes/video_call_route_args.dart';
+import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/explanation_convert.dart';
 import 'package:mindcoach/core/utils/feature_convert.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
 import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
+import 'package:mindcoach/core/widgets/future_progress_dialog.dart';
+import 'package:mindcoach/http/http_service.dart';
 import 'package:mindcoach/models/consultant_model.dart';
+
+class _AppointmentResult {
+  final int statusCode;
+  final String? message;
+  final String? error;
+  const _AppointmentResult({
+    required this.statusCode,
+    this.message,
+    this.error,
+  });
+}
 
 class SpecialistDetailScreen extends ConsumerStatefulWidget {
   final ConsultantModel specialist;
@@ -24,10 +41,16 @@ class SpecialistDetailScreen extends ConsumerStatefulWidget {
   /// ([VideoCallRealtimeScreen], `connection_success`).
   final bool isTrial;
 
+  /// Bu ekran bir ConversationScreen üzerinden açıldıysa true olur.
+  /// Sohbet butonuna basıldığında yeni bir ConversationScreen push'lamak
+  /// yerine geri pop ederek loop'u engelleriz.
+  final bool fromConversation;
+
   const SpecialistDetailScreen({
     super.key,
     required this.specialist,
     this.isTrial = false,
+    this.fromConversation = false,
   });
 
   @override
@@ -39,6 +62,38 @@ class _SpecialistDetailScreenState
     extends ConsumerState<SpecialistDetailScreen> {
   int? _selectedSlotIndex;
   late ConsultantModel _specialist;
+  bool _isCreatingAppointment = false;
+
+  // 00:00 - 23:30 arası 24 slot, değişken aralıklarla.
+  static const List<String> _slotTimes = [
+    '00:00',
+    '00:45',
+    '01:30',
+    '02:30',
+    '03:15',
+    '04:00',
+    '05:00',
+    '06:30',
+    '07:15',
+    '08:00',
+    '09:00',
+    '10:30',
+    '11:15',
+    '12:00',
+    '13:30',
+    '14:15',
+    '15:00',
+    '16:30',
+    '17:15',
+    '18:00',
+    '19:30',
+    '20:45',
+    '22:00',
+    '23:30',
+  ];
+
+  String? _slotTimeAt(int index) =>
+      (index >= 0 && index < _slotTimes.length) ? _slotTimes[index] : null;
 
   @override
   void initState() {
@@ -71,6 +126,99 @@ class _SpecialistDetailScreenState
     } catch (_) {
       // Refresh başarısız olsa da mevcut detay ekranı çalışmaya devam etsin.
     }
+  }
+
+  /// Seçili slot için bugün tarihinde randevu oluştur.
+  /// POST /appointments/webhook — server duplicate kontrolünü kendisi yapar.
+  /// Network/Backend süresince proje genel loading dialog'unu (runWithProgressDialog) gösterir.
+  Future<void> _createAppointment(String slotTime) async {
+    if (_isCreatingAppointment) return;
+    final l10n = context.l10n;
+    final userId = ref.read(AllProviders.userProvider)?.id;
+    if (userId == null) {
+      _showSnack('Error');
+      return;
+    }
+
+    final parts = slotTime.split(':');
+    if (parts.length != 2) return;
+    final now = DateTime.now();
+    final appointmentDateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+    );
+
+    _isCreatingAppointment = true;
+    try {
+      final result = await context.runWithProgressDialog<_AppointmentResult>(
+        () async {
+          try {
+            final httpService = HttpService();
+            final response = await httpService.post(
+              path: AppConstants.createAppointmentURL,
+              body: {
+                'userId': userId,
+                'consultantId': _specialist.id,
+                'appointmentDate': appointmentDateTime
+                    .toUtc()
+                    .toIso8601String(),
+              },
+            );
+
+            Map<String, dynamic> data = const {};
+            try {
+              data = jsonDecode(response.body) as Map<String, dynamic>;
+            } catch (_) {}
+
+            final ok = response.statusCode == 201 || response.statusCode == 200;
+            // Dialog kapanmadan önce appointments listesini yenile — kapandığında
+            // slotlar zaten güncellenmiş görünür.
+            if (ok && mounted) {
+              await ref.read(appointmentsProvider.notifier).refresh();
+            }
+            return _AppointmentResult(
+              statusCode: response.statusCode,
+              message: data['message'] as String?,
+              error: data['error'] as String?,
+            );
+          } catch (_) {
+            return const _AppointmentResult(statusCode: -1);
+          }
+        },
+        message: l10n.pleaseWait,
+      );
+
+      if (!mounted) return;
+      final ok = result.statusCode == 201 || result.statusCode == 200;
+      if (ok) {
+        setState(() => _selectedSlotIndex = null);
+        _showSnack(result.message ?? l10n.coachDetailCreateAppointment);
+      } else if (result.statusCode == 409) {
+        final serverError = result.error ?? '';
+        final String localizedMsg;
+        if (serverError.contains('at this date and time')) {
+          localizedMsg = l10n.appointmentConflictSameTime;
+        } else if (serverError.contains('with this consultant')) {
+          localizedMsg = l10n.appointmentConflictSameCoach;
+        } else {
+          localizedMsg = l10n.appointmentConflictSameTime;
+        }
+        _showSnack(localizedMsg);
+      } else {
+        _showSnack('Error');
+      }
+    } finally {
+      _isCreatingAppointment = false;
+    }
+  }
+
+  void _showSnack(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -406,7 +554,7 @@ class _SpecialistDetailScreenState
                                   icon: SvgPicture.asset(
                                     "assets/icons/ic_aval.svg",
                                   ),
-                                  title: '08:00 - 18:00',
+                                  title: '00:00 - 23:30',
                                   subtitle: l10n.coachDetailAvailability,
                                 ),
                               ),
@@ -482,11 +630,27 @@ class _SpecialistDetailScreenState
               // Chat icon
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/conversation_page',
-                    arguments: specialist,
-                  );
+                  // Eğer ekran zaten bir ConversationScreen'den açıldıysa,
+                  // yeni bir ConversationScreen push'lamak yerine geri pop
+                  // ederek loop'u engelle (chat → detail → chat → detail ...).
+                  if (widget.fromConversation) {
+                    Navigator.pop(context);
+                  } else {
+                    // Detaydan ConversationScreen'e gidiyoruz; fromDetail=true
+                    // geçerek o ekrandan tekrar detaya gidilirse geri pop edilsin.
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        settings: const RouteSettings(
+                          name: '/conversation_page',
+                        ),
+                        builder: (_) => ConversationScreen(
+                          specialistId: specialist,
+                          fromDetail: true,
+                        ),
+                      ),
+                    );
+                  }
                 },
                 child: Container(
                   width: 60,
@@ -505,64 +669,87 @@ class _SpecialistDetailScreenState
               const SizedBox(width: 10),
             ],
 
-            // Start Video Call button
+            // Bottom action button — bir slot seçiliyse "Randevu Oluştur",
+            // değilse "Görüntülü Aramayı Başlat".
             Expanded(
-              child: GestureDetector(
-                onTap: () async {
-                  final premiumState = ref.read(AllProviders.premiumProvider);
-                  late final bool isTrial;
-                  // FindCoachStep'ten gelen her görüşme 1 dk trial — premium olsun olmasın.
-                  if (widget.isTrial) {
-                    isTrial = true;
-                  } else if (premiumState.isPremium) {
-                    isTrial = false;
-                  } else {
-                    await presentProOffersPaywall();
-                    return;
+              child: Builder(
+                builder: (context) {
+                  final hasSelectedSlot = _selectedSlotIndex != null;
+                  final iconPath = hasSelectedSlot
+                      ? "assets/icons/ic_ic.svg"
+                      : "assets/icons/ic_record.svg";
+                  final label = hasSelectedSlot
+                      ? l10n.coachDetailCreateAppointment
+                      : l10n.coachDetailStartVideoCall;
+
+                  Future<void> onTap() async {
+                    if (hasSelectedSlot) {
+                      // Slot zaten _selectedSlotIndex aracılığıyla bilinen indeks.
+                      // Slots listesi `_buildAppointmentCard` içinde oluşturuluyor;
+                      // burada doğrudan aynı türetilmiş listeyi kullanırız.
+                      final time = _slotTimeAt(_selectedSlotIndex!);
+                      if (time != null) await _createAppointment(time);
+                      return;
+                    }
+
+                    final premiumState = ref.read(AllProviders.premiumProvider);
+                    late final bool isTrial;
+                    // FindCoachStep'ten gelen her görüşme 1 dk trial — premium olsun olmasın.
+                    if (widget.isTrial) {
+                      isTrial = true;
+                    } else if (premiumState.isPremium) {
+                      isTrial = false;
+                    } else {
+                      await presentProOffersPaywall();
+                      return;
+                    }
+                    if (!context.mounted) return;
+                    await Navigator.pushNamed(
+                      context,
+                      PageRoutes.videoCall,
+                      arguments: VideoCallRouteArgs(
+                        specialist: specialist,
+                        isTrial: isTrial,
+                      ),
+                    );
+                    if (mounted) _refreshSpecialist();
                   }
-                  if (!context.mounted) return;
-                  await Navigator.pushNamed(
-                    context,
-                    PageRoutes.videoCall,
-                    arguments: VideoCallRouteArgs(
-                      specialist: specialist,
-                      isTrial: isTrial,
+
+                  return GestureDetector(
+                    onTap: onTap,
+                    child: Container(
+                      height: 54,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF21BC87),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF21BC87),
+                            blurRadius: 10,
+                            offset: const Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(iconPath),
+                          const SizedBox(width: 10),
+                          Text(
+                            label,
+                            style: const TextStyle(
+                              fontFamily: 'Geist',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
-                  if (mounted) _refreshSpecialist();
                 },
-                child: Container(
-                  height: 54, // Fixed (54px)
-                  padding: const EdgeInsets.all(10), // Padding: 10px
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF21BC87),
-                    borderRadius: BorderRadius.circular(16), // Radius: 16px
-                    boxShadow: [
-                      BoxShadow(
-                        // Drop shadow: X: 0, Y: 0, Blur: 10, #21BC87
-                        color: const Color(0xFF21BC87),
-                        blurRadius: 10,
-                        offset: const Offset(0, 0),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/icons/ic_record.svg"),
-                      const SizedBox(width: 10), // Gap: 10px
-                      Text(
-                        l10n.coachDetailStartVideoCall,
-                        style: const TextStyle(
-                          fontFamily: 'Geist',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ),
           ],
@@ -715,20 +902,8 @@ class _SpecialistDetailScreenState
     final dateLabel = DateFormat('d MMMM, EEEE', localeTag).format(now);
 
     // Varsayılan slotlar; DB'de aynı saatte ilgili koçun randevusu varsa pasif/soluk gösterilir.
-    final slots = [
-      {'time': '08:00'},
-      {'time': '09:40'},
-      {'time': '10:00'},
-      {'time': '12:00'},
-      {'time': '14:00'},
-      {'time': '14:30'},
-      {'time': '15:30'},
-      {'time': '16:00'},
-      {'time': '16:30'},
-      {'time': '17:00'},
-      {'time': '17:30'},
-      {'time': '18:00'},
-    ];
+    // Tek kaynak: _slotTimes (00:00 - 23:30 arası 24 değişken aralıklı slot).
+    final slots = _slotTimes.map((t) => {'time': t}).toList();
 
     return Container(
       width: double.infinity,
@@ -763,24 +938,53 @@ class _SpecialistDetailScreenState
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.only(left: 4.0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF21BC87).withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  '${context.l10n.appointments}: ${bookedSlots.length}',
-                  style: const TextStyle(
-                    fontFamily: 'Geist',
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF21BC87),
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF21BC87).withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      '${context.l10n.appointments}: ${bookedSlots.length}',
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF21BC87),
+                      ),
+                    ),
                   ),
-                ),
+                  for (final t in bookedSlots.toList()..sort())
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF21BC87).withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(
+                          color: const Color(0xFF21BC87).withValues(alpha: 0.20),
+                        ),
+                      ),
+                      child: Text(
+                        t,
+                        style: const TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF21BC87),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ],
@@ -793,7 +997,21 @@ class _SpecialistDetailScreenState
             children: List.generate(slots.length, (index) {
               final slot = slots[index];
               final time = slot['time'] as String;
-              final isAvailable = !bookedSlots.contains(time);
+
+              // Slot "HH:MM"yi bugünün tarihindeki DateTime'a çevir; geçmişte
+              // kalanlar da soluk + tıklanamaz olsun.
+              final now = DateTime.now();
+              final parts = time.split(':');
+              final slotDateTime = DateTime(
+                now.year,
+                now.month,
+                now.day,
+                int.parse(parts[0]),
+                int.parse(parts[1]),
+              );
+              final isPast = slotDateTime.isBefore(now);
+              final isBooked = bookedSlots.contains(time);
+              final isAvailable = !isBooked && !isPast;
               final isSelected = _selectedSlotIndex == index;
 
               // Duruma göre renk atamaları
@@ -801,8 +1019,11 @@ class _SpecialistDetailScreenState
               Color textColor;
               Color backgroundColor;
 
-              if (!isAvailable) {
-                // Pasif (Dolmuş/Geçmiş) Saatler
+              if (isBooked) {
+                borderColor = const Color(0xFF21BC87).withValues(alpha: 0.30);
+                textColor = const Color(0xFF21BC87);
+                backgroundColor = const Color(0xFF21BC87).withValues(alpha: 0.08);
+              } else if (isPast) {
                 borderColor = Colors.black.withValues(alpha: 0.05);
                 textColor = Colors.black.withValues(alpha: 0.20);
                 backgroundColor = Colors.transparent;
@@ -850,7 +1071,7 @@ class _SpecialistDetailScreenState
                     style: TextStyle(
                       fontFamily: 'Geist',
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: isBooked ? FontWeight.w600 : FontWeight.w500,
                       color: textColor,
                     ),
                   ),

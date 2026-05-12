@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "End",
   "videoCallRateTitle": "Rate Conversation",
   "videoCallRateSubtitle": "Evaluate the video call",
-  "premiumStatusInactive": "inactive"
+  "premiumStatusInactive": "inactive",
+  "appointmentConflictSameTime": "You already have an appointment at this time with another coach.",
+  "appointmentConflictSameCoach": "You already have an appointment with this coach."
 }

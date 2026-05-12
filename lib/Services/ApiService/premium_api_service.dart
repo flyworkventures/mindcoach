@@ -6,6 +6,39 @@ import 'package:mindcoach/core/utils/app_constants.dart';
 class PremiumApiService {
   static const String _endpoint = '/api/v1/premium/confirm-purchase';
 
+  /// Backend'e device + (varsa) user ile premium initialize/sync isteği at.
+  /// Backend account-aware: userId verilirse user-scoped, yoksa device-scoped çalışır.
+  Future<Map<String, dynamic>> initialize({
+    required String deviceId,
+    int? userId,
+  }) async {
+    final url = Uri.parse(
+      '${AppConstants.baseURL}/api/v1/premium/initialize',
+    );
+    final response = await http
+        .post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'deviceId': deviceId,
+            if (userId != null) 'userId': userId,
+          }),
+        )
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            throw Exception('Premium initialize timeout');
+          },
+        );
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        'Premium initialize failed: ${response.statusCode} - ${response.body}',
+      );
+    }
+    return jsonDecode(response.body) as Map<String, dynamic>;
+  }
+
   /// RevenueCat'ten satın almanın onayını backend'e ilet
   ///
   /// Parametreler:
@@ -32,6 +65,7 @@ class PremiumApiService {
   /// - Exception - 200 dışı status code
   Future<Map<String, dynamic>> confirmPurchase({
     required String deviceId,
+    int? userId,
     required String receiptData,
     required String packageIdentifier,
   }) async {
@@ -40,6 +74,7 @@ class PremiumApiService {
 
       final payload = {
         'deviceId': deviceId,
+        if (userId != null) 'userId': userId,
         'receiptData': receiptData,
         'packageIdentifier': packageIdentifier,
         'timestamp': DateTime.now().toIso8601String(),
@@ -87,10 +122,12 @@ class PremiumApiService {
   /// ```
   Future<Map<String, dynamic>> getDevicePremiumStatus({
     required String deviceId,
+    int? userId,
   }) async {
     try {
+      final qs = userId != null ? '?userId=$userId' : '';
       final url = Uri.parse(
-        '${AppConstants.baseURL}/api/v1/premium/device-status/$deviceId',
+        '${AppConstants.baseURL}/api/v1/premium/device-status/$deviceId$qs',
       );
 
       final response = await http.get(

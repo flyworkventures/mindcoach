@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "Terminer",
   "videoCallRateTitle": "Noter la conversation",
   "videoCallRateSubtitle": "Évaluez l'appel vidéo",
-  "premiumStatusInactive": "inactif"
+  "premiumStatusInactive": "inactif",
+  "appointmentConflictSameTime": "Vous avez déjà un rendez-vous à cette heure avec un autre coach.",
+  "appointmentConflictSameCoach": "Vous avez déjà un rendez-vous avec ce coach."
 }

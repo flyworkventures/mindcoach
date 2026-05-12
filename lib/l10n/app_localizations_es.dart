@@ -2216,4 +2216,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => 'inactivo';
+
+  @override
+  String get appointmentConflictSameTime =>
+      'Ya tienes una cita a esta hora con otro coach.';
+
+  @override
+  String get appointmentConflictSameCoach =>
+      'Ya tienes una cita con este coach.';
 }

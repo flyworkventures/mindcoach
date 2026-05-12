@@ -2225,4 +2225,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => 'inaktiv';
+
+  @override
+  String get appointmentConflictSameTime =>
+      'Sie haben bereits einen Termin zu dieser Zeit mit einem anderen Coach.';
+
+  @override
+  String get appointmentConflictSameCoach =>
+      'Sie haben bereits einen Termin mit diesem Coach.';
 }

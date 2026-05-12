@@ -2194,4 +2194,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => 'pasif';
+
+  @override
+  String get appointmentConflictSameTime =>
+      'Bu saatte başka bir rehberle zaten randevunuz var.';
+
+  @override
+  String get appointmentConflictSameCoach =>
+      'Bu rehberle zaten bir randevunuz var.';
 }

@@ -13,13 +13,21 @@ class PremiumNotifier extends StateNotifier<PremiumState> {
     state = newState;
   }
 
-  /// Premium trial'ı aktivat (3 gün)
+  /// Premium trial'ı aktivat (3 gün).
+  /// Cihaz başına sadece bir kez verilir — daha önce kullanılmışsa no-op.
   Future<void> activateTrialPremium() async {
+    final hasUsedTrial = await _localDb.getHasUsedTrial();
+    if (hasUsedTrial) {
+      // Mevcut state'i değiştirmeden çık — trial yeniden verilmez.
+      return;
+    }
+
     final expiryDate = DateTime.now().add(const Duration(days: 3));
 
     await _localDb.setPremiumStartDate(DateTime.now());
     await _localDb.setPremiumExpiryDate(expiryDate);
     await _localDb.setIsPremiumPurchased(false);
+    await _localDb.setHasUsedTrial(true);
 
     state = state.copyWith(
       isPremium: true,
@@ -29,19 +37,34 @@ class PremiumNotifier extends StateNotifier<PremiumState> {
     );
   }
 
-  /// Purchased premium'ı aktivat (1 yıl)
-  Future<void> activatePurchasedPremium() async {
-    final expiryDate = DateTime.now().add(const Duration(days: 365));
+  /// Purchased premium'ı aktivat.
+  /// [expiryDate] verilirse onu kullanır (RevenueCat'ten gelen gerçek expiry),
+  /// aksi halde 1 yıllık default.
+  Future<void> activatePurchasedPremium({DateTime? expiryDate}) async {
+    final effectiveExpiry =
+        expiryDate ?? DateTime.now().add(const Duration(days: 365));
+    final daysRemaining = effectiveExpiry.difference(DateTime.now()).inDays;
 
     await _localDb.setPremiumStartDate(DateTime.now());
-    await _localDb.setPremiumExpiryDate(expiryDate);
+    await _localDb.setPremiumExpiryDate(effectiveExpiry);
     await _localDb.setIsPremiumPurchased(true);
 
     state = state.copyWith(
       isPremium: true,
-      expiryDate: expiryDate,
+      expiryDate: effectiveExpiry,
       isPurchased: true,
-      daysRemaining: 365,
+      daysRemaining: daysRemaining < 0 ? 0 : daysRemaining,
+    );
+  }
+
+  /// Premium'ı tamamen kapat (backend "premium yok" derse veya expire olduysa).
+  Future<void> deactivatePremium() async {
+    await _localDb.clearPremiumStatus();
+    state = state.copyWith(
+      isPremium: false,
+      expiryDate: null,
+      isPurchased: false,
+      daysRemaining: 0,
     );
   }
 

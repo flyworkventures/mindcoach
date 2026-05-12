@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "Finalizar",
   "videoCallRateTitle": "Calificar conversación",
   "videoCallRateSubtitle": "Evalúa la videollamada",
-  "premiumStatusInactive": "inactivo"
+  "premiumStatusInactive": "inactivo",
+  "appointmentConflictSameTime": "Ya tienes una cita a esta hora con otro coach.",
+  "appointmentConflictSameCoach": "Ya tienes una cita con este coach."
 }

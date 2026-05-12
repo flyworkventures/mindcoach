@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "结束",
   "videoCallRateTitle": "评价对话",
   "videoCallRateSubtitle": "请评价本次视频通话",
-  "premiumStatusInactive": "未激活"
+  "premiumStatusInactive": "未激活",
+  "appointmentConflictSameTime": "您在此时间已与其他教练有预约。",
+  "appointmentConflictSameCoach": "您已与此教练有预约。"
 }

@@ -762,5 +762,7 @@
   "videoCallEndDialogEnd": "Encerrar",
   "videoCallRateTitle": "Avaliar conversa",
   "videoCallRateSubtitle": "Avalie a chamada de vídeo",
-  "premiumStatusInactive": "inativo"
+  "premiumStatusInactive": "inativo",
+  "appointmentConflictSameTime": "Você já tem um agendamento neste horário com outro coach.",
+  "appointmentConflictSameCoach": "Você já tem um agendamento com este coach."
 }

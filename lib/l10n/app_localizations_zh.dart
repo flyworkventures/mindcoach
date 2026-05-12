@@ -2062,4 +2062,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get premiumStatusInactive => '未激活';
+
+  @override
+  String get appointmentConflictSameTime => '您在此时间已与其他教练有预约。';
+
+  @override
+  String get appointmentConflictSameCoach => '您已与此教练有预约。';
 }

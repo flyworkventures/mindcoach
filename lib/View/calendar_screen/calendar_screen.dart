@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_realtime_screen.dart';
 import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/global_constants/month_strings.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
@@ -10,7 +11,6 @@ import 'package:mindcoach/core/utils/job_convert.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../core/models/appointment_info.dart';
-import '../appointments/appointment_video_call_screen.dart';
 import '../appointments/appointments_notifier.dart';
 import '../specialists_screen/specialists_notifier.dart';
 
@@ -41,7 +41,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     super.initState();
     final initialDate = widget.initialSelectedDate?.toLocal();
     if (initialDate != null) {
-      _focusedDay = DateTime(initialDate.year, initialDate.month, initialDate.day);
+      _focusedDay = DateTime(
+        initialDate.year,
+        initialDate.month,
+        initialDate.day,
+      );
       _selectedDay = _focusedDay;
       // Bildirimden gelen tarih tek seferlik kullanılsın.
       Future.microtask(() {
@@ -578,9 +582,24 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     DateTime appointmentDateTime,
   ) async {
     if (!_isAppointmentJoinAvailable(appointmentDateTime)) return;
+
+    final consultantId = info.consultantId;
+    if (consultantId == null) return;
+
+    final consultantsState = ref.read(specialistsProvider);
+    final consultants = consultantsState.specialists;
+    if (consultants == null || consultants.isEmpty) return;
+
+    final consultant = consultants.cast<dynamic>().firstWhere(
+      (c) => c.id == consultantId,
+      orElse: () => null,
+    );
+    if (consultant == null) return;
+
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => AppointmentVideoCallScreen(appointment: info),
+        builder: (_) =>
+            VideoCallRealtimeScreen(specialist: consultant, isTrial: false),
       ),
     );
   }
