@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "वीडियो कॉल का मूल्यांकन करें",
   "premiumStatusInactive": "निष्क्रिय",
   "appointmentConflictSameTime": "इस समय आपकी पहले से किसी अन्य कोच के साथ अपॉइंटमेंट है।",
-  "appointmentConflictSameCoach": "इस कोच के साथ आपकी पहले से एक अपॉइंटमेंट है।"
+  "appointmentConflictSameCoach": "इस कोच के साथ आपकी पहले से एक अपॉइंटमेंट है।",
+  "appointmentReminderTitle": "अपॉइंटमेंट रिमाइंडर",
+  "appointmentReminderBody": "{specialistName} के साथ आपकी अपॉइंटमेंट 30 मिनट में शुरू होगी।",
+  "appointmentReminderFallbackName": "आपका विशेषज्ञ",
+  "analyticsTrackingTitle": "एनालिटिक्स ट्रैकिंग",
+  "analyticsTrackingDescription": "गुमनाम उपयोग डेटा साझा करके ऐप को बेहतर बनाने में हमारी मदद करें। आप इसे कभी भी बंद कर सकते हैं।"
 }

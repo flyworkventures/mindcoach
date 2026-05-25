@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "Valuta la videochiamata",
   "premiumStatusInactive": "inattivo",
   "appointmentConflictSameTime": "Hai già un appuntamento a quest'ora con un altro coach.",
-  "appointmentConflictSameCoach": "Hai già un appuntamento con questo coach."
+  "appointmentConflictSameCoach": "Hai già un appuntamento con questo coach.",
+  "appointmentReminderTitle": "Promemoria appuntamento",
+  "appointmentReminderBody": "Il tuo appuntamento con {specialistName} inizia tra 30 minuti.",
+  "appointmentReminderFallbackName": "il tuo specialista",
+  "analyticsTrackingTitle": "Tracciamento analitico",
+  "analyticsTrackingDescription": "Aiutaci a migliorare l'app condividendo dati di utilizzo anonimi. Puoi disattivarlo in qualsiasi momento."
 }

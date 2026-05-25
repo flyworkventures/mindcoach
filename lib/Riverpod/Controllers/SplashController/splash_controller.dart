@@ -5,7 +5,9 @@ import 'package:mindcoach/Repositories/auth_repositories.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Services/NotificationsService/notification_service.dart';
 import 'package:mindcoach/Services/NotificationsService/periodic_notification_scheduler.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/Utils/logger.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/app/my_app.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 
@@ -34,6 +36,18 @@ Future init() async {
       debugPrint("PROVİDER: ${providerModel?.username}");
 
       if (providerModel != null) {
+        await AnalyticsService.instance.capture(
+          AnalyticsEvents.sessionRestored,
+          properties: {
+            'user_id': providerModel.id,
+            'credential': providerModel.credential ?? 'unknown',
+          },
+        );
+        await AnalyticsService.instance.identifyUser(
+          userId: providerModel.id,
+          credential: providerModel.credential,
+          hasCompletedProfile: providerModel.answerData != null,
+        );
         _handlePostLoginTasks(userModel);
 
         final isGuest = providerModel.credential == 'guest';

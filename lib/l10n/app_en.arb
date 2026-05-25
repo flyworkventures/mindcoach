@@ -764,5 +764,15 @@
   "videoCallRateSubtitle": "Evaluate the video call",
   "premiumStatusInactive": "inactive",
   "appointmentConflictSameTime": "You already have an appointment at this time with another coach.",
-  "appointmentConflictSameCoach": "You already have an appointment with this coach."
+  "appointmentConflictSameCoach": "You already have an appointment with this coach.",
+  "appointmentReminderTitle": "Appointment reminder",
+  "appointmentReminderBody": "Your appointment with {specialistName} starts in 30 minutes.",
+  "@appointmentReminderBody": {
+    "placeholders": {
+      "specialistName": { "type": "String" }
+    }
+  },
+  "appointmentReminderFallbackName": "your specialist",
+  "analyticsTrackingTitle": "Analytics tracking",
+  "analyticsTrackingDescription": "Help us improve by sharing anonymous usage data. You can turn this off at any time."
 }

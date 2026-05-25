@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "영상 통화를 평가해 주세요",
   "premiumStatusInactive": "비활성",
   "appointmentConflictSameTime": "이 시간에 이미 다른 코치와 예약이 있습니다.",
-  "appointmentConflictSameCoach": "이 코치와 이미 예약이 있습니다."
+  "appointmentConflictSameCoach": "이 코치와 이미 예약이 있습니다.",
+  "appointmentReminderTitle": "예약 알림",
+  "appointmentReminderBody": "{specialistName} 님과의 예약이 30분 후에 시작됩니다.",
+  "appointmentReminderFallbackName": "담당 전문가",
+  "analyticsTrackingTitle": "분석 추적",
+  "analyticsTrackingDescription": "익명의 사용 데이터를 공유하여 앱 개선에 도움을 주세요. 언제든지 끌 수 있습니다."
 }

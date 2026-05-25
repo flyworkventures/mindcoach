@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../Services/Analytics/analytics_service.dart';
+import '../../core/analytics/analytics_events.dart';
 import '../../core/routes/page_routes.dart';
 import '../../core/utils/context_l10n_extensions.dart';
 import '../../l10n/app_localizations.dart';
@@ -41,6 +43,21 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
               return l10n.stressLevelHighDescription;
             },
           );
+
+      final result = ref.read(resultProvider);
+      final flow = ref.read(testFlowProvider);
+      if (result != null) {
+        AnalyticsService.instance.capture(
+          AnalyticsEvents.mentalTestCompleted,
+          properties: {
+            if (flow.testName != null) 'test_name': flow.testName,
+            'answered_questions': widget.results.length,
+            'total_questions': flow.totalQuestions,
+            'score': double.parse(result.score.toStringAsFixed(3)),
+            'level': result.level,
+          },
+        );
+      }
     });
   }
 

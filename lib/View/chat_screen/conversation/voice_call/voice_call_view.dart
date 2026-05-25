@@ -13,7 +13,9 @@ import 'package:flutter_pcm_sound/flutter_pcm_sound.dart' as pcm;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/call_permissions.dart';
@@ -593,6 +595,10 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
 
   Future<void> _onRealtimeConnectionReady() async {
     if (!mounted) return;
+    AnalyticsService.instance.capture(
+      AnalyticsEvents.voiceCallStarted,
+      properties: {'consultant_id': widget.specialist.id},
+    );
     _cancelAiSpeakingWatchdog();
     _cancelAiPlaybackIdleMonitor();
     _stopRingTone();
@@ -837,6 +843,13 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
 
   // ── End call / cleanup ─────────────────────────────────────────────────────
   Future<void> _endCall() async {
+    AnalyticsService.instance.capture(
+      AnalyticsEvents.voiceCallEnded,
+      properties: {
+        'consultant_id': widget.specialist.id,
+        'duration_seconds': _secondsElapsed,
+      },
+    );
     _cancelAiSpeakingWatchdog();
     _cancelAiPlaybackIdleMonitor();
     _stopRingTone();

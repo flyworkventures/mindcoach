@@ -2146,4 +2146,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get appointmentConflictSameCoach => '이 코치와 이미 예약이 있습니다.';
+
+  @override
+  String get appointmentReminderTitle => '예약 알림';
+
+  @override
+  String appointmentReminderBody(String specialistName) {
+    return '$specialistName 님과의 예약이 30분 후에 시작됩니다.';
+  }
+
+  @override
+  String get appointmentReminderFallbackName => '담당 전문가';
+
+  @override
+  String get analyticsTrackingTitle => '분석 추적';
+
+  @override
+  String get analyticsTrackingDescription =>
+      '익명의 사용 데이터를 공유하여 앱 개선에 도움을 주세요. 언제든지 끌 수 있습니다.';
 }

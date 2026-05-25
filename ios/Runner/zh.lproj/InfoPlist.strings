@@ -3,3 +3,5 @@
 "NSMicrophoneUsageDescription" = "应用会使用麦克风来录制并发送语音消息。";
 "NSPhotoLibraryAddUsageDescription" = "应用会使用您的照片库，以便您选择照片进行上传和分享。";
 "NSPhotoLibraryUsageDescription" = "应用会使用您的照片库，以便您选择照片进行上传和分享。";
+
+"NSUserTrackingUsageDescription" = "我们收集匿名使用数据以改善您的体验。您可以随时在设置中关闭。";

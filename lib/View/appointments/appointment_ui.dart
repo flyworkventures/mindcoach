@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
+import '../../Services/Analytics/analytics_service.dart';
+import '../../core/analytics/analytics_events.dart';
 import '../../core/utils/context_l10n_extensions.dart';
 import '../../core/utils/job_convert.dart';
 import '../chat_screen/conversation/video_call/video_call_realtime_screen.dart';
@@ -223,6 +225,13 @@ class AppointmentCardUi extends ConsumerWidget {
                                         orElse: () => null,
                                       );
                                   if (c == null) return;
+                                  AnalyticsService.instance.capture(
+                                    AnalyticsEvents.appointmentCallStarted,
+                                    properties: {
+                                      'consultant_id': cId,
+                                      'source': 'appointment_card',
+                                    },
+                                  );
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (_) => VideoCallRealtimeScreen(

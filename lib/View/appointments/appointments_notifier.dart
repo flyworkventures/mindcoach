@@ -3,6 +3,7 @@ library;
 
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ui' show Locale;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/Services/NotificationsService/local_notification_service.dart';
@@ -10,6 +11,7 @@ import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
 import 'package:mindcoach/core/repo/appointment_repo.dart';
 import 'package:mindcoach/core/repo/consultant_repo.dart';
+import 'package:mindcoach/l10n/app_localizations.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 
 class AppointmentsState {
@@ -477,10 +479,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
       }
 
       final now = DateTime.now();
-      final userLang =
-          (ref.read(AllProviders.userProvider)?.nativeLang ?? 'en')
-              .toLowerCase()
-              .trim();
+      final localizations = _reminderLocalizations();
       for (final entry in appointmentsMap.entries) {
         for (final info in entry.value) {
           if (info.status?.toLowerCase() == 'cancelled') continue;
@@ -492,13 +491,14 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
           if (!reminderTime.isAfter(now)) continue;
 
           final id = _reminderNotificationId(info, appointmentDateTime);
-          final specialistName =
-              info.specialistName.isNotEmpty ? info.specialistName : 'uzmaniniz';
+          final specialistName = info.specialistName.isNotEmpty
+              ? info.specialistName
+              : localizations.appointmentReminderFallbackName;
 
           await service.scheduleOneTimeNotification(
             id: id,
-            title: _appointmentReminderTitle(userLang),
-            body: _appointmentReminderBody(userLang, specialistName),
+            title: localizations.appointmentReminderTitle,
+            body: localizations.appointmentReminderBody(specialistName),
             scheduledTime: reminderTime,
             payload: '$_appointmentReminderPayloadPrefix$id',
           );
@@ -509,77 +509,16 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     }
   }
 
-  String _appointmentReminderTitle(String lang) {
-    switch (_normalizeLang(lang)) {
-      case 'tr':
-        return 'Randevu hatirlatmasi';
-      case 'de':
-        return 'Termin-Erinnerung';
-      case 'es':
-        return 'Recordatorio de cita';
-      case 'fr':
-        return 'Rappel de rendez-vous';
-      case 'hi':
-        return 'Appointment reminder';
-      case 'it':
-        return 'Promemoria appuntamento';
-      case 'ja':
-        return '予約リマインダー';
-      case 'ko':
-        return '예약 알림';
-      case 'pt':
-        return 'Lembrete de consulta';
-      case 'ru':
-        return 'Напоминание о встрече';
-      case 'zh':
-        return '预约提醒';
-      default:
-        return 'Appointment reminder';
-    }
-  }
-
-  String _appointmentReminderBody(String lang, String specialistName) {
-    switch (_normalizeLang(lang)) {
-      case 'tr':
-        return '$specialistName ile gorusmenize 30 dakika kaldi.';
-      case 'de':
-        return 'Ihr Termin mit $specialistName beginnt in 30 Minuten.';
-      case 'es':
-        return 'Tu cita con $specialistName comienza en 30 minutos.';
-      case 'fr':
-        return 'Votre rendez-vous avec $specialistName commence dans 30 minutes.';
-      case 'hi':
-        return 'Your appointment with $specialistName starts in 30 minutes.';
-      case 'it':
-        return 'Il tuo appuntamento con $specialistName inizia tra 30 minuti.';
-      case 'ja':
-        return '$specialistName との予約は30分後に始まります。';
-      case 'ko':
-        return '$specialistName 님과의 예약이 30분 후에 시작됩니다.';
-      case 'pt':
-        return 'Sua consulta com $specialistName comeca em 30 minutos.';
-      case 'ru':
-        return 'Ваша встреча с $specialistName начнётся через 30 минут.';
-      case 'zh':
-        return '您与 $specialistName 的预约将在 30 分钟后开始。';
-      default:
-        return 'Your appointment with $specialistName starts in 30 minutes.';
-    }
-  }
-
-  String _normalizeLang(String lang) {
-    if (lang.startsWith('tr')) return 'tr';
-    if (lang.startsWith('de')) return 'de';
-    if (lang.startsWith('es')) return 'es';
-    if (lang.startsWith('fr')) return 'fr';
-    if (lang.startsWith('hi')) return 'hi';
-    if (lang.startsWith('it')) return 'it';
-    if (lang.startsWith('ja')) return 'ja';
-    if (lang.startsWith('ko')) return 'ko';
-    if (lang.startsWith('pt')) return 'pt';
-    if (lang.startsWith('ru')) return 'ru';
-    if (lang.startsWith('zh')) return 'zh';
-    return 'en';
+  /// User'ın nativeLang'ına göre AppLocalizations instance'ı döndürür.
+  /// Desteklenmeyen dil gelirse `en`'e düşer.
+  AppLocalizations _reminderLocalizations() {
+    final raw = (ref.read(AllProviders.userProvider)?.nativeLang ?? 'en')
+        .toLowerCase()
+        .trim();
+    final code = raw.contains('-') ? raw.split('-').first : raw;
+    final supported = AppLocalizations.supportedLocales
+        .any((l) => l.languageCode == code);
+    return lookupAppLocalizations(Locale(supported ? code : 'en'));
   }
 }
 

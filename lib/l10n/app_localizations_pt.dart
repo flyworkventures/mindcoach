@@ -2224,4 +2224,22 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get appointmentConflictSameCoach =>
       'Você já tem um agendamento com este coach.';
+
+  @override
+  String get appointmentReminderTitle => 'Lembrete de consulta';
+
+  @override
+  String appointmentReminderBody(String specialistName) {
+    return 'Sua consulta com $specialistName começa em 30 minutos.';
+  }
+
+  @override
+  String get appointmentReminderFallbackName => 'seu especialista';
+
+  @override
+  String get analyticsTrackingTitle => 'Rastreamento analítico';
+
+  @override
+  String get analyticsTrackingDescription =>
+      'Ajude-nos a melhorar o aplicativo compartilhando dados de uso anônimos. Você pode desativar a qualquer momento.';
 }

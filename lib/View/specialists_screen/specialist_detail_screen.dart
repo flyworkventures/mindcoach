@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/View/appointments/appointments_notifier.dart';
 import 'package:mindcoach/View/chat_screen/conversation/conversation_page.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
@@ -103,6 +105,13 @@ class _SpecialistDetailScreenState
     Future.microtask(() {
       if (!mounted) return;
       ref.read(appointmentsProvider.notifier).refresh();
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.coachDetailViewed,
+        properties: {
+          'consultant_id': _specialist.id,
+          'is_trial_flow': widget.isTrial,
+        },
+      );
     });
   }
 
@@ -195,8 +204,23 @@ class _SpecialistDetailScreenState
       final ok = result.statusCode == 201 || result.statusCode == 200;
       if (ok) {
         setState(() => _selectedSlotIndex = null);
+        await AnalyticsService.instance.capture(
+          AnalyticsEvents.appointmentCreated,
+          properties: {
+            'consultant_id': _specialist.id,
+            'slot_time': slotTime,
+          },
+        );
         _showSnack(result.message ?? l10n.coachDetailCreateAppointment);
       } else if (result.statusCode == 409) {
+        await AnalyticsService.instance.capture(
+          AnalyticsEvents.appointmentCreateFailed,
+          properties: {
+            'consultant_id': _specialist.id,
+            'status_code': result.statusCode,
+            'error_type': 'conflict',
+          },
+        );
         final serverError = result.error ?? '';
         final String localizedMsg;
         if (serverError.contains('at this date and time')) {
@@ -208,6 +232,13 @@ class _SpecialistDetailScreenState
         }
         _showSnack(localizedMsg);
       } else {
+        await AnalyticsService.instance.capture(
+          AnalyticsEvents.appointmentCreateFailed,
+          properties: {
+            'consultant_id': _specialist.id,
+            'status_code': result.statusCode,
+          },
+        );
         _showSnack('Error');
       }
     } finally {
@@ -704,6 +735,14 @@ class _SpecialistDetailScreenState
                       return;
                     }
                     if (!context.mounted) return;
+                    await AnalyticsService.instance.capture(
+                      AnalyticsEvents.videoCallStarted,
+                      properties: {
+                        'consultant_id': specialist.id,
+                        'is_trial': isTrial,
+                        'source': 'coach_detail',
+                      },
+                    );
                     await Navigator.pushNamed(
                       context,
                       PageRoutes.videoCall,
@@ -1049,6 +1088,15 @@ class _SpecialistDetailScreenState
                         setState(() {
                           _selectedSlotIndex = isSelected ? null : index;
                         });
+                        if (!isSelected) {
+                          AnalyticsService.instance.capture(
+                            AnalyticsEvents.appointmentSlotSelected,
+                            properties: {
+                              'consultant_id': _specialist.id,
+                              'slot_time': time,
+                            },
+                          );
+                        }
                       }
                     : null, // Pasif butonlara tıklanmasını engeller
                 child: Container(

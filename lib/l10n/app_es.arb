@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "Evalúa la videollamada",
   "premiumStatusInactive": "inactivo",
   "appointmentConflictSameTime": "Ya tienes una cita a esta hora con otro coach.",
-  "appointmentConflictSameCoach": "Ya tienes una cita con este coach."
+  "appointmentConflictSameCoach": "Ya tienes una cita con este coach.",
+  "appointmentReminderTitle": "Recordatorio de cita",
+  "appointmentReminderBody": "Tu cita con {specialistName} comienza en 30 minutos.",
+  "appointmentReminderFallbackName": "tu especialista",
+  "analyticsTrackingTitle": "Seguimiento analítico",
+  "analyticsTrackingDescription": "Ayúdanos a mejorar la aplicación compartiendo datos de uso anónimos. Puedes desactivarlo en cualquier momento."
 }

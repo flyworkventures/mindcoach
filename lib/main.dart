@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +9,11 @@ import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'package:mindcoach/Services/NotificationsService/local_notification_service.dart';
 import 'package:mindcoach/Services/NotificationsService/notification_service.dart';
 import 'package:mindcoach/Services/RevenueCatService/revenuecat_service.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/device_utils.dart';
+import 'package:mindcoach/core/utils/local_db_keys.dart';
 import 'package:rive/rive.dart';
 
 import 'app/my_app.dart';
@@ -18,6 +22,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await RiveNative.init();
+
+  await AnalyticsService.instance.initialize();
 
   // Initialize device-based premium system
   await _initializePremiumSystem();
@@ -44,8 +50,27 @@ Future<void> _initializePremiumSystem() async {
   try {
     final deviceId = await DeviceUtils.getDeviceId();
     debugPrint('📱 Device ID: $deviceId');
+    await AnalyticsService.instance.identifyDevice(deviceId);
 
     final localDb = LocalDbService();
+    final hasLaunchedBefore =
+        await localDb.getBool(key: LocalDbKeys.appHasLaunched) ?? false;
+    final isFirstOpen = !hasLaunchedBefore;
+    if (isFirstOpen) {
+      await localDb.setBool(key: LocalDbKeys.appHasLaunched, value: true);
+    }
+    await AnalyticsService.instance.capture(
+      AnalyticsEvents.appOpened,
+      properties: {
+        'is_first_open': isFirstOpen,
+        'app_version': AppConstants.appVersion,
+        'platform': Platform.isIOS
+            ? 'ios'
+            : Platform.isAndroid
+                ? 'android'
+                : Platform.operatingSystem,
+      },
+    );
 
     // 1) Önce backend'i dene (authoritative). Backend cihaz daha önce trial almışsa
     //    yenisini vermez, mevcut status'unu döner (expired ise isPremium:false).

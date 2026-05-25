@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
@@ -10,6 +12,10 @@ abstract final class RevenueCatOfferings {
 
 /// Hesap silme akışı ve benzeri yerlerden belirli paywall'ları açmak için.
 Future<void> presentProOffersPaywall() async {
+  await AnalyticsService.instance.capture(
+    AnalyticsEvents.paywallPresented,
+    properties: {'offering_id': RevenueCatOfferings.proOffers},
+  );
   try {
     final offerings = await Purchases.getOfferings();
     final offering =
@@ -18,11 +24,27 @@ Future<void> presentProOffersPaywall() async {
     await RevenueCatUI.presentPaywall(offering: offering);
   } catch (e, st) {
     debugPrint('presentProOffersPaywall: $e\n$st');
+    await AnalyticsService.instance.capture(
+      AnalyticsEvents.subscriptionFailed,
+      properties: {
+        'offering_id': RevenueCatOfferings.proOffers,
+        'error': e.toString(),
+      },
+    );
     await RevenueCatUI.presentPaywall();
+  } finally {
+    await AnalyticsService.instance.capture(
+      AnalyticsEvents.paywallDismissed,
+      properties: {'offering_id': RevenueCatOfferings.proOffers},
+    );
   }
 }
 
 Future<void> presentDiscountPaywall() async {
+  await AnalyticsService.instance.capture(
+    AnalyticsEvents.paywallPresented,
+    properties: {'offering_id': RevenueCatOfferings.discount},
+  );
   try {
     final offerings = await Purchases.getOfferings();
     final offering = offerings.getOffering(RevenueCatOfferings.discount);
@@ -33,6 +55,18 @@ Future<void> presentDiscountPaywall() async {
     }
   } catch (e, st) {
     debugPrint('presentDiscountPaywall: $e\n$st');
+    await AnalyticsService.instance.capture(
+      AnalyticsEvents.subscriptionFailed,
+      properties: {
+        'offering_id': RevenueCatOfferings.discount,
+        'error': e.toString(),
+      },
+    );
     await RevenueCatUI.presentPaywall();
+  } finally {
+    await AnalyticsService.instance.capture(
+      AnalyticsEvents.paywallDismissed,
+      properties: {'offering_id': RevenueCatOfferings.discount},
+    );
   }
 }

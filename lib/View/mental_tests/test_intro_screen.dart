@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../Services/Analytics/analytics_service.dart';
+import '../../core/analytics/analytics_events.dart';
 import '../../core/routes/page_routes.dart';
 import '../../l10n/app_localizations.dart';
 import 'notifiers/test_flow_notifier.dart';
@@ -162,6 +164,13 @@ class TestIntroScreen extends ConsumerWidget {
                         imagePath: imagePath,
                         totalQuestions: totalQuestions,
                       );
+                  AnalyticsService.instance.capture(
+                    AnalyticsEvents.mentalTestStarted,
+                    properties: {
+                      'test_name': testName,
+                      'total_questions': totalQuestions,
+                    },
+                  );
                   Navigator.pushNamed(context, PageRoutes.testQuestionScreen);
                 },
                 child: Container(

@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
+import 'package:mindcoach/core/analytics/onboarding_analytics.dart';
 import 'package:mindcoach/View/OnboardView/data/onboarding_localizations.dart';
 import 'package:mindcoach/core/routes/page_routes.dart'; // Yönlendirme için eklendi
 import 'package:mindcoach/core/utils/local_db_keys.dart';
@@ -21,11 +24,39 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _currentIndex = 0;
   Timer? _autoTimer;
+  final Set<int> _viewedSlideIndices = {};
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _trackSlideViewed(_currentIndex);
+    });
     _startAutoTimer();
+  }
+
+  void _trackSlideViewed(int index) {
+    if (_viewedSlideIndices.contains(index)) return;
+    _viewedSlideIndices.add(index);
+    AnalyticsService.instance.capture(
+      AnalyticsEvents.onboardingSlideViewed,
+      properties: {
+        'slide_number': OnboardingAnalytics.slideNumber(index),
+        'slide_name': OnboardingAnalytics.slideName(index),
+      },
+    );
+  }
+
+  void _trackOnboardingSwiped(int fromIndex, int toIndex) {
+    // HTML: slide 1 veya 2'de "Swipe to continue" → to 2 veya 3
+    if (fromIndex > 1 || toIndex != fromIndex + 1) return;
+    AnalyticsService.instance.capture(
+      AnalyticsEvents.onboardingSwiped,
+      properties: {
+        'from_slide': OnboardingAnalytics.slideNumber(fromIndex),
+        'to_slide': OnboardingAnalytics.slideNumber(toIndex),
+      },
+    );
   }
 
   // Timer'ı başlatan veya sıfırlayan metod
@@ -37,19 +68,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           .read(AllControllers.onboardController.notifier)
           .pages
           .length;
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % pageCount;
-      });
+      final next = (_currentIndex + 1) % pageCount;
+      setState(() => _currentIndex = next);
+      _trackSlideViewed(next);
     });
   }
 
-  // Sonraki sayfaya geç
-  void _nextPage(int pageCount) {
+  /// [userInitiated] true → onboarding_swiped (buton veya kaydırma).
+  void _nextPage(int pageCount, {bool userInitiated = false}) {
     if (_currentIndex < pageCount - 1) {
-      setState(() {
-        _currentIndex++;
-      });
-      _startAutoTimer(); // Kullanıcı müdahale ettiği için süreyi sıfırla
+      final from = _currentIndex;
+      final to = _currentIndex + 1;
+      if (userInitiated) _trackOnboardingSwiped(from, to);
+      setState(() => _currentIndex = to);
+      _trackSlideViewed(to);
+      _startAutoTimer();
     }
   }
 
@@ -93,7 +126,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             // Sağa veya sola kaydırma hassasiyetini yakalama
             if (details.primaryVelocity! < 0) {
               // Sola kaydırıldı (İleri git)
-              _nextPage(pageCount);
+              _nextPage(pageCount, userInitiated: true);
             } else if (details.primaryVelocity! > 0) {
               // Sağa kaydırıldı (Geri git)
               _previousPage();
@@ -231,11 +264,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return GestureDetector(
       onTap: () async {
         if (!isLastPage) {
-          _nextPage(
-            pageCount,
-          ); // Butona basıldığında da manuel gitme sayılıyor, timer sıfırlanır
+          _nextPage(pageCount, userInitiated: true);
         } else {
-          // KULLANICI GET STARTED'A BASTI -> Onboarding görüldü olarak işaretle
+          await AnalyticsService.instance.capture(
+            AnalyticsEvents.onboardingCompleted,
+          );
           _autoTimer?.cancel();
           await LocalDbService().setBool(
             key: LocalDbKeys.onboardingSeen,

@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "ビデオ通話を評価してください",
   "premiumStatusInactive": "無効",
   "appointmentConflictSameTime": "この時間帯には別のコーチとの予約があります。",
-  "appointmentConflictSameCoach": "このコーチとの予約がすでにあります。"
+  "appointmentConflictSameCoach": "このコーチとの予約がすでにあります。",
+  "appointmentReminderTitle": "予約リマインダー",
+  "appointmentReminderBody": "{specialistName}との予約は30分後に始まります。",
+  "appointmentReminderFallbackName": "担当の専門家",
+  "analyticsTrackingTitle": "アナリティクス追跡",
+  "analyticsTrackingDescription": "匿名の利用データを共有してアプリの改善にご協力ください。いつでもオフにできます。"
 }

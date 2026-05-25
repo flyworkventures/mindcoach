@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Services/NotificationsService/notification_service.dart';
 import 'package:mindcoach/Services/NotificationsService/periodic_notification_scheduler.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/app/my_app.dart';
 import 'package:mindcoach/app/navbar_shell.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
@@ -177,6 +179,16 @@ class AuthController extends Notifier<AsyncValue<void>> {
       // 2. Session'ı temizle
       await _authService.clearSession();
       debugPrint('✅ [AUTH-CONTROLLER] Session temizlendi');
+
+      await AnalyticsService.instance.capture(
+        AnalyticsEvents.accountDeleted,
+        properties: {
+          if (deleteReason != null) 'delete_reason': deleteReason,
+          if (deleteMessage != null && deleteMessage.isNotEmpty)
+            'has_delete_message': true,
+        },
+      );
+      await AnalyticsService.instance.reset();
 
       // 3. Unauthenticated'a yönlendir
       _navigationService.navigateToUnauthenticated();

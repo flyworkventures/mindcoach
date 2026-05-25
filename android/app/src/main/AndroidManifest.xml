@@ -50,6 +50,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- PostHog: Dart tarafında manuel init (main.dart) -->
+        <meta-data android:name="com.posthog.posthog.AUTO_INIT" android:value="false" />
             
         <meta-data
             android:name="com.google.android.gms.version"

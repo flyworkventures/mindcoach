@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import '../utils/local_db_keys.dart';
 
 final localeProvider =
@@ -39,7 +42,19 @@ class LocaleNotifier extends Notifier<Locale?> {
   }
 
   Future<void> setLocale(Locale? newLocale) async {
+    final previousCode = getLanguageCode();
     state = newLocale;
+    final newCode = newLocale?.languageCode ?? getSystemLocale().languageCode;
+    if (previousCode != newCode) {
+      unawaited(AnalyticsService.instance.capture(
+        AnalyticsEvents.languageChanged,
+        properties: {
+          'from': previousCode,
+          'to': newCode,
+          'is_system_default': newLocale == null,
+        },
+      ));
+    }
 
     try {
       if (newLocale != null) {

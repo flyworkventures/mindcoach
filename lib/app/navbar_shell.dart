@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../Services/Analytics/analytics_service.dart';
 import '../Services/NotificationsService/in_app_notification_service.dart';
+import '../core/analytics/analytics_events.dart';
 import '../View/HomeView/home_screen.dart';
 import '../View/appointments/appointments_notifier.dart';
 import '../View/calendar_screen/calendar_screen.dart';
@@ -338,6 +340,22 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
                     child: GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () {
+                        if (selectedIndex != index) {
+                          const tabNames = [
+                            'home',
+                            'specialists',
+                            'calendar',
+                            'chat',
+                            'profile',
+                          ];
+                          AnalyticsService.instance.capture(
+                            AnalyticsEvents.tabSelected,
+                            properties: {
+                              'tab_index': index,
+                              'tab_name': tabNames[index],
+                            },
+                          );
+                        }
                         ref.read(bottomNavProvider.notifier).setTab(index);
                       },
                       child: Center(

@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:mindcoach/Repositories/auth_repositories.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/Utils/logger.dart';
 import 'package:mindcoach/View/ProfileSetupView/constants/approach_strings.dart';
 import 'package:mindcoach/View/ProfileSetupView/domain/profile_models.dart';
@@ -260,6 +262,17 @@ class ProfileSetupController extends StateNotifier<ProfileSetupState> {
             text: "Profil tamamlandı, authenticated'a yönlendiriliyor",
             className: "ProfileSetupController",
             functionName: "completeProfile",
+          );
+          await AnalyticsService.instance.capture(
+            AnalyticsEvents.profileSetupCompleted,
+            properties: {
+              'user_id': userModel.id,
+              'gender': genderString,
+              'support_area': supportAreaToString(
+                state.supportArea ?? SupportArea.career,
+              ),
+              'available_days_count': avaibleDays.length,
+            },
           );
           // Backend'e ulasti, local cache'i temizle
           await _clearPersistedState();

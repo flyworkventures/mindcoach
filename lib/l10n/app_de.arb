@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "Bewerte den Videoanruf",
   "premiumStatusInactive": "inaktiv",
   "appointmentConflictSameTime": "Sie haben bereits einen Termin zu dieser Zeit mit einem anderen Coach.",
-  "appointmentConflictSameCoach": "Sie haben bereits einen Termin mit diesem Coach."
+  "appointmentConflictSameCoach": "Sie haben bereits einen Termin mit diesem Coach.",
+  "appointmentReminderTitle": "Termin-Erinnerung",
+  "appointmentReminderBody": "Ihr Termin mit {specialistName} beginnt in 30 Minuten.",
+  "appointmentReminderFallbackName": "Ihrem Spezialisten",
+  "analyticsTrackingTitle": "Analyse-Tracking",
+  "analyticsTrackingDescription": "Helfen Sie uns, die App zu verbessern, indem Sie anonyme Nutzungsdaten teilen. Sie können dies jederzeit deaktivieren."
 }

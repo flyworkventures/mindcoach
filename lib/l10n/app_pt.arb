@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "Avalie a chamada de vídeo",
   "premiumStatusInactive": "inativo",
   "appointmentConflictSameTime": "Você já tem um agendamento neste horário com outro coach.",
-  "appointmentConflictSameCoach": "Você já tem um agendamento com este coach."
+  "appointmentConflictSameCoach": "Você já tem um agendamento com este coach.",
+  "appointmentReminderTitle": "Lembrete de consulta",
+  "appointmentReminderBody": "Sua consulta com {specialistName} começa em 30 minutos.",
+  "appointmentReminderFallbackName": "seu especialista",
+  "analyticsTrackingTitle": "Rastreamento analítico",
+  "analyticsTrackingDescription": "Ajude-nos a melhorar o aplicativo compartilhando dados de uso anônimos. Você pode desativar a qualquer momento."
 }

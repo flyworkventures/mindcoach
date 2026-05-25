@@ -2202,4 +2202,22 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get appointmentConflictSameCoach =>
       'Bu rehberle zaten bir randevunuz var.';
+
+  @override
+  String get appointmentReminderTitle => 'Randevu hatırlatması';
+
+  @override
+  String appointmentReminderBody(String specialistName) {
+    return '$specialistName ile görüşmenize 30 dakika kaldı.';
+  }
+
+  @override
+  String get appointmentReminderFallbackName => 'uzmanınız';
+
+  @override
+  String get analyticsTrackingTitle => 'Analitik takibi';
+
+  @override
+  String get analyticsTrackingDescription =>
+      'Anonim kullanım verilerini paylaşarak uygulamayı geliştirmemize yardımcı olun. İstediğiniz zaman kapatabilirsiniz.';
 }

@@ -5,6 +5,9 @@ class LocalDbKeys {
       "appleFullName"; // Apple'dan gelen fullName (geçici)
   static String onboardingSeen =
       "onboardingSeen"; // Onboarding bir kere gösterildi mi?
+
+  /// İlk uygulama açılışı (PostHog `app_opened.is_first_open`).
+  static String appHasLaunched = "appHasLaunched";
   static String savedUsername =
       "savedUsername"; // Profile'da kaydedilen username override
   static String profileSetupData =
@@ -23,6 +26,9 @@ class LocalDbKeys {
 
   // Login sonrası bir kez paywall gösterilsin mi
   static String pendingPaywallAfterLogin = "pendingPaywallAfterLogin";
+
+  // Analytics opt-out (GDPR/KVKK). true ise PostHog'a hiçbir event gitmez.
+  static String analyticsOptedOut = "analyticsOptedOut";
 
   // Premium deneme süresi sayaçları (cihaz başına; non-premium kullanıcı için)
   // 10 mesaj yazılı chat'te (sonra premium gerekli). Sesli/video premium-only.

@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:mindcoach/l10n/app_localizations.dart';
 
 class AppConstants {
+  /// PostHog Project API Key (Project Settings → Project API Key).
+  /// Boş bırakılırsa analytics devre dışı kalır.
+  static const String postHogApiKey =
+      'phc_CyQ8mrzY5kZ3Mhg6Aa6YvJCb2fHufwyMG7YHcnccJ8P2';
+
+  /// EU: https://eu.i.posthog.com | US: https://us.i.posthog.com
+  static const String postHogHost = 'https://us.i.posthog.com';
+
+  /// Keep in sync with `version` in pubspec.yaml.
+  static const String appVersion = '1.0.1+6';
+
   static const String defaultPpUrl =
       "https://mindcoach.b-cdn.net/1024x1024.jpg";
   static const String baseURL = 'https://mindcoach.fly-work.com';

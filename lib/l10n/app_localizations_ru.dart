@@ -2229,4 +2229,22 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get appointmentConflictSameCoach =>
       'У вас уже есть запись к этому коучу.';
+
+  @override
+  String get appointmentReminderTitle => 'Напоминание о встрече';
+
+  @override
+  String appointmentReminderBody(String specialistName) {
+    return 'Ваша встреча с $specialistName начнётся через 30 минут.';
+  }
+
+  @override
+  String get appointmentReminderFallbackName => 'вашим специалистом';
+
+  @override
+  String get analyticsTrackingTitle => 'Отслеживание аналитики';
+
+  @override
+  String get analyticsTrackingDescription =>
+      'Помогите нам улучшить приложение, делясь анонимными данными об использовании. Вы можете отключить это в любой момент.';
 }

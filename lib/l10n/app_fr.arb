@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "Évaluez l'appel vidéo",
   "premiumStatusInactive": "inactif",
   "appointmentConflictSameTime": "Vous avez déjà un rendez-vous à cette heure avec un autre coach.",
-  "appointmentConflictSameCoach": "Vous avez déjà un rendez-vous avec ce coach."
+  "appointmentConflictSameCoach": "Vous avez déjà un rendez-vous avec ce coach.",
+  "appointmentReminderTitle": "Rappel de rendez-vous",
+  "appointmentReminderBody": "Votre rendez-vous avec {specialistName} commence dans 30 minutes.",
+  "appointmentReminderFallbackName": "votre spécialiste",
+  "analyticsTrackingTitle": "Suivi analytique",
+  "analyticsTrackingDescription": "Aidez-nous à améliorer l'application en partageant des données d'utilisation anonymes. Vous pouvez le désactiver à tout moment."
 }

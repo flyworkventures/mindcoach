@@ -16,8 +16,10 @@ import 'package:mindcoach/core/utils/local_db_keys.dart';
 import 'package:mindcoach/Http/http_service.dart';
 import 'package:mindcoach/models/user_model.dart';
 import 'package:mindcoach/View/appointments/appointments_notifier.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
 import 'package:mindcoach/View/chat_screen/notifiers/conversation_notifier.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/features/notifications/notification_notifier.dart';
 
 class AuthProvider extends StateNotifier{
@@ -28,12 +30,37 @@ class AuthProvider extends StateNotifier{
   final localDbService = LocalDbService();
 
 
-  Future<UserModel?> login(SocialLoginProvider provider)async{
-  HandleLoginModel loginModel =  await handleLogin(provider);
-  UserModel? userModel = await sendAPI(loginModel);
-  ref?.read(AllProviders.userProvider.notifier).setUserModel(userModel);
-
-  return userModel;
+  Future<UserModel?> login(SocialLoginProvider provider) async {
+    await AnalyticsService.instance.trackLoginStarted(provider.name);
+    try {
+      final loginModel = await handleLogin(provider);
+      final userModel = await sendAPI(loginModel);
+      if (userModel != null) {
+        ref?.read(AllProviders.userProvider.notifier).setUserModel(userModel);
+        await AnalyticsService.instance.trackLoginCompleted(
+          provider: provider.name,
+          userId: userModel.id,
+          hasCompletedProfile: userModel.answerData != null,
+        );
+        await AnalyticsService.instance.identifyUser(
+          userId: userModel.id,
+          credential: userModel.credential,
+          hasCompletedProfile: userModel.answerData != null,
+        );
+      } else {
+        await AnalyticsService.instance.trackLoginFailed(
+          provider.name,
+          reason: 'api_null_user',
+        );
+      }
+      return userModel;
+    } catch (e) {
+      await AnalyticsService.instance.trackLoginFailed(
+        provider.name,
+        reason: e.toString(),
+      );
+      rethrow;
+    }
   }
 
 
@@ -164,9 +191,10 @@ class AuthProvider extends StateNotifier{
 
 
 
-Future logout() async{
+Future logout() async {
+      await AnalyticsService.instance.capture(AnalyticsEvents.logoutCompleted);
+      await AnalyticsService.instance.reset();
 
-   
       final httpService = HttpService(ref: ref);
       Logger.info(text: "API isteği gönderiliyor: ${AppConstants.logoutURL}",className: "AuthProvider",functionName: "logout");
       

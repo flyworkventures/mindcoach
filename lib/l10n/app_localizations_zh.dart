@@ -2068,4 +2068,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get appointmentConflictSameCoach => '您已与此教练有预约。';
+
+  @override
+  String get appointmentReminderTitle => '预约提醒';
+
+  @override
+  String appointmentReminderBody(String specialistName) {
+    return '您与$specialistName的预约将在30分钟后开始。';
+  }
+
+  @override
+  String get appointmentReminderFallbackName => '您的专家';
+
+  @override
+  String get analyticsTrackingTitle => '分析追踪';
+
+  @override
+  String get analyticsTrackingDescription => '通过分享匿名使用数据帮助我们改进应用。您可以随时关闭此功能。';
 }

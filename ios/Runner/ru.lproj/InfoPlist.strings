@@ -3,3 +3,5 @@
 "NSMicrophoneUsageDescription" = "Mikrofon ispolzuetsya dlya zapisi i otpravki golosovykh soobshcheniy v prilozhenii.";
 "NSPhotoLibraryAddUsageDescription" = "Vasha fotomediateka ispolzuetsya, chtoby vy mogli vybirat foto dlya zagruzki i obmena v prilozhenii.";
 "NSPhotoLibraryUsageDescription" = "Vasha fotomediateka ispolzuetsya, chtoby vy mogli vybirat foto dlya zagruzki i obmena v prilozhenii.";
+
+"NSUserTrackingUsageDescription" = "My sobiraem anonimnye dannye ob ispolzovanii, chtoby uluchshit vash opyt. Vy mozhete otklyuchit eto v lyuboe vremya v nastroykakh.";

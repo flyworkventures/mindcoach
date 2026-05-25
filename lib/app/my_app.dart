@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,9 +9,11 @@ import 'package:in_app_notification/in_app_notification.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Riverpod/Providers/premium_provider.dart';
 import 'package:mindcoach/Services/ApiService/premium_api_service.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/View/splash/splash.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/device_utils.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:mindcoach/models/premium_state.dart';
 import 'package:mindcoach/models/user_model.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -33,6 +36,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   late final Future<String> _premiumInitFuture;
   bool _processingPurchase = false;
   CustomerInfoUpdateListener? _customerInfoListener;
+  String? _analyticsDistinctId;
+  bool _premiumHydrated = false;
 
   @override
   void initState() {
@@ -57,6 +62,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       debugPrint(
         '🔐 Premium status: ${next.isPremium}, Days: ${next.daysRemaining}',
       );
+      _trackPremiumAnalytics(previous, next);
     });
 
     // Auth state transitions → align RevenueCat identity + re-sync premium.
@@ -65,9 +71,12 @@ class _MyAppState extends ConsumerState<MyApp> {
       final nextId = next?.id;
       if (prevId == nextId) return;
       if (nextId != null) {
+        _analyticsDistinctId = nextId.toString();
+        unawaited(_identifyUserForAnalytics(next!));
         _handleAuthLogin(nextId);
       } else {
         _handleAuthLogout();
+        _resetAnalyticsIdentity();
       }
     });
 
@@ -91,6 +100,9 @@ class _MyAppState extends ConsumerState<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'MindCoach',
           navigatorKey: navigatorKey,
+          navigatorObservers: [
+            if (AnalyticsService.instance.isEnabled) PosthogObserver(),
+          ],
           locale: locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -119,6 +131,13 @@ class _MyAppState extends ConsumerState<MyApp> {
     try {
       // Get or create device ID
       final deviceId = await DeviceUtils.getDeviceId();
+      _analyticsDistinctId = 'device_$deviceId';
+
+      final loggedInUser = ref.read(AllProviders.userProvider);
+      if (loggedInUser?.id != null) {
+        _analyticsDistinctId = loggedInUser!.id.toString();
+        await _identifyUserForAnalytics(loggedInUser);
+      }
 
       // Initialize premium provider with device ID
       final initialState = PremiumState.initial(deviceId: deviceId);
@@ -143,9 +162,11 @@ class _MyAppState extends ConsumerState<MyApp> {
       // varsa backend'in "premium yok" kararını override eder.
       await _checkExistingEntitlements(deviceId, ref);
 
+      _premiumHydrated = true;
       return deviceId;
     } catch (e) {
       debugPrint('⚠️ Error initializing premium: $e');
+      _premiumHydrated = true;
       return 'unknown';
     }
   }
@@ -220,6 +241,9 @@ class _MyAppState extends ConsumerState<MyApp> {
       }
 
       // 1) Local premium'u aktive et (anında UI güncellensin).
+      // premiumProvider state değişimi → ref.listen → trackPremiumTransition
+      // → premium_purchased event'ini tek noktadan ateşler. Burada manuel
+      // capture etmiyoruz (duplicate olurdu).
       await notifier.activatePurchasedPremium(expiryDate: expiryDate);
       debugPrint(
         '✅ Local premium aktive edildi (purchased, expiry=$expiryDate, product=$productId).',
@@ -343,6 +367,52 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   /// Auth: user logged out (userProvider User → null transition).
   /// RevenueCat'i detach et, local premium'u temizle, guest mode'da yeniden sync et.
+  Future<void> _identifyUserForAnalytics(UserModel user) async {
+    final premium = ref.read(premiumProvider);
+    await AnalyticsService.instance.identifyUser(
+      userId: user.id,
+      credential: user.credential,
+      hasCompletedProfile: user.answerData != null,
+      isPremium: premium.isPremium,
+      daysRemaining: premium.daysRemaining,
+    );
+  }
+
+  Future<void> _resetAnalyticsIdentity() async {
+    await AnalyticsService.instance.reset();
+    try {
+      final deviceId = await DeviceUtils.getDeviceId();
+      _analyticsDistinctId = 'device_$deviceId';
+      await AnalyticsService.instance.identifyDevice(deviceId);
+    } catch (_) {}
+  }
+
+  void _trackPremiumAnalytics(PremiumState? previous, PremiumState next) {
+    final distinctId = _analyticsDistinctId;
+    if (distinctId == null || !AnalyticsService.instance.isEnabled) return;
+
+    // Hydration sırasında (local DB → backend → RevenueCat zinciri) premium
+    // state birden çok kez set ediliyor; bunları gerçek transition sanıp
+    // phantom premium_purchased / premium_deactivated event'i atmamak için
+    // init future tamamlanana kadar tracking kapalı.
+    if (!_premiumHydrated) return;
+
+    final prev = previous ?? PremiumState.initial(deviceId: next.deviceId);
+    if (prev.isPremium == next.isPremium &&
+        prev.isPurchased == next.isPurchased) {
+      return;
+    }
+    AnalyticsService.instance.trackPremiumTransition(
+      userDistinctId: distinctId,
+      wasPremium: prev.isPremium,
+      wasPurchased: prev.isPurchased,
+      isPremium: next.isPremium,
+      isPurchased: next.isPurchased,
+      daysRemaining: next.daysRemaining,
+      source: 'premium_provider',
+    );
+  }
+
   Future<void> _handleAuthLogout() async {
     try {
       final deviceId = await DeviceUtils.getDeviceId();

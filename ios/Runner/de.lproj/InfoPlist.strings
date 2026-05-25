@@ -3,3 +3,5 @@
 "NSMicrophoneUsageDescription" = "Ihr Mikrofon wird verwendet, um Sprachnachrichten in der App aufzunehmen und zu senden.";
 "NSPhotoLibraryAddUsageDescription" = "Ihre Fotomediathek wird verwendet, damit Sie Fotos zum Hochladen und Teilen in der App auswaehlen koennen.";
 "NSPhotoLibraryUsageDescription" = "Ihre Fotomediathek wird verwendet, damit Sie Fotos zum Hochladen und Teilen in der App auswaehlen koennen.";
+
+"NSUserTrackingUsageDescription" = "Wir erheben anonyme Nutzungsdaten, um Ihre Erfahrung zu verbessern. Sie koennen dies jederzeit in den Einstellungen deaktivieren.";

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/Services/NotificationsService/notification_service.dart';
 import 'package:mindcoach/Services/NotificationsService/periodic_notification_scheduler.dart';
 import 'package:mindcoach/Services/RevenueCatService/revenuecat_service.dart';
@@ -43,6 +45,10 @@ class _SplashState extends ConsumerState<Splash>
       curve: Curves.easeIn,
     );
     _fadeController.forward();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AnalyticsService.instance.capture(AnalyticsEvents.splashViewed);
+    });
 
     _initializeApp();
   }

@@ -2228,4 +2228,22 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get appointmentConflictSameCoach =>
       'Hai già un appuntamento con questo coach.';
+
+  @override
+  String get appointmentReminderTitle => 'Promemoria appuntamento';
+
+  @override
+  String appointmentReminderBody(String specialistName) {
+    return 'Il tuo appuntamento con $specialistName inizia tra 30 minuti.';
+  }
+
+  @override
+  String get appointmentReminderFallbackName => 'il tuo specialista';
+
+  @override
+  String get analyticsTrackingTitle => 'Tracciamento analitico';
+
+  @override
+  String get analyticsTrackingDescription =>
+      'Aiutaci a migliorare l\'app condividendo dati di utilizzo anonimi. Puoi disattivarlo in qualsiasi momento.';
 }

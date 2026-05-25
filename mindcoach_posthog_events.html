@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MindCoach — PostHog Event Spec</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f7f8fa;
+    --surface-2: #eef0f3;
+    --border: #e3e6ea;
+    --text: #0f1720;
+    --muted: #5b6573;
+    --accent: #29b87a;
+    --accent-soft: #e6f7ee;
+    --accent-dark: #1f9c66;
+    --code-bg: #f3f5f8;
+    --warn: #b15c00;
+    --warn-bg: #fff4e0;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  .eyebrow {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 16px;
+    margin: 0;
+    max-width: 720px;
+  }
+
+  /* Funnel overview */
+  .funnel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 32px 0 48px;
+  }
+  .funnel-step {
+    flex: 1;
+    min-width: 130px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    position: relative;
+  }
+  .funnel-step .num {
+    font-size: 11px;
+    color: var(--accent-dark);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .funnel-step .name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* Section */
+  section.stage {
+    margin-bottom: 56px;
+  }
+  .stage-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .stage-num {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+  h2 {
+    font-size: 22px;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .stage-desc {
+    color: var(--muted);
+    margin: 4px 0 24px;
+    font-size: 14px;
+  }
+
+  /* Event card */
+  .event {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .event-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .event-name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 14px;
+    font-weight: 600;
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--text);
+  }
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .badge.auto { background: #eef0f3; color: #3a4452; }
+  .badge.tap { background: var(--accent-soft); color: var(--accent-dark); }
+  .badge.view { background: #eef4ff; color: #2a4ea8; }
+  .badge.identify { background: #fff4e0; color: var(--warn); }
+
+  .trigger {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .trigger strong { color: var(--text); font-weight: 600; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    background: var(--surface-2);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  tr:last-child td { border-bottom: none; }
+  td code, .prop {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .type {
+    color: var(--muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+  }
+
+  .note {
+    background: var(--warn-bg);
+    border-left: 3px solid var(--warn);
+    color: #5b3a00;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  /* Sticky TOC */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 40px;
+  }
+  .toc-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .toc-list { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+  .toc-list a { color: var(--text); text-decoration: none; font-size: 13px; }
+  .toc-list a:hover { color: var(--accent-dark); }
+
+  /* User props */
+  .props-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+  }
+  .prop-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .prop-card .k {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .prop-card .v {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  hr.soft { border: 0; border-top: 1px solid var(--border); margin: 56px 0; }
+
+  footer {
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+    margin-top: 56px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <span class="eyebrow">PostHog Event Spec</span>
+    <h1>MindCoach — Onboarding Funnel Tracking</h1>
+    <p class="subtitle">Ready-to-implement event taxonomy for the value-first first-run journey: splash → onboarding → profile → coach match → demo session → premium offer → trial → auth. User is anonymous through every step and only gets identified at the final auth screen. Keep names and property keys exactly as written.</p>
+  </header>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <div class="toc-title">Funnel stages</div>
+    <div class="toc-list">
+      <a href="#s1">1. App Open + Splash</a>
+      <a href="#s2">2. Onboarding Carousel</a>
+      <a href="#s3">3. Profile Setup (5 steps)</a>
+      <a href="#s4">4. Coach Matching</a>
+      <a href="#s5">5. Coach Profile</a>
+      <a href="#s6">6. Demo Session</a>
+      <a href="#s7">7. Premium Offer</a>
+      <a href="#s8">8. Trial Activation</a>
+      <a href="#s9">9. Auth</a>
+      <a href="#user-props">User properties</a>
+      <a href="#impl">Implementation rules</a>
+    </div>
+  </nav>
+
+  <!-- FUNNEL OVERVIEW -->
+  <div class="funnel">
+    <div class="funnel-step"><div class="num">01</div><div class="name">Splash</div></div>
+    <div class="funnel-step"><div class="num">02</div><div class="name">Onboarding</div></div>
+    <div class="funnel-step"><div class="num">03</div><div class="name">Profile 1–5</div></div>
+    <div class="funnel-step"><div class="num">04</div><div class="name">Matches</div></div>
+    <div class="funnel-step"><div class="num">05</div><div class="name">Coach Profile</div></div>
+    <div class="funnel-step"><div class="num">06</div><div class="name">Demo Session</div></div>
+    <div class="funnel-step"><div class="num">07</div><div class="name">Premium</div></div>
+    <div class="funnel-step"><div class="num">08</div><div class="name">Trial</div></div>
+    <div class="funnel-step"><div class="num">09</div><div class="name">Auth</div></div>
+  </div>
+
+  <!-- STAGE 1 -->
+  <section class="stage" id="s1">
+    <div class="stage-header"><span class="stage-num">STAGE 01</span><h2>App Open + Splash</h2></div>
+    <p class="stage-desc">"mindcoach" splash screen with tagline "Take a moment for yourself."</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">app_opened</span>
+        <span class="badge auto">Auto</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> App launch (cold or warm start).</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">is_first_open</span></td><td class="type">boolean</td><td>True only on the very first app launch.</td></tr>
+          <tr><td><span class="prop">app_version</span></td><td class="type">string</td><td>Build version.</td></tr>
+          <tr><td><span class="prop">platform</span></td><td class="type">enum</td><td><code>ios</code> | <code>android</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">splash_viewed</span>
+        <span class="badge view">View</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Splash screen rendered.</div>
+    </div>
+  </section>
+
+  <!-- STAGE 2 -->
+  <section class="stage" id="s2">
+    <div class="stage-header"><span class="stage-num">STAGE 02</span><h2>Onboarding Carousel</h2></div>
+    <p class="stage-desc">3 slides: "Feeling overwhelmed?" → "Talk your way." → "Find the right coach for you."</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">onboarding_slide_viewed</span>
+        <span class="badge view">View</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Each slide becomes visible (fire once per slide per session).</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">slide_number</span></td><td class="type">int</td><td><code>1</code>, <code>2</code>, <code>3</code></td></tr>
+          <tr><td><span class="prop">slide_name</span></td><td class="type">enum</td><td><code>feeling_overwhelmed</code> | <code>talk_your_way</code> | <code>find_the_right_coach</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">onboarding_swiped</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Swipe to continue" tapped on slide 1 or 2.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">from_slide</span></td><td class="type">int</td><td><code>1</code> or <code>2</code></td></tr>
+          <tr><td><span class="prop">to_slide</span></td><td class="type">int</td><td><code>2</code> or <code>3</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">onboarding_completed</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Get Started" tapped on slide 3.</div>
+    </div>
+  </section>
+
+  <!-- STAGE 3 -->
+  <section class="stage" id="s3">
+    <div class="stage-header"><span class="stage-num">STAGE 03</span><h2>Profile Setup — 5 steps</h2></div>
+    <p class="stage-desc">Step 1: About you · Step 2: Support area · Step 3: Coach approach · Step 4: Available days · Step 5: Time of day.</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">profile_step_viewed</span>
+        <span class="badge view">View</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Each of the 5 profile screens is rendered.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">step</span></td><td class="type">int</td><td><code>1</code>–<code>5</code></td></tr>
+          <tr><td><span class="prop">step_name</span></td><td class="type">enum</td><td><code>about_you</code> | <code>support_area</code> | <code>coach_approach</code> | <code>available_days</code> | <code>available_time</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">profile_step_completed</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Next" tapped on a step (or "Find My Coaches" on step 5).</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">step</span></td><td class="type">int</td><td><code>1</code>–<code>5</code></td></tr>
+          <tr><td><span class="prop">step_name</span></td><td class="type">enum</td><td>Same enum as above.</td></tr>
+          <tr><td colspan="3" style="background:var(--surface-2); font-weight:600;">Step-specific properties (include only the one matching the current step)</td></tr>
+          <tr><td><span class="prop">name_provided</span></td><td class="type">boolean</td><td>Step 1 — whether the name field is non-empty. <em>Do not send the name value itself in the event; set it as a user property.</em></td></tr>
+          <tr><td><span class="prop">gender</span></td><td class="type">enum</td><td>Step 1 — <code>male</code> | <code>female</code> | <code>prefer_not_to_say</code></td></tr>
+          <tr><td><span class="prop">support_area</span></td><td class="type">enum</td><td>Step 2 — <code>individual_growth</code> | <code>family</code> | <code>career</code> | <code>education</code> | <code>personal_development</code></td></tr>
+          <tr><td><span class="prop">coach_approach</span></td><td class="type">enum</td><td>Step 3 — <code>supportive</code> | <code>convincing</code> | <code>energetic</code> | <code>humorous</code></td></tr>
+          <tr><td><span class="prop">available_days</span></td><td class="type">array</td><td>Step 4 — any of <code>mon</code>, <code>tue</code>, <code>wed</code>, <code>thu</code>, <code>fri</code>, <code>sat</code>, <code>sun</code></td></tr>
+          <tr><td><span class="prop">time_slot</span></td><td class="type">enum</td><td>Step 5 — <code>morning</code> (08:00–12:00) | <code>afternoon</code> (12:00–16:00) | <code>evening</code> (16:00–21:00)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">profile_back_tapped</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "&lt; Back" tapped during profile setup.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">from_step</span></td><td class="type">int</td><td><code>1</code>–<code>5</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">profile_completed</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Find My Coaches" tapped on step 5 (after all 5 steps successful).</div>
+      <div class="note">Also push the full set of user properties (<code>gender</code>, <code>support_area</code>, <code>coach_approach</code>, <code>available_days</code>, <code>time_slot</code>) via <code>posthog.people.set()</code> at this point.</div>
+    </div>
+  </section>
+
+  <!-- STAGE 4 -->
+  <section class="stage" id="s4">
+    <div class="stage-header"><span class="stage-num">STAGE 04</span><h2>Coach Matching</h2></div>
+    <p class="stage-desc">"4 COACHES MATCHED FOR CAREER" — swipe to browse — Skip / Book buttons.</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">coach_matches_viewed</span>
+        <span class="badge view">View</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Match results screen rendered.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">match_count</span></td><td class="type">int</td><td>Number of coaches returned.</td></tr>
+          <tr><td><span class="prop">support_area</span></td><td class="type">enum</td><td>Echo of the user's selection.</td></tr>
+          <tr><td><span class="prop">available_days</span></td><td class="type">array</td><td>Echo of step 4.</td></tr>
+          <tr><td><span class="prop">time_slot</span></td><td class="type">enum</td><td>Echo of step 5.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">coach_card_swiped</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> User swipes between coach cards.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">coach_id</span></td><td class="type">string</td><td>ID of the card now in view.</td></tr>
+          <tr><td><span class="prop">position</span></td><td class="type">int</td><td>Index in the list (0-based).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">coach_skipped</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Skip" or red ✕ button tapped on the match card.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">coach_id</span></td><td class="type">string</td><td></td></tr>
+          <tr><td><span class="prop">position</span></td><td class="type">int</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">coach_book_tapped</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Book" or green video icon tapped on the match card.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">coach_id</span></td><td class="type">string</td><td></td></tr>
+          <tr><td><span class="prop">position</span></td><td class="type">int</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- STAGE 5 -->
+  <section class="stage" id="s5">
+    <div class="stage-header"><span class="stage-num">STAGE 05</span><h2>Coach Profile</h2></div>
+    <p class="stage-desc">Detailed coach view (name, rating, tags, info, Memory / Language / Availability blocks, Start Video Call CTA).</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">coach_profile_viewed</span>
+        <span class="badge view">View</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Coach profile screen rendered.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">coach_id</span></td><td class="type">string</td><td></td></tr>
+          <tr><td><span class="prop">source</span></td><td class="type">enum</td><td><code>match_card</code> | <code>book_button</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">video_call_started</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Start Video Call" tapped on coach profile.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">coach_id</span></td><td class="type">string</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- STAGE 6 -->
+  <section class="stage" id="s6">
+    <div class="stage-header"><span class="stage-num">STAGE 06</span><h2>Demo Session</h2></div>
+    <p class="stage-desc">Demo video session with the chosen coach. Results screen ("Demo Sonuç") surfaces duration ("Süre") and self-awareness score ("Öz farkındalık skoru").</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">demo_session_completed</span>
+        <span class="badge auto">Auto</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Demo result screen ("It went great with…") rendered.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">coach_id</span></td><td class="type">string</td><td></td></tr>
+          <tr><td><span class="prop">duration_seconds</span></td><td class="type">int</td><td>From "Süre" field (e.g. <code>30</code> for 00:30).</td></tr>
+          <tr><td><span class="prop">awareness_score</span></td><td class="type">int</td><td>0–100, from "Öz farkındalık skoru".</td></tr>
+          <tr><td><span class="prop">insights_unlocked_count</span></td><td class="type">int</td><td>Number of un-blurred insight cards shown (e.g. <code>3</code>).</td></tr>
+          <tr><td><span class="prop">insights_locked_count</span></td><td class="type">int</td><td>Number of blurred insight cards behind the paywall.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- STAGE 7 -->
+  <section class="stage" id="s7">
+    <div class="stage-header"><span class="stage-num">STAGE 07</span><h2>Premium Offer</h2></div>
+    <p class="stage-desc">Same screen as Stage 6 — bottom CTAs: "Daha fazlası için Premium satın al" / "Satın almadan devam et". This is the first paywall moment.</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">premium_offer_viewed</span>
+        <span class="badge view">View</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Premium CTA visible (fires alongside <code>demo_session_completed</code>).</div>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">premium_purchase_tapped</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Daha fazlası için Premium satın al" tapped.</div>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">continue_free_tapped</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> "Satın almadan devam et" tapped — flows the user into the 3-day trial.</div>
+    </div>
+  </section>
+
+  <!-- STAGE 8 -->
+  <section class="stage" id="s8">
+    <div class="stage-header"><span class="stage-num">STAGE 08</span><h2>Trial Activation</h2></div>
+    <p class="stage-desc">"3-day free trial activated" screen (toggle animation off → on). Shown after the user opts to continue without purchase.</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">trial_activated</span>
+        <span class="badge auto">Auto</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Trial activation screen completes its animation / is auto-confirmed.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">trial_days</span></td><td class="type">int</td><td><code>3</code></td></tr>
+        </tbody>
+      </table>
+      <div class="note">Also set anonymous-user properties <code>trial_status = "active"</code> and <code>trial_start_date</code>. These will be carried over to the real user once auth completes.</div>
+    </div>
+  </section>
+
+  <!-- STAGE 9 -->
+  <section class="stage" id="s9">
+    <div class="stage-header"><span class="stage-num">STAGE 09</span><h2>Auth</h2></div>
+    <p class="stage-desc">Welcome screen: "Sign in to find your coach and start your journey." Continue with Google / Apple / Guest. This is the final step — user converts from anonymous to identified here.</p>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">auth_screen_viewed</span>
+        <span class="badge view">View</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Welcome / Auth screen rendered.</div>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">auth_method_tapped</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> User taps one of the three auth buttons.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">method</span></td><td class="type">enum</td><td><code>google</code> | <code>apple</code> | <code>guest</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">auth_completed</span>
+        <span class="badge identify">Identify</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Successful sign-in / guest session created. Call <code>posthog.alias(user_id)</code> + <code>posthog.identify(user_id)</code> here so the entire anonymous funnel (stages 1–8) joins the real user.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">method</span></td><td class="type">enum</td><td><code>google</code> | <code>apple</code> | <code>guest</code></td></tr>
+          <tr><td><span class="prop">is_new_user</span></td><td class="type">boolean</td><td>True if account just created.</td></tr>
+        </tbody>
+      </table>
+      <div class="note">This is the conversion goal. All prior events were anonymous — aliasing here stitches the full funnel into a single user journey.</div>
+    </div>
+
+    <div class="event">
+      <div class="event-head">
+        <span class="event-name">auth_failed</span>
+        <span class="badge tap">Tap</span>
+      </div>
+      <div class="trigger"><strong>Trigger:</strong> Auth attempt fails or is cancelled by user.</div>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Value / Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="prop">method</span></td><td class="type">enum</td><td><code>google</code> | <code>apple</code></td></tr>
+          <tr><td><span class="prop">reason</span></td><td class="type">enum</td><td><code>cancelled</code> | <code>error</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="soft" />
+
+  <!-- USER PROPERTIES -->
+  <section id="user-props">
+    <div class="stage-header"><span class="stage-num">PROFILE</span><h2>User properties (set via posthog.people.set)</h2></div>
+    <p class="stage-desc">Set these once per user; overwrite when the user edits their preferences. Don't pass them as event properties unless explicitly noted above.</p>
+
+    <div class="props-grid">
+      <div class="prop-card"><div class="k">name</div><div class="v">string — from Profile step 1</div></div>
+      <div class="prop-card"><div class="k">gender</div><div class="v">male / female / prefer_not_to_say</div></div>
+      <div class="prop-card"><div class="k">support_area</div><div class="v">individual_growth / family / career / education / personal_development</div></div>
+      <div class="prop-card"><div class="k">coach_approach</div><div class="v">supportive / convincing / energetic / humorous</div></div>
+      <div class="prop-card"><div class="k">available_days</div><div class="v">array of mon–sun</div></div>
+      <div class="prop-card"><div class="k">time_slot</div><div class="v">morning / afternoon / evening</div></div>
+      <div class="prop-card"><div class="k">auth_method</div><div class="v">google / apple / guest</div></div>
+      <div class="prop-card"><div class="k">is_new_user</div><div class="v">boolean</div></div>
+      <div class="prop-card"><div class="k">trial_status</div><div class="v">active / expired / converted</div></div>
+      <div class="prop-card"><div class="k">trial_start_date</div><div class="v">ISO-8601 date</div></div>
+      <div class="prop-card"><div class="k">is_premium</div><div class="v">boolean — true after purchase</div></div>
+      <div class="prop-card"><div class="k">signup_date</div><div class="v">ISO-8601 date, set once</div></div>
+    </div>
+  </section>
+
+  <hr class="soft" />
+
+  <!-- IMPLEMENTATION -->
+  <section id="impl">
+    <div class="stage-header"><span class="stage-num">RULES</span><h2>Implementation rules</h2></div>
+    <p class="stage-desc">Keep these consistent so the funnel reports cleanly in PostHog.</p>
+
+    <div class="event">
+      <div class="event-head"><span class="event-name">Naming</span></div>
+      <ul>
+        <li>Event names: <code>snake_case</code>, past tense (e.g. <code>onboarding_completed</code>).</li>
+        <li>Property keys: <code>snake_case</code>, no abbreviations.</li>
+        <li>Enum values: <code>snake_case</code>, exactly as listed in this doc.</li>
+      </ul>
+    </div>
+
+    <div class="event">
+      <div class="event-head"><span class="event-name">Identity (anonymous-until-end flow)</span></div>
+      <ul>
+        <li>Stages 1–8 fire while the user is <strong>anonymous</strong> on the PostHog auto-generated distinct ID. Do NOT call <code>identify()</code> earlier — it'll fragment the funnel.</li>
+        <li>Set user properties (gender, support_area, coach_approach, available_days, time_slot, trial_status, etc.) on the anonymous user via <code>posthog.people.set()</code> as soon as they're known. PostHog will carry them onto the identified user at auth.</li>
+        <li>On <code>auth_completed</code>: call <code>posthog.alias(user_id)</code> first, then <code>posthog.identify(user_id)</code>. The alias call stitches the entire anonymous funnel (stages 1–8) into the new user record.</li>
+        <li>For guest users: still call <code>identify()</code> with a stable guest ID (e.g. <code>guest_&lt;uuid&gt;</code>) so they're trackable across sessions.</li>
+      </ul>
+    </div>
+
+    <div class="event">
+      <div class="event-head"><span class="event-name">When to fire view vs. tap</span></div>
+      <ul>
+        <li><span class="badge view">View</span> events fire when a screen / element becomes visible — once per session per screen.</li>
+        <li><span class="badge tap">Tap</span> events fire on the user action (button tap, swipe).</li>
+        <li><span class="badge auto">Auto</span> events fire automatically (lifecycle / completion).</li>
+      </ul>
+    </div>
+
+    <div class="event">
+      <div class="event-head"><span class="event-name">Funnel definition in PostHog</span></div>
+      <p style="margin:6px 0 0; font-size:13px;">Configure the main onboarding funnel with these steps in order:</p>
+      <ol style="font-size:13px;">
+        <li><code>app_opened</code></li>
+        <li><code>onboarding_completed</code></li>
+        <li><code>profile_completed</code></li>
+        <li><code>coach_matches_viewed</code></li>
+        <li><code>video_call_started</code></li>
+        <li><code>demo_session_completed</code></li>
+        <li><code>continue_free_tapped</code> <em>or</em> <code>premium_purchase_tapped</code></li>
+        <li><code>trial_activated</code></li>
+        <li><code>auth_completed</code> (conversion goal)</li>
+      </ol>
+      <p style="margin:10px 0 0; font-size:13px; color:var(--muted);">Build a second funnel for revenue: <code>premium_offer_viewed</code> → <code>premium_purchase_tapped</code>.</p>
+    </div>
+
+    <div class="event">
+      <div class="event-head"><span class="event-name">PII</span></div>
+      <ul>
+        <li>Never send <code>name</code> or email as an event property. Set them only as user properties.</li>
+        <li>Don't send raw auth tokens, device IDs, or IP — PostHog already handles device/session info.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    MindCoach · PostHog event spec · v1
+  </footer>
+
+</div>
+</body>
+</html>

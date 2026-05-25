@@ -9,6 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/Services/rive_preload_service.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
@@ -72,6 +74,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
     Future.microtask(() async {
       if (!mounted) return;
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.conversationOpened,
+        properties: {'consultant_id': widget.specialistId.id},
+      );
       try {
         // Önce eski konuşma mesajlarını temizle (A→B geçişinde yanlış mesaj görünmesin)
         ref
@@ -878,6 +884,13 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             .read(conversationsProvider.notifier)
             .sendMessage(id: widget.specialistId.id, text: trimmed)
             .then((_) {
+              AnalyticsService.instance.capture(
+                AnalyticsEvents.messageSent,
+                properties: {
+                  'consultant_id': widget.specialistId.id,
+                  'has_image': false,
+                },
+              );
               if (mounted) {
                 _startReplyPolling(previousTopMessageId: previousTopMessageId);
               }

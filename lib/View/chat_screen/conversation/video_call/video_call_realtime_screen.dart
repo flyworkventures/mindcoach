@@ -16,7 +16,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mindcoach/Riverpod/Providers/premium_provider.dart'
     as AllProviders;
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/Services/rive_preload_service.dart';
 import 'package:mindcoach/View/specialists_screen/specialists_notifier.dart';
 import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_trial_insights_screen.dart';
@@ -291,6 +293,14 @@ class _VideoCallRealtimeScreenState
     if (!_riveReady || !_serverConnectionReady) return;
     if (!mounted) return;
     _callOpenFinalized = true;
+
+    AnalyticsService.instance.capture(
+      AnalyticsEvents.videoCallStarted,
+      properties: {
+        'consultant_id': widget.specialist.id,
+        'is_trial': widget.isTrial,
+      },
+    );
 
     _cancelAiSpeakingWatchdog();
     _cancelAiPlaybackIdleMonitor();
@@ -1813,6 +1823,15 @@ class _VideoCallRealtimeScreenState
   }
 
   Future<void> _endCall({bool navigateToLogin = false}) async {
+    AnalyticsService.instance.capture(
+      AnalyticsEvents.videoCallEnded,
+      properties: {
+        'consultant_id': widget.specialist.id,
+        'is_trial': widget.isTrial,
+        'duration_seconds': _secondsElapsed,
+      },
+    );
+
     _cancelAiSpeakingWatchdog();
     _cancelAiPlaybackIdleMonitor();
     _cancelConnectionReadyFallback();

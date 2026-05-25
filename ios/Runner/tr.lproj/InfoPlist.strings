@@ -3,3 +3,5 @@
 "NSMicrophoneUsageDescription" = "Mikrofonunuz, uygulama icinde sesli mesaj kaydetmek ve gondermek icin kullanilir.";
 "NSPhotoLibraryAddUsageDescription" = "Fotograf kutuphaneniz, uygulamada yuklemek ve paylasmak uzere fotograf secmeniz icin kullanilir.";
 "NSPhotoLibraryUsageDescription" = "Fotograf kutuphaneniz, uygulamada yuklemek ve paylasmak uzere fotograf secmeniz icin kullanilir.";
+
+"NSUserTrackingUsageDescription" = "Uygulamanizi gelistirmek ve size daha iyi bir deneyim sunmak icin anonim kullanim verileri toplariz. Ayarlardan istediginiz zaman kapatabilirsiniz.";

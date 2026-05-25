@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 
 /// Tek bir ses kaydını temsil eder (player'a aktarılacak).
 class SoundPlayerItem {
@@ -45,6 +47,7 @@ class _SoundPlayerScreenState extends State<SoundPlayerScreen> {
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
   bool _isPlaying = false;
+  final Set<int> _trackedPlays = <int>{};
 
   @override
   void initState() {
@@ -93,6 +96,17 @@ class _SoundPlayerScreenState extends State<SoundPlayerScreen> {
     if (_isPlaying) {
       _player.pause();
     } else {
+      if (_trackedPlays.add(_currentIndex)) {
+        final item = widget.playlist[_currentIndex];
+        AnalyticsService.instance.capture(
+          AnalyticsEvents.relaxingSoundPlayed,
+          properties: {
+            'title': item.title,
+            'audio_path': item.audioPath,
+            'playlist_index': _currentIndex,
+          },
+        );
+      }
       _player.play();
     }
   }

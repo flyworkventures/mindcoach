@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 
 import '../../Riverpod/Providers/all_providers.dart';
 import '../../core/routes/page_routes.dart';
@@ -33,6 +34,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
 
   final ImagePicker _picker = ImagePicker();
   bool _isUploadingPhoto = false;
+  bool _analyticsEnabled = !AnalyticsService.instance.isOptedOut;
 
   String _extractUserEmail(UserModel? user) {
     if (user == null) return '';
@@ -395,6 +397,20 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                       controller: _ageController,
                       prefixIcon: SvgPicture.asset("assets/icons/ic_cake.svg"),
                       keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 24),
+                    _AnalyticsOptOutTile(
+                      enabled: _analyticsEnabled,
+                      title: l10n.analyticsTrackingTitle,
+                      description: l10n.analyticsTrackingDescription,
+                      onChanged: (value) async {
+                        setState(() => _analyticsEnabled = value);
+                        if (value) {
+                          await AnalyticsService.instance.optIn();
+                        } else {
+                          await AnalyticsService.instance.optOut();
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -1828,6 +1844,69 @@ class _ProfileTextField extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AnalyticsOptOutTile extends StatelessWidget {
+  final bool enabled;
+  final String title;
+  final String description;
+  final ValueChanged<bool> onChanged;
+
+  const _AnalyticsOptOutTile({
+    required this.enabled,
+    required this.title,
+    required this.description,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Switch.adaptive(
+            value: enabled,
+            onChanged: onChanged,
+            activeTrackColor: const Color(0xFF21BC87),
+          ),
+        ],
+      ),
     );
   }
 }

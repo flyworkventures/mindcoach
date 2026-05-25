@@ -764,5 +764,10 @@
   "videoCallRateSubtitle": "请评价本次视频通话",
   "premiumStatusInactive": "未激活",
   "appointmentConflictSameTime": "您在此时间已与其他教练有预约。",
-  "appointmentConflictSameCoach": "您已与此教练有预约。"
+  "appointmentConflictSameCoach": "您已与此教练有预约。",
+  "appointmentReminderTitle": "预约提醒",
+  "appointmentReminderBody": "您与{specialistName}的预约将在30分钟后开始。",
+  "appointmentReminderFallbackName": "您的专家",
+  "analyticsTrackingTitle": "分析追踪",
+  "analyticsTrackingDescription": "通过分享匿名使用数据帮助我们改进应用。您可以随时关闭此功能。"
 }

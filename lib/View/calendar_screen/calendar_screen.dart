@@ -10,6 +10,8 @@ import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../Services/Analytics/analytics_service.dart';
+import '../../core/analytics/analytics_events.dart';
 import '../../core/models/appointment_info.dart';
 import '../appointments/appointments_notifier.dart';
 import '../specialists_screen/specialists_notifier.dart';
@@ -595,6 +597,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       orElse: () => null,
     );
     if (consultant == null) return;
+
+    await AnalyticsService.instance.capture(
+      AnalyticsEvents.appointmentCallStarted,
+      properties: {
+        'consultant_id': consultantId,
+        'source': 'calendar',
+      },
+    );
 
     await Navigator.of(context).push(
       MaterialPageRoute(

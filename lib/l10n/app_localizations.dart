@@ -4065,6 +4065,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You already have an appointment with this coach.'**
   String get appointmentConflictSameCoach;
+
+  /// No description provided for @appointmentReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment reminder'**
+  String get appointmentReminderTitle;
+
+  /// No description provided for @appointmentReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your appointment with {specialistName} starts in 30 minutes.'**
+  String appointmentReminderBody(String specialistName);
+
+  /// No description provided for @appointmentReminderFallbackName.
+  ///
+  /// In en, this message translates to:
+  /// **'your specialist'**
+  String get appointmentReminderFallbackName;
+
+  /// No description provided for @analyticsTrackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics tracking'**
+  String get analyticsTrackingTitle;
+
+  /// No description provided for @analyticsTrackingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us improve by sharing anonymous usage data. You can turn this off at any time.'**
+  String get analyticsTrackingDescription;
 }
 
 class _AppLocalizationsDelegate
