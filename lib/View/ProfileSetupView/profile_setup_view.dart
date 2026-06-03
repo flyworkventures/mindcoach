@@ -1,11 +1,16 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mindcoach/Riverpod/Controllers/ProfileSetupController/profile_setup_controller.dart';
 import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
+import 'package:mindcoach/core/analytics/funnel_analytics.dart';
 import 'package:mindcoach/View/ProfileSetupView/steps/available_days_step.dart';
 import 'package:mindcoach/app/my_app.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
@@ -39,8 +44,28 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
   // Ekran sayısı (success yok, login sayfasına yönlendirilecek)
   final int _totalSteps = 5;
 
+  void _trackStepViewed(int step) {
+    unawaited(
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.profileStepViewed,
+        properties: FunnelAnalytics.profileStepViewedProps(step),
+      ),
+    );
+  }
+
+  void _trackStepCompleted(int step, ProfileSetupState state) {
+    unawaited(
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.profileStepCompleted,
+        properties: FunnelAnalytics.profileStepCompletedProps(step, state),
+      ),
+    );
+  }
+
   void _goNext() {
     if (_currentPage < _totalSteps - 1) {
+      final state = ref.read(AllControllers.profileSetupProvider);
+      _trackStepCompleted(_currentPage + 1, state);
       // Özellikle NameGender adımından çıkarken klavyeyi kapat.
       FocusManager.instance.primaryFocus?.unfocus();
       _pageController.nextPage(
@@ -53,6 +78,12 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
 
   void _goBack() {
     if (_currentPage > 0) {
+      unawaited(
+        AnalyticsService.instance.capture(
+          AnalyticsEvents.profileBackTapped,
+          properties: {'from_step': _currentPage + 1},
+        ),
+      );
       _pageController.previousPage(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
@@ -63,6 +94,7 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
   @override
   void initState() {
     super.initState();
+    _trackStepViewed(1);
     Future.microtask(() {
       log(
         "Username and Token: ${ref.read(AllProviders.userProvider)?.credential}, ${ref.read(AllProviders.userProvider)?.token}. ",
@@ -182,6 +214,7 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
                         setState(() {
                           _currentPage = i;
                         });
+                        _trackStepViewed(i + 1);
                       },
                       children: [
                         NameGenderStep(
@@ -279,6 +312,19 @@ class _MindCoachOnboardingState extends ConsumerState<MindCoachOnboarding> {
                         if (!canProceed) return;
 
                         if (_currentPage == stepCount - 1) {
+                          _trackStepCompleted(stepCount, profileState);
+                          unawaited(
+                            AnalyticsService.instance.capture(
+                              AnalyticsEvents.profileCompleted,
+                            ),
+                          );
+                          unawaited(
+                            AnalyticsService.instance.setPersonProperties(
+                              FunnelAnalytics.profilePersonProperties(
+                                profileState,
+                              ),
+                            ),
+                          );
                           navigatorKey.currentState?.pushNamedAndRemoveUntil(
                             PageRoutes.findCoach,
                             (a) => false,

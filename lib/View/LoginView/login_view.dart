@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,6 +17,9 @@ import 'package:mindcoach/core/utils/local_db_keys.dart';
 import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/core/utils/screen_size_extensions.dart';
 import 'package:mindcoach/core/widgets/future_progress_dialog.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
+import 'package:mindcoach/core/analytics/funnel_analytics.dart';
 import 'package:mindcoach/models/user_model.dart';
 
 class LoginView extends ConsumerStatefulWidget {
@@ -29,10 +33,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
   // Sadece ilgili butonda yükleme göstermek için null veya ilgili provider'ı tutacağız
   SocialLoginProvider? _loadingProvider;
 
+  @override
+  void initState() {
+    super.initState();
+    unawaited(
+      AnalyticsService.instance.capture(AnalyticsEvents.authScreenViewed),
+    );
+  }
+
   Future<void> _handleLogin(SocialLoginProvider provider) async {
     // Farklı bir işlem zaten devam ediyorsa tetiklenmeyi engelle
     if (_loadingProvider != null) return;
 
+    unawaited(
+      AnalyticsService.instance.trackAuthMethodTapped(
+        FunnelAnalytics.authMethod(provider),
+      ),
+    );
     setState(() => _loadingProvider = provider);
 
     try {

@@ -48,11 +48,15 @@ class SpecialistDetailScreen extends ConsumerStatefulWidget {
   /// yerine geri pop ederek loop'u engelleriz.
   final bool fromConversation;
 
+  /// PostHog `coach_profile_viewed.source` — `match_card` | `book_button`.
+  final String profileSource;
+
   const SpecialistDetailScreen({
     super.key,
     required this.specialist,
     this.isTrial = false,
     this.fromConversation = false,
+    this.profileSource = 'match_card',
   });
 
   @override
@@ -108,6 +112,8 @@ class _SpecialistDetailScreenState
       AnalyticsService.instance.capture(
         AnalyticsEvents.coachDetailViewed,
         properties: {
+          'coach_id': _specialist.id.toString(),
+          'source': widget.profileSource,
           'consultant_id': _specialist.id,
           'is_trial_flow': widget.isTrial,
         },
@@ -738,9 +744,9 @@ class _SpecialistDetailScreenState
                     await AnalyticsService.instance.capture(
                       AnalyticsEvents.videoCallStarted,
                       properties: {
+                        'coach_id': specialist.id.toString(),
                         'consultant_id': specialist.id,
                         'is_trial': isTrial,
-                        'source': 'coach_detail',
                       },
                     );
                     await Navigator.pushNamed(

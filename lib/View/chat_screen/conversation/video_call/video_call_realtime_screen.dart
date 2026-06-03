@@ -294,14 +294,6 @@ class _VideoCallRealtimeScreenState
     if (!mounted) return;
     _callOpenFinalized = true;
 
-    AnalyticsService.instance.capture(
-      AnalyticsEvents.videoCallStarted,
-      properties: {
-        'consultant_id': widget.specialist.id,
-        'is_trial': widget.isTrial,
-      },
-    );
-
     _cancelAiSpeakingWatchdog();
     _cancelAiPlaybackIdleMonitor();
     unawaited(_configureAudioSession());

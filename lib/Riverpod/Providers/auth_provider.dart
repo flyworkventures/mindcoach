@@ -20,6 +20,7 @@ import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
 import 'package:mindcoach/View/chat_screen/notifiers/conversation_notifier.dart';
 import 'package:mindcoach/core/analytics/analytics_events.dart';
+import 'package:mindcoach/core/analytics/funnel_analytics.dart';
 import 'package:mindcoach/features/notifications/notification_notifier.dart';
 
 class AuthProvider extends StateNotifier{
@@ -31,33 +32,34 @@ class AuthProvider extends StateNotifier{
 
 
   Future<UserModel?> login(SocialLoginProvider provider) async {
-    await AnalyticsService.instance.trackLoginStarted(provider.name);
+    final method = FunnelAnalytics.authMethod(provider);
     try {
       final loginModel = await handleLogin(provider);
       final userModel = await sendAPI(loginModel);
       if (userModel != null) {
         ref?.read(AllProviders.userProvider.notifier).setUserModel(userModel);
-        await AnalyticsService.instance.trackLoginCompleted(
-          provider: provider.name,
-          userId: userModel.id,
-          hasCompletedProfile: userModel.answerData != null,
-        );
-        await AnalyticsService.instance.identifyUser(
+        final hasProfile = userModel.answerData != null;
+        await AnalyticsService.instance.trackAuthCompleted(
+          method: method,
           userId: userModel.id,
           credential: userModel.credential,
-          hasCompletedProfile: userModel.answerData != null,
+          hasCompletedProfile: hasProfile,
+          isNewUser: !hasProfile,
         );
       } else {
-        await AnalyticsService.instance.trackLoginFailed(
-          provider.name,
-          reason: 'api_null_user',
+        await AnalyticsService.instance.trackAuthFailed(
+          method: method,
+          reason: 'error',
         );
       }
       return userModel;
     } catch (e) {
-      await AnalyticsService.instance.trackLoginFailed(
-        provider.name,
-        reason: e.toString(),
+      final reason = e.toString().toLowerCase().contains('cancel')
+          ? 'cancelled'
+          : 'error';
+      await AnalyticsService.instance.trackAuthFailed(
+        method: method,
+        reason: reason,
       );
       rethrow;
     }

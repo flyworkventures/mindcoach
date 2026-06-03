@@ -22,7 +22,8 @@ class AuthRepository {
       if (Platform.isAndroid) {
         try {
           await GoogleSignIn.instance.initialize(
-            serverClientId: "705277804468-apmhk9tueifqj824v9eq58c8d8lr2up3.apps.googleusercontent.com",
+            serverClientId:
+                '705277804468-b3a82f9k2c3moht7m388lf7mkgu5oo9u.apps.googleusercontent.com',
           );
           debugPrint("✅ [Google Sign-In] Android initialization successful");
         } catch (e) {
@@ -128,8 +129,8 @@ Future<dynamic> googleSignIn() async{
         debugPrint("❌ [Google Sign-In] ========================================");
         debugPrint("❌ [Google Sign-In] 1. Google Cloud Console'a gidin:");
         debugPrint("❌ [Google Sign-In]    https://console.cloud.google.com/apis/credentials");
-        debugPrint("❌ [Google Sign-In] 2. OAuth Client ID'yi bulun (proje: mindcoach-748a6):");
-        debugPrint("❌ [Google Sign-In]    705277804468-44as6uuepouglaudcgna3j22lu8bvbqr");
+        debugPrint("❌ [Google Sign-In] 2. Web OAuth Client (serverClientId, client_type 3):");
+        debugPrint("❌ [Google Sign-In]    705277804468-b3a82f9k2c3moht7m388lf7mkgu5oo9u");
         debugPrint("❌ [Google Sign-In] 3. Package name: com.flywork.mindcoach (TAM OLARAK)");
         debugPrint("❌ [Google Sign-In] 4. Aşağıdaki SHA key'leri EKLEYİN:");
         debugPrint("❌ [Google Sign-In]    DEBUG SHA-1:   C7:A6:48:26:D6:91:7C:31:B6:3E:0E:A9:3D:0A:44:90:EE:9A:5F:FA");

@@ -174,11 +174,57 @@ class AnalyticsService {
     }
   }
 
+  /// Anonim funnel sırasında person property güncelle (login öncesi).
+  Future<void> setPersonProperties(Map<String, Object?> properties) async {
+    if (!isEnabled) return;
+    try {
+      final props = <String, Object>{};
+      for (final e in properties.entries) {
+        if (e.value != null) props[e.key] = e.value!;
+      }
+      if (props.isEmpty) return;
+      await Posthog().setPersonProperties(userPropertiesToSet: props);
+    } catch (e) {
+      debugPrint('⚠️ PostHog setPersonProperties: $e');
+    }
+  }
+
+  /// Auth tamamlandığında anonim oturumu gerçek kullanıcıya birleştir.
+  Future<void> aliasAndIdentifyUser({
+    required int userId,
+    String? credential,
+    bool? hasCompletedProfile,
+    bool? isPremium,
+    int? daysRemaining,
+    Map<String, Object?>? personProperties,
+  }) async {
+    if (!_initialized) return;
+    final id = userId.toString();
+    try {
+      await Posthog().alias(alias: id);
+      await Posthog().identify(
+        userId: id,
+        userProperties: {
+          if (credential != null) 'credential': credential,
+          if (hasCompletedProfile != null)
+            'has_completed_profile': hasCompletedProfile,
+          if (isPremium != null) 'is_premium': isPremium,
+          if (daysRemaining != null) 'premium_days_remaining': daysRemaining,
+        },
+      );
+      if (personProperties != null && personProperties.isNotEmpty) {
+        await setPersonProperties(personProperties);
+      }
+    } catch (e) {
+      debugPrint('⚠️ PostHog aliasAndIdentifyUser: $e');
+    }
+  }
+
   Future<void> capture(
     String eventName, {
     Map<String, Object?>? properties,
   }) async {
-    if (!_initialized) return;
+    if (!isEnabled) return;
     try {
       final props = <String, Object>{};
       if (properties != null) {
@@ -196,6 +242,45 @@ class AnalyticsService {
   }
 
   // ——— Convenience helpers ———
+
+  Future<void> trackAuthMethodTapped(String method) => capture(
+        AnalyticsEvents.authMethodTapped,
+        properties: {'method': method},
+      );
+
+  Future<void> trackAuthCompleted({
+    required String method,
+    required int userId,
+    String? credential,
+    bool hasCompletedProfile = false,
+    bool? isNewUser,
+  }) async {
+    await capture(
+      AnalyticsEvents.authCompleted,
+      properties: {
+        'method': method,
+        if (isNewUser != null) 'is_new_user': isNewUser,
+      },
+    );
+    await aliasAndIdentifyUser(
+      userId: userId,
+      credential: credential,
+      hasCompletedProfile: hasCompletedProfile,
+      personProperties: {'auth_method': method},
+    );
+  }
+
+  Future<void> trackAuthFailed({
+    required String method,
+    required String reason,
+  }) =>
+      capture(
+        AnalyticsEvents.authFailed,
+        properties: {
+          'method': method,
+          'reason': reason,
+        },
+      );
 
   Future<void> trackLoginStarted(String provider) => capture(
         AnalyticsEvents.loginStarted,

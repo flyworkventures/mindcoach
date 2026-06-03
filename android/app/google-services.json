@@ -14,15 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "705277804468-44as6uuepouglaudcgna3j22lu8bvbqr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.flywork.mindcoach",
-            "certificate_hash": "584b19663715d7e261637c5faa09f8027755f7cc"
-          }
-        },
-        {
-          "client_id": "705277804468-q90n9hvaoovkrbq3d5n1qqaq0j6m1l11.apps.googleusercontent.com",
+          "client_id": "705277804468-4fctl8jn0t0f7i5g2sfaql2ldtdssmss.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.flywork.mindcoach",
@@ -30,8 +22,20 @@
           }
         },
         {
-          "client_id": "705277804468-apmhk9tueifqj824v9eq58c8d8lr2up3.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "705277804468-9i3qsghcfocevhbm98vmq9oq0r9a44ol.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flywork.mindcoach",
+            "certificate_hash": "5d9a2bcc12f446d0e661e4a8758d3958e84a01a9"
+          }
+        },
+        {
+          "client_id": "705277804468-dr9uncu85f72h4crufv38cpk5pr4n660.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flywork.mindcoach",
+            "certificate_hash": "584b19663715d7e261637c5faa09f8027755f7cc"
+          }
         }
       ],
       "api_key": [
@@ -43,11 +47,11 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "705277804468-apmhk9tueifqj824v9eq58c8d8lr2up3.apps.googleusercontent.com",
+              "client_id": "705277804468-b3a82f9k2c3moht7m388lf7mkgu5oo9u.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "705277804468-0h6o4amg21fn428s15nf1nvb5npk3ct8.apps.googleusercontent.com",
+              "client_id": "705277804468-1o6rltu0c8voqma3lkvmdda031aq6gf3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.flywork.mindcoachapp"

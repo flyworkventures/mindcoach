@@ -10,10 +10,34 @@ abstract final class AnalyticsEvents {
   static const String onboardingSwiped = 'onboarding_swiped';
   static const String onboardingCompleted = 'onboarding_completed';
 
-  // Auth
+  // Auth (legacy — prefer auth* funnel events below)
   static const String loginStarted = 'login_started';
   static const String loginCompleted = 'login_completed';
   static const String loginFailed = 'login_failed';
+
+  // Auth funnel (HTML stage 09)
+  static const String authScreenViewed = 'auth_screen_viewed';
+  static const String authMethodTapped = 'auth_method_tapped';
+  static const String authCompleted = 'auth_completed';
+  static const String authFailed = 'auth_failed';
+
+  // Profile setup funnel (HTML stage 03)
+  static const String profileStepViewed = 'profile_step_viewed';
+  static const String profileStepCompleted = 'profile_step_completed';
+  static const String profileBackTapped = 'profile_back_tapped';
+  static const String profileCompleted = 'profile_completed';
+
+  // Coach matching (HTML stage 04)
+  static const String coachMatchesViewed = 'coach_matches_viewed';
+  static const String coachCardSwiped = 'coach_card_swiped';
+  static const String coachSkipped = 'coach_skipped';
+  static const String coachBookTapped = 'coach_book_tapped';
+
+  // Demo + premium offer (HTML stage 06–07)
+  static const String demoSessionCompleted = 'demo_session_completed';
+  static const String premiumOfferViewed = 'premium_offer_viewed';
+  static const String premiumPurchaseTapped = 'premium_purchase_tapped';
+  static const String continueFreeTapped = 'continue_free_tapped';
   static const String logoutCompleted = 'logout_completed';
   static const String accountDeleted = 'account_deleted';
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,6 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mindcoach/Riverpod/Controllers/ProfileSetupController/profile_setup_controller.dart';
 import 'package:mindcoach/Riverpod/Controllers/all_controllers.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
+import 'package:mindcoach/core/analytics/funnel_analytics.dart';
 import 'package:mindcoach/View/ProfileSetupView/constants/meeting_time_constants.dart';
 import 'package:mindcoach/View/ProfileSetupView/domain/profile_models.dart';
 import 'package:mindcoach/View/specialists_screen/specialist_detail_screen.dart';
@@ -56,6 +60,7 @@ class FindCoachStep extends ConsumerStatefulWidget {
 class _FindCoachStepState extends ConsumerState<FindCoachStep> {
   int _index = 0;
   bool _isSubmitting = false;
+  bool _matchesViewTracked = false;
   Offset _dragOffset = Offset.zero;
   static const double _horizontalSwipeThreshold = 90;
   static const int _maxDisplayCoaches = 3;
@@ -64,12 +69,73 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
   int? _displayPoolCacheKey;
   List<ConsultantModel>? _displayCoaches;
 
+  void _maybeTrackMatchesViewed() {
+    if (_matchesViewTracked) return;
+    final matched = _matchedCoaches();
+    if (matched.isEmpty) return;
+    _matchesViewTracked = true;
+    final props = FunnelAnalytics.coachMatchesViewedProps(widget.profileState);
+    props['match_count'] = matched.length;
+    unawaited(
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.coachMatchesViewed,
+        properties: props,
+      ),
+    );
+  }
+
+  void _trackCoachCardSwiped() {
+    final matched = _matchedCoaches();
+    if (matched.isEmpty) return;
+    final coach = matched[_index % matched.length];
+    unawaited(
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.coachCardSwiped,
+        properties: {
+          'coach_id': coach.id.toString(),
+          'position': _index,
+        },
+      ),
+    );
+  }
+
+  void _trackCoachSkipped() {
+    final matched = _matchedCoaches();
+    if (matched.isEmpty) return;
+    final coach = matched[_index % matched.length];
+    unawaited(
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.coachSkipped,
+        properties: {
+          'coach_id': coach.id.toString(),
+          'position': _index,
+        },
+      ),
+    );
+  }
+
+  void _trackCoachBookTapped() {
+    final matched = _matchedCoaches();
+    if (matched.isEmpty) return;
+    final coach = matched[_index % matched.length];
+    unawaited(
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.coachBookTapped,
+        properties: {
+          'coach_id': coach.id.toString(),
+          'position': _index,
+        },
+      ),
+    );
+  }
+
   @override
   void didUpdateWidget(covariant FindCoachStep oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (_index >= _matchedCoaches().length && _matchedCoaches().isNotEmpty) {
       _index = 0;
     }
+    _maybeTrackMatchesViewed();
   }
 
   /// Alan filtresi sonrası aday havuzu (henüz 3 ile sınırlı değil).
@@ -153,16 +219,19 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
     }
   }
 
-  void _skipToNextCoach() {
+  void _skipToNextCoach({bool trackSkipEvent = false}) {
     final len = _matchedCoaches().length;
     if (len <= 1) return;
+    if (trackSkipEvent) _trackCoachSkipped();
     setState(() => _index = (_index + 1) % len);
+    _trackCoachCardSwiped();
   }
 
   void _goToPreviousCoach() {
     final len = _matchedCoaches().length;
     if (len <= 1) return;
     setState(() => _index = (_index - 1 + len) % len);
+    _trackCoachCardSwiped();
   }
 
   Future<void> _selectCurrentCoach() async {
@@ -171,6 +240,7 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
     if (matched.isEmpty) return;
     final coach = matched[_index % matched.length];
 
+    _trackCoachBookTapped();
     setState(() => _isSubmitting = true);
     try {
       // Riverpod state'inde secili kocu isaretle (UI tarafinda kullanilan
@@ -184,7 +254,11 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) =>
-              SpecialistDetailScreen(specialist: coach, isTrial: true),
+              SpecialistDetailScreen(
+                specialist: coach,
+                isTrial: true,
+                profileSource: 'book_button',
+              ),
         ),
       );
     } catch (_) {
@@ -204,6 +278,10 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
     final matched = _matchedCoaches();
     final hasCoach = matched.isNotEmpty;
     final coach = hasCoach ? matched[_index % matched.length] : null;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeTrackMatchesViewed();
+    });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +308,7 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
                       if (dx >= _horizontalSwipeThreshold) {
                         _goToPreviousCoach();
                       } else if (dx <= -_horizontalSwipeThreshold) {
-                        _skipToNextCoach();
+                        _skipToNextCoach(trackSkipEvent: true);
                       }
                       setState(() => _dragOffset = Offset.zero);
                     },
@@ -622,7 +700,7 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: _skipToNextCoach,
+              onTap: () => _skipToNextCoach(trackSkipEvent: true),
               child: Container(
                 width: 64,
                 height: 64,

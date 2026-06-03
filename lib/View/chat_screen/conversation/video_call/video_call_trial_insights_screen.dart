@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
+import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/services/video_call_insights_service.dart';
 import 'package:mindcoach/core/utils/local_db_keys.dart';
@@ -29,6 +32,29 @@ class VideoCallTrialInsightsScreen extends StatefulWidget {
 class _VideoCallTrialInsightsScreenState
     extends State<VideoCallTrialInsightsScreen> {
   Future<VideoCallInsightsResult>? _future;
+  bool _demoOfferTracked = false;
+
+  void _trackDemoAndOfferIfNeeded(VideoCallInsightsResult data) {
+    if (_demoOfferTracked) return;
+    _demoOfferTracked = true;
+    final locked = data.highlights.length > 3 ? data.highlights.length - 3 : 0;
+    final unlocked = data.highlights.length - locked;
+    unawaited(
+      AnalyticsService.instance.capture(
+        AnalyticsEvents.demoSessionCompleted,
+        properties: {
+          'coach_id': widget.specialist.id.toString(),
+          'duration_seconds': widget.durationSeconds,
+          'awareness_score': data.mindfulnessScore,
+          'insights_unlocked_count': unlocked,
+          'insights_locked_count': locked,
+        },
+      ),
+    );
+    unawaited(
+      AnalyticsService.instance.capture(AnalyticsEvents.premiumOfferViewed),
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -68,7 +94,11 @@ class _VideoCallTrialInsightsScreenState
     );
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const TrialActivatedScreen()),
+      MaterialPageRoute(
+        builder: (_) => TrialActivatedScreen(
+          trackTrialActivated: !openPaywallAfterLogin,
+        ),
+      ),
     );
   }
 
@@ -120,6 +150,7 @@ class _VideoCallTrialInsightsScreenState
                 );
               }
               final data = snapshot.data!;
+              _trackDemoAndOfferIfNeeded(data);
               return Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Column(
@@ -183,6 +214,11 @@ class _VideoCallTrialInsightsScreenState
                           ),
                         ),
                         onPressed: () {
+                          unawaited(
+                            AnalyticsService.instance.capture(
+                              AnalyticsEvents.premiumPurchaseTapped,
+                            ),
+                          );
                           _openTrialActivatedPage(openPaywallAfterLogin: true);
                         },
                         child: Text(
@@ -210,6 +246,11 @@ class _VideoCallTrialInsightsScreenState
                     ),
                     TextButton(
                       onPressed: () {
+                        unawaited(
+                          AnalyticsService.instance.capture(
+                            AnalyticsEvents.continueFreeTapped,
+                          ),
+                        );
                         _openTrialActivatedPage(openPaywallAfterLogin: false);
                       },
                       child: Text(
@@ -582,7 +623,9 @@ class _HighlightCard extends StatelessWidget {
 }
 
 class TrialActivatedScreen extends StatefulWidget {
-  const TrialActivatedScreen({super.key});
+  final bool trackTrialActivated;
+
+  const TrialActivatedScreen({super.key, this.trackTrialActivated = true});
 
   @override
   State<TrialActivatedScreen> createState() => _TrialActivatedScreenState();
@@ -628,7 +671,21 @@ class _TrialActivatedScreenState extends State<TrialActivatedScreen> {
     Future<void>.delayed(const Duration(milliseconds: 280), () {
       if (!mounted) return;
       setState(() => _switchOn = true);
+      if (widget.trackTrialActivated) {
+        unawaited(_trackTrialActivated());
+      }
       _continueFlow();
+    });
+  }
+
+  Future<void> _trackTrialActivated() async {
+    await AnalyticsService.instance.capture(
+      AnalyticsEvents.premiumTrialActivated,
+      properties: {'trial_days': 3},
+    );
+    await AnalyticsService.instance.setPersonProperties({
+      'trial_status': 'active',
+      'trial_start_date': DateTime.now().toUtc().toIso8601String(),
     });
   }
 

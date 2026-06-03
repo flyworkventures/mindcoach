@@ -39,11 +39,24 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
+                <!-- google-services.json oauth_client (client_type: 1) — güncel 2026-06 -->
                 <intent-filter>
                     <action android:name="android.intent.action.VIEW"/>
                     <category android:name="android.intent.category.DEFAULT"/>
                     <category android:name="android.intent.category.BROWSABLE"/>
-                    <data android:scheme="com.googleusercontent.apps.705277804468-44as6uuepouglaudcgna3j22lu8bvbqr"/>
+                    <data android:scheme="com.googleusercontent.apps.705277804468-dr9uncu85f72h4crufv38cpk5pr4n660"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <category android:name="android.intent.category.BROWSABLE"/>
+                    <data android:scheme="com.googleusercontent.apps.705277804468-4fctl8jn0t0f7i5g2sfaql2ldtdssmss"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <category android:name="android.intent.category.BROWSABLE"/>
+                    <data android:scheme="com.googleusercontent.apps.705277804468-9i3qsghcfocevhbm98vmq9oq0r9a44ol"/>
                 </intent-filter>
         </activity>
         
