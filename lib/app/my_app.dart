@@ -119,7 +119,11 @@ class _MyAppState extends ConsumerState<MyApp> {
           ),
           builder: (context, child) {
             SizeConfig.init(context);
-            return InAppNotification(child: child!);
+            final appChild = InAppNotification(child: child!);
+            if (!AnalyticsService.instance.isEnabled) {
+              return appChild;
+            }
+            return PostHogWidget(child: appChild);
           },
         );
       },

@@ -59,12 +59,19 @@ class _VideoCallTrialInsightsScreenState
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _future ??= VideoCallInsightsService().buildInsights(
+    if (_future != null) return;
+    _future = VideoCallInsightsService().buildInsights(
       consultantId: widget.specialist.id,
       durationSeconds: widget.durationSeconds,
       transcriptTurns: widget.transcriptTurns,
       coachName: _coachName(),
       localeCode: Localizations.localeOf(context).languageCode,
+    );
+    unawaited(
+      _future!.then((data) {
+        if (!mounted) return;
+        _trackDemoAndOfferIfNeeded(data);
+      }),
     );
   }
 
@@ -150,7 +157,6 @@ class _VideoCallTrialInsightsScreenState
                 );
               }
               final data = snapshot.data!;
-              _trackDemoAndOfferIfNeeded(data);
               return Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Column(

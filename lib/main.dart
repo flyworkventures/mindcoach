@@ -50,7 +50,11 @@ Future<void> _initializePremiumSystem() async {
   try {
     final deviceId = await DeviceUtils.getDeviceId();
     debugPrint('📱 Device ID: $deviceId');
-    await AnalyticsService.instance.identifyDevice(deviceId);
+    // identifyDevice burada kasıtlı olarak çağrılmıyor.
+    // Stage 1–8 boyunca kullanıcı PostHog'da anonim kalmalı; erken identify
+    // funnel event'lerini device_<id> altında kilitler ve auth_completed
+    // sonrasındaki alias→identify birleştirmesini bozar.
+    // identifyDevice yalnızca logout sonrası (_resetAnalyticsIdentity) çağrılır.
 
     final localDb = LocalDbService();
     final hasLaunchedBefore =

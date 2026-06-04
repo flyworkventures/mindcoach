@@ -23,7 +23,6 @@ import 'package:mindcoach/Services/rive_preload_service.dart';
 import 'package:mindcoach/View/specialists_screen/specialists_notifier.dart';
 import 'package:mindcoach/View/chat_screen/conversation/video_call/video_call_trial_insights_screen.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
-import 'package:mindcoach/core/routes/page_routes.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/call_permissions.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
@@ -1852,10 +1851,17 @@ class _VideoCallRealtimeScreenState
     await _resetAudioSession();
     if (!mounted) return;
     if (navigateToLogin) {
-      Navigator.of(
-        context,
-        rootNavigator: true,
-      ).pushNamedAndRemoveUntil(PageRoutes.login, (route) => false);
+      await _persistVideoTrialUsageOnce();
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => VideoCallTrialInsightsScreen(
+            specialist: widget.specialist,
+            durationSeconds: _secondsElapsed,
+            transcriptTurns: List<Map<String, String>>.from(_transcriptTurns),
+          ),
+        ),
+      );
       return;
     }
     Navigator.of(context).pop();

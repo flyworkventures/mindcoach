@@ -28,9 +28,11 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 |--------|--------|
 | `58:4B:19:66:...` | Debug (çoğu Mac) — `google-services.json` içinde var |
 | `79:7E:06:14:...` | Release — `google-services.json` içinde var |
-| `5D:9A:2B:CC:...` | Yeni eklenen — **json’da yoksa giriş çalışmaz** |
+| `5D:9A:2B:CC:...` | **Play Store** (Uygulama imzalama anahtarı) — mağaza sürümü için zorunlu |
 
-**Play Store** kullanıyorsan: Play Console → Setup → App integrity → **App signing key certificate** SHA-1’ini de Firebase’e ekle.
+**Play Store** kullanıyorsan: Play Console → **Uygulama imzalama** → **Uygulama imzalama anahtarı sertifikası** SHA-1’ini Firebase’e ekle (Yükleme anahtarı değil).
+
+> Mağazadan indirilen APK, Google’ın **uygulama imzalama** anahtarıyla imzalanır. Yerel release/debug SHA’ları tek başına Play sürümünü kurtarmaz.
 
 ## 3. google-services.json yeniden indir (zorunlu)
 
@@ -40,7 +42,7 @@ SHA ekledikten sonra:
 2. `android/app/google-services.json` dosyasının üzerine yaz
 3. `oauth_client` içinde **her SHA için** bir `client_type: 1` satırı olmalı
 
-Şu anki dosyada yalnızca 2 Android client var; Firebase’de 3 SHA-1 görünüyorsa json **güncel değil**.
+`oauth_client` içinde **3 adet** `client_type: 1` satırı olmalı (debug, yükleme, uygulama imzalama). Eksikse json güncel değildir.
 
 Üçüncü client eklendikten sonra `AndroidManifest.xml` içine o client’ın reversed scheme’ini de ekle:
 
@@ -60,7 +62,17 @@ Google Cloud’da elle **Android client 2** (`5D:9A:2B:CC...`) oluşturmuş olab
 
 Authentication → Sign-in method → **Google** → Enabled.
 
-## 6. Temiz build
+## 6. Play Store’a yeni sürüm gönder (kritik)
+
+Firebase + `google-services.json` güncellendikten sonra **mutlaka yeni AAB** yükleyin. Kullanıcıların cihazındaki eski APK eski json ile derlenmişse Google girişi çalışmaz.
+
+```bash
+flutter build appbundle --release
+```
+
+Play Console → Production / Internal testing → yeni sürüm yayınlayın.
+
+## 7. Temiz build (yerel test)
 
 ```bash
 flutter clean
@@ -71,7 +83,11 @@ cd .. && flutter run
 
 SHA değişikliğinden sonra **10–15 dakika** bekle.
 
-## 7. Paket adı
+## 8. OAuth consent screen
+
+[Google Cloud Console](https://console.cloud.google.com/apis/credentials/consent) → OAuth consent screen → **Production** (veya test kullanıcıları listesinde değilseniz mağaza kullanıcıları giriş yapamaz).
+
+## 9. Paket adı
 
 `applicationId` = `com.flywork.mindcoach` (Firebase ile aynı olmalı).
 
@@ -83,6 +99,7 @@ SHA değişikliğinden sonra **10–15 dakika** bekle.
 | Hemen “iptal” / Error 16 | Çoğunlukla yanlış OAuth yapılandırması (Credential Manager “canceled” gibi döner) |
 | Debug çalışır, release çalışmaz | Release SHA veya release intent-filter eksik |
 | Başka PC’de çalışmaz | O makinenin debug SHA’sı Firebase’de yok |
+| Play’den indirilen çalışmaz, debug çalışır | Uygulama imzalama SHA eksik veya **eski mağaza build’i** |
 
 Kod: `lib/core/repo/auth_repository.dart` — Android’de `serverClientId` = Web client (`b3a82f9k...`).
 

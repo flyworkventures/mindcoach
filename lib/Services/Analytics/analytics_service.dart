@@ -39,6 +39,10 @@ class AnalyticsService {
       config.host = AppConstants.postHogHost;
       config.debug = kDebugMode;
       config.captureApplicationLifecycleEvents = true;
+      // PostHog panelinde Project Settings → Record user sessions açık olmalı.
+      config.sessionReplay = true;
+      config.sessionReplayConfig.maskAllTexts = false;
+      config.sessionReplayConfig.maskAllImages = false;
       await Posthog().setup(config);
       _initialized = true;
 
@@ -255,6 +259,7 @@ class AnalyticsService {
     bool hasCompletedProfile = false,
     bool? isNewUser,
   }) async {
+    final now = DateTime.now().toUtc().toIso8601String();
     await capture(
       AnalyticsEvents.authCompleted,
       properties: {
@@ -266,7 +271,14 @@ class AnalyticsService {
       userId: userId,
       credential: credential,
       hasCompletedProfile: hasCompletedProfile,
-      personProperties: {'auth_method': method},
+      personProperties: {
+        'auth_method': method,
+        // is_new_user kalıcı person property (event'te de var, spec gereği ikisi birden).
+        if (isNewUser != null) 'is_new_user': isNewUser,
+        // signup_date yalnızca yeni kullanıcılarda set edilir; tekrar login'de
+        // üzerine yazılmasın diye isNewUser==true koşulu zorunlu.
+        if (isNewUser == true) 'signup_date': now,
+      },
     );
   }
 
