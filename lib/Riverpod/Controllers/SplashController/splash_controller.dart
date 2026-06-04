@@ -39,8 +39,10 @@ Future init() async {
         await AnalyticsService.instance.capture(
           AnalyticsEvents.sessionRestored,
           properties: {
-            'user_id': providerModel.id,
-            'credential': providerModel.credential ?? 'unknown',
+            // user_id event'e eklenmez (PII); kullanıcı kimliği
+            // hemen ardından gelen identifyUser çağrısıyla PostHog'a iletilir.
+            'auth_method': providerModel.credential ?? 'unknown',
+            'has_completed_profile': providerModel.answerData != null,
           },
         );
         await AnalyticsService.instance.identifyUser(
