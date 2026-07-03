@@ -817,6 +817,9 @@ class AppLocalizationsKo extends AppLocalizations {
       '__MIND가이드__ 경험을 개선하기 위해 떠나는 이유를 알려주실 수 있나요?';
 
   @override
+  String get deleteAccountReasonRequired => '이유를 선택하거나 메시지를 입력해 주세요.';
+
+  @override
   String get deleteReasonNotRealistic => 'AI 캐릭터가 현실적이지 않다고 느꼈습니다.';
 
   @override
@@ -847,7 +850,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get switchTo1MonthPlan => '1개월 플랜으로 전환';
 
   @override
-  String get monthlyPlanPrice => '\$79/월, 언제든지 취소 가능';
+  String get monthlyPlanPrice => '\$1.99/월, 언제든지 취소 가능';
 
   @override
   String get noLongTermCommitment => '장기 약정 없음. 월 단위로 커뮤니티와 계속 연결하세요.';
@@ -886,7 +889,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get stayAnd60Off => '남아서 1개월 50% 할인 받기';
 
   @override
-  String get bestOfferPrice => '역대 최고의 제안. 단 \$1.49/월';
+  String get bestOfferPrice => '역대 최고의 제안. 단 \$0.99/월';
 
   @override
   String get accept60OffAndStay => '50% 할인 수락 & 남기';
@@ -1787,6 +1790,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get coachDetailCreateAppointment => '예약 만들기';
 
   @override
+  String get coachDetailSelectTime => '시간 선택';
+
+  @override
   String get searchSoundHint => '소리, 분위기, 느낌 검색..';
 
   @override
@@ -2111,6 +2117,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get trialEndedAction => '로그인하고 계속하기';
+
+  @override
+  String get guestPremiumRequiredTitle => 'Premium을 위해 로그인';
+
+  @override
+  String get guestPremiumRequiredMessage =>
+      'Premium을 이용하려면 Google 또는 Apple로 로그인해야 합니다.';
+
+  @override
+  String get guestPremiumSignInAction => '로그인';
 
   @override
   String get noUpcomingAppointments => '예정된 예약이 없습니다';

@@ -1684,6 +1684,12 @@ abstract class AppLocalizations {
   /// **'To help us improve the MindCoach experience, could you tell us why you\'re leaving?'**
   String get deleteAccountImproveQuestion;
 
+  /// No description provided for @deleteAccountReasonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a reason or write a message.'**
+  String get deleteAccountReasonRequired;
+
   /// No description provided for @deleteReasonNotRealistic.
   ///
   /// In en, this message translates to:
@@ -1747,7 +1753,7 @@ abstract class AppLocalizations {
   /// No description provided for @monthlyPlanPrice.
   ///
   /// In en, this message translates to:
-  /// **'\$79/month, cancel anytime'**
+  /// **'\$1.99/month, cancel anytime'**
   String get monthlyPlanPrice;
 
   /// No description provided for @noLongTermCommitment.
@@ -1825,7 +1831,7 @@ abstract class AppLocalizations {
   /// No description provided for @bestOfferPrice.
   ///
   /// In en, this message translates to:
-  /// **'Our best offer ever. Just \$1.49/month'**
+  /// **'Our best offer ever. Just \$0.99/month'**
   String get bestOfferPrice;
 
   /// No description provided for @accept60OffAndStay.
@@ -3364,6 +3370,12 @@ abstract class AppLocalizations {
   /// **'Create an appointment'**
   String get coachDetailCreateAppointment;
 
+  /// No description provided for @coachDetailSelectTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time'**
+  String get coachDetailSelectTime;
+
   /// No description provided for @searchSoundHint.
   ///
   /// In en, this message translates to:
@@ -3993,6 +4005,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign in to continue'**
   String get trialEndedAction;
+
+  /// No description provided for @guestPremiumRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in for Premium'**
+  String get guestPremiumRequiredTitle;
+
+  /// No description provided for @guestPremiumRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'To go Premium, you need to sign in with Google or Apple.'**
+  String get guestPremiumRequiredMessage;
+
+  /// No description provided for @guestPremiumSignInAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get guestPremiumSignInAction;
 
   /// No description provided for @noUpcomingAppointments.
   ///

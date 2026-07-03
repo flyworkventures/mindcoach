@@ -804,6 +804,9 @@ class AppLocalizationsZh extends AppLocalizations {
       '为了改善 __MIND向导__ 体验，您能告诉我们您离开的原因吗？';
 
   @override
+  String get deleteAccountReasonRequired => '请选择一个原因或写下留言。';
+
+  @override
   String get deleteReasonNotRealistic => '我觉得 AI 角色不够真实。';
 
   @override
@@ -834,7 +837,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get switchTo1MonthPlan => '切换至1个月计划';
 
   @override
-  String get monthlyPlanPrice => '\$79/月，随时取消';
+  String get monthlyPlanPrice => '\$1.99/月，随时取消';
 
   @override
   String get noLongTermCommitment => '无长期承诺。按月与我们的社区保持联系。';
@@ -873,7 +876,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get stayAnd60Off => '留下并享受1个月50%折扣';
 
   @override
-  String get bestOfferPrice => '我们有史以来最好的优惠。仅\$1.49/月';
+  String get bestOfferPrice => '我们有史以来最好的优惠。仅\$0.99/月';
 
   @override
   String get accept60OffAndStay => '接受50%折扣并留下';
@@ -1709,6 +1712,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get coachDetailCreateAppointment => '创建预约';
 
   @override
+  String get coachDetailSelectTime => '选择时间';
+
+  @override
   String get searchSoundHint => '搜索声音、心情、氛围..';
 
   @override
@@ -2032,6 +2038,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get trialEndedAction => '登录以继续';
+
+  @override
+  String get guestPremiumRequiredTitle => '登录以使用 Premium';
+
+  @override
+  String get guestPremiumRequiredMessage =>
+      '要使用 Premium，您需要通过 Google 或 Apple 登录。';
+
+  @override
+  String get guestPremiumSignInAction => '登录';
 
   @override
   String get noUpcomingAppointments => '暂无即将到来的预约';

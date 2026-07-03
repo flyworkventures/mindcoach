@@ -736,7 +736,12 @@ class _SpecialistDetailScreenState
                     } else if (premiumState.isPremium) {
                       isTrial = false;
                     } else {
-                      await presentProOffersPaywall();
+                      final isGuest =
+                          (ref.read(AllProviders.userProvider)?.credential ??
+                                  '')
+                              .toLowerCase() ==
+                          'guest';
+                      await presentPaywallForUser(context, isGuest: isGuest);
                       return;
                     }
                     if (!context.mounted) return;
@@ -950,7 +955,7 @@ class _SpecialistDetailScreenState
       final dt = DateTime(2000, 1, 1, int.parse(parts[0]), int.parse(parts[1]));
       timeLabel = DateFormat.jm(localeTag).format(dt);
     } else {
-      timeLabel = 'Select Time';
+      timeLabel = context.l10n.coachDetailSelectTime;
     }
 
     return Column(

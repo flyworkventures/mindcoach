@@ -14,6 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_pcm_sound/flutter_pcm_sound.dart' as pcm;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mindcoach/Riverpod/Providers/all_providers.dart'
+    as app_providers;
 import 'package:mindcoach/Riverpod/Providers/premium_provider.dart'
     as AllProviders;
 import 'package:mindcoach/Services/Analytics/analytics_service.dart';
@@ -278,7 +280,11 @@ class _VideoCallRealtimeScreenState
     if (!widget.isTrial &&
         !widget.isAnalysis &&
         !ref.read(AllProviders.premiumProvider).isPremium) {
-      await presentProOffersPaywall();
+      final isGuest =
+          (ref.read(app_providers.AllProviders.userProvider)?.credential ?? '')
+              .toLowerCase() ==
+          'guest';
+      if (mounted) await presentPaywallForUser(context, isGuest: isGuest);
       if (mounted) Navigator.of(context).pop();
       return;
     }

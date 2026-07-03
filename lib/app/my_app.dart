@@ -229,6 +229,9 @@ class _MyAppState extends ConsumerState<MyApp> {
       final expiryDate = expiryStr != null ? DateTime.tryParse(expiryStr) : null;
       final productId = entitlement.productIdentifier;
       final receipt = info.originalAppUserId;
+      // 3 günlük ücretsiz deneme (introductory offer) ya da trial döneminde mi?
+      final isTrial = entitlement.periodType == PeriodType.trial ||
+          entitlement.periodType == PeriodType.intro;
 
       // Aynı satın almayı tekrar tekrar işlememek için: zaten satın alındı
       // işaretliyse ve expiry değişmediyse no-op.
@@ -256,6 +259,8 @@ class _MyAppState extends ConsumerState<MyApp> {
           userId: currentUserId,
           receiptData: receipt,
           packageIdentifier: productId,
+          expiryDate: expiryDate,
+          isTrial: isTrial,
         );
         debugPrint('✅ Backend confirmPurchase başarılı (userId=$currentUserId).');
       } catch (e) {

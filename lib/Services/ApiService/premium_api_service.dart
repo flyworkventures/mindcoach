@@ -68,6 +68,8 @@ class PremiumApiService {
     int? userId,
     required String receiptData,
     required String packageIdentifier,
+    DateTime? expiryDate,
+    bool isTrial = false,
   }) async {
     try {
       final url = Uri.parse('${AppConstants.baseURL}$_endpoint');
@@ -77,6 +79,10 @@ class PremiumApiService {
         if (userId != null) 'userId': userId,
         'receiptData': receiptData,
         'packageIdentifier': packageIdentifier,
+        // RevenueCat'ten gelen GERÇEK bitiş tarihi (3 gün deneme dahil).
+        // Backend bunu kullanır; sabit +1 yıl varsaymaz.
+        if (expiryDate != null) 'expiryDate': expiryDate.toUtc().toIso8601String(),
+        'isTrial': isTrial,
         'timestamp': DateTime.now().toIso8601String(),
       };
 

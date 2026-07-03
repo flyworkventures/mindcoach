@@ -847,6 +847,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'MindCoach deneyimini iyileştirmemiz için bize neden ayrılmak istediğini söyler misin?';
 
   @override
+  String get deleteAccountReasonRequired =>
+      'Lütfen bir neden seç veya bir mesaj yaz.';
+
+  @override
   String get deleteReasonNotRealistic =>
       'Yapay zeka karakterlerini gerçekçi bulmadım.';
 
@@ -882,7 +886,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get switchTo1MonthPlan => '1 Aylık Plana Geç';
 
   @override
-  String get monthlyPlanPrice => '\$79/ay, istediğin zaman iptal et';
+  String get monthlyPlanPrice => '\$1.99/ay, istediğin zaman iptal et';
 
   @override
   String get noLongTermCommitment =>
@@ -926,7 +930,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get bestOfferPrice =>
-      'Şimdiye kadarki en iyi teklifimiz. Sadece ₺79,99/ay';
+      'Şimdiye kadarki en iyi teklifimiz. Sadece \$0.99/ay';
 
   @override
   String get accept60OffAndStay => '%50 İndirimi Kabul Et & Kal';
@@ -1834,6 +1838,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get coachDetailCreateAppointment => 'Randevu oluştur';
 
   @override
+  String get coachDetailSelectTime => 'Saat Seç';
+
+  @override
   String get searchSoundHint => 'Sesleri, ruh hallerini, tınıları ara..';
 
   @override
@@ -2164,6 +2171,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get trialEndedAction => 'Devam etmek için giriş yap';
+
+  @override
+  String get guestPremiumRequiredTitle => 'Premium için giriş yap';
+
+  @override
+  String get guestPremiumRequiredMessage =>
+      'Premium\'a geçebilmek için Google veya Apple ile giriş yapman gerekiyor.';
+
+  @override
+  String get guestPremiumSignInAction => 'Giriş yap';
 
   @override
   String get noUpcomingAppointments => 'Yaklaşan randevu yok';

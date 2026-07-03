@@ -14,6 +14,7 @@ import '../View/chat_screen/chat_notifier.dart';
 import '../View/chat_screen/presentation/pages/chat_screen.dart';
 import '../View/profile_screen/presentation/profile_screen.dart';
 import '../View/specialists_screen/specialists_screen.dart';
+import '../core/utils/premium_sync.dart';
 import '../features/notifications/notification_notifier.dart';
 import 'navbar_provider.dart';
 
@@ -66,9 +67,12 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    // Uygulama ön plana gelince bildirim + chat yenile
+    // Uygulama ön plana gelince bildirim + chat + premium durumunu yenile
     if (state == AppLifecycleState.resumed) {
       _refreshRealtimeData();
+      // Premium durumunu backend ile tazele: kullanıcı uygulama açıkken
+      // abonelik süresi dolduysa / iptal edildiyse anında yansısın.
+      unawaited(syncPremiumFromBackend(ref));
       try {
         ref.read(chatProvider.notifier).refreshChats();
       } catch (e) {

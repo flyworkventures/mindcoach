@@ -630,18 +630,26 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
     super.dispose();
   }
 
+  void _dismissKeyboard() {
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+    return GestureDetector(
+      onTap: _dismissKeyboard,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
         ),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -748,6 +756,8 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
                               maxLines: 3,
                               minLines: 2,
                               controller: _messageController,
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => _dismissKeyboard(),
                               style: const TextStyle(
                                 fontFamily: 'Geist',
                                 fontSize: 12,
@@ -779,7 +789,10 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () {
+                            _dismissKeyboard();
+                            Navigator.of(context).pop();
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 30,
@@ -806,6 +819,7 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () {
+                            _dismissKeyboard();
                             final reasons = _getReasons(context);
                             final selectedReason =
                                 (_selectedIndex != null &&
@@ -813,10 +827,28 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
                                     _selectedIndex! < reasons.length)
                                 ? reasons[_selectedIndex!]
                                 : null;
+                            final typedMessage =
+                                _messageController.text.trim();
+
+                            // Kullanıcı ya bir sebep seçmeli ya da bir mesaj
+                            // yazmalı; ikisi de boşsa ileri gitme.
+                            if (selectedReason == null &&
+                                typedMessage.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    context.l10n.deleteAccountReasonRequired,
+                                  ),
+                                  backgroundColor: const Color(0xFFE53935),
+                                ),
+                              );
+                              return;
+                            }
+
                             widget.onNext(
                               DeleteAccountFeedback(
                                 reason: selectedReason,
-                                message: _messageController.text.trim(),
+                                message: typedMessage,
                               ),
                             );
                           },
@@ -854,6 +886,7 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -862,6 +895,7 @@ class _DeleteAccountBottomSheetState extends State<_DeleteAccountBottomSheet> {
 
     return InkWell(
       onTap: () {
+        _dismissKeyboard();
         setState(() {
           _selectedIndex = index;
         });

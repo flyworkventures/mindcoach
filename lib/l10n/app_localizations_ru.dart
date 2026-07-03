@@ -865,6 +865,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Чтобы улучшить опыт использования __MINDнаставник__, не могли бы вы рассказать, почему уходите?';
 
   @override
+  String get deleteAccountReasonRequired =>
+      'Пожалуйста, выберите причину или напишите сообщение.';
+
+  @override
   String get deleteReasonNotRealistic =>
       'Я не нашёл персонажей ИИ реалистичными.';
 
@@ -900,7 +904,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get switchTo1MonthPlan => 'Перейти на план на 1 месяц';
 
   @override
-  String get monthlyPlanPrice => '\$79/месяц, отмена в любое время';
+  String get monthlyPlanPrice => '\$1.99/месяц, отмена в любое время';
 
   @override
   String get noLongTermCommitment =>
@@ -945,7 +949,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get stayAnd60Off => 'Останьтесь и получите скидку 50% на 1 месяц';
 
   @override
-  String get bestOfferPrice => 'Наше лучшее предложение. Всего \$1.49/месяц';
+  String get bestOfferPrice => 'Наше лучшее предложение. Всего \$0.99/месяц';
 
   @override
   String get accept60OffAndStay => 'Принять скидку 50% и остаться';
@@ -1854,6 +1858,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get coachDetailCreateAppointment => 'Назначить встречу';
 
   @override
+  String get coachDetailSelectTime => 'Выберите время';
+
+  @override
   String get searchSoundHint => 'Искать звуки, настроения, атмосферу..';
 
   @override
@@ -2191,6 +2198,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get trialEndedAction => 'Войти, чтобы продолжить';
+
+  @override
+  String get guestPremiumRequiredTitle => 'Войдите для Premium';
+
+  @override
+  String get guestPremiumRequiredMessage =>
+      'Чтобы получить Premium, войдите через Google или Apple.';
+
+  @override
+  String get guestPremiumSignInAction => 'Войти';
 
   @override
   String get noUpcomingAppointments => 'Нет предстоящих встреч';

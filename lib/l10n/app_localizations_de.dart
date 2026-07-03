@@ -862,6 +862,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Um die __MINDBegleiter__-Erfahrung zu verbessern, könntest du uns sagen, warum du gehst?';
 
   @override
+  String get deleteAccountReasonRequired =>
+      'Bitte wähle einen Grund oder schreibe eine Nachricht.';
+
+  @override
   String get deleteReasonNotRealistic =>
       'Ich fand die KI-Charaktere nicht realistisch.';
 
@@ -898,7 +902,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get switchTo1MonthPlan => 'Zum 1-Monats-Plan wechseln';
 
   @override
-  String get monthlyPlanPrice => '\$79/Monat, jederzeit kündbar';
+  String get monthlyPlanPrice => '\$1.99/Monat, jederzeit kündbar';
 
   @override
   String get noLongTermCommitment =>
@@ -943,7 +947,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get bestOfferPrice =>
-      'Unser bestes Angebot aller Zeiten. Nur \$1.49/Monat';
+      'Unser bestes Angebot aller Zeiten. Nur \$0.99/Monat';
 
   @override
   String get accept60OffAndStay => '50% Rabatt annehmen & bleiben';
@@ -1856,6 +1860,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get coachDetailCreateAppointment => 'Einen Termin erstellen';
 
   @override
+  String get coachDetailSelectTime => 'Uhrzeit wählen';
+
+  @override
   String get searchSoundHint => 'Suche nach Sounds, Stimmungen, Vibes..';
 
   @override
@@ -2195,6 +2202,16 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get trialEndedAction => 'Anmelden, um fortzufahren';
+
+  @override
+  String get guestPremiumRequiredTitle => 'Für Premium anmelden';
+
+  @override
+  String get guestPremiumRequiredMessage =>
+      'Um Premium zu nutzen, musst du dich mit Google oder Apple anmelden.';
+
+  @override
+  String get guestPremiumSignInAction => 'Anmelden';
 
   @override
   String get noUpcomingAppointments => 'Keine bevorstehenden Termine';

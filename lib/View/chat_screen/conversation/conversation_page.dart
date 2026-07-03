@@ -23,7 +23,6 @@ import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 import 'package:mindcoach/models/message_model.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../notifiers/conversation_notifier.dart';
@@ -382,7 +381,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       .watch(AllProviders.premiumProvider)
                       .isPremium;
                   if (!isPremium) {
-                    await RevenueCatUI.presentPaywall();
+                    final isGuest =
+                        (ref.read(AllProviders.userProvider)?.credential ?? '')
+                            .toLowerCase() ==
+                        'guest';
+                    await presentPaywallForUser(context, isGuest: isGuest);
                   } else {
                     unawaited(_openVideoCall());
                   }
@@ -402,7 +405,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       .watch(AllProviders.premiumProvider)
                       .isPremium;
                   if (!isPremium) {
-                    await RevenueCatUI.presentPaywall();
+                    final isGuest =
+                        (ref.read(AllProviders.userProvider)?.credential ?? '')
+                            .toLowerCase() ==
+                        'guest';
+                    await presentPaywallForUser(context, isGuest: isGuest);
                   } else {
                     Navigator.pushNamed(
                       context,
@@ -832,10 +839,19 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     });
   }
 
+  /// Guest kullanıcıysa önce login'e yönlendiren, değilse paywall açan yardımcı.
+  Future<void> _presentPaywallGated() async {
+    final isGuest =
+        (ref.read(AllProviders.userProvider)?.credential ?? '').toLowerCase() ==
+        'guest';
+    if (!mounted) return;
+    await presentPaywallForUser(context, isGuest: isGuest);
+  }
+
   Future<void> _openVideoCall() async {
     final premiumState = ref.read(AllProviders.premiumProvider);
     if (!premiumState.isPremium) {
-      await presentProOffersPaywall();
+      await _presentPaywallGated();
       return;
     }
     if (!mounted) return;
@@ -898,7 +914,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             .catchError((Object e) async {
               if (!mounted) return;
               if (e is TrialQuotaExceededException) {
-                await presentProOffersPaywall();
+                await _presentPaywallGated();
                 return;
               }
               debugPrint("❌ Mesaj gönderme hatası: $e");
@@ -960,7 +976,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           .catchError((Object e) async {
             if (!mounted) return;
             if (e is TrialQuotaExceededException) {
-              await presentProOffersPaywall();
+              await _presentPaywallGated();
               return;
             }
             ScaffoldMessenger.of(context).showSnackBar(
@@ -1104,7 +1120,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           .catchError((Object e) async {
             if (!mounted) return;
             if (e is TrialQuotaExceededException) {
-              await presentProOffersPaywall();
+              await _presentPaywallGated();
               return;
             }
             ScaffoldMessenger.of(context).showSnackBar(

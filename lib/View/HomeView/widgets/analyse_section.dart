@@ -22,16 +22,26 @@ class _AnalyseSectionState extends ConsumerState<AnalyseSection> {
   static const _primaryGreen = Color(0xFF21BC87);
   static const _gradientEnd = Color(0xFFF6F6F6);
 
-  /// Psikolojik analizi yürüten karakter (Derin Saner) consultants tablosunda bu id ile tanımlı.
-  static const int _analysisConsultantId = 17;
+  /// Psikolojik analizi yürüten karakter (Sıla Yılmaz / Nova Care) consultants tablosunda bu id ile tanımlı.
+  static const int _analysisConsultantId = 3;
 
-  /// Derin Saner Rive dosyası — url3d boş gelirse yedek olarak kullanılır.
+  /// Sıla Yılmaz Rive dosyası — url3d boş gelirse yedek olarak kullanılır.
   static const String _analysisRiveFallbackUrl =
-      'https://mindcoach.b-cdn.net/Female%20Riv/iris.riv';
+      'https://mindcoach.b-cdn.net/Female%20Riv/f_avatar7.riv';
 
-  /// Kart görseli — Derin Saner karakterinin detay sayfasındaki yandan duruşu.
+  /// Kart görseli — Sıla Yılmaz karakterinin detay ekranındaki yandan duruşu.
+  /// Consultant bulunamazsa yedek olarak kullanılır.
   static const String _analysisCardImageUrl =
-      'https://mindcoach.b-cdn.net/images/c_iris_detail.png';
+      'https://mindcoach.b-cdn.net/c_nova_care_detail.png';
+
+  /// Detay ekranındaki gibi photoURL uzantısından önce `_detail` ekler.
+  String _resolveCardImageUrl(ConsultantModel? consultant) {
+    final photo = consultant?.photoURL.trim();
+    if (photo == null || photo.isEmpty) return _analysisCardImageUrl;
+    final dotIndex = photo.lastIndexOf('.');
+    if (dotIndex == -1) return _analysisCardImageUrl;
+    return '${photo.substring(0, dotIndex)}_detail${photo.substring(dotIndex)}';
+  }
 
   bool _isStarting = false;
 
@@ -214,13 +224,15 @@ class _AnalyseSectionState extends ConsumerState<AnalyseSection> {
                     ),
                   ),
                   SizedBox(
-                    width: 160,
+                    width: 180,
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: AspectRatio(
-                        aspectRatio: 205 / 250,
+                        aspectRatio: 205 / 270,
                         child: CachedNetworkImage(
-                          imageUrl: _analysisCardImageUrl,
+                          imageUrl: _resolveCardImageUrl(
+                            _findAnalysisConsultant(ref),
+                          ),
                           fit: BoxFit.cover,
                           alignment: Alignment.topCenter,
                           placeholder: (_, _) => const SizedBox.shrink(),

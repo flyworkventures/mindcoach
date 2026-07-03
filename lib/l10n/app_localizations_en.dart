@@ -852,6 +852,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'To help us improve the MindCoach experience, could you tell us why you\'re leaving?';
 
   @override
+  String get deleteAccountReasonRequired =>
+      'Please select a reason or write a message.';
+
+  @override
   String get deleteReasonNotRealistic =>
       'I didn\'t find the AI characters realistic.';
 
@@ -888,7 +892,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get switchTo1MonthPlan => 'Switch to 1-Month Plan';
 
   @override
-  String get monthlyPlanPrice => '\$79/month, cancel anytime';
+  String get monthlyPlanPrice => '\$1.99/month, cancel anytime';
 
   @override
   String get noLongTermCommitment =>
@@ -930,7 +934,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stayAnd60Off => 'Stay and get 50% off for 1 month';
 
   @override
-  String get bestOfferPrice => 'Our best offer ever. Just \$1.49/month';
+  String get bestOfferPrice => 'Our best offer ever. Just \$0.99/month';
 
   @override
   String get accept60OffAndStay => 'Accept 50% Off & Stay';
@@ -1838,6 +1842,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coachDetailCreateAppointment => 'Create an appointment';
 
   @override
+  String get coachDetailSelectTime => 'Select Time';
+
+  @override
   String get searchSoundHint => 'Search sounds, moods, vibes..';
 
   @override
@@ -2169,6 +2176,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trialEndedAction => 'Sign in to continue';
+
+  @override
+  String get guestPremiumRequiredTitle => 'Sign in for Premium';
+
+  @override
+  String get guestPremiumRequiredMessage =>
+      'To go Premium, you need to sign in with Google or Apple.';
+
+  @override
+  String get guestPremiumSignInAction => 'Sign in';
 
   @override
   String get noUpcomingAppointments => 'No upcoming appointments';

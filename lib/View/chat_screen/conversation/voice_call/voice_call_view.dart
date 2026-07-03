@@ -116,6 +116,15 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) => _bootstrapVoiceCall());
   }
 
+  /// Guest kullanıcıysa önce login'e yönlendirir, değilse paywall açar.
+  Future<void> _presentPaywallGated() async {
+    final isGuest =
+        (ref.read(AllProviders.userProvider)?.credential ?? '').toLowerCase() ==
+        'guest';
+    if (!mounted) return;
+    await presentPaywallForUser(context, isGuest: isGuest);
+  }
+
   Future<void> _bootstrapVoiceCall() async {
     if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
       final ok = await ensureMicrophonePermission();
@@ -127,7 +136,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
     }
     // 🎤 PREMIUM KONTROLÜ: Sesli görüşme sadece premium kullanıcılara açık
     if (!ref.read(AllProviders.premiumProvider).isPremium) {
-      await presentProOffersPaywall();
+      await _presentPaywallGated();
       if (mounted) Navigator.of(context).pop();
       return;
     }
@@ -620,7 +629,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
         if (remaining <= 0) {
           _voiceTrialHardStopShown = true;
           _durationTimer?.cancel();
-          await presentProOffersPaywall();
+          await _presentPaywallGated();
           if (mounted) await _endCall();
         }
       }());

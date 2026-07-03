@@ -140,6 +140,14 @@ class ChatNotifier extends Notifier<ChatState> {
       final chatItems = <ChatItem>[];
       for (final chatModel in chatModels) {
 
+        // Boş sohbetleri (henüz hiç mesajlaşılmamış) geçmişte gösterme.
+        // Backend oturum açılışında lastMessage=null olan chat kaydı oluşturabiliyor;
+        // bunlar "Geçmiş" listesini kirletmesin.
+        final lastMsg = chatModel.lastMessage.trim();
+        if (lastMsg.isEmpty) {
+          continue;
+        }
+
         SpecialistId? specialistId = _consultantIdToSpecialistId(
           chatModel.consultantId,
           consultants,
@@ -149,12 +157,13 @@ class ChatNotifier extends Notifier<ChatState> {
         if (specialistId == null && chatModel.consultantId >= 1 && chatModel.consultantId <= 5) {
           specialistId = SpecialistId.values[chatModel.consultantId - 1];
         }
-        
 
-        if (specialistId == null) {
-          print('⚠️ Consultant ID ${chatModel.consultantId} için SpecialistId bulunamadı');
-          continue;
-        }
+        // Yeni dinamik danışmanlar (id 6+) legacy SpecialistId enum'una map
+        // edilemiyor. İsim ve avatar zaten consultant verisinden geldiği için
+        // burada yalnızca fallback amaçlı deterministik bir SpecialistId atanır.
+        // Aksi halde sohbet atlanıp "Geçmiş" listesinde hiç görünmüyordu.
+        specialistId ??=
+            SpecialistId.values[chatModel.consultantId % SpecialistId.values.length];
 
         DateTime messageTime;
         if (chatModel.lastMessageDate != null) {
