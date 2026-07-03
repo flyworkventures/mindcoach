@@ -76,7 +76,7 @@ class InviteScreen extends StatelessWidget {
                       const Spacer(),
 
                       Text(
-                        'Mind Coach',
+                        'MindCoach',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           fontSize: 20,

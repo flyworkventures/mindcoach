@@ -34,7 +34,6 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  late final Future<String> _premiumInitFuture;
   bool _processingPurchase = false;
   CustomerInfoUpdateListener? _customerInfoListener;
   String? _analyticsDistinctId;
@@ -44,7 +43,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     super.initState();
     // App ömrü boyunca premium init işlemini tek sefer çalıştır.
-    _premiumInitFuture = _initializePremiumOnLaunch(ref);
+    // UI'ı bloklamadan arka planda; sonuç premiumProvider üzerinden yansır.
+    unawaited(_initializePremiumOnLaunch(ref));
   }
 
   @override
@@ -88,46 +88,39 @@ class _MyAppState extends ConsumerState<MyApp> {
         .getLanguageCode();
     debugPrint("Locale: $currentLanguageCode");
 
-    return FutureBuilder<String>(
-      future: _premiumInitFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(
-            home: Scaffold(body: Center(child: CircularProgressIndicator())),
-          );
+    // Premium init (_premiumInitFuture) arka planda çalışır; premiumProvider
+    // üzerinden reaktif güncellenir. UI'ı beklemeye almıyoruz — aksi halde
+    // backend/RevenueCat çağrıları bitene kadar splash'tan önce boş beyaz bir
+    // spinner ekranı gösteriliyordu. Doğrudan markalı Splash'ı gösteriyoruz.
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MindCoach',
+      navigatorKey: navigatorKey,
+      navigatorObservers: [
+        CurrentRouteObserver.instance,
+        if (AnalyticsService.instance.isEnabled) PosthogObserver(),
+      ],
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      //routes: AppRouter.routes,
+      home: const Splash(),
+      onGenerateRoute: AppRouter.generateRoute,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2BD383),
+        ),
+        textTheme: GoogleFonts.quicksandTextTheme(),
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: Colors.white,
+      ),
+      builder: (context, child) {
+        SizeConfig.init(context);
+        final appChild = InAppNotification(child: child!);
+        if (!AnalyticsService.instance.isEnabled) {
+          return appChild;
         }
-
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'MindCoach',
-          navigatorKey: navigatorKey,
-          navigatorObservers: [
-            CurrentRouteObserver.instance,
-            if (AnalyticsService.instance.isEnabled) PosthogObserver(),
-          ],
-          locale: locale,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          //routes: AppRouter.routes,
-          home: const Splash(),
-          onGenerateRoute: AppRouter.generateRoute,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF2BD383),
-            ),
-            textTheme: GoogleFonts.quicksandTextTheme(),
-            brightness: Brightness.light,
-            scaffoldBackgroundColor: Colors.white,
-          ),
-          builder: (context, child) {
-            SizeConfig.init(context);
-            final appChild = InAppNotification(child: child!);
-            if (!AnalyticsService.instance.isEnabled) {
-              return appChild;
-            }
-            return PostHogWidget(child: appChild);
-          },
-        );
+        return PostHogWidget(child: appChild);
       },
     );
   }

@@ -25,7 +25,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>$(PRODUCT_COPYRIGHT)</string>
 	<key>NSCameraUsageDescription</key>
-	<string>The camera shows your preview during video calls with coaches in Mindcoach.</string>
+	<string>The camera shows your preview during video calls with coaches in MindCoach.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

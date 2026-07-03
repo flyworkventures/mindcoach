@@ -1,8 +1,8 @@
-Mind Coach – Cookie-Richtlinie
+MindCoach – Cookie-Richtlinie
 
 Zuletzt aktualisiert: 2025
 
-Willkommen bei Mind Coach! Jedes Mal, wenn Sie die App nutzen, setzen wir bestimmte digitale Helfer ein, um Ihr Erlebnis zu personalisieren. Diese Richtlinie erklärt, was diese Helfer – also Cookies und ähnliche Technologien – sind, wozu sie dienen und wie Sie Ihre diesbezüglichen Präferenzen verwalten können.
+Willkommen bei MindCoach! Jedes Mal, wenn Sie die App nutzen, setzen wir bestimmte digitale Helfer ein, um Ihr Erlebnis zu personalisieren. Diese Richtlinie erklärt, was diese Helfer – also Cookies und ähnliche Technologien – sind, wozu sie dienen und wie Sie Ihre diesbezüglichen Präferenzen verwalten können.
 
 1. Was sind Cookies?
 
@@ -10,7 +10,7 @@ Cookies sind kleine Datendateien, die auf Ihrem Gerät gespeichert werden. Sie h
 
 2. Welche Cookies verwenden wir?
 
-Mind Coach kann verschiedene Arten von Cookies für unterschiedliche Zwecke verwenden:
+MindCoach kann verschiedene Arten von Cookies für unterschiedliche Zwecke verwenden:
 
 Unbedingt erforderliche Cookies
 
@@ -30,7 +30,7 @@ Diese Cookies werden eingesetzt, um Ihnen relevantere Inhalte und Angebote anzuz
 
 3. Warum verwenden wir Cookies?
 
-Mind Coach setzt Cookies für folgende Zwecke ein:
+MindCoach setzt Cookies für folgende Zwecke ein:
 
 Die App schnell und reibungslos betreiben
 
@@ -44,7 +44,7 @@ Relevante Inhalte und Werbung zu optimieren
 
 4. Cookies von Drittanbietern
 
-Einige Cookies können von Partnern gesetzt werden, die Analyse- oder Werbedienstleistungen anbieten. Diese Cookies werden gemäß den Richtlinien der jeweiligen Plattformen verwaltet. Mind Coach achtet bei der Zusammenarbeit mit solchen Partnern auf Datensicherheit und den Schutz der Privatsphäre.
+Einige Cookies können von Partnern gesetzt werden, die Analyse- oder Werbedienstleistungen anbieten. Diese Cookies werden gemäß den Richtlinien der jeweiligen Plattformen verwaltet. MindCoach achtet bei der Zusammenarbeit mit solchen Partnern auf Datensicherheit und den Schutz der Privatsphäre.
 
 5. Steuerung und Verwaltung von Cookies
 
@@ -60,7 +60,7 @@ Bitte beachten Sie jedoch, dass die Deaktivierung unbedingt erforderlicher Cooki
 
 6. Nutzung der Daten
 
-Sofern die über Cookies gewonnenen Informationen als personenbezogene Daten gelten, werden diese im Rahmen unserer Datenschutzrichtlinie verarbeitet. Mind Coach verwendet Ihre Daten ausschließlich im Rahmen gesetzlicher Vorgaben und mit geeigneten Sicherheitsmaßnahmen.
+Sofern die über Cookies gewonnenen Informationen als personenbezogene Daten gelten, werden diese im Rahmen unserer Datenschutzrichtlinie verarbeitet. MindCoach verwendet Ihre Daten ausschließlich im Rahmen gesetzlicher Vorgaben und mit geeigneten Sicherheitsmaßnahmen.
 
 7. Änderungen dieser Richtlinie
 

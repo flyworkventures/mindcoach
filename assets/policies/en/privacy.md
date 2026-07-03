@@ -1,10 +1,10 @@
-MIND COACH – Privacy Policy
+MINDCOACH – Privacy Policy
 
 Last Updated: 2025
 
-This Privacy Policy explains the principles governing the collection, use, storage, and protection of personal data belonging to users of the Mind Coach mobile application (“Application”). By using the Application, you are deemed to have accepted this Policy.
+This Privacy Policy explains the principles governing the collection, use, storage, and protection of personal data belonging to users of the MindCoach mobile application (“Application”). By using the Application, you are deemed to have accepted this Policy.
 
-Mind Coach prioritizes user privacy and data security as fundamental principles. All personal data is processed in compliance with applicable data protection regulations (KVKK, GDPR, and other relevant laws).
+MindCoach prioritizes user privacy and data security as fundamental principles. All personal data is processed in compliance with applicable data protection regulations (KVKK, GDPR, and other relevant laws).
 
 1. Information We Collect
 
@@ -86,7 +86,7 @@ Shared data is anonymized wherever possible, and the principle of minimum data u
 
 5. Cookies and Tracking Technologies
 
-Mind Coach may use cookies and similar technologies to measure performance and improve user experience. These technologies are used for:
+MindCoach may use cookies and similar technologies to measure performance and improve user experience. These technologies are used for:
 
 Service continuity
 
@@ -117,7 +117,7 @@ To exercise these rights:
 
 7. Security Measures
 
-Mind Coach implements technical and administrative measures to protect user data, including:
+MindCoach implements technical and administrative measures to protect user data, including:
 
 SSL/TLS encryption
 
@@ -127,15 +127,15 @@ Authorized access protocols
 
 Regular security audits
 
-While no system can be guaranteed to be entirely secure, Mind Coach aims to maintain high security standards.
+While no system can be guaranteed to be entirely secure, MindCoach aims to maintain high security standards.
 
 8. Children’s Privacy
 
-Mind Coach is not intended for individuals under the age of 13 and does not knowingly collect data from this age group. If such use is detected, the account will be terminated, and related data will be deleted.
+MindCoach is not intended for individuals under the age of 13 and does not knowingly collect data from this age group. If such use is detected, the account will be terminated, and related data will be deleted.
 
 9. Changes to This Policy
 
-Mind Coach may update this Privacy Policy from time to time. Changes become effective once published within the Application, and users will be notified accordingly.
+MindCoach may update this Privacy Policy from time to time. Changes become effective once published within the Application, and users will be notified accordingly.
 
 10. Contact
 

@@ -1959,7 +1959,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get premiumTryFree => 'Mind Coach Premium\'u\n1 hafta ücretsiz dene';
+  String get premiumTryFree => 'MindCoach Premium\'u\n1 hafta ücretsiz dene';
 
   @override
   String get premiumUnlimitedAccess =>

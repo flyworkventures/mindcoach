@@ -1,14 +1,14 @@
-MIND COACH – Nutzungsbedingungen (Terms of Service)
+MINDCOACH – Nutzungsbedingungen (Terms of Service)
 
 Zuletzt aktualisiert: 2025
 
-Diese Nutzungsbedingungen („Bedingungen“) legen die Regeln für die Nutzung der Mind Coach Mobile-Applikation („App“) fest. Durch die Nutzung der App erklären Sie sich mit diesen Bedingungen einverstanden. Wenn Sie diesen Bedingungen nicht zustimmen, dürfen Sie die App nicht verwenden.
+Diese Nutzungsbedingungen („Bedingungen“) legen die Regeln für die Nutzung der MindCoach Mobile-Applikation („App“) fest. Durch die Nutzung der App erklären Sie sich mit diesen Bedingungen einverstanden. Wenn Sie diesen Bedingungen nicht zustimmen, dürfen Sie die App nicht verwenden.
 
-Mind Coach ist eine Anwendung, die ein KI-gestütztes Chat- und Persönlichkeitsentwicklungs­erlebnis anbietet. Die App stellt keine professionelle Beratung, keine klinische Betreuung, keine Diagnose und keinen offiziellen Dienst dar.
+MindCoach ist eine Anwendung, die ein KI-gestütztes Chat- und Persönlichkeitsentwicklungs­erlebnis anbietet. Die App stellt keine professionelle Beratung, keine klinische Betreuung, keine Diagnose und keinen offiziellen Dienst dar.
 
 1. Leistungsumfang
 
-Mind Coach bietet den Nutzern ein KI-basiertes Chat-Erlebnis mit Fokus auf Selbstreflexion und persönliche Weiterentwicklung.
+MindCoach bietet den Nutzern ein KI-basiertes Chat-Erlebnis mit Fokus auf Selbstreflexion und persönliche Weiterentwicklung.
 
 Die App umfasst unter anderem folgende Leistungen:
 
@@ -22,7 +22,7 @@ Vorschläge auf Basis des Nutzerverhaltens
 
 Eine personalisierte Gesprächserfahrung
 
-Mind Coach versteht keine der bereitgestellten Inhalte als professionelle Empfehlung, Diagnose, Begutachtung oder Beratung.
+MindCoach versteht keine der bereitgestellten Inhalte als professionelle Empfehlung, Diagnose, Begutachtung oder Beratung.
 
 2. Voraussetzungen für die Nutzung der App
 
@@ -54,7 +54,7 @@ Verkauf, Vervielfältigung oder Weitergabe von App-Inhalten ohne Erlaubnis
 
 4. Konto und Mitgliedschaft
 
-Wenn Sie ein Konto bei Mind Coach erstellen:
+Wenn Sie ein Konto bei MindCoach erstellen:
 
 Sind Sie für die Richtigkeit der von Ihnen angegebenen Daten verantwortlich.
 
@@ -64,7 +64,7 @@ Liegt die Sicherheit Ihres Passworts in Ihrer Verantwortung.
 
 Können Sie Ihr Konto jederzeit löschen.
 
-Mind Coach behält sich das Recht vor, Nutzerkonten bei Verstößen gegen diese Bedingungen vorübergehend zu sperren oder endgültig zu schließen.
+MindCoach behält sich das Recht vor, Nutzerkonten bei Verstößen gegen diese Bedingungen vorübergehend zu sperren oder endgültig zu schließen.
 
 5. Premium- und kostenpflichtige Dienste
 
@@ -76,11 +76,11 @@ Abonnements können sich am Ende des Abrechnungszeitraums automatisch verlänger
 
 Kündigungen von Abonnements erfolgen über die Einstellungen im jeweiligen Store.
 
-Mind Coach erstattet keine Gebühren; es gelten die Erstattungsrichtlinien der jeweiligen Stores.
+MindCoach erstattet keine Gebühren; es gelten die Erstattungsrichtlinien der jeweiligen Stores.
 
 6. Inhalte und Haftungsausschluss
 
-Inhalte, die von Mind Coach bereitgestellt werden, werden automatisch durch künstliche Intelligenz generiert.
+Inhalte, die von MindCoach bereitgestellt werden, werden automatisch durch künstliche Intelligenz generiert.
 
 Diese Inhalte ersetzen keine professionelle Meinung.
 
@@ -90,7 +90,7 @@ Die App ist kein Notfall- oder Kriseninterventionssystem. In solchen Fällen mü
 
 7. Geistige Eigentumsrechte
 
-Das Nutzungsrecht an sämtlichen Inhalten der App, einschließlich Design, Software, Texten, Bildern und KI-generierten Ausgaben, liegt bei Mind Coach.
+Das Nutzungsrecht an sämtlichen Inhalten der App, einschließlich Design, Software, Texten, Bildern und KI-generierten Ausgaben, liegt bei MindCoach.
 
 Ohne ausdrückliche Genehmigung ist es untersagt:
 
@@ -104,13 +104,13 @@ Quellcode zu untersuchen oder zu verändern
 
 8. Datenschutz und Datensicherheit
 
-Die von Mind Coach verarbeiteten Daten werden gemäß der Datenschutzrichtlinie geschützt.
+Die von MindCoach verarbeiteten Daten werden gemäß der Datenschutzrichtlinie geschützt.
 Die Datenschutzrichtlinie ist ein integraler Bestandteil dieser Bedingungen.
 Durch die Nutzung der App akzeptieren alle Nutzer die Datenschutzrichtlinie.
 
 9. Änderungen des Dienstes
 
-Zur Weiterentwicklung seiner Leistungen kann Mind Coach:
+Zur Weiterentwicklung seiner Leistungen kann MindCoach:
 
 Funktionen der App aktualisieren, ändern oder entfernen
 
@@ -120,7 +120,7 @@ Diese Nutzungsbedingungen anpassen
 
 10. Haftungsbeschränkung
 
-Mind Coach haftet nicht für:
+MindCoach haftet nicht für:
 
 Folgen der von der KI generierten Inhalte
 
@@ -134,7 +134,7 @@ Der Nutzer akzeptiert, die App „wie gesehen“ („as is“) zu verwenden.
 
 11. Beendigung (Kündigung des Kontos)
 
-Mind Coach behält sich das Recht vor, Ihr Konto in folgenden Fällen zu schließen:
+MindCoach behält sich das Recht vor, Ihr Konto in folgenden Fällen zu schließen:
 
 Nutzung entgegen diesen Bedingungen
 

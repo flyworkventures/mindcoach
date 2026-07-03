@@ -90,7 +90,7 @@ await scheduler.updateSchedule();
 
 ```dart
 static const NotificationContent twoHour = NotificationContent(
-  title: 'Mind Coach Hatırlatıcı',
+  title: 'MindCoach Hatırlatıcı',
   body: 'Özelleştirilmiş mesajınız',
   payload: 'reminder_2h',
 );

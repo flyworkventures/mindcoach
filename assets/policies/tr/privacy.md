@@ -1,7 +1,7 @@
-MIND COACH – Gizlilik Politikası
+MINDCOACH – Gizlilik Politikası
 Son Güncelleme Tarihi: 2025
-Bu Gizlilik Politikası, Mind Coach mobil uygulamasını (“Uygulama”) kullanan tüm kullanıcıların kişisel verilerinin toplanması, kullanılması, saklanması ve korunmasına ilişkin esasları açıklar. Uygulamayı kullanarak bu politikayı kabul etmiş sayılırsınız.
-Mind Coach, kullanıcı gizliliğini ve veri güvenliğini temel ilke olarak benimser. Tüm kişisel veriler, geçerli veri koruma düzenlemelerine (KVKK, GDPR ve ilgili diğer mevzuatlar) uygun şekilde işlenir.
+Bu Gizlilik Politikası, MindCoach mobil uygulamasını (“Uygulama”) kullanan tüm kullanıcıların kişisel verilerinin toplanması, kullanılması, saklanması ve korunmasına ilişkin esasları açıklar. Uygulamayı kullanarak bu politikayı kabul etmiş sayılırsınız.
+MindCoach, kullanıcı gizliliğini ve veri güvenliğini temel ilke olarak benimser. Tüm kişisel veriler, geçerli veri koruma düzenlemelerine (KVKK, GDPR ve ilgili diğer mevzuatlar) uygun şekilde işlenir.
 1. Toplanan Bilgiler
    Uygulama, hizmetlerin sağlanabilmesi amacıyla aşağıdaki veri türlerini toplayabilir:
    1.1. Kullanıcı Tarafından Sağlanan Veriler
@@ -90,7 +90,7 @@ Kullanıcı onayı: Kullanıcının açık rızası ile yapılan paylaşımlar
 
 Paylaşılan veriler mümkün olduğunca anonimleştirilir ve minimum veri ilkesi esas alınır.
 5. Çerezler ve İzleme Teknolojileri
-   Mind Coach, uygulama performansını ölçmek ve kullanıcı deneyimini iyileştirmek amacıyla çerezler ve benzeri teknolojiler kullanabilir. Bu teknolojiler:
+   MindCoach, uygulama performansını ölçmek ve kullanıcı deneyimini iyileştirmek amacıyla çerezler ve benzeri teknolojiler kullanabilir. Bu teknolojiler:
    Hizmet sürekliliği
 
 
@@ -124,7 +124,7 @@ Açık rızayı geri çekme hakkı
 Bu haklarınızı kullanmak için:
 📩 support@fly-work.com
 7. Güvenlik Önlemleri
-   Mind Coach, kullanıcı verilerini korumak için teknik ve idari güvenlik önlemleri uygular:
+   MindCoach, kullanıcı verilerini korumak için teknik ve idari güvenlik önlemleri uygular:
    SSL/TLS şifreleme
 
 
@@ -139,9 +139,9 @@ Düzenli güvenlik denetimleri
 
 Hiçbir sistemin tamamen güvenli olduğu garanti edilemez, ancak yüksek güvenlik standartları hedeflenir.
 8. Çocukların Gizliliği
-   Mind Coach, 13 yaş altı kişilere yönelik değildir ve bu yaş grubundan bilerek veri toplamaz. Böyle bir kullanım tespit edilirse hesap kapatılır ve ilgili veriler silinir.
+   MindCoach, 13 yaş altı kişilere yönelik değildir ve bu yaş grubundan bilerek veri toplamaz. Böyle bir kullanım tespit edilirse hesap kapatılır ve ilgili veriler silinir.
 9. Politika Değişiklikleri
-   Mind Coach, bu Gizlilik Politikasını güncelleyebilir. Güncellemeler uygulama içerisinde yayımlandığı andan itibaren yürürlüğe girer. Kullanıcılar değişikliklerden haberdar edilir.
+   MindCoach, bu Gizlilik Politikasını güncelleyebilir. Güncellemeler uygulama içerisinde yayımlandığı andan itibaren yürürlüğe girer. Kullanıcılar değişikliklerden haberdar edilir.
 10. İletişim
     Her türlü soru ve talep için:
     📩 support@fly-work.com

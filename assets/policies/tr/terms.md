@@ -1,9 +1,9 @@
-MIND COACH – Hizmet Şartları (Terms of Service)
+MINDCOACH – Hizmet Şartları (Terms of Service)
 Son Güncelleme: 2025
-Bu Hizmet Şartları (“Şartlar”), Mind Coach mobil uygulamasını (“Uygulama”) kullanmanız için geçerli olan kuralları içerir. Uygulamayı kullanarak bu Şartları kabul etmiş sayılırsınız. Şartları kabul etmiyorsanız Uygulama’yı kullanmamalısınız.
-Mind Coach, yapay zekâ destekli bir sohbet ve kişisel gelişim deneyimi sunan bir uygulamadır. Uygulama, profesyonel danışmanlık, klinik yönlendirme, teşhis veya resmi bir hizmet sağlamaz.
+Bu Hizmet Şartları (“Şartlar”), MindCoach mobil uygulamasını (“Uygulama”) kullanmanız için geçerli olan kuralları içerir. Uygulamayı kullanarak bu Şartları kabul etmiş sayılırsınız. Şartları kabul etmiyorsanız Uygulama’yı kullanmamalısınız.
+MindCoach, yapay zekâ destekli bir sohbet ve kişisel gelişim deneyimi sunan bir uygulamadır. Uygulama, profesyonel danışmanlık, klinik yönlendirme, teşhis veya resmi bir hizmet sağlamaz.
 1. Hizmetin Kapsamı
-   Mind Coach, kullanıcılara yapay zekâ tabanlı kişisel farkındalık ve düşünce gelişimi odaklı sohbet deneyimi sunar.
+   MindCoach, kullanıcılara yapay zekâ tabanlı kişisel farkındalık ve düşünce gelişimi odaklı sohbet deneyimi sunar.
    Uygulama aşağıdaki hizmetleri içerir:
    Yapay zekâ ile metin tabanlı sohbet
 
@@ -20,7 +20,7 @@ Kullanıcı davranışlarına göre öneriler
 Kişiselleştirilmiş sohbet deneyimi
 
 
-Mind Coach, sağlanan içeriklerin hiçbirini profesyonel bir tavsiye, teşhis, değerlendirme veya yönlendirme olarak yorumlamaz.
+MindCoach, sağlanan içeriklerin hiçbirini profesyonel bir tavsiye, teşhis, değerlendirme veya yönlendirme olarak yorumlamaz.
 2. Uygulamayı Kullanma Koşulları
    Uygulamayı kullanabilmek için:
    En az 13 yaşında olmalısınız.
@@ -57,7 +57,7 @@ Uygulama içeriklerini izinsiz satmak, çoğaltmak veya paylaşmak
 
 
 4. Hesap ve Üyelik
-   Mind Coach’ta hesap oluşturduğunuzda:
+   MindCoach’ta hesap oluşturduğunuzda:
    Sağladığınız bilgilerin doğruluğundan siz sorumlusunuz.
 
 
@@ -70,7 +70,7 @@ Hesabınızı üçüncü kişilerle paylaşmamalısınız.
 Dilediğiniz zaman hesabınızı silebilirsiniz.
 
 
-Mind Coach, Şartlara aykırılık tespit edilmesi halinde kullanıcı hesaplarını askıya alma veya kapatma hakkını saklı tutar.
+MindCoach, Şartlara aykırılık tespit edilmesi halinde kullanıcı hesaplarını askıya alma veya kapatma hakkını saklı tutar.
 5. Premium ve Ücretli Hizmetler
    Bazı özellikler ücretli olabilir. Bu hizmetleri satın alırken:
    Ücretlendirme App Store ve Google Play politikalarına göre yapılır.
@@ -82,12 +82,12 @@ Abonelikler dönem sonunda otomatik olarak yenilenebilir.
 Abonelik iptalleri mağaza ayarları üzerinden yapılır.
 
 
-Mind Coach, mağaza politikalarına bağlı olarak ücret iadesi yapmaz.
+MindCoach, mağaza politikalarına bağlı olarak ücret iadesi yapmaz.
 
 
 
 6. İçerik ve Sorumluluk Reddi
-   Mind Coach tarafından üretilen içerikler yapay zekâ tarafından otomatik oluşturulur.
+   MindCoach tarafından üretilen içerikler yapay zekâ tarafından otomatik oluşturulur.
 
 
 Bu içerikler profesyonel görüş yerine geçmez.
@@ -100,7 +100,7 @@ Uygulama acil durum veya kriz müdahale sistemi değildir. Bu gibi durumlarda ku
 
 
 7. Fikri Mülkiyet Hakları
-   Uygulama tasarımı, yazılımı, metinler, görseller ve yapay zekâ çıktıları dahil tüm içeriklerin kullanım hakkı Mind Coach’a aittir.
+   Uygulama tasarımı, yazılımı, metinler, görseller ve yapay zekâ çıktıları dahil tüm içeriklerin kullanım hakkı MindCoach’a aittir.
    İzinsiz olarak:
    Kopyalama
 
@@ -116,11 +116,11 @@ Kaynak kodunu inceleme veya değiştirme
 
 işlemleri yapılamaz.
 8. Veri Gizliliği ve Güvenliği
-   Mind Coach tarafından işlenen veriler, Gizlilik Politikası’na uygun şekilde korunur.
+   MindCoach tarafından işlenen veriler, Gizlilik Politikası’na uygun şekilde korunur.
    Gizlilik Politikası bu Şartların ayrılmaz bir parçasıdır.
    Uygulamayı kullanan herkes Gizlilik Politikası’nı kabul etmiş sayılır.
 9. Hizmette Değişiklikler
-   Mind Coach, hizmetlerini geliştirmek amacıyla:
+   MindCoach, hizmetlerini geliştirmek amacıyla:
    Uygulama özelliklerini güncelleyebilir, değiştirebilir veya kaldırabilir.
 
 
@@ -130,7 +130,7 @@ Hizmet Şartlarını güncelleyebilir.
 Güncellemeler, uygulama içinde yayınlandığı anda geçerli olur.
 
 10. Sorumluluğun Sınırı
-    Mind Coach aşağıdakilerden sorumlu değildir:
+    MindCoach aşağıdakilerden sorumlu değildir:
     Yapay zekâ içeriklerinin sonuçları
 
 
@@ -145,7 +145,7 @@ Cihaz, bağlantı veya internet sorunları
 
 Kullanıcı, Uygulama’yı “olduğu gibi” kullanmayı kabul eder.
 11. Fesih
-    Mind Coach aşağıdaki durumlarda hesabınızı kapatma hakkını saklı tutar:
+    MindCoach aşağıdaki durumlarda hesabınızı kapatma hakkını saklı tutar:
     Şartlara aykırı kullanım
 
 

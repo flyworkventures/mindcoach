@@ -1,10 +1,10 @@
-Mind Coach – Çerez Politikası
+MindCoach – Çerez Politikası
 Son Güncelleme: 2025
-Mind Coach’a hoş geldiniz! Uygulamayı her ziyaret ettiğinizde deneyiminizi kişiselleştirmek için bazı dijital yardımcılar kullanıyoruz. Bu politika, bu yardımcıların — yani çerezlerin — ne olduğunu, ne işe yaradığını ve bu konudaki tercihlerinizi nasıl yönetebileceğinizi açıklar.
+MindCoach’a hoş geldiniz! Uygulamayı her ziyaret ettiğinizde deneyiminizi kişiselleştirmek için bazı dijital yardımcılar kullanıyoruz. Bu politika, bu yardımcıların — yani çerezlerin — ne olduğunu, ne işe yaradığını ve bu konudaki tercihlerinizi nasıl yönetebileceğinizi açıklar.
 1. Çerez Nedir?
    Çerezler, cihazınıza yerleştirilen küçük veri dosyalarıdır. Uygulamayı nasıl kullandığınızı anlamamıza yardımcı olur ve sizi tanıyan bir deneyim sunar. Kimliğinizi doğrudan içermezler; daha çok tercihlerinizi ve kullanım alışkanlıklarınızı hatırlayan dijital notlar gibidir.
 2. Hangi Çerezleri Kullanıyoruz?
-   Mind Coach çeşitli amaçlarla farklı çerez türleri kullanabilir:
+   MindCoach çeşitli amaçlarla farklı çerez türleri kullanabilir:
    Zorunlu Çerezler
    Bu çerezler olmadan uygulama temel fonksiyonlarını yerine getiremez. Oturum işlemleri, güvenlik ve ana ekran navigasyonu gibi çekirdek yapıları destekler.
    Performans ve Analitik Çerezleri
@@ -14,7 +14,7 @@ Mind Coach’a hoş geldiniz! Uygulamayı her ziyaret ettiğinizde deneyiminizi 
    Pazarlama ve Reklam Çerezleri
    Size daha alakalı içerikler gösterebilmek için kullanılır. Bu çerezler bazı üçüncü taraf platformlarla birlikte çalışabilir.
 3. Çerezleri Neden Kullanıyoruz?
-   Mind Coach çerezleri aşağıdaki amaçlarla kullanır:
+   MindCoach çerezleri aşağıdaki amaçlarla kullanır:
    Uygulamayı hızlı ve sorunsuz çalıştırmak
 
 
@@ -31,7 +31,7 @@ Hangi özelliklerin ilgi gördüğünü ölçerek geliştirme planlamak
 
 
 4. Üçüncü Taraf Çerezleri
-   Bazı çerezler, analitik ve reklam hizmetleri sunan iş ortakları tarafından yerleştirilebilir. Bu çerezler, ilgili platformların kendi politikaları doğrultusunda yönetilir. Mind Coach bu taraflarla çalışırken veri güvenliğine özen gösterir.
+   Bazı çerezler, analitik ve reklam hizmetleri sunan iş ortakları tarafından yerleştirilebilir. Bu çerezler, ilgili platformların kendi politikaları doğrultusunda yönetilir. MindCoach bu taraflarla çalışırken veri güvenliğine özen gösterir.
 5. Çerez Kontrolleri ve Yönetim
    Çerezler üzerinde tam kontrol sizdedir. İsterseniz:
    Tarayıcı ayarlarından
@@ -46,7 +46,7 @@ Uygulama ayarlarından
 çerez kullanımını sınırlandırabilir, bazılarını engelleyebilir veya tamamen silebilirsiniz.
 Ancak zorunlu çerezlerin devre dışı bırakılması uygulamanın düzenli çalışmasını engelleyebilir.
 6. Verilerin Kullanımı
-   Çerezler aracılığıyla elde edilen bilgiler kişisel veri niteliği taşıması halinde, bu veriler Gizlilik Politikamız kapsamında işlenir. Mind Coach verilerinizi yalnızca yasal gereklilikler çerçevesinde ve güvenli yöntemlerle kullanır.
+   Çerezler aracılığıyla elde edilen bilgiler kişisel veri niteliği taşıması halinde, bu veriler Gizlilik Politikamız kapsamında işlenir. MindCoach verilerinizi yalnızca yasal gereklilikler çerçevesinde ve güvenli yöntemlerle kullanır.
 7. Politika Güncellemeleri
    Teknolojiler ve standartlar zamanla değişebilir. Bu nedenle çerez politikamız güncellenebilir. Güncel metin her zaman uygulama veya web sitesinde yayınlanır.
 8. İletişim

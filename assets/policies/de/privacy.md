@@ -1,10 +1,10 @@
-MIND COACH – Datenschutzrichtlinie (Privacy Policy)
+MINDCOACH – Datenschutzrichtlinie (Privacy Policy)
 
 Zuletzt aktualisiert: 2025
 
-Diese Datenschutzrichtlinie erklärt die Grundsätze für die Erhebung, Nutzung, Speicherung und den Schutz personenbezogener Daten aller Nutzer der Mind Coach Mobile-Applikation („App“). Durch die Nutzung der App akzeptieren Sie diese Richtlinie.
+Diese Datenschutzrichtlinie erklärt die Grundsätze für die Erhebung, Nutzung, Speicherung und den Schutz personenbezogener Daten aller Nutzer der MindCoach Mobile-Applikation („App“). Durch die Nutzung der App akzeptieren Sie diese Richtlinie.
 
-Mind Coach betrachtet den Schutz der Privatsphäre und Datensicherheit als grundlegendes Prinzip. Alle personenbezogenen Daten werden gemäß den geltenden Datenschutzgesetzen (KVKK, DSGVO/GDPR und anderen relevanten Vorschriften) verarbeitet.
+MindCoach betrachtet den Schutz der Privatsphäre und Datensicherheit als grundlegendes Prinzip. Alle personenbezogenen Daten werden gemäß den geltenden Datenschutzgesetzen (KVKK, DSGVO/GDPR und anderen relevanten Vorschriften) verarbeitet.
 
 1. Erhobene Daten
 
@@ -86,7 +86,7 @@ Weitergegebene Daten werden so weit wie möglich anonymisiert und nach dem Prinz
 
 5. Cookies und Tracking-Technologien
 
-Mind Coach kann Cookies und ähnliche Technologien verwenden, um die Leistung der App zu messen und die Nutzererfahrung zu verbessern. Diese Technologien dienen folgenden Zwecken:
+MindCoach kann Cookies und ähnliche Technologien verwenden, um die Leistung der App zu messen und die Nutzererfahrung zu verbessern. Diese Technologien dienen folgenden Zwecken:
 
 Sicherstellung der Dienstkontinuität
 
@@ -117,7 +117,7 @@ Zur Ausübung Ihrer Rechte:
 
 7. Sicherheitsmaßnahmen
 
-Mind Coach ergreift technische und organisatorische Maßnahmen, um Nutzerdaten zu schützen, darunter:
+MindCoach ergreift technische und organisatorische Maßnahmen, um Nutzerdaten zu schützen, darunter:
 
 SSL/TLS-Verschlüsselung
 
@@ -127,15 +127,15 @@ Autorisierte Zugriffsprotokolle
 
 Regelmäßige Sicherheitsüberprüfungen
 
-Kein System kann absolute Sicherheit garantieren, dennoch strebt Mind Coach ein hohes Sicherheitsniveau an.
+Kein System kann absolute Sicherheit garantieren, dennoch strebt MindCoach ein hohes Sicherheitsniveau an.
 
 8. Datenschutz von Kindern
 
-Mind Coach richtet sich nicht an Personen unter 13 Jahren und erhebt wissentlich keine Daten von dieser Altersgruppe. Bei Feststellung einer solchen Nutzung wird das Konto geschlossen und die entsprechenden Daten gelöscht.
+MindCoach richtet sich nicht an Personen unter 13 Jahren und erhebt wissentlich keine Daten von dieser Altersgruppe. Bei Feststellung einer solchen Nutzung wird das Konto geschlossen und die entsprechenden Daten gelöscht.
 
 9. Änderungen dieser Richtlinie
 
-Mind Coach kann diese Datenschutzrichtlinie aktualisieren. Änderungen treten in Kraft, sobald sie innerhalb der App veröffentlicht werden. Nutzer werden über wichtige Anpassungen informiert.
+MindCoach kann diese Datenschutzrichtlinie aktualisieren. Änderungen treten in Kraft, sobald sie innerhalb der App veröffentlicht werden. Nutzer werden über wichtige Anpassungen informiert.
 
 10. Kontakt
 

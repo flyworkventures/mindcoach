@@ -1,4 +1,4 @@
-"NSCameraUsageDescription" = "Mindcoach 在与教练进行视频通话时会使用相机显示您的预览画面。";
+"NSCameraUsageDescription" = "MindCoach 在与教练进行视频通话时会使用相机显示您的预览画面。";
 "NSLocationWhenInUseUsageDescription" = "应用在使用期间会根据您的所在区域发送相关通知，因此需要使用位置信息。";
 "NSMicrophoneUsageDescription" = "应用会使用麦克风来录制并发送语音消息。";
 "NSPhotoLibraryAddUsageDescription" = "应用会使用您的照片库，以便您选择照片进行上传和分享。";

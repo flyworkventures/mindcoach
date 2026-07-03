@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">mindcoach</string>
+    <string name="app_name">MindCoach</string>
 
     <!-- Google Sign-In: Web OAuth client (google-services.json client_type 3) -->
     <string name="default_web_client_id">705277804468-b3a82f9k2c3moht7m388lf7mkgu5oo9u.apps.googleusercontent.com</string>

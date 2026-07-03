@@ -1,4 +1,4 @@
-"NSCameraUsageDescription" = "Mindcoach me coaches ke sath video calls ke dauran preview dikhane ke liye camera ka upyog hota hai.";
+"NSCameraUsageDescription" = "MindCoach me coaches ke sath video calls ke dauran preview dikhane ke liye camera ka upyog hota hai.";
 "NSLocationWhenInUseUsageDescription" = "App istemal karte waqt aapke area ke anusar relevant notifications bhejne ke liye aapki location ka upyog hota hai.";
 "NSMicrophoneUsageDescription" = "App ke andar voice messages record aur bhejne ke liye aapke microphone ka upyog hota hai.";
 "NSPhotoLibraryAddUsageDescription" = "App me upload aur share karne ke liye photos chunne hetu aapki photo library ka upyog hota hai.";

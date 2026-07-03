@@ -10,15 +10,31 @@ enum SpecialistId { aura, zen, elara, orion, cyra }
 class SpecialistsState {
   final List<ConsultantModel>? specialists; // filtrelenmiş liste
   final int selectedId;
-  SpecialistsState({required this.specialists, required this.selectedId});
+
+  /// İlk yükleme sürüyor mu (spinner göstermek için).
+  final bool isLoading;
+
+  /// Yükleme denendi ve başarısız oldu (retry butonu göstermek için).
+  final bool loadFailed;
+
+  SpecialistsState({
+    required this.specialists,
+    required this.selectedId,
+    this.isLoading = false,
+    this.loadFailed = false,
+  });
 
   SpecialistsState copyWith({
     List<ConsultantModel>? specialists,
     int? selectedId,
+    bool? isLoading,
+    bool? loadFailed,
   }) {
     return SpecialistsState(
       specialists: specialists ?? this.specialists,
       selectedId: selectedId ?? this.selectedId,
+      isLoading: isLoading ?? this.isLoading,
+      loadFailed: loadFailed ?? this.loadFailed,
     );
   }
 }
@@ -39,28 +55,62 @@ class SpecialistsNotifier extends Notifier<SpecialistsState> {
     return initialState;
   }
 
-  /// Consultants'ları API'den yükle
-  Future<void> _loadConsultants() async {
-    try {
-      ConsultantRepo repo = ConsultantRepo(ref);
-      List<ConsultantModel>? list = await repo.getAllConsultant();
-      if (!ref.mounted) return;
-
-      if (list != null && list.isNotEmpty) {
-        state = state.copyWith(specialists: list);
-        debugPrint("✅ ${list.length} consultant yüklendi");
-      } else {
-        // Boş liste
-        debugPrint("ℹ️ Consultants listesi boş veya null");
-      }
-    } catch (e) {
-      if (!ref.mounted) return;
-      debugPrint("❌ Consultants yükleme hatası: $e");
+  /// Consultants'ları API'den yükle.
+  ///
+  /// Uzak DB bağlantısı kararsız olduğunda ilk istek boş/başarısız dönebiliyor;
+  /// bu yüzden birkaç kez artan gecikmeyle yeniden denenir. Hepsi başarısız
+  /// olursa [SpecialistsState.loadFailed] true olur ve UI retry butonu gösterir.
+  Future<void> _loadConsultants({int maxAttempts = 3}) async {
+    // Zaten dolu liste varsa spinner gösterme (sessiz yenileme).
+    final hasData = (state.specialists?.isNotEmpty ?? false);
+    if (!hasData) {
+      state = state.copyWith(isLoading: true, loadFailed: false);
     }
+
+    for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        final repo = ConsultantRepo(ref);
+        final list = await repo.getAllConsultant();
+        if (!ref.mounted) return;
+
+        if (list != null && list.isNotEmpty) {
+          state = state.copyWith(
+            specialists: list,
+            isLoading: false,
+            loadFailed: false,
+          );
+          debugPrint("✅ ${list.length} consultant yüklendi (deneme $attempt)");
+          return;
+        }
+        debugPrint("ℹ️ Consultants boş döndü (deneme $attempt/$maxAttempts)");
+      } catch (e) {
+        if (!ref.mounted) return;
+        debugPrint("❌ Consultants yükleme hatası (deneme $attempt): $e");
+      }
+
+      // Son deneme değilse artan gecikmeyle tekrar dene.
+      if (attempt < maxAttempts) {
+        await Future.delayed(Duration(milliseconds: 600 * attempt));
+        if (!ref.mounted) return;
+      }
+    }
+
+    // Tüm denemeler başarısız — mevcut veriyi koru, hata bayrağını kaldır.
+    if (!ref.mounted) return;
+    final stillEmpty = (state.specialists?.isEmpty ?? true);
+    state = state.copyWith(
+      isLoading: false,
+      loadFailed: stillEmpty,
+    );
   }
 
-  /// Manuel olarak consultants'ları yeniden yükle
+  /// Manuel olarak consultants'ları yeniden yükle (retry butonu / ilk açılış).
   Future<void> init() async {
+    await _loadConsultants();
+  }
+
+  /// UI'dan retry için: hata durumunu sıfırlayıp yeniden dener.
+  Future<void> retry() async {
     await _loadConsultants();
   }
 

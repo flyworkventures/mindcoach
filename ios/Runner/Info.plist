@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>mindcoach</string>
+	<string>MindCoach</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -47,9 +47,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>The camera shows your preview during video calls with coaches in Mindcoach.</string>
+	<string>The camera shows your preview during video calls with coaches in MindCoach.</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Mindcoach connects to your local development server on the same Wi-Fi network.</string>
+	<string>MindCoach connects to your local development server on the same Wi-Fi network.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is used to send you relevant notifications based on your area while using the app.</string>
 	<key>NSMicrophoneUsageDescription</key>

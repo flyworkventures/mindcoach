@@ -36,6 +36,7 @@ class FindCoachScreen extends ConsumerWidget {
           child: FindCoachStep(
             profileState: profileState,
             coaches: specialistsState.specialists ?? const [],
+            loadFailed: specialistsState.loadFailed,
           ),
         ),
       ),
@@ -48,10 +49,14 @@ class FindCoachStep extends ConsumerStatefulWidget {
     super.key,
     required this.profileState,
     required this.coaches,
+    this.loadFailed = false,
   });
 
   final ProfileSetupState profileState;
   final List<ConsultantModel> coaches;
+
+  /// Danışman listesi yüklenemediyse (bağlantı hatası) retry butonu gösterilir.
+  final bool loadFailed;
 
   @override
   ConsumerState<FindCoachStep> createState() => _FindCoachStepState();
@@ -325,12 +330,64 @@ class _FindCoachStepState extends ConsumerState<FindCoachStep> {
                       ),
                     ),
                   )
-                : const Center(child: CircularProgressIndicator()),
+                : widget.loadFailed
+                    ? _buildRetryState()
+                    : const Center(child: CircularProgressIndicator()),
           ),
         ),
         const SizedBox(height: 12),
         if (hasCoach) _buildBottomActions(),
       ],
+    );
+  }
+
+  /// Bağlantı hatası durumunda sonsuz spinner yerine gösterilir.
+  Widget _buildRetryState() {
+    final tr = Localizations.localeOf(context).languageCode == 'tr';
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.wifi_off_rounded, size: 48, color: Color(0xFF96989C)),
+          const SizedBox(height: 16),
+          Text(
+            tr ? 'Rehberler yüklenemedi' : 'Could not load coaches',
+            style: const TextStyle(
+              fontFamily: 'Geist',
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            tr
+                ? 'İnternet bağlantını kontrol edip tekrar dene.'
+                : 'Check your connection and try again.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'Geist',
+              fontSize: 14,
+              color: Color(0xFF96989C),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF21BC87),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              ref.read(specialistsProvider.notifier).retry();
+            },
+            child: Text(tr ? 'Tekrar dene' : 'Retry'),
+          ),
+        ],
+      ),
     );
   }
 

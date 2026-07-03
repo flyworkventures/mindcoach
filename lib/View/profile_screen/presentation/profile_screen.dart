@@ -69,7 +69,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
         
     await Share.share(
       shareUrl,
-      subject: 'Mind Coach',
+      subject: 'MindCoach',
       sharePositionOrigin: sharePositionOrigin,
     );
   }
@@ -671,7 +671,7 @@ class _ShareFriendBottomSheet extends StatelessWidget {
     await SharePlus.instance.share(
       ShareParams(
         text: shareUrl,
-        subject: 'Mind Coach',
+        subject: 'MindCoach',
         sharePositionOrigin: sharePositionOrigin,
       ),
     );

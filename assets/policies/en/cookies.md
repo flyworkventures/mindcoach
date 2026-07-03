@@ -1,8 +1,8 @@
-Mind Coach – Cookies Policy
+MindCoach – Cookies Policy
 
 Last Updated: 2025
 
-Welcome to Mind Coach! Each time you use the Application, we use certain digital tools to personalize and improve your experience. This policy explains what these tools — cookies and similar technologies — are, what they do, and how you can manage your preferences.
+Welcome to MindCoach! Each time you use the Application, we use certain digital tools to personalize and improve your experience. This policy explains what these tools — cookies and similar technologies — are, what they do, and how you can manage your preferences.
 
 1. What Are Cookies?
 
@@ -10,7 +10,7 @@ Cookies are small data files placed on your device. They help us understand how 
 
 2. What Types of Cookies Do We Use?
 
-Mind Coach may use different types of cookies for various purposes:
+MindCoach may use different types of cookies for various purposes:
 
 Strictly Necessary Cookies
 
@@ -30,7 +30,7 @@ These cookies are used to show you more relevant content and offers. Some of the
 
 3. Why Do We Use Cookies?
 
-Mind Coach uses cookies for the following purposes:
+MindCoach uses cookies for the following purposes:
 
 To ensure the Application runs quickly and smoothly
 
@@ -44,7 +44,7 @@ To optimize relevant content and advertising
 
 4. Third-Party Cookies
 
-Some cookies may be placed by partners providing analytics and advertising services. These cookies are managed in accordance with the policies of the respective platforms. Mind Coach takes care to work with such partners in a way that respects data security and privacy.
+Some cookies may be placed by partners providing analytics and advertising services. These cookies are managed in accordance with the policies of the respective platforms. MindCoach takes care to work with such partners in a way that respects data security and privacy.
 
 5. Cookie Controls and Management
 
@@ -60,7 +60,7 @@ However, disabling strictly necessary cookies may prevent the Application from f
 
 6. Use of Data
 
-If the information obtained through cookies qualifies as personal data, such data is processed in accordance with our Privacy Policy. Mind Coach uses your data only within the scope of legal requirements and through secure methods.
+If the information obtained through cookies qualifies as personal data, such data is processed in accordance with our Privacy Policy. MindCoach uses your data only within the scope of legal requirements and through secure methods.
 
 7. Updates to This Policy
 

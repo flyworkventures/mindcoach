@@ -49,9 +49,20 @@ class NotificationService {
       );
 
       final permissionGranted = await OneSignal.Notifications.requestPermission(
-        false,
+        true,
       );
       debugPrint('[ONESIGNAL] Permission granted: $permissionGranted');
+
+      // İzin verildiyse cihazı push aboneliğine opt-in et. Bu yapılmazsa
+      // backend "All included players are not subscribed" hatası alır ve
+      // bildirim telefona düşmez.
+      try {
+        if (permissionGranted) {
+          OneSignal.User.pushSubscription.optIn();
+        }
+      } catch (e) {
+        debugPrint('[ONESIGNAL] optIn hatası: $e');
+      }
 
       // Foreground notification listener - bildirim geldiğinde yakala
       OneSignal.Notifications.addForegroundWillDisplayListener((event) {
@@ -94,10 +105,19 @@ class NotificationService {
       await OneSignal.login(userId);
       debugPrint('[ONESIGNAL] User registered with External User ID: $userId');
 
+      // login sonrası aboneliğin aktif olduğundan emin ol (opt-in). Kullanıcı
+      // daha önce izin verdiyse bu, backend'in cihazı bulmasını garantiler.
+      try {
+        OneSignal.User.pushSubscription.optIn();
+      } catch (e) {
+        debugPrint('[ONESIGNAL] optIn (registerUser) hatası: $e');
+      }
+
       try {
         final pushSubscriptionId = OneSignal.User.pushSubscription.id;
+        final optedIn = OneSignal.User.pushSubscription.optedIn;
         debugPrint(
-          '[ONESIGNAL] OneSignal Push Subscription ID: $pushSubscriptionId',
+          '[ONESIGNAL] Push Subscription ID: $pushSubscriptionId | optedIn: $optedIn',
         );
       } catch (e) {
         debugPrint('[ONESIGNAL] Could not get push subscription ID: $e');

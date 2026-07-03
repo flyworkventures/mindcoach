@@ -1,4 +1,4 @@
-"NSCameraUsageDescription" = "Mindcoach でコーチとのビデオ通話中にプレビューを表示するためにカメラを使用します。";
+"NSCameraUsageDescription" = "MindCoach でコーチとのビデオ通話中にプレビューを表示するためにカメラを使用します。";
 "NSLocationWhenInUseUsageDescription" = "アプリ利用中に地域に合った通知を送るため、位置情報を使用します。";
 "NSMicrophoneUsageDescription" = "アプリ内で音声メッセージを録音して送信するため、マイクを使用します。";
 "NSPhotoLibraryAddUsageDescription" = "アプリでアップロード・共有する写真を選択するため、写真ライブラリを使用します。";
