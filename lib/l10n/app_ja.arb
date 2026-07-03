@@ -5,7 +5,7 @@
   "appointmentRescheduled": "予約を変更しました",
   "analyseBadge": "AI 搭載",
   "analyseTitle": "心を理解するいちばん簡単な方法。",
-  "analyseSubtitle": "いくつかの質問に正直に答えると、Mindcoach があなたの感情状態、強み、成長分野を可視化します。",
+  "analyseSubtitle": "いくつかの質問に正直に答えると、MindCoach があなたの感情状態、強み、成長分野を可視化します。",
   "analyseCta": "分析を開始",
   "relaxingSound": "リラックスできる音",
   "seeAll": "すべて見る",
@@ -599,7 +599,7 @@
   "calling": "発信中...",
   "image": "画像",
   "coachesTitle": "ガイド",
-  "searchAtMindcoach": "__MINDガイド__で検索",
+  "searchAtMindcoach": "MindCoachで検索",
   "noResultsFound": "\"{query}\" の結果は見つかりませんでした",
   "@noResultsFound": {
     "placeholders": {

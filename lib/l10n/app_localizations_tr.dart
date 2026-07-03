@@ -25,7 +25,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get analyseSubtitle =>
-      'Birkaç soruyu içtenlikle yanıtla; Mindcoach duygusal durumunu, güçlü yönlerini ve gelişim alanlarını haritalasın.';
+      'Birkaç soruyu içtenlikle yanıtla; MindCoach duygusal durumunu, güçlü yönlerini ve gelişim alanlarını haritalasın.';
 
   @override
   String get analyseCta => 'Analize Başla';
@@ -844,7 +844,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get deleteAccountImproveQuestion =>
-      'Mindcoach deneyimini iyileştirmemiz için bize neden ayrılmak istediğini söyler misin?';
+      'MindCoach deneyimini iyileştirmemiz için bize neden ayrılmak istediğini söyler misin?';
 
   @override
   String get deleteReasonNotRealistic =>
@@ -1951,7 +1951,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get coachesTitle => 'Rehberler';
 
   @override
-  String get searchAtMindcoach => 'Mindcoach\'ta Ara';
+  String get searchAtMindcoach => 'MindCoach\'ta Ara';
 
   @override
   String noResultsFound(String query) {

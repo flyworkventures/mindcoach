@@ -5,7 +5,7 @@
   "appointmentRescheduled": "Randevu ertelendi",
   "analyseBadge": "Yapay zeka destekli",
   "analyseTitle": "Zihnini anlamanın en kolay yolu.",
-  "analyseSubtitle": "Birkaç soruyu içtenlikle yanıtla; Mindcoach duygusal durumunu, güçlü yönlerini ve gelişim alanlarını haritalasın.",
+  "analyseSubtitle": "Birkaç soruyu içtenlikle yanıtla; MindCoach duygusal durumunu, güçlü yönlerini ve gelişim alanlarını haritalasın.",
   "analyseCta": "Analize Başla",
   "relaxingSound": "Rahatlatıcı Ses",
   "seeAll": "Tümünü Gör",
@@ -599,7 +599,7 @@
   "calling": "Aranıyor...",
   "image": "Görsel",
   "coachesTitle": "Rehberler",
-  "searchAtMindcoach": "Mindcoach'ta Ara",
+  "searchAtMindcoach": "MindCoach'ta Ara",
   "noResultsFound": "\"{query}\" için sonuç bulunamadı",
   "@noResultsFound": {
     "placeholders": {
@@ -677,7 +677,7 @@
   "profileSaved": "Profil başarıyla kaydedildi",
   "done": "Tamam",
   "deleteAccountWhyLeaving": "Gitmeni istemiyoruz ama seni anlıyoruz.",
-  "deleteAccountImproveQuestion": "Mindcoach deneyimini iyileştirmemiz için bize neden ayrılmak istediğini söyler misin?",
+  "deleteAccountImproveQuestion": "MindCoach deneyimini iyileştirmemiz için bize neden ayrılmak istediğini söyler misin?",
   "deleteReasonNotRealistic": "Yapay zeka karakterlerini gerçekçi bulmadım.",
   "deleteReasonTechnicalIssues": "Görüntülü sohbetlerde teknik sorunlar yaşıyorum.",
   "deleteReasonPrice": "Abonelik fiyatları beklentimin üzerinde.",

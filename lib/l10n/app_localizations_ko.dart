@@ -25,7 +25,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get analyseSubtitle =>
-      '몇 가지 질문에 솔직하게 답하면 Mindcoach가 감정 상태, 강점, 성장 영역을 정리해 드립니다.';
+      '몇 가지 질문에 솔직하게 답하면 MindCoach가 감정 상태, 강점, 성장 영역을 정리해 드립니다.';
 
   @override
   String get analyseCta => '분석 시작';
@@ -1904,7 +1904,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get coachesTitle => '가이드';
 
   @override
-  String get searchAtMindcoach => '__MIND가이드__에서 검색';
+  String get searchAtMindcoach => 'MindCoach에서 검색';
 
   @override
   String noResultsFound(String query) {

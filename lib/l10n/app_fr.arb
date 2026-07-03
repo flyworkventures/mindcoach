@@ -5,7 +5,7 @@
   "appointmentRescheduled": "Rendez-vous reporté",
   "analyseBadge": "Propulsé par l'IA",
   "analyseTitle": "Le moyen le plus simple de comprendre votre esprit.",
-  "analyseSubtitle": "Répondez honnêtement à quelques questions et Mindcoach cartographiera votre état émotionnel, vos forces et vos axes de progression.",
+  "analyseSubtitle": "Répondez honnêtement à quelques questions et MindCoach cartographiera votre état émotionnel, vos forces et vos axes de progression.",
   "analyseCta": "Lancer l'analyse",
   "relaxingSound": "Son relaxant",
   "seeAll": "Voir tout",
@@ -599,7 +599,7 @@
   "calling": "Appel en cours...",
   "image": "Image",
   "coachesTitle": "Guides",
-  "searchAtMindcoach": "Rechercher sur __MINDguide__",
+  "searchAtMindcoach": "Rechercher sur MindCoach",
   "noResultsFound": "Aucun résultat trouvé pour \"{query}\"",
   "@noResultsFound": {
     "placeholders": {

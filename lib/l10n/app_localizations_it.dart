@@ -25,7 +25,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get analyseSubtitle =>
-      'Rispondi con sincerità ad alcune domande e Mindcoach traccerà il tuo stato emotivo, i tuoi punti di forza e le aree di crescita.';
+      'Rispondi con sincerità ad alcune domande e MindCoach traccerà il tuo stato emotivo, i tuoi punti di forza e le aree di crescita.';
 
   @override
   String get analyseCta => 'Avvia analisi';
@@ -1970,7 +1970,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get coachesTitle => 'Guida';
 
   @override
-  String get searchAtMindcoach => 'Cerca in __MINDguida__';
+  String get searchAtMindcoach => 'Cerca in MindCoach';
 
   @override
   String noResultsFound(String query) {

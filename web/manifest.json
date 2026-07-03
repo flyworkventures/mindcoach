@@ -1,6 +1,6 @@
 {
-    "name": "mindcoach",
-    "short_name": "mindcoach",
+    "name": "MindCoach",
+    "short_name": "MindCoach",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

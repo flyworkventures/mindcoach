@@ -24,7 +24,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get analyseTitle => '了解你内心最简单的方式。';
 
   @override
-  String get analyseSubtitle => '诚实地回答几个问题，Mindcoach 将描绘出你的情绪状态、优势和成长空间。';
+  String get analyseSubtitle => '诚实地回答几个问题，MindCoach 将描绘出你的情绪状态、优势和成长空间。';
 
   @override
   String get analyseCta => '开始分析';
@@ -1826,7 +1826,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get coachesTitle => '向导';
 
   @override
-  String get searchAtMindcoach => '在__MIND向导__中搜索';
+  String get searchAtMindcoach => '在 MindCoach 中搜索';
 
   @override
   String noResultsFound(String query) {

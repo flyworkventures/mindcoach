@@ -151,7 +151,7 @@ abstract class AppLocalizations {
   /// No description provided for @analyseSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Answer a few questions honestly, and Mindcoach will map out your emotional state, strengths, and areas for growth.'**
+  /// **'Answer a few questions honestly, and MindCoach will map out your emotional state, strengths, and areas for growth.'**
   String get analyseSubtitle;
 
   /// No description provided for @analyseCta.

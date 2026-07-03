@@ -25,7 +25,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get analyseSubtitle =>
-      'Ответьте честно на несколько вопросов, и Mindcoach определит ваше эмоциональное состояние, сильные стороны и зоны роста.';
+      'Ответьте честно на несколько вопросов, и MindCoach определит ваше эмоциональное состояние, сильные стороны и зоны роста.';
 
   @override
   String get analyseCta => 'Начать анализ';
@@ -1971,7 +1971,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get coachesTitle => 'Наставники';
 
   @override
-  String get searchAtMindcoach => 'Поиск в __MINDнаставник__';
+  String get searchAtMindcoach => 'Поиск в MindCoach';
 
   @override
   String noResultsFound(String query) {

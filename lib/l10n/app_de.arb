@@ -5,7 +5,7 @@
   "appointmentRescheduled": "Termin verschoben",
   "analyseBadge": "KI-gestützt",
   "analyseTitle": "Der einfachste Weg, deinen Geist zu verstehen.",
-  "analyseSubtitle": "Beantworte ein paar Fragen ehrlich, und Mindcoach zeichnet deinen emotionalen Zustand, deine Stärken und deine Wachstumsbereiche auf.",
+  "analyseSubtitle": "Beantworte ein paar Fragen ehrlich, und MindCoach zeichnet deinen emotionalen Zustand, deine Stärken und deine Wachstumsbereiche auf.",
   "analyseCta": "Analyse starten",
   "relaxingSound": "Entspannender Sound",
   "seeAll": "Alle ansehen",
@@ -599,7 +599,7 @@
   "calling": "Wird angerufen...",
   "image": "Bild",
   "coachesTitle": "Begleiter",
-  "searchAtMindcoach": "Bei __MINDBegleiter__ suchen",
+  "searchAtMindcoach": "Bei MindCoach suchen",
   "noResultsFound": "Keine Ergebnisse für \"{query}\" gefunden",
   "@noResultsFound": {
     "placeholders": {

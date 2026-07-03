@@ -25,7 +25,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get analyseSubtitle =>
-      'いくつかの質問に正直に答えると、Mindcoach があなたの感情状態、強み、成長分野を可視化します。';
+      'いくつかの質問に正直に答えると、MindCoach があなたの感情状態、強み、成長分野を可視化します。';
 
   @override
   String get analyseCta => '分析を開始';
@@ -1878,7 +1878,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get coachesTitle => 'ガイド';
 
   @override
-  String get searchAtMindcoach => '__MINDガイド__で検索';
+  String get searchAtMindcoach => 'MindCoachで検索';
 
   @override
   String noResultsFound(String query) {

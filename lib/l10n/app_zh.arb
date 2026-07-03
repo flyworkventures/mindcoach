@@ -5,7 +5,7 @@
   "appointmentRescheduled": "预约已改期",
   "analyseBadge": "AI 驱动",
   "analyseTitle": "了解你内心最简单的方式。",
-  "analyseSubtitle": "诚实地回答几个问题，Mindcoach 将描绘出你的情绪状态、优势和成长空间。",
+  "analyseSubtitle": "诚实地回答几个问题，MindCoach 将描绘出你的情绪状态、优势和成长空间。",
   "analyseCta": "开始分析",
   "relaxingSound": "放松的声音",
   "seeAll": "查看全部",
@@ -599,7 +599,7 @@
   "calling": "呼叫中...",
   "image": "图像",
   "coachesTitle": "向导",
-  "searchAtMindcoach": "在__MIND向导__中搜索",
+  "searchAtMindcoach": "在 MindCoach 中搜索",
   "noResultsFound": "未找到与“{query}”相关的结果",
   "@noResultsFound": {
     "placeholders": {

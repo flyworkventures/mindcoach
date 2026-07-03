@@ -25,7 +25,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analyseSubtitle =>
-      'Answer a few questions honestly, and Mindcoach will map out your emotional state, strengths, and areas for growth.';
+      'Answer a few questions honestly, and MindCoach will map out your emotional state, strengths, and areas for growth.';
 
   @override
   String get analyseCta => 'Start Analyze';

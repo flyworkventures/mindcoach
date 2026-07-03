@@ -25,7 +25,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get analyseSubtitle =>
-      'कुछ सवालों के ईमानदारी से जवाब दें, और Mindcoach आपकी भावनात्मक स्थिति, ताकत और विकास के क्षेत्रों को दर्शाएगा।';
+      'कुछ सवालों के ईमानदारी से जवाब दें, और MindCoach आपकी भावनात्मक स्थिति, ताकत और विकास के क्षेत्रों को दर्शाएगा।';
 
   @override
   String get analyseCta => 'विश्लेषण शुरू करें';
@@ -1956,7 +1956,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get coachesTitle => 'मार्गदर्शक';
 
   @override
-  String get searchAtMindcoach => '__MINDमार्गदर्शक__ पर खोजें';
+  String get searchAtMindcoach => 'MindCoach पर खोजें';
 
   @override
   String noResultsFound(String query) {

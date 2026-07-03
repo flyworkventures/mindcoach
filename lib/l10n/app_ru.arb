@@ -5,7 +5,7 @@
   "appointmentRescheduled": "Запись перенесена",
   "analyseBadge": "На базе ИИ",
   "analyseTitle": "Самый простой способ понять свой разум.",
-  "analyseSubtitle": "Ответьте честно на несколько вопросов, и Mindcoach определит ваше эмоциональное состояние, сильные стороны и зоны роста.",
+  "analyseSubtitle": "Ответьте честно на несколько вопросов, и MindCoach определит ваше эмоциональное состояние, сильные стороны и зоны роста.",
   "analyseCta": "Начать анализ",
   "relaxingSound": "Расслабляющий звук",
   "seeAll": "Смотреть все",
@@ -599,7 +599,7 @@
   "calling": "Звонок...",
   "image": "Изображение",
   "coachesTitle": "Наставники",
-  "searchAtMindcoach": "Поиск в __MINDнаставник__",
+  "searchAtMindcoach": "Поиск в MindCoach",
   "noResultsFound": "Результаты по запросу \"{query}\" не найдены",
   "@noResultsFound": {
     "placeholders": {

@@ -5,7 +5,7 @@
   "appointmentRescheduled": "Consulta reagendada",
   "analyseBadge": "Com IA",
   "analyseTitle": "A maneira mais fácil de entender sua mente.",
-  "analyseSubtitle": "Responda a algumas perguntas com sinceridade e o Mindcoach mapeará seu estado emocional, seus pontos fortes e áreas de crescimento.",
+  "analyseSubtitle": "Responda a algumas perguntas com sinceridade e o MindCoach mapeará seu estado emocional, seus pontos fortes e áreas de crescimento.",
   "analyseCta": "Iniciar análise",
   "relaxingSound": "Som Relaxante",
   "seeAll": "Ver Tudo",
@@ -599,7 +599,7 @@
   "calling": "Chamando...",
   "image": "Imagem",
   "coachesTitle": "Guias",
-  "searchAtMindcoach": "Pesquisar no __MINDguia__",
+  "searchAtMindcoach": "Pesquisar no MindCoach",
   "noResultsFound": "Nenhum resultado encontrado para \"{query}\"",
   "@noResultsFound": {
     "placeholders": {

@@ -15,17 +15,16 @@ class AppConstants {
 
   static const String defaultPpUrl =
       "https://mindcoach.b-cdn.net/1024x1024.jpg";
-  // ---- Local backend (mindcoach_apis-main, PORT 3010) ----
+  // ---- Production (canlı sunucu) ----
+  static const String baseURL = 'https://mindcoach.fly-work.com';
+  static const String wsBaseURL = 'wss://mindcoach.fly-work.com/realtime';
+
+  // ---- Local backend (geri almak için, mindcoach_apis-main PORT 3010) ----
   // Gerçek cihaz (fiziksel telefon): Mac ile telefon AYNI Wi-Fi ağında olmalı.
   //   Mac LAN IP: 192.168.1.104  (değişirse `ipconfig getifaddr en0` ile güncelleyin)
-  // iOS Simulator için: http://localhost:3010
-  // Android Emulator için: http://10.0.2.2:3010
-  static const String baseURL = 'http://192.168.1.104:3010';
-  static const String wsBaseURL = 'ws://192.168.1.104:3010/realtime';
-
-  // ---- Production (geri almak için) ----
-  // static const String baseURL = 'https://mindcoach.fly-work.com';
-  // static const String wsBaseURL = 'ws://mindcoach.fly-work.com/realtime';
+  // iOS Simulator için: http://localhost:3010 | Android Emulator: http://10.0.2.2:3010
+  // static const String baseURL = 'http://192.168.1.104:3010';
+  // static const String wsBaseURL = 'ws://192.168.1.104:3010/realtime';
   static const String onesignalId = "b3ba2ab4-03a9-45dc-a303-f0a92d7d1410";
   static const String googleAuth = "/auth/google";
   static const String facebookAuth = "/auth/facebook";
