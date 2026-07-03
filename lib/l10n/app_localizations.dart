@@ -118,6 +118,48 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
+  /// No description provided for @reschedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Reschedule'**
+  String get reschedule;
+
+  /// No description provided for @appointmentDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment deleted'**
+  String get appointmentDeleted;
+
+  /// No description provided for @appointmentRescheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment rescheduled'**
+  String get appointmentRescheduled;
+
+  /// No description provided for @analyseBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered'**
+  String get analyseBadge;
+
+  /// No description provided for @analyseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The easiest way to understand your mind.'**
+  String get analyseTitle;
+
+  /// No description provided for @analyseSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer a few questions honestly, and Mindcoach will map out your emotional state, strengths, and areas for growth.'**
+  String get analyseSubtitle;
+
+  /// No description provided for @analyseCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Analyze'**
+  String get analyseCta;
+
   /// No description provided for @relaxingSound.
   ///
   /// In en, this message translates to:
@@ -3339,6 +3381,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Most Popular'**
   String get mostPopular;
+
+  /// No description provided for @soundCategoryAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get soundCategoryAll;
 
   /// No description provided for @soundCategoryFocus.
   ///

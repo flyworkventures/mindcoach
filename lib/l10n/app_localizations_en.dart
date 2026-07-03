@@ -9,6 +9,28 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get reschedule => 'Reschedule';
+
+  @override
+  String get appointmentDeleted => 'Appointment deleted';
+
+  @override
+  String get appointmentRescheduled => 'Appointment rescheduled';
+
+  @override
+  String get analyseBadge => 'AI-powered';
+
+  @override
+  String get analyseTitle => 'The easiest way to understand your mind.';
+
+  @override
+  String get analyseSubtitle =>
+      'Answer a few questions honestly, and Mindcoach will map out your emotional state, strengths, and areas for growth.';
+
+  @override
+  String get analyseCta => 'Start Analyze';
+
+  @override
   String get relaxingSound => 'Relaxing Sound';
 
   @override
@@ -1823,6 +1845,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mostPopular => 'Most Popular';
+
+  @override
+  String get soundCategoryAll => 'All';
 
   @override
   String get soundCategoryFocus => 'Focus';

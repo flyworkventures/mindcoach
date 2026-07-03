@@ -192,6 +192,8 @@ String getSoundSubtitle(AppLocalizations l, String key) {
 
 String getCategoryLabel(AppLocalizations l, String key) {
   switch (key) {
+    case 'all':
+      return l.soundCategoryAll;
     case 'focus':
       return l.soundCategoryFocus;
     case 'sleep':

@@ -9,6 +9,28 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get reschedule => 'Verschieben';
+
+  @override
+  String get appointmentDeleted => 'Termin gelöscht';
+
+  @override
+  String get appointmentRescheduled => 'Termin verschoben';
+
+  @override
+  String get analyseBadge => 'KI-gestützt';
+
+  @override
+  String get analyseTitle => 'Der einfachste Weg, deinen Geist zu verstehen.';
+
+  @override
+  String get analyseSubtitle =>
+      'Beantworte ein paar Fragen ehrlich, und Mindcoach zeichnet deinen emotionalen Zustand, deine Stärken und deine Wachstumsbereiche auf.';
+
+  @override
+  String get analyseCta => 'Analyse starten';
+
+  @override
   String get relaxingSound => 'Entspannender Sound';
 
   @override
@@ -1841,6 +1863,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get mostPopular => 'Beliebteste';
+
+  @override
+  String get soundCategoryAll => 'Alle';
 
   @override
   String get soundCategoryFocus => 'Fokus';

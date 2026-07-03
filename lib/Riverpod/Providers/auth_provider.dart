@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -150,44 +152,56 @@ class AuthProvider extends StateNotifier{
 
 
  Future<UserModel?> sendAPI(HandleLoginModel loginModel) async{
-  final httpService = HttpService(ref: ref);
-        final response = await httpService.post(
-        path: loginModel.apiPath!,
-        body: loginModel.body ?? {},
-        headers: loginModel.header,
-      );
-      
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final json = jsonDecode(response.body);
-        if (json['success'] == true && json['data'] != null) {
-          final token = json['data']['token'];
-          final userData = json['data']['user'];
-          
-          // Token'ı kaydet
-          await localDbService.setString(key: LocalDbKeys.token, value: token);
- 
-          // User bilgisini de kaydet (UserProvider'a set etmek için)
-          if (userData != null) {
-             final userModel = UserModel.fromMap(userData);
-              final userModelWithToken = userModel.copyWith(token: token);
-              if (ref != null) {
-                ref!.invalidate(chatProvider);
-                ref!.invalidate(conversationsProvider);
-                ref!.invalidate(appointmentsProvider);
-                ref!.invalidate(notificationNotifierProvider);
-              }
-              return userModelWithToken;
-          }else {
-         return null;
-          
+  try {
+    final httpService = HttpService(ref: ref);
+    final response = await httpService.post(
+      path: loginModel.apiPath!,
+      body: loginModel.body ?? {},
+      headers: loginModel.header,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final json = jsonDecode(response.body);
+      if (json['success'] == true && json['data'] != null) {
+        final token = json['data']['token'];
+        final userData = json['data']['user'];
+
+        await localDbService.setString(key: LocalDbKeys.token, value: token);
+
+        if (userData != null) {
+          final userModel = UserModel.fromMap(userData);
+          final userModelWithToken = userModel.copyWith(token: token);
+          if (ref != null) {
+            ref!.invalidate(chatProvider);
+            ref!.invalidate(conversationsProvider);
+            ref!.invalidate(appointmentsProvider);
+            ref!.invalidate(notificationNotifierProvider);
+          }
+          return userModelWithToken;
         }
-        } else {
-         return null;
-          
-        }
-      } else {
-         return null;
+        debugPrint('[AuthProvider] sendAPI: userData null');
+        return null;
       }
+      debugPrint(
+        '[AuthProvider] sendAPI: success=false veya data null — '
+        '${response.body}',
+      );
+      return null;
+    }
+    debugPrint(
+      '[AuthProvider] sendAPI HTTP ${response.statusCode}: ${response.body}',
+    );
+    return null;
+  } on SocketException catch (e) {
+    debugPrint('[AuthProvider] sendAPI ağ hatası ($e) — baseURL=${AppConstants.baseURL}');
+    return null;
+  } on TimeoutException catch (e) {
+    debugPrint('[AuthProvider] sendAPI zaman aşımı ($e) — baseURL=${AppConstants.baseURL}');
+    return null;
+  } catch (e, st) {
+    debugPrint('[AuthProvider] sendAPI beklenmeyen hata: $e\n$st');
+    return null;
+  }
  }
 
 

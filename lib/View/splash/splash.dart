@@ -282,7 +282,7 @@ class _SplashState extends ConsumerState<Splash>
                 right: 0,
                 child: Center(
                   child: Text(
-                    'mindcoach',
+                    'MindCoach',
                     style: GoogleFonts.quicksand(
                       fontSize: 42,
                       fontWeight: FontWeight.w700,

@@ -50,10 +50,15 @@ class VideoCallRealtimeScreen extends ConsumerStatefulWidget {
   /// Onboarding deneme akisi: 1 dk limiti baglanti kurulunca baslar.
   final bool isTrial;
 
+  /// Psikolojik öz-farkındalık analizi akışı: danışman 10 soru sorup
+  /// duygusal durum + güçlü yönler yorumu yapar (sunucuya `mode=analysis`).
+  final bool isAnalysis;
+
   const VideoCallRealtimeScreen({
     super.key,
     required this.specialist,
     this.isTrial = false,
+    this.isAnalysis = false,
   });
 
   @override
@@ -174,8 +179,12 @@ class _VideoCallRealtimeScreenState
   DateTime? _aiSpeakingSince;
   int _lastPlaybackRms = 0;
 
+  static const String _kDefaultRiveFallbackUrl =
+      'https://mindcoach.b-cdn.net/Female%20Riv/elena.riv';
+
   late rive.FileLoader _riveFileLoader;
   int _riveLoaderKey = 0;
+  bool _riveRecoveryAttempted = false;
   dynamic _riveController;
   dynamic _riveViewModel;
   // StateMachine input fallback (used when the .riv file has no ViewModel)
@@ -264,7 +273,11 @@ class _VideoCallRealtimeScreenState
 
     // 🎬 PREMIUM KONTROLÜ:
     // FindCoachStep trial akışında (isTrial=true) 1 dk deneme izni verilir.
-    if (!widget.isTrial && !ref.read(AllProviders.premiumProvider).isPremium) {
+    // Psikolojik analiz akışı (isAnalysis=true) paywall'a takılmadan doğrudan
+    // görüşmeyi açar; kullanıcı butona basınca anında karaktere bağlanır.
+    if (!widget.isTrial &&
+        !widget.isAnalysis &&
+        !ref.read(AllProviders.premiumProvider).isPremium) {
       await presentProOffersPaywall();
       if (mounted) Navigator.of(context).pop();
       return;
@@ -473,21 +486,122 @@ class _VideoCallRealtimeScreenState
   /// takip eder. Cache'den alınan loader'lar dispose edilmemeli.
   bool _ownsRiveFileLoader = false;
 
+  String _resolveRiveUrl() {
+    final raw = widget.specialist.url3d?.trim();
+    if (raw != null && raw.isNotEmpty) {
+      return RivePreloadService.normalizeRiveUrl(raw) ?? _kDefaultRiveFallbackUrl;
+    }
+    return _kDefaultRiveFallbackUrl;
+  }
+
   rive.FileLoader _buildRiveFileLoader() {
-    final cached = RivePreloadService.instance.getLoader(
-      widget.specialist.url3d,
-    );
+    final url = _resolveRiveUrl();
+    final cached = RivePreloadService.instance.getLoader(url);
     // Dosya tamamen indirilip decode edildiyse anında kullan.
-    // Hâlâ indirme devam ediyorsa yerel asset'e geç; [_scheduleRemoteRiveUpgrade]
-    // tamamlanınca uzak dosyaya geçilir.
     if (cached != null && cached.isFileAvailable) {
       _ownsRiveFileLoader = false;
       return cached;
     }
+
+    // CDN'den doğrudan yükle. Repo'da yerel f_avatar1.riv yok; eski fallback
+    // RiveFailed → karanlık ekrana yol açıyordu.
+    final remote = RivePreloadService.instance.obtainOrCreateLoader(url);
+    if (remote != null) {
+      _ownsRiveFileLoader = false;
+      return remote;
+    }
+
     _ownsRiveFileLoader = true;
-    return rive.FileLoader.fromAsset(
-      'assets/chars/f_avatar1.riv',
+    return rive.FileLoader.fromUrl(
+      _kDefaultRiveFallbackUrl,
       riveFactory: rive.Factory.rive,
+    );
+  }
+
+  rive.RiveWidgetController _createRiveWidgetController(rive.File file) {
+    Object? lastError;
+    final attempts = <rive.RiveWidgetController Function()>[
+      () => rive.RiveWidgetController(file),
+      () => rive.RiveWidgetController(
+        file,
+        artboardSelector: const rive.ArtboardAtIndex(0),
+        stateMachineSelector: const rive.StateMachineAtIndex(0),
+      ),
+    ];
+    for (final create in attempts) {
+      try {
+        return create();
+      } catch (e) {
+        lastError = e;
+      }
+    }
+    if (lastError != null) throw lastError;
+    return rive.RiveWidgetController(file);
+  }
+
+  void _resetRiveBindingState() {
+    _riveReady = false;
+    _riveController = null;
+    _riveViewModel = null;
+    _smTalk = null;
+    _smVisemeNum = null;
+    _smDuration = null;
+  }
+
+  void _reloadRiveLoader(String url) {
+    final loader = RivePreloadService.instance.obtainOrCreateLoader(url);
+    if (loader == null) return;
+    setState(() {
+      _resetRiveBindingState();
+      if (_ownsRiveFileLoader) {
+        _riveFileLoader.dispose();
+        _ownsRiveFileLoader = false;
+      }
+      _riveFileLoader = loader;
+      _riveLoaderKey++;
+    });
+  }
+
+  Future<void> _recoverRiveAfterFailure() async {
+    if (_riveRecoveryAttempted || !mounted) return;
+    _riveRecoveryAttempted = true;
+
+    final current = RivePreloadService.normalizeRiveUrl(_resolveRiveUrl());
+    final fallback =
+        RivePreloadService.normalizeRiveUrl(_kDefaultRiveFallbackUrl);
+
+    if (current != null &&
+        fallback != null &&
+        current != fallback) {
+      final ok = await RivePreloadService.instance.ensurePreloaded(fallback);
+      if (!mounted) return;
+      if (ok) {
+        _reloadRiveLoader(fallback);
+        return;
+      }
+    }
+
+    RivePreloadService.instance.invalidate(_resolveRiveUrl());
+    _reloadRiveLoader(_resolveRiveUrl());
+  }
+
+  void _onRiveFailed(Object error, StackTrace stackTrace) {
+    debugPrint(
+      'Rive yükleme hatası (consultant ${widget.specialist.id}): $error',
+    );
+    unawaited(_recoverRiveAfterFailure());
+  }
+
+  Widget _buildRiveAvatar(rive.RiveLoaded loaded) {
+    if (!_riveReady) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _onRiveLoaded(loaded);
+      });
+    }
+    return rive.RiveWidget(
+      controller: loaded.controller,
+      fit: rive.Fit.cover,
+      alignment: const Alignment(0, 0.35),
     );
   }
 
@@ -495,7 +609,7 @@ class _VideoCallRealtimeScreenState
   /// [obtainOrCreateLoader] ile indirme başlar; bitince uzak .riv'e geçilir.
   Future<void> _scheduleRemoteRiveUpgrade() async {
     final loader = RivePreloadService.instance.obtainOrCreateLoader(
-      widget.specialist.url3d,
+      _resolveRiveUrl(),
     );
     if (loader == null) return;
 
@@ -505,6 +619,7 @@ class _VideoCallRealtimeScreenState
       if (identical(_riveFileLoader, loader)) return;
 
       setState(() {
+        _resetRiveBindingState();
         if (_ownsRiveFileLoader) {
           _riveFileLoader.dispose();
           _ownsRiveFileLoader = false;
@@ -697,7 +812,8 @@ class _VideoCallRealtimeScreenState
           '${AppConstants.wsBaseURL}'
           '?token=${Uri.encodeQueryComponent(token)}'
           '&consultantId=${widget.specialist.id}'
-          '&lang=${Uri.encodeQueryComponent(deviceLang)}';
+          '&lang=${Uri.encodeQueryComponent(deviceLang)}'
+          '${widget.isAnalysis ? '&mode=analysis' : ''}';
       _ws = await WebSocket.connect(url);
       _wsSub = _ws!.listen(
         _onWsData,
@@ -2162,8 +2278,12 @@ class _VideoCallRealtimeScreenState
     //     planda paint ediliyor ama placeholder üstüne tam opaque oturuyor.
     //   • connection_success'te placeholder fade-out (140 ms) → arkadaki
     //     Rive ANINDA görünür hale geliyor, mount/first-paint maliyeti yok.
-    final bool showAvatar =
-        _callState != _CallState.connecting && _callState != _CallState.error;
+    // Placeholder yalnızca Rive gerçekten hazır olduğunda kaybolsun; aksi halde
+    // indirme sırasında karanlık/boş ekran görünür.
+    final bool hidePlaceholder =
+        _riveReady &&
+        _callState != _CallState.connecting &&
+        _callState != _CallState.error;
     return Container(
       color: const Color(0xFF22C987),
       child: Stack(
@@ -2174,25 +2294,27 @@ class _VideoCallRealtimeScreenState
               key: ValueKey<int>(_riveLoaderKey),
               child: rive.RiveWidgetBuilder(
                 fileLoader: _riveFileLoader,
+                controller: _createRiveWidgetController,
                 onLoaded: _onRiveLoaded,
+                onFailed: _onRiveFailed,
                 builder: (context, state) {
                   return switch (state) {
-                    rive.RiveLoading() => const SizedBox.shrink(),
-                    rive.RiveFailed() => const SizedBox.shrink(),
-                    rive.RiveLoaded() => rive.RiveWidget(
-                      controller: state.controller,
-                      fit: rive.Fit.cover,
-                      alignment: const Alignment(0, 0.35),
+                    rive.RiveLoading() => _buildRiveLoadingPlaceholder(
+                      showSpinner: false,
                     ),
+                    rive.RiveFailed() => _buildRiveLoadingPlaceholder(
+                      showSpinner: false,
+                    ),
+                    rive.RiveLoaded loaded => _buildRiveAvatar(loaded),
                   };
                 },
               ),
             ),
           ),
           IgnorePointer(
-            ignoring: showAvatar,
+            ignoring: hidePlaceholder,
             child: AnimatedOpacity(
-              opacity: showAvatar ? 0.0 : 1.0,
+              opacity: hidePlaceholder ? 0.0 : 1.0,
               duration: const Duration(milliseconds: 140),
               curve: Curves.easeOut,
               child: _buildRiveLoadingPlaceholder(

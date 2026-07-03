@@ -9,6 +9,28 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get reschedule => 'Ertele';
+
+  @override
+  String get appointmentDeleted => 'Randevu silindi';
+
+  @override
+  String get appointmentRescheduled => 'Randevu ertelendi';
+
+  @override
+  String get analyseBadge => 'Yapay zeka destekli';
+
+  @override
+  String get analyseTitle => 'Zihnini anlamanın en kolay yolu.';
+
+  @override
+  String get analyseSubtitle =>
+      'Birkaç soruyu içtenlikle yanıtla; Mindcoach duygusal durumunu, güçlü yönlerini ve gelişim alanlarını haritalasın.';
+
+  @override
+  String get analyseCta => 'Analize Başla';
+
+  @override
   String get relaxingSound => 'Rahatlatıcı Ses';
 
   @override
@@ -24,10 +46,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get premiumHeadlinePart1 => 'Yargılanmadan,\nsadece ';
 
   @override
-  String get premiumHeadlineHighlight => 'anlaşıldığın';
+  String get premiumHeadlineHighlight => 'anlaşılmak';
 
   @override
-  String get premiumHeadlinePart2 => ' bir alan.';
+  String get premiumHeadlinePart2 => ' için\nbir alan.';
 
   @override
   String get premiumSubtitle =>
@@ -46,7 +68,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get premiumAnnualDiscount => 'Yıllık planda %40 indirim';
 
   @override
-  String get premiumCta => 'Hemen Başla';
+  String get premiumCta => 'Başla';
 
   @override
   String get premiumPrice => '₺149,99';
@@ -1819,6 +1841,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get mostPopular => 'En Popüler';
+
+  @override
+  String get soundCategoryAll => 'Tümü';
 
   @override
   String get soundCategoryFocus => 'Odak';

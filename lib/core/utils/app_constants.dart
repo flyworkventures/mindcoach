@@ -15,8 +15,17 @@ class AppConstants {
 
   static const String defaultPpUrl =
       "https://mindcoach.b-cdn.net/1024x1024.jpg";
-  static const String baseURL = 'https://mindcoach.fly-work.com';
-  static const String wsBaseURL = 'ws://mindcoach.fly-work.com/realtime';
+  // ---- Local backend (mindcoach_apis-main, PORT 3010) ----
+  // Gerçek cihaz (fiziksel telefon): Mac ile telefon AYNI Wi-Fi ağında olmalı.
+  //   Mac LAN IP: 192.168.1.104  (değişirse `ipconfig getifaddr en0` ile güncelleyin)
+  // iOS Simulator için: http://localhost:3010
+  // Android Emulator için: http://10.0.2.2:3010
+  static const String baseURL = 'http://192.168.1.104:3010';
+  static const String wsBaseURL = 'ws://192.168.1.104:3010/realtime';
+
+  // ---- Production (geri almak için) ----
+  // static const String baseURL = 'https://mindcoach.fly-work.com';
+  // static const String wsBaseURL = 'ws://mindcoach.fly-work.com/realtime';
   static const String onesignalId = "b3ba2ab4-03a9-45dc-a303-f0a92d7d1410";
   static const String googleAuth = "/auth/google";
   static const String facebookAuth = "/auth/facebook";
@@ -29,6 +38,7 @@ class AppConstants {
   static const String logoutURL = "/auth/logout";
   static const String deleteAccountURL = "/auth/account";
   static const String consultantsURL = "/consultants";
+  static String getConsultantByIdURL(int id) => "/consultants/$id";
   static const String consultantssendMessageURL = "/chats/send";
   static const String sendPremiumMessageURL = "/chats/send-premium";
   static const String sendGeneralAssistantMessageURL =
@@ -51,6 +61,10 @@ class AppConstants {
       "/appointments/user/$userId/upcoming";
   static String cancelAppointmentURL(int appointmentId) =>
       "/appointments/$appointmentId";
+  static String deleteAppointmentURL(int appointmentId) =>
+      "/appointments/$appointmentId/permanent";
+  static String rescheduleAppointmentURL(int appointmentId) =>
+      "/appointments/$appointmentId/reschedule";
   static String reactivateAppointmentURL(int appointmentId) =>
       "/appointments/$appointmentId/reactivate";
   static const String createAppointmentURL = "/appointments/webhook";
@@ -65,6 +79,10 @@ class AppConstants {
   static String getNotificationByIdURL(int id) => "/notifications/$id";
   static String deleteNotificationURL(int id) => "/notifications/$id";
   static const String deleteAllNotificationsURL = "/notifications";
+  static const String notificationPreferencesURL = "/notifications/preferences";
+  static const String notificationUnreadCountURL = "/notifications/unread-count";
+  static const String markAllNotificationsReadURL = "/notifications/read-all";
+  static String markNotificationReadURL(int id) => "/notifications/$id/read";
 
   static Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates = [
     AppLocalizations.delegate,

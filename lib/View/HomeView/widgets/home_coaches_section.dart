@@ -24,7 +24,7 @@ class _HomeCoachesSectionState extends ConsumerState<HomeCoachesSection> {
   void initState() {
     super.initState();
     // Varsayılan filtre: sınav kaygısı koçları
-    _selectedJob = 'exam_anxiety';
+    _selectedJob = 'personal';
   }
 
   @override
@@ -39,11 +39,11 @@ class _HomeCoachesSectionState extends ConsumerState<HomeCoachesSection> {
     // API'den gelen gerçek job tiplerine göre filtre listesi oluştur
     // Önce sınav kaygısı, ortada mevcut tipler, sonda yeni rehberlik tipleri
     const jobOrder = [
+      'personal',
       'exam_anxiety',
       'adult',
       'child',
       'teenage',
-      'personal',
       'family_assistant',
       'thought_and_habit_guide',
       'emotional_balance',

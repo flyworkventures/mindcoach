@@ -616,14 +616,14 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                           controller: _messageController,
                           style: const TextStyle(
                             fontFamily: 'Geist',
-                            fontSize: 14,
+                            fontSize: 16,
                             color: Colors.black,
                           ),
                           decoration: InputDecoration(
                             hintText: l.typeAMessage,
                             hintStyle: const TextStyle(
                               fontFamily: 'Geist',
-                              fontSize: 12,
+                              fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: Colors.black,
                             ),
@@ -1745,7 +1745,7 @@ class _MessageBubbleState extends State<_MessageBubble> {
             widget.message.message,
             style: TextStyle(
               fontFamily: 'Geist',
-              fontSize: 12,
+              fontSize: 16,
               fontWeight: FontWeight.w400,
               color: isMe ? Colors.white : Color(0xFF96989C),
             ),

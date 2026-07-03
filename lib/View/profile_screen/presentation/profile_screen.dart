@@ -60,12 +60,17 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   }
 
   // --- SHARE FRIEND DIALOG METODU ---
-  void _showShareFriendSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const _ShareFriendBottomSheet(),
+  Future<void> _showShareFriendSheet(BuildContext context) async {
+    final String shareUrl = "https://fly-work.com/mindcoach/download/";
+    final RenderBox? box = context.findRenderObject() as RenderBox?;
+    final Rect? sharePositionOrigin = box != null
+        ? box.localToGlobal(Offset.zero) & box.size
+        : null;
+        
+    await Share.share(
+      shareUrl,
+      subject: 'Mind Coach',
+      sharePositionOrigin: sharePositionOrigin,
     );
   }
 
@@ -401,6 +406,17 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                             },
                           ),
                         ),
+                      ),
+                    ),
+                    _buildListItem(
+                      iconAsset: 'assets/icons/ic_bell.svg',
+                      title:
+                          Localizations.localeOf(context).languageCode == 'tr'
+                              ? 'Bildirim Ayarları'
+                              : 'Notification Settings',
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        PageRoutes.notificationSettings,
                       ),
                     ),
                     _buildListItem(

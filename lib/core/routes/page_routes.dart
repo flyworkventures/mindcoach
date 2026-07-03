@@ -20,6 +20,7 @@ class PageRoutes {
   static const String faq = '/faq_screen';
   static const String appointments = '/appointments_screen';
   static const String notifications = '/notifications_screen';
+  static const String notificationSettings = '/notification_settings';
   static const String premimum = '/premium_screen';
   static const String conversationScreen = '/conversation_page';
   static const String videoCall = '/video_call_screen';

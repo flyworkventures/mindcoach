@@ -29,4 +29,23 @@ class ConsultantRepo {
     return [];
   }
  }
+
+ /// Tek bir danışmanı id ile getirir (analiz kartı gibi doğrudan açılışlar için).
+ Future<ConsultantModel?> getConsultantById(int id) async {
+   try {
+     final http = HttpService(ref: ref);
+     final res = await http.get(path: AppConstants.getConsultantByIdURL(id));
+     if (res.statusCode != 200) return null;
+     final json = jsonDecode(res.body);
+     if (json['success'] != true || json['data']?['consultant'] == null) {
+       return null;
+     }
+     return ConsultantModel.fromMap(
+       json['data']['consultant'] as Map<String, dynamic>,
+     );
+   } catch (e) {
+     debugPrint('getConsultantById($id) error: $e');
+     return null;
+   }
+ }
 }

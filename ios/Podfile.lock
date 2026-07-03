@@ -1,0 +1,159 @@
+PODS:
+  - audio_waveforms (0.0.1):
+    - Flutter
+  - devicelocale (0.0.1):
+    - Flutter
+  - FBAEMKit (18.0.3):
+    - FBSDKCoreKit_Basics (= 18.0.3)
+  - FBSDKCoreKit (18.0.3):
+    - FBAEMKit (= 18.0.3)
+    - FBSDKCoreKit_Basics (= 18.0.3)
+  - FBSDKCoreKit_Basics (18.0.3)
+  - FBSDKLoginKit (18.0.3):
+    - FBSDKCoreKit (= 18.0.3)
+  - Flutter (1.0.0)
+  - flutter_facebook_auth (7.1.2):
+    - FBSDKLoginKit (~> 18.0.0)
+    - Flutter
+  - flutter_inappwebview_ios (0.0.1):
+    - Flutter
+    - flutter_inappwebview_ios/Core (= 0.0.1)
+    - OrderedSet (~> 6.0.3)
+  - flutter_inappwebview_ios/Core (0.0.1):
+    - Flutter
+    - OrderedSet (~> 6.0.3)
+  - flutter_localization (0.0.1):
+    - Flutter
+  - flutter_pcm_sound (0.0.1):
+    - Flutter
+  - flutter_secure_storage (6.0.0):
+    - Flutter
+  - onesignal_flutter (5.3.4):
+    - Flutter
+    - OneSignalXCFramework (= 5.2.15)
+  - OneSignalXCFramework (5.2.15):
+    - OneSignalXCFramework/OneSignalComplete (= 5.2.15)
+  - OneSignalXCFramework/OneSignal (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalExtension
+    - OneSignalXCFramework/OneSignalLiveActivities
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalComplete (5.2.15):
+    - OneSignalXCFramework/OneSignal
+    - OneSignalXCFramework/OneSignalInAppMessages
+    - OneSignalXCFramework/OneSignalLocation
+  - OneSignalXCFramework/OneSignalCore (5.2.15)
+  - OneSignalXCFramework/OneSignalExtension (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalInAppMessages (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalLiveActivities (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalLocation (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalNotifications (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalExtension
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalOSCore (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+  - OneSignalXCFramework/OneSignalOutcomes (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+  - OneSignalXCFramework/OneSignalUser (5.2.15):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OrderedSet (6.0.3)
+  - permission_handler_apple (9.3.0):
+    - Flutter
+  - rive_native (0.0.1):
+    - Flutter
+  - sign_in_with_apple (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - audio_waveforms (from `.symlinks/plugins/audio_waveforms/ios`)
+  - devicelocale (from `.symlinks/plugins/devicelocale/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
+  - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
+  - flutter_localization (from `.symlinks/plugins/flutter_localization/ios`)
+  - flutter_pcm_sound (from `.symlinks/plugins/flutter_pcm_sound/ios`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - onesignal_flutter (from `.symlinks/plugins/onesignal_flutter/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - rive_native (from `.symlinks/plugins/rive_native/ios`)
+  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
+
+SPEC REPOS:
+  trunk:
+    - FBAEMKit
+    - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
+    - FBSDKLoginKit
+    - OneSignalXCFramework
+    - OrderedSet
+
+EXTERNAL SOURCES:
+  audio_waveforms:
+    :path: ".symlinks/plugins/audio_waveforms/ios"
+  devicelocale:
+    :path: ".symlinks/plugins/devicelocale/ios"
+  Flutter:
+    :path: Flutter
+  flutter_facebook_auth:
+    :path: ".symlinks/plugins/flutter_facebook_auth/ios"
+  flutter_inappwebview_ios:
+    :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
+  flutter_localization:
+    :path: ".symlinks/plugins/flutter_localization/ios"
+  flutter_pcm_sound:
+    :path: ".symlinks/plugins/flutter_pcm_sound/ios"
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  onesignal_flutter:
+    :path: ".symlinks/plugins/onesignal_flutter/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  rive_native:
+    :path: ".symlinks/plugins/rive_native/ios"
+  sign_in_with_apple:
+    :path: ".symlinks/plugins/sign_in_with_apple/ios"
+
+SPEC CHECKSUMS:
+  audio_waveforms: a6dde7fe7c0ea05f06ffbdb0f7c1b2b2ba6cedcf
+  devicelocale: bd64aa714485a8afdaded0892c1e7d5b7f680cf8
+  FBAEMKit: 2a6b529993713c185b02bc36f8c91129bf78dfb0
+  FBSDKCoreKit: 65d7f7a7d6fcc3aa6eb6e093ec737a4184fc6049
+  FBSDKCoreKit_Basics: 7bc9d8fde8f70985fba2ed7c1d07e319f969a991
+  FBSDKLoginKit: 66d20fcb7afcafc0c420477662f96845cd1a5179
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_facebook_auth: d97dc09216aebd99d7ac52360186a630f67bdf18
+  flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
+  flutter_localization: 72299fb6cb4e51cae587bd953ed0b958040b71e6
+  flutter_pcm_sound: e9c2f6ce580eefcab2af46763f0354484d5c4ac8
+  flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
+  onesignal_flutter: 6e6254c04f61c8d71d2b9a511bd19f8977eb44e4
+  OneSignalXCFramework: ea9e14a95b92ad48d9b35037cbae88a9542bdea3
+  OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  rive_native: 777d743a0b4e4e1cdbdafd80035a44d44771a5fc
+  sign_in_with_apple: c5dcc141574c8c54d5ac99dd2163c0c72ad22418
+
+PODFILE CHECKSUM: 57f08a9611c9e9de771ae4088be572af018bf77f
+
+COCOAPODS: 1.16.2

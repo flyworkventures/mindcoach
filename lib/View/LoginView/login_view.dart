@@ -62,6 +62,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
         if (userModel == null || !mounted) {
           debugPrint('[LoginView] Login basarisiz veya widget dispose edildi');
+          if (mounted && provider != SocialLoginProvider.guest) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.l10n.errorGeneral)),
+            );
+          }
           return;
         }
 

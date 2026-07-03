@@ -17,14 +17,25 @@ class RivePreloadService {
 
   final Map<String, rive.FileLoader> _cache = {};
 
-  /// Şema yoksa `https://` eklenir; trim uygulanır.
+  /// Şema yoksa `https://` eklenir; boşluklar `%20` olarak normalize edilir.
   static String? normalizeRiveUrl(String? raw) {
     if (raw == null) return null;
     final t = raw.trim();
     if (t.isEmpty) return null;
     final lower = t.toLowerCase();
-    if (lower.startsWith('http://') || lower.startsWith('https://')) return t;
-    return 'https://$t';
+    final withScheme = (lower.startsWith('http://') || lower.startsWith('https://'))
+        ? t
+        : 'https://$t';
+    final uri = Uri.tryParse(withScheme);
+    if (uri == null || !uri.hasScheme || uri.host.isEmpty) return null;
+    return uri.toString();
+  }
+
+  /// Başarısız indirme sonrası aynı URL ile yeniden denemek için cache kaydını siler.
+  void invalidate(String? rawUrl) {
+    final url = normalizeRiveUrl(rawUrl);
+    if (url == null) return;
+    _cache.remove(url);
   }
 
   /// [rawUrl] için arka planda ön yükleme başlatır.
@@ -68,5 +79,26 @@ class RivePreloadService {
     final url = normalizeRiveUrl(rawUrl);
     if (url == null) return false;
     return _cache.containsKey(url);
+  }
+
+  /// CDN'deki .riv dosyasının indirilmesini bekler. Analiz / görüntülü arama
+  /// açılmadan önce avatarın hazır olması için kullanılır.
+  Future<bool> ensurePreloaded(
+    String? rawUrl, {
+    Duration timeout = const Duration(seconds: 25),
+  }) async {
+    final url = normalizeRiveUrl(rawUrl);
+    if (url == null) return false;
+
+    final loader = obtainOrCreateLoader(rawUrl);
+    if (loader == null) return false;
+    if (loader.isFileAvailable) return true;
+
+    try {
+      await loader.file().timeout(timeout);
+      return loader.isFileAvailable;
+    } catch (_) {
+      return loader.isFileAvailable;
+    }
   }
 }

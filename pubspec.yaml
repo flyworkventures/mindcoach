@@ -80,6 +80,8 @@ flutter:
     - assets/json/
     - assets/chars/
     - assets/icons/
+    - assets/premiumCard/
+    - assets/analyse/
     - assets/policies/en/
     - assets/policies/tr/
     - assets/policies/de/

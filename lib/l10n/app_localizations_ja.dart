@@ -9,6 +9,28 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get reschedule => '予定変更';
+
+  @override
+  String get appointmentDeleted => '予約を削除しました';
+
+  @override
+  String get appointmentRescheduled => '予約を変更しました';
+
+  @override
+  String get analyseBadge => 'AI 搭載';
+
+  @override
+  String get analyseTitle => '心を理解するいちばん簡単な方法。';
+
+  @override
+  String get analyseSubtitle =>
+      'いくつかの質問に正直に答えると、Mindcoach があなたの感情状態、強み、成長分野を可視化します。';
+
+  @override
+  String get analyseCta => '分析を開始';
+
+  @override
   String get relaxingSound => 'リラックスできる音';
 
   @override
@@ -1746,6 +1768,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get mostPopular => '一番人気';
+
+  @override
+  String get soundCategoryAll => 'すべて';
 
   @override
   String get soundCategoryFocus => 'フォーカス';

@@ -9,6 +9,28 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get reschedule => 'Перенести';
+
+  @override
+  String get appointmentDeleted => 'Запись удалена';
+
+  @override
+  String get appointmentRescheduled => 'Запись перенесена';
+
+  @override
+  String get analyseBadge => 'На базе ИИ';
+
+  @override
+  String get analyseTitle => 'Самый простой способ понять свой разум.';
+
+  @override
+  String get analyseSubtitle =>
+      'Ответьте честно на несколько вопросов, и Mindcoach определит ваше эмоциональное состояние, сильные стороны и зоны роста.';
+
+  @override
+  String get analyseCta => 'Начать анализ';
+
+  @override
   String get relaxingSound => 'Расслабляющий звук';
 
   @override
@@ -1839,6 +1861,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get mostPopular => 'Самые популярные';
+
+  @override
+  String get soundCategoryAll => 'Все';
 
   @override
   String get soundCategoryFocus => 'Фокус';

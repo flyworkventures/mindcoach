@@ -64,6 +64,17 @@ class SpecialistsNotifier extends Notifier<SpecialistsState> {
     await _loadConsultants();
   }
 
+  /// Tek danışmanı API'den getirir (analiz kartı gibi doğrudan açılışlar için).
+  Future<ConsultantModel?> fetchConsultantById(int id) async {
+    try {
+      final repo = ConsultantRepo(ref);
+      return await repo.getConsultantById(id);
+    } catch (e) {
+      debugPrint('fetchConsultantById($id) error: $e');
+      return null;
+    }
+  }
+
   void selectSpecialist(int id) {
     state = state.copyWith(selectedId: id);
   }

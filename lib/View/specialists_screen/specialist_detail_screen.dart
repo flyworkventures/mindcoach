@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/core/analytics/analytics_events.dart';
@@ -66,7 +68,8 @@ class SpecialistDetailScreen extends ConsumerStatefulWidget {
 
 class _SpecialistDetailScreenState
     extends ConsumerState<SpecialistDetailScreen> {
-  int? _selectedSlotIndex;
+  DateTime _selectedDate = DateTime.now();
+  String? _selectedTime;
   late ConsultantModel _specialist;
   bool _isCreatingAppointment = false;
 
@@ -157,11 +160,10 @@ class _SpecialistDetailScreenState
 
     final parts = slotTime.split(':');
     if (parts.length != 2) return;
-    final now = DateTime.now();
     final appointmentDateTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
       int.parse(parts[0]),
       int.parse(parts[1]),
     );
@@ -209,7 +211,7 @@ class _SpecialistDetailScreenState
       if (!mounted) return;
       final ok = result.statusCode == 201 || result.statusCode == 200;
       if (ok) {
-        setState(() => _selectedSlotIndex = null);
+        setState(() => _selectedTime = null);
         await AnalyticsService.instance.capture(
           AnalyticsEvents.appointmentCreated,
           properties: {
@@ -416,7 +418,7 @@ class _SpecialistDetailScreenState
                                                     .toStringAsFixed(2),
                                                 style: const TextStyle(
                                                   fontFamily: 'Geist',
-                                                  fontSize: 14,
+                                                  fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                   color: Color(0xFFFFCC00),
                                                 ),
@@ -485,7 +487,7 @@ class _SpecialistDetailScreenState
                                     jobTitle,
                                     style: const TextStyle(
                                       fontFamily: 'Geist',
-                                      fontSize: 14,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                       color: Color(0xFF96989C),
                                       height: 20 / 14,
@@ -615,9 +617,10 @@ class _SpecialistDetailScreenState
 
                             // Appointment card
                             _buildAppointmentCard(
-                              _bookedTimeSlotsForCoachToday(
+                              _bookedTimeSlotsForCoachOnDate(
                                 appointmentsState.appointments,
                                 specialist.id,
+                                _selectedDate,
                               ),
                             ),
                           ],
@@ -711,7 +714,7 @@ class _SpecialistDetailScreenState
             Expanded(
               child: Builder(
                 builder: (context) {
-                  final hasSelectedSlot = _selectedSlotIndex != null;
+                  final hasSelectedSlot = _selectedTime != null;
                   final iconPath = hasSelectedSlot
                       ? "assets/icons/ic_ic.svg"
                       : "assets/icons/ic_record.svg";
@@ -721,11 +724,7 @@ class _SpecialistDetailScreenState
 
                   Future<void> onTap() async {
                     if (hasSelectedSlot) {
-                      // Slot zaten _selectedSlotIndex aracılığıyla bilinen indeks.
-                      // Slots listesi `_buildAppointmentCard` içinde oluşturuluyor;
-                      // burada doğrudan aynı türetilmiş listeyi kullanırız.
-                      final time = _slotTimeAt(_selectedSlotIndex!);
-                      if (time != null) await _createAppointment(time);
+                      await _createAppointment(_selectedTime!);
                       return;
                     }
 
@@ -891,7 +890,7 @@ class _SpecialistDetailScreenState
             title,
             style: const TextStyle(
               fontFamily: 'Geist',
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Color(0xFF333333),
             ),
@@ -913,17 +912,17 @@ class _SpecialistDetailScreenState
     );
   }
 
-  Set<String> _bookedTimeSlotsForCoachToday(
+  Set<String> _bookedTimeSlotsForCoachOnDate(
     Map<DateTime, List<AppointmentInfo>> appointments,
     int consultantId,
+    DateTime date,
   ) {
-    final today = DateTime.now();
-    final todayDate = DateTime(today.year, today.month, today.day);
+    final targetDate = DateTime(date.year, date.month, date.day);
     final bookedSlots = <String>{};
 
     for (final entry in appointments.entries) {
       final keyDate = DateTime(entry.key.year, entry.key.month, entry.key.day);
-      if (keyDate != todayDate) continue;
+      if (keyDate != targetDate) continue;
 
       for (final info in entry.value) {
         if (info.consultantId != consultantId) continue;
@@ -942,198 +941,669 @@ class _SpecialistDetailScreenState
   }
 
   Widget _buildAppointmentCard(Set<String> bookedSlots) {
-    final now = DateTime.now();
     final localeTag = Localizations.localeOf(context).toLanguageTag();
-    final dateLabel = DateFormat('d MMMM, EEEE', localeTag).format(now);
+    final dateLabel = DateFormat('d MMM, EEEE', localeTag).format(_selectedDate);
 
-    // Varsayılan slotlar; DB'de aynı saatte ilgili koçun randevusu varsa pasif/soluk gösterilir.
-    // Tek kaynak: _slotTimes (00:00 - 23:30 arası 24 değişken aralıklı slot).
-    final slots = _slotTimes.map((t) => {'time': t}).toList();
+    String timeLabel;
+    if (_selectedTime != null) {
+      final parts = _selectedTime!.split(':');
+      final dt = DateTime(2000, 1, 1, int.parse(parts[0]), int.parse(parts[1]));
+      timeLabel = DateFormat.jm(localeTag).format(dt);
+    } else {
+      timeLabel = 'Select Time';
+    }
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF4F5F6), // Tasarımdaki hafif gri arka plan
-        borderRadius: BorderRadius.circular(16),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Date Selector
+        _appointmentField(
+          iconAsset: "assets/icons/calendar-2 1.png",
+          fallbackIcon: Icons.calendar_today,
+          label: dateLabel,
+          onTap: _showDateBottomSheet,
+        ),
+        const SizedBox(height: 12),
+        // Time Selector
+        _appointmentField(
+          iconAsset: "assets/icons/clock (10) 1.png",
+          fallbackIcon: Icons.access_time,
+          label: timeLabel,
+          highlighted: _selectedTime != null,
+          onTap: () => _showTimeBottomSheet(bookedSlots),
+        ),
+      ],
+    );
+  }
+
+  Widget _appointmentField({
+    required String iconAsset,
+    required IconData fallbackIcon,
+    required String label,
+    required VoidCallback onTap,
+    bool highlighted = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF4F5F6),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: highlighted
+                ? const Color(0xFF21BC87)
+                : const Color(0xFFE2E2E2),
+          ),
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              iconAsset,
+              width: 22,
+              height: 22,
+              errorBuilder: (c, e, s) => Icon(fallbackIcon, size: 22),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  height: 20 / 14,
+                  letterSpacing: 0,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Date row
-          Padding(
-            padding: const EdgeInsets.only(left: 4.0),
-            child: Row(
+    );
+  }
+
+  /// Bu koç için randevusu olan günleri (gün bazında) döndürür — takvimde
+  /// nokta göstermek için kullanılır.
+  Set<DateTime> _eventDatesForCoach() {
+    final appointments = ref.read(appointmentsProvider).appointments;
+    final result = <DateTime>{};
+    for (final entry in appointments.entries) {
+      for (final info in entry.value) {
+        if (info.consultantId != _specialist.id) continue;
+        if ((info.status ?? '').toLowerCase() == 'cancelled') continue;
+        final dt = info.appointmentDateTime;
+        if (dt == null) continue;
+        result.add(DateTime(dt.year, dt.month, dt.day));
+      }
+    }
+    return result;
+  }
+
+  void _showDateBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _AppointmentDateSheet(
+        initialDate: _selectedDate,
+        eventDates: _eventDatesForCoach(),
+        onSaved: (date) {
+          setState(() {
+            _selectedDate = date;
+            _selectedTime = null; // Tarih değişince saat sıfırlanır.
+          });
+        },
+      ),
+    );
+  }
+
+  void _showTimeBottomSheet(Set<String> bookedSlots) {
+    DateTime initialTime = DateTime.now();
+    if (_selectedTime != null) {
+      final parts = _selectedTime!.split(':');
+      initialTime = DateTime(
+        _selectedDate.year,
+        _selectedDate.month,
+        _selectedDate.day,
+        int.parse(parts[0]),
+        int.parse(parts[1]),
+      );
+    }
+    
+    DateTime tempSelectedTime = initialTime;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.only(top: 20, left: 16, right: 16, bottom: 40),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                SvgPicture.asset("assets/icons/ic_cal.svg"),
-                const SizedBox(width: 8),
-                Text(
-                  dateLabel,
-                  style: const TextStyle(
-                    fontFamily: 'Geist',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE2E2E2),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  height: 200,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.time,
+                    initialDateTime: tempSelectedTime,
+                    onDateTimeChanged: (DateTime newDateTime) {
+                      tempSelectedTime = newDateTime;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF21BC87),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () {
+                      final timeStr = DateFormat('HH:mm').format(tempSelectedTime);
+                      
+                      final isPast = _selectedDate.year == DateTime.now().year &&
+                                     _selectedDate.month == DateTime.now().month &&
+                                     _selectedDate.day == DateTime.now().day &&
+                                     tempSelectedTime.hour * 60 + tempSelectedTime.minute < DateTime.now().hour * 60 + DateTime.now().minute;
+                      
+                      if (bookedSlots.contains(timeStr) || isPast) {
+                        _showSnack(context.l10n.appointmentConflictSameTime);
+                        return;
+                      }
+
+                      setState(() {
+                        _selectedTime = timeStr;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      context.l10n.save,
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          if (bookedSlots.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: Wrap(
-                spacing: 6,
-                runSpacing: 6,
+        );
+      },
+    );
+  }
+}
+
+/// Randevu tarihi seçimi için bottom sheet — takvim sayfasının (CalendarScreen)
+/// üstündeki takvim yapısının aynısı: ay başlığı + ay okları, haftalık şerit ve
+/// bordürlü TableCalendar. Altında Kaydet butonu.
+class _AppointmentDateSheet extends StatefulWidget {
+  final DateTime initialDate;
+  final Set<DateTime> eventDates;
+  final ValueChanged<DateTime> onSaved;
+
+  const _AppointmentDateSheet({
+    required this.initialDate,
+    required this.eventDates,
+    required this.onSaved,
+  });
+
+  @override
+  State<_AppointmentDateSheet> createState() => _AppointmentDateSheetState();
+}
+
+class _AppointmentDateSheetState extends State<_AppointmentDateSheet> {
+  static const _primaryGreen = Color(0xFF21BC87);
+  static const _lightGreyText = Color(0xFF96989C);
+
+  late DateTime _selected;
+  late DateTime _focusedDay;
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = _dateOnly(widget.initialDate);
+    _focusedDay = _selected;
+  }
+
+  DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
+
+  DateTime get _today => _dateOnly(DateTime.now());
+
+  bool _isPast(DateTime day) => _dateOnly(day).isBefore(_today);
+
+  bool _hasEvent(DateTime day) => widget.eventDates.contains(_dateOnly(day));
+
+  // Takvim şeridi için o haftanın günleri (Pazartesi başlangıçlı).
+  List<DateTime> _getCurrentWeekDays(DateTime focused) {
+    final startOfWeek = focused.subtract(Duration(days: focused.weekday - 1));
+    return List.generate(
+      7,
+      (i) => _dateOnly(startOfWeek.add(Duration(days: i))),
+    );
+  }
+
+  void _selectDay(DateTime day) {
+    if (_isPast(day)) return;
+    setState(() {
+      _selected = _dateOnly(day);
+      _focusedDay = _selected;
+    });
+  }
+
+  void _changeMonth(int delta) {
+    final candidate = DateTime(
+      _focusedDay.year,
+      _focusedDay.month + delta,
+      _focusedDay.day,
+    );
+    // Geçmiş aylara gitmeyi engelle.
+    if (candidate.year < _today.year ||
+        (candidate.year == _today.year && candidate.month < _today.month)) {
+      return;
+    }
+    setState(() => _focusedDay = candidate);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 24),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE2E2E2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // 1. Ay/Yıl başlığı ve navigasyon
+            _buildMonthNavigationHeader(context),
+            const SizedBox(height: 24),
+
+            // 2. Haftalık şerit
+            _buildWeeklyTimelineRow(context),
+            const SizedBox(height: 24),
+
+            // 3. Takvim (TableCalendar)
+            _buildCustomCalendar(context),
+            const SizedBox(height: 24),
+
+            // 4. Kaydet butonu
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _primaryGreen,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  widget.onSaved(_selected);
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  context.l10n.save,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // --- Ay/Yıl başlığı ---
+  Widget _buildMonthNavigationHeader(BuildContext context) {
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final monthLabel = DateFormat('MMMM', locale).format(_focusedDay).toUpperCase();
+    final dayLabel = DateFormat('EEEE', locale).format(_selected);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$monthLabel ${_focusedDay.year}',
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: _primaryGreen,
+                letterSpacing: 1.0,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  '${_selected.day}',
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                    height: 1.0,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  dayLabel,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: _lightGreyText,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            GestureDetector(
+              onTap: () => _changeMonth(-1),
+              child: SvgPicture.asset(
+                'assets/icons/ic_left.svg',
+                width: 32,
+                height: 32,
+              ),
+            ),
+            const SizedBox(width: 8),
+            GestureDetector(
+              onTap: () => _changeMonth(1),
+              child: SvgPicture.asset(
+                'assets/icons/ic_right.svg',
+                width: 32,
+                height: 32,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // --- Haftalık şerit ---
+  Widget _buildWeeklyTimelineRow(BuildContext context) {
+    final weekDays = _getCurrentWeekDays(_focusedDay);
+    final locale = Localizations.localeOf(context).toLanguageTag();
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: weekDays.map((date) {
+        final currentDate = _dateOnly(date);
+        final isSelected = isSameDay(_selected, currentDate);
+        final isPast = _isPast(currentDate);
+        final hasEvent = _hasEvent(currentDate);
+
+        final dayName = DateFormat('EEE', locale).format(date).toUpperCase();
+        final dayNumber = '${date.day}';
+
+        // Seçili gün (yeşil kapsül)
+        if (isSelected) {
+          return GestureDetector(
+            onTap: () => _selectDay(currentDate),
+            child: Container(
+              height: 94,
+              width: 50,
+              decoration: BoxDecoration(
+                color: _primaryGreen,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF21BC87).withValues(alpha: 0.10),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      '${context.l10n.appointments}: ${bookedSlots.length}',
-                      style: const TextStyle(
-                        fontFamily: 'Geist',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF21BC87),
-                      ),
+                  Text(
+                    dayName,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
                     ),
                   ),
-                  for (final t in bookedSlots.toList()..sort())
+                  const SizedBox(height: 8),
+                  Text(
+                    dayNumber,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (hasEvent)
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF21BC87).withValues(alpha: 0.06),
-                        borderRadius: BorderRadius.circular(999),
-                        border: Border.all(
-                          color: const Color(0xFF21BC87).withValues(alpha: 0.20),
-                        ),
-                      ),
-                      child: Text(
-                        t,
-                        style: const TextStyle(
-                          fontFamily: 'Geist',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF21BC87),
-                        ),
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
                       ),
                     ),
                 ],
               ),
             ),
-          ],
-          const SizedBox(height: 16),
+          );
+        }
 
-          // Time slots
-          Wrap(
-            spacing: 8, // Figma Gap: 10px
-            runSpacing: 8,
-            children: List.generate(slots.length, (index) {
-              final slot = slots[index];
-              final time = slot['time'] as String;
-
-              // Slot "HH:MM"yi bugünün tarihindeki DateTime'a çevir; geçmişte
-              // kalanlar da soluk + tıklanamaz olsun.
-              final now = DateTime.now();
-              final parts = time.split(':');
-              final slotDateTime = DateTime(
-                now.year,
-                now.month,
-                now.day,
-                int.parse(parts[0]),
-                int.parse(parts[1]),
-              );
-              final isPast = slotDateTime.isBefore(now);
-              final isBooked = bookedSlots.contains(time);
-              final isAvailable = !isBooked && !isPast;
-              final isSelected = _selectedSlotIndex == index;
-
-              // Duruma göre renk atamaları
-              Color borderColor;
-              Color textColor;
-              Color backgroundColor;
-
-              if (isBooked) {
-                borderColor = const Color(0xFF21BC87).withValues(alpha: 0.30);
-                textColor = const Color(0xFF21BC87);
-                backgroundColor = const Color(0xFF21BC87).withValues(alpha: 0.08);
-              } else if (isPast) {
-                borderColor = Colors.black.withValues(alpha: 0.05);
-                textColor = Colors.black.withValues(alpha: 0.20);
-                backgroundColor = Colors.transparent;
-              } else if (isSelected) {
-                // Seçili Saat
-                borderColor = const Color(0xFF21BC87);
-                textColor = const Color(0xFF21BC87);
-                backgroundColor = const Color(
-                  0xFF21BC87,
-                ).withValues(alpha: 0.10);
-              } else {
-                // Seçilebilir Aktif Saatler
-                borderColor = Colors.black.withValues(
-                  alpha: 0.20,
-                ); // Figma #000000 20%
-                textColor = Colors.black;
-                backgroundColor = Colors.transparent;
-              }
-
-              return GestureDetector(
-                onTap: isAvailable
-                    ? () {
-                        setState(() {
-                          _selectedSlotIndex = isSelected ? null : index;
-                        });
-                        if (!isSelected) {
-                          AnalyticsService.instance.capture(
-                            AnalyticsEvents.appointmentSlotSelected,
-                            properties: {
-                              'consultant_id': _specialist.id,
-                              'slot_time': time,
-                            },
-                          );
-                        }
-                      }
-                    : null, // Pasif butonlara tıklanmasını engeller
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8, // Figma Left/Right 10px
-                    vertical: 4, // Figma Top/Bottom 4px
-                  ),
-                  decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.circular(
-                      999,
-                    ), // Tam oval (Pill shape)
-                    border: Border.all(
-                      color: borderColor,
-                      width: 1, // Figma Border 1px
-                    ),
-                  ),
-                  child: Text(
-                    time,
-                    style: TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 12,
-                      fontWeight: isBooked ? FontWeight.w600 : FontWeight.w500,
-                      color: textColor,
-                    ),
+        // Seçili olmayan gün
+        return GestureDetector(
+          onTap: isPast ? null : () => _selectDay(currentDate),
+          child: SizedBox(
+            height: 94,
+            width: 40,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  dayName,
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isPast
+                        ? _lightGreyText.withValues(alpha: 0.5)
+                        : _lightGreyText,
                   ),
                 ),
-              );
-            }),
+                const SizedBox(height: 8),
+                Text(
+                  dayNumber,
+                  style: TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: isPast
+                        ? Colors.black.withValues(alpha: 0.3)
+                        : Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                if (hasEvent)
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      color: _primaryGreen,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ],
+        );
+      }).toList(),
+    );
+  }
+
+  // --- TableCalendar ---
+  Widget _buildCustomCalendar(BuildContext context) {
+    final langCode = context.langCode;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E2E2)),
+      ),
+      child: TableCalendar<int>(
+        startingDayOfWeek: langCode == 'en'
+            ? StartingDayOfWeek.sunday
+            : StartingDayOfWeek.monday,
+        firstDay: DateTime.utc(2020, 1, 1),
+        lastDay: DateTime.utc(2030, 12, 31),
+        focusedDay: _focusedDay,
+        availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+        headerVisible: false,
+        rowHeight: 44.0,
+        daysOfWeekHeight: 40.0,
+        enabledDayPredicate: (day) => !_isPast(day),
+        selectedDayPredicate: (day) => isSameDay(_selected, day),
+        eventLoader: (day) => _hasEvent(day) ? const [1] : const [],
+        onDaySelected: (selectedDay, focusedDay) => _selectDay(selectedDay),
+        onPageChanged: (focusedDay) =>
+            setState(() => _focusedDay = focusedDay),
+        calendarBuilders: CalendarBuilders<int>(
+          dowBuilder: (dowContext, day) {
+            final locale = Localizations.localeOf(dowContext);
+            final label = DateFormat.E(
+              locale.toLanguageTag(),
+            ).format(day).substring(0, 1);
+            return Center(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: _lightGreyText,
+                ),
+              ),
+            );
+          },
+          markerBuilder: (context, day, events) {
+            if (events.isEmpty) return null;
+            final isSelectedDay = isSameDay(_selected, day);
+            return Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: isSelectedDay ? Colors.white : _primaryGreen,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            );
+          },
+        ),
+        calendarStyle: const CalendarStyle(
+          outsideDaysVisible: false,
+          weekendTextStyle: TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+          defaultTextStyle: TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+          disabledTextStyle: TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFFCED0D3),
+          ),
+          todayDecoration: BoxDecoration(
+            color: Colors.black,
+            shape: BoxShape.circle,
+          ),
+          todayTextStyle: TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+          selectedDecoration: BoxDecoration(
+            color: _primaryGreen,
+            shape: BoxShape.circle,
+          ),
+          selectedTextStyle: TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

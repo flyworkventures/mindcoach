@@ -70,9 +70,36 @@ class _FaqScreenState extends ConsumerState<FaqScreen> {
 
                         final isExpanded = _expandedIndex == index;
 
+                        // Kategori değiştiğinde bir başlık göster.
+                        final showCategoryHeader = index == 0 ||
+                            items[index - 1].categoryKey != item.categoryKey;
+                        final categoryTitle =
+                            item.category[lang] ?? item.category['en'] ?? '';
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // KATEGORİ BAŞLIĞI
+                            if (showCategoryHeader &&
+                                categoryTitle.isNotEmpty) ...[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: index == 0 ? 0 : 18.h,
+                                  bottom: 12.h,
+                                ),
+                                child: Text(
+                                  categoryTitle,
+                                  style: const TextStyle(
+                                    fontFamily: 'Geist',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.2,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+
                             // SORU KARTI
                             _FaqQuestionCard(
                               question: question,
@@ -152,7 +179,7 @@ class _FaqQuestionCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 50.h, // Figma'daki Fixed Height: 50px
+        constraints: BoxConstraints(minHeight: 50.h), // Figma min yükseklik 50px
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16), // Figma Radius: 16px
@@ -171,13 +198,13 @@ class _FaqQuestionCard extends StatelessWidget {
             Expanded(
               child: Text(
                 question,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontFamily: 'Geist',
                   fontSize: 13,
                   fontWeight: FontWeight.w700, // Bold
-                  height: 1.0,
+                  height: 1.2,
                   color: Color(0xFF96989C), // Text Secondary (#96989C)
                 ),
               ),

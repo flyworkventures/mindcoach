@@ -21,6 +21,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import '../core/config/size_config.dart';
 import '../core/locale/locale_provider.dart';
 import '../core/routes/app_router.dart';
+import '../core/services/current_route_observer.dart';
 import '../l10n/app_localizations.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -101,6 +102,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           title: 'MindCoach',
           navigatorKey: navigatorKey,
           navigatorObservers: [
+            CurrentRouteObserver.instance,
             if (AnalyticsService.instance.isEnabled) PosthogObserver(),
           ],
           locale: locale,

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,6 +9,7 @@ import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/global_constants/month_strings.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 import 'package:mindcoach/core/utils/job_convert.dart';
+import 'package:mindcoach/core/widgets/future_progress_dialog.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../Services/Analytics/analytics_service.dart';
@@ -79,17 +81,17 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   // Belirli bir gün için randevuları getiren yardımcı fonksiyon
-  List<AppointmentInfo> _getAppointmentsForDay(DateTime day) {
-    final appointmentsState = ref.read(appointmentsProvider);
-    final map = appointmentsState.appointments;
-
+  List<AppointmentInfo> _getAppointmentsForDay(
+    DateTime day,
+    Map<DateTime, List<AppointmentInfo>> appointmentsMap,
+  ) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final d = DateTime(day.year, day.month, day.day);
     if (d.isBefore(today)) return const <AppointmentInfo>[];
 
     final key = DateTime(day.year, day.month, day.day);
-    final appointments = map[key] ?? const <AppointmentInfo>[];
+    final appointments = appointmentsMap[key] ?? const <AppointmentInfo>[];
 
     // İptal edilen randevuları filtrele
     return appointments.where((appointment) {
@@ -117,6 +119,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Provider değişince (sil/ertele) takvim anında yeniden çizilsin.
+    final appointmentsMap = ref.watch(
+      appointmentsProvider.select((s) => s.appointments),
+    );
+
     return Scaffold(
       backgroundColor: Colors.white, // Figma arkaplanı beyaz
       body: SafeArea(
@@ -134,11 +141,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               const SizedBox(height: 24),
 
               // 2. HAFTALIK ŞERİT (Weekly Timeline)
-              _buildWeeklyTimelineRow(context),
+              _buildWeeklyTimelineRow(context, appointmentsMap),
               const SizedBox(height: 24),
 
               // 3. Takvim Görünümü (TableCalendar)
-              _buildCustomCalendar(context),
+              _buildCustomCalendar(context, appointmentsMap),
               const SizedBox(height: 32),
 
               // 4. "Today's sessions" Başlığı
@@ -155,9 +162,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
               // 5. Seçilen Tarihteki Randevu Listesi
               if (_selectedDay != null) ...[
-                ..._getAppointmentsForDay(_selectedDay!).asMap().entries.map((
-                  entry,
-                ) {
+                ..._getAppointmentsForDay(_selectedDay!, appointmentsMap)
+                    .asMap()
+                    .entries
+                    .map((entry) {
                   final sessionOrder = entry.key + 1;
                   final info = entry.value;
                   return _buildAppointmentCard(
@@ -279,7 +287,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   // --- HAFTALIK ŞERİT WIDGET'I ---
-  Widget _buildWeeklyTimelineRow(BuildContext context) {
+  Widget _buildWeeklyTimelineRow(
+    BuildContext context,
+    Map<DateTime, List<AppointmentInfo>> appointmentsMap,
+  ) {
     final weekDays = _getCurrentWeekDays(_focusedDay);
     final locale = Localizations.localeOf(context).toLanguageTag();
     final today = DateTime(
@@ -297,7 +308,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             _selectedDay != null && isSameDay(_selectedDay, currentDate);
 
         final isPast = currentDate.isBefore(today);
-        final hasEvent = _getAppointmentsForDay(currentDate).isNotEmpty;
+        final hasEvent =
+            _getAppointmentsForDay(currentDate, appointmentsMap).isNotEmpty;
 
         final dayName = DateFormat('EEE', locale).format(date).toUpperCase();
         final dayNumber = '${date.day}';
@@ -410,7 +422,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   // --- TableCalendar ---
 
-  Widget _buildCustomCalendar(BuildContext context) {
+  Widget _buildCustomCalendar(
+    BuildContext context,
+    Map<DateTime, List<AppointmentInfo>> appointmentsMap,
+  ) {
     final langCode = context.langCode;
 
     return Container(
@@ -523,7 +538,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             color: Colors.white,
           ),
         ),
-        eventLoader: _getAppointmentsForDay,
+        eventLoader: (day) => _getAppointmentsForDay(day, appointmentsMap),
         selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
         onDaySelected: (selectedDay, focusedDay) {
           if (!isSameDay(_selectedDay, selectedDay)) {
@@ -743,53 +758,67 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     ),
                   ),
 
-                  // Sağ taraf Saat / Başla (Dinamik Renkli Kapsül)
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: canStartNow
-                        ? () => _startAppointmentCall(
-                            context,
-                            info,
-                            appointmentDateTime,
-                          )
-                        : null,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: selectedColor.withValues(
-                          alpha: 0.1,
-                        ), // Seçilen rengin %10 saydam hali
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            canStartNow
-                                ? "assets/icons/ic_video.svg"
-                                : "assets/icons/ic_clock.svg",
-                            colorFilter: ColorFilter.mode(
-                              selectedColor,
-                              BlendMode.srcIn,
-                            ),
+                  // Sağ taraf: ... menüsü (Ertele/Sil) + Saat/Başla kapsülü
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (info.appointmentId != null) ...[
+                        _buildAppointmentMenu(
+                          context,
+                          info,
+                          appointmentDateTime,
+                        ),
+                        const SizedBox(height: 6),
+                      ],
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: canStartNow
+                            ? () => _startAppointmentCall(
+                                context,
+                                info,
+                                appointmentDateTime,
+                              )
+                            : null,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            canStartNow
-                                ? _localizedStartLabel(context)
-                                : formattedTime,
-                            style: TextStyle(
-                              fontFamily: 'Geist',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: selectedColor,
-                            ),
+                          decoration: BoxDecoration(
+                            color: selectedColor.withValues(
+                              alpha: 0.1,
+                            ), // Seçilen rengin %10 saydam hali
+                            borderRadius: BorderRadius.circular(30),
                           ),
-                        ],
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                canStartNow
+                                    ? "assets/icons/ic_video.svg"
+                                    : "assets/icons/ic_clock.svg",
+                                colorFilter: ColorFilter.mode(
+                                  selectedColor,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                canStartNow
+                                    ? _localizedStartLabel(context)
+                                    : formattedTime,
+                                style: TextStyle(
+                                  fontFamily: 'Geist',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: selectedColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -798,6 +827,266 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         ),
       ),
     );
+  }
+
+  // --- Randevu ... Menüsü (Ertele / Sil) ---
+
+  Widget _buildAppointmentMenu(
+    BuildContext context,
+    AppointmentInfo info,
+    DateTime appointmentDateTime,
+  ) {
+    return PopupMenuButton<String>(
+      tooltip: '',
+      color: Colors.white,
+      elevation: 8,
+      padding: EdgeInsets.zero,
+      splashRadius: 18,
+      offset: const Offset(0, 28),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      constraints: const BoxConstraints(minWidth: 130, maxWidth: 220),
+      icon: const Icon(Icons.more_horiz, color: _kLightGreyText, size: 22),
+      onSelected: (value) {
+        if (value == 'reschedule') {
+          _showRescheduleSheet(context, info, appointmentDateTime);
+        } else if (value == 'delete') {
+          _confirmAndDeleteAppointment(context, info);
+        }
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem<String>(
+          value: 'reschedule',
+          height: 40,
+          child: _appointmentMenuRow(
+            Icons.access_time,
+            context.l10n.reschedule,
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'delete',
+          height: 40,
+          child: _appointmentMenuRow(Icons.delete_outline, context.l10n.delete),
+        ),
+      ],
+    );
+  }
+
+  Widget _appointmentMenuRow(IconData icon, String label) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: const Color(0xFF3A3434)),
+        const SizedBox(width: 12),
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF3A3434),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _confirmAndDeleteAppointment(
+    BuildContext context,
+    AppointmentInfo info,
+  ) async {
+    final appointmentId = info.appointmentId;
+    if (appointmentId == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          context.l10n.areYouSure,
+          style: const TextStyle(
+            fontFamily: 'Geist',
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(
+              context.l10n.cancel,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontWeight: FontWeight.w600,
+                color: _kLightGreyText,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              context.l10n.delete,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontWeight: FontWeight.w700,
+                color: Color(0xFFDC2626),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+    if (!context.mounted) return;
+
+    // Silme + liste yenileme boyunca kapatılamayan progress dialog göster;
+    // işlem bitince dialog otomatik kapanır ve liste yenilendiği için silinen
+    // randevu kartı ekranda kalmaz.
+    final ok = await showFutureProgressDialog<bool>(
+      context: context,
+      action: () => ref
+          .read(appointmentsProvider.notifier)
+          .deleteAppointment(appointmentId),
+    );
+
+    if (!context.mounted) return;
+    if (ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.appointmentDeleted)),
+      );
+    }
+  }
+
+  /// 30 dakikalık slotlara hizalanmış, "şimdi"den sonraki en yakın başlangıç.
+  DateTime _alignToSlot(DateTime base, DateTime now) {
+    var t = base.isAfter(now) ? base : now;
+    // saniye/milisaniyeyi at
+    t = DateTime(t.year, t.month, t.day, t.hour, t.minute);
+    final remainder = t.minute % 30;
+    if (remainder != 0) {
+      t = t.add(Duration(minutes: 30 - remainder));
+    }
+    if (!t.isAfter(now)) {
+      t = t.add(const Duration(minutes: 30));
+    }
+    return t;
+  }
+
+  Future<void> _showRescheduleSheet(
+    BuildContext context,
+    AppointmentInfo info,
+    DateTime appointmentDateTime,
+  ) async {
+    final appointmentId = info.appointmentId;
+    if (appointmentId == null) return;
+
+    final now = DateTime.now();
+    final minimumDate = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+    );
+    final initial = _alignToSlot(appointmentDateTime, minimumDate);
+    var picked = initial;
+
+    final result = await showModalBottomSheet<DateTime>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE2E2E2),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  context.l10n.reschedule,
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 200,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    use24hFormat: true,
+                    minuteInterval: 30,
+                    minimumDate: minimumDate,
+                    initialDateTime: initial,
+                    onDateTimeChanged: (dt) => picked = dt,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _kPrimaryGreen,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(sheetContext).pop(picked),
+                    child: Text(
+                      context.l10n.save,
+                      style: const TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (result == null) return;
+    if (!context.mounted) return;
+
+    final ok = await showFutureProgressDialog<bool>(
+      context: context,
+      action: () => ref
+          .read(appointmentsProvider.notifier)
+          .rescheduleAppointment(appointmentId, result),
+    );
+
+    if (!context.mounted) return;
+    if (ok) {
+      final newDay = DateTime(result.year, result.month, result.day);
+      setState(() {
+        _selectedDay = newDay;
+        _focusedDay = newDay;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.appointmentRescheduled)),
+      );
+    }
   }
 
   // --- Yeni Randevu Ekle Butonu ---

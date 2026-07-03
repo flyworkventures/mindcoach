@@ -12,6 +12,34 @@ import 'package:mindcoach/models/consultant_model.dart';
 class HomeQuickActions extends ConsumerWidget {
   const HomeQuickActions({super.key});
 
+  static const _silaYilmazId = 3;
+
+  List<ConsultantModel> _quickActionConsultants(
+    List<ConsultantModel> specialists,
+  ) {
+    final sila = specialists
+        .where((s) => s.id == _silaYilmazId)
+        .cast<ConsultantModel?>()
+        .firstOrNull;
+    final base = specialists.take(2).toList();
+
+    if (sila == null) return base;
+
+    final result = <ConsultantModel>[];
+    for (final coach in base) {
+      final isFemale = coach.roles?.contains('female') ?? false;
+      if (isFemale) {
+        if (!result.any((c) => c.id == sila.id)) {
+          result.add(sila);
+        }
+      } else {
+        result.add(coach);
+      }
+    }
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
@@ -21,6 +49,8 @@ class HomeQuickActions extends ConsumerWidget {
     if (specialists == null || specialists.isEmpty) {
       return const SizedBox.shrink();
     }
+
+    final quickActions = _quickActionConsultants(specialists);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 28, 16, 0),
@@ -40,10 +70,9 @@ class HomeQuickActions extends ConsumerWidget {
           const SizedBox(height: 12),
 
           // Coach list
-          ...specialists
-              .take(2)
-              .toList()
-              .map((coach) => _QuickActionCoachTile(coach: coach)),
+          ...quickActions.map(
+            (coach) => _QuickActionCoachTile(coach: coach),
+          ),
         ],
       ),
     );

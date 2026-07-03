@@ -9,6 +9,27 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get reschedule => '改期';
+
+  @override
+  String get appointmentDeleted => '预约已删除';
+
+  @override
+  String get appointmentRescheduled => '预约已改期';
+
+  @override
+  String get analyseBadge => 'AI 驱动';
+
+  @override
+  String get analyseTitle => '了解你内心最简单的方式。';
+
+  @override
+  String get analyseSubtitle => '诚实地回答几个问题，Mindcoach 将描绘出你的情绪状态、优势和成长空间。';
+
+  @override
+  String get analyseCta => '开始分析';
+
+  @override
   String get relaxingSound => '放松的声音';
 
   @override
@@ -1695,6 +1716,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get mostPopular => '最受欢迎';
+
+  @override
+  String get soundCategoryAll => '全部';
 
   @override
   String get soundCategoryFocus => '专注';

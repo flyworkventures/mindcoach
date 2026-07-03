@@ -9,6 +9,28 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get reschedule => 'पुनर्निर्धारित करें';
+
+  @override
+  String get appointmentDeleted => 'अपॉइंटमेंट हटा दिया गया';
+
+  @override
+  String get appointmentRescheduled => 'अपॉइंटमेंट पुनर्निर्धारित किया गया';
+
+  @override
+  String get analyseBadge => 'एआई-संचालित';
+
+  @override
+  String get analyseTitle => 'अपने मन को समझने का सबसे आसान तरीका।';
+
+  @override
+  String get analyseSubtitle =>
+      'कुछ सवालों के ईमानदारी से जवाब दें, और Mindcoach आपकी भावनात्मक स्थिति, ताकत और विकास के क्षेत्रों को दर्शाएगा।';
+
+  @override
+  String get analyseCta => 'विश्लेषण शुरू करें';
+
+  @override
   String get relaxingSound => 'आरामदायक ध्वनि';
 
   @override
@@ -1824,6 +1846,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get mostPopular => 'सबसे लोकप्रिय';
+
+  @override
+  String get soundCategoryAll => 'सभी';
 
   @override
   String get soundCategoryFocus => 'फोकस';

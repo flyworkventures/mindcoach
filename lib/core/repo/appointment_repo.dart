@@ -171,6 +171,77 @@ class AppointmentRepo {
     }
   }
 
+  /// Randevuyu kalıcı olarak sil (hard delete)
+  /// DELETE /appointments/:id/permanent
+  Future<bool> deleteAppointment(int appointmentId) async {
+    try {
+      HttpService httpService = HttpService(ref: ref);
+      final path = AppConstants.deleteAppointmentURL(appointmentId);
+      log("🗑️ Randevu siliniyor: appointmentId=$appointmentId, path=$path");
+
+      final response = await httpService.delete(path: path);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        if (json['success'] == true) {
+          log("✅ Randevu başarıyla silindi: $appointmentId");
+          return true;
+        } else {
+          log("❌ Randevu silinemedi: ${json['error'] ?? 'Unknown error'}");
+          return false;
+        }
+      } else if (response.statusCode == 404) {
+        // Zaten silinmiş — UI eski veri göstermiş olabilir, başarı say
+        log("ℹ️ Randevu zaten silinmiş: $appointmentId");
+        return true;
+      } else {
+        final json = jsonDecode(response.body);
+        log("❌ Randevu silme hatası (${response.statusCode}): ${json['error'] ?? response.body}");
+        return false;
+      }
+    } catch (e) {
+      log("❌ deleteAppointment hatası: $e");
+      return false;
+    }
+  }
+
+  /// Randevuyu yeni tarihe ertele (reschedule)
+  /// PUT /appointments/:id/reschedule
+  Future<bool> rescheduleAppointment(
+    int appointmentId,
+    DateTime newDateTime,
+  ) async {
+    try {
+      HttpService httpService = HttpService(ref: ref);
+      final path = AppConstants.rescheduleAppointmentURL(appointmentId);
+      final isoDate = newDateTime.toUtc().toIso8601String();
+      log("🔁 Randevu erteleniyor: appointmentId=$appointmentId, date=$isoDate, path=$path");
+
+      final response = await httpService.put(
+        path: path,
+        body: {'appointmentDate': isoDate},
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        if (json['success'] == true) {
+          log("✅ Randevu başarıyla ertelendi: $appointmentId");
+          return true;
+        } else {
+          log("❌ Randevu ertelenemedi: ${json['error'] ?? 'Unknown error'}");
+          return false;
+        }
+      } else {
+        final json = jsonDecode(response.body);
+        log("❌ Randevu erteleme hatası (${response.statusCode}): ${json['error'] ?? response.body}");
+        return false;
+      }
+    } catch (e) {
+      log("❌ rescheduleAppointment hatası: $e");
+      return false;
+    }
+  }
+
   /// İptal edilmiş randevuyu geri al (reactivate)
   /// PUT /appointments/:id/reactivate
   Future<bool> reactivateAppointment(int appointmentId) async {

@@ -9,14 +9,16 @@ import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 class PremiumCard extends ConsumerWidget {
   const PremiumCard({super.key});
 
+  static const _accentGreen = Color(0xFF2BD383);
+  static const _cardDark = Color(0xFF17281E);
+  static const _primaryGreen = Color(0xFF21BC87);
+  static const _glowGreen = Color(0xFF13CF76);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final premiumState = ref.watch(AllProviders.premiumProvider);
     final l = context.l10n;
 
-    // Banner sadece kullanıcı premium'u SATIN ALDIYSA gizlenir.
-    // Trial sürümünde (isPremium=true & isPurchased=false) yine görünür ki
-    // kullanıcıyı paid'e dönüşmeye teşvik etsin.
     if (premiumState.isPurchased) return const SizedBox.shrink();
 
     return Padding(
@@ -29,31 +31,39 @@ class PremiumCard extends ConsumerWidget {
         },
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
           decoration: BoxDecoration(
-            color: const Color(0xFF17281E),
             borderRadius: BorderRadius.circular(16),
+            gradient: const RadialGradient(
+              center: Alignment.topRight,
+              radius: 1.1,
+              colors: [_accentGreen, _cardDark],
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: _glowGreen,
+                blurRadius: 14,
+                offset: Offset(0, 0),
+                spreadRadius: 0,
+              ),
+            ],
           ),
-          // 1. FIX: Ana Column'u minimum boyuta zorluyoruz
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF21BC87),
+                  color: _primaryGreen,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SvgPicture.asset("assets/icons/ic_king.svg"),
-                    SizedBox(width: 6),
-                    Text(
+                    SvgPicture.asset('assets/icons/ic_king.svg'),
+                    const SizedBox(width: 6),
+                    const Text(
                       'PREMIUM',
                       style: TextStyle(
                         fontFamily: 'Geist',
@@ -65,7 +75,7 @@ class PremiumCard extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               RichText(
                 text: TextSpan(
                   style: const TextStyle(
@@ -73,28 +83,30 @@ class PremiumCard extends ConsumerWidget {
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
+                    height: 32 / 24,
                   ),
                   children: [
                     TextSpan(text: l.premiumHeadlinePart1),
                     TextSpan(
                       text: l.premiumHeadlineHighlight,
-                      style: const TextStyle(color: Color(0xFF21BC87)),
+                      style: const TextStyle(color: _accentGreen),
                     ),
                     TextSpan(text: l.premiumHeadlinePart2),
                   ],
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               Text(
                 l.premiumSubtitle,
                 style: TextStyle(
                   fontFamily: 'Geist',
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: Color(0xFF96989C),
+                  color: Colors.white.withValues(alpha: 0.7),
+                  height: 18 / 14,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               _featureRow(l.premiumFeature1),
               const SizedBox(height: 8),
               _featureRow(l.premiumFeature2),
@@ -104,7 +116,6 @@ class PremiumCard extends ConsumerWidget {
               Row(
                 children: [
                   Expanded(
-                    // 2. FIX: Row içindeki Expanded Column'u minimuma zorluyoruz
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +138,7 @@ class PremiumCard extends ConsumerWidget {
                                   fontFamily: 'Geist',
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF21BC87),
+                                  color: _accentGreen,
                                 ),
                               ),
                             ],
@@ -140,54 +151,39 @@ class PremiumCard extends ConsumerWidget {
                             fontFamily: 'Geist',
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF21BC87),
+                            color: _accentGreen,
                           ),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    // Padding: Top 10, Bottom 10, Right 20, Left 20
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     decoration: BoxDecoration(
-                      // DİKKAT: Buraya kendi koyu arka plan rengini girmelisin.
-                      // Aksi takdirde gölge (shadow) butonun içini beyaz doldurur.
-                      color: const Color(0xFF1B231E),
-                      borderRadius: BorderRadius.circular(12), // Radius: 12px
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.white, // Border: 1px, #FFFFFF
+                        color: Colors.white,
                         width: 1,
                       ),
-                      boxShadow: const [
-                        // Shadows and blurs: Drop shadow, X:0, Y:0, Blur:4, #FFFFFF
-                        BoxShadow(
-                          color: Colors.white, // Beyaz parlama efekti
-                          blurRadius: 4,
-                          offset: Offset(0, 0),
-                          spreadRadius: 0,
-                        ),
-                      ],
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          l.premiumCta, // Veya "Başlayın"
+                          l.premiumCta,
                           style: const TextStyle(
                             fontFamily: 'Geist',
-                            fontSize: 18, // Size: 18px
-                            fontWeight: FontWeight.w600, // SemiBold
-                            color: Colors.white, // Colors: #FFFFFF
-                            height: 22 / 18, // Line height: 22px
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            height: 22 / 18,
+                            letterSpacing: 0,
                           ),
                         ),
-                        const SizedBox(width: 8), // Gap: 8px
+                        const SizedBox(width: 8),
                         SvgPicture.asset(
-                          "assets/icons/ic_rightt.svg",
-                          // Ok ikonunun siyah veya başka renk kalmaması, tam beyaz olması için:
+                          'assets/icons/ic_rightt.svg',
                           colorFilter: const ColorFilter.mode(
                             Colors.white,
                             BlendMode.srcIn,
@@ -208,7 +204,7 @@ class PremiumCard extends ConsumerWidget {
   Widget _featureRow(String text) {
     return Row(
       children: [
-        SvgPicture.asset("assets/icons/ic_tick-circle.svg"),
+        SvgPicture.asset('assets/icons/ic_tick-circle.svg'),
         const SizedBox(width: 8),
         Expanded(
           child: Text(

@@ -10,7 +10,7 @@ class AppTitle extends StatelessWidget {
 
   const AppTitle({
     super.key,
-    this.text = 'Mind Coach',
+    this.text = 'MindCoach',
     this.gradient = true,
     this.solidColor = Colors.white,
   });

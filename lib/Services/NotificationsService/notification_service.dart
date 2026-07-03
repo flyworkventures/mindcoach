@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mindcoach/core/routes/page_routes.dart';
+import 'package:mindcoach/core/services/current_route_observer.dart';
+import 'package:mindcoach/core/services/deep_link_handler.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -10,6 +13,30 @@ class NotificationService {
       return {...raw, ...Map<String, dynamic>.from(metadata)};
     }
     return Map<String, dynamic>.from(raw);
+  }
+
+  /// additionalData içinden deep-link'i güvenli çeker (üst seviye veya metadata).
+  String? _extractDeepLink(Map<String, dynamic> normalized) {
+    final dl = normalized['deepLink'] ?? normalized['deep_link'];
+    if (dl is String && dl.trim().isNotEmpty) return dl.trim();
+    return null;
+  }
+
+  /// Kullanıcı ilgili ekranda aktifken foreground push banner'ını bastır.
+  bool _shouldSuppressForeground(Map<String, dynamic> normalized) {
+    final type = normalized['type'] as String?;
+    // Randevu bildirimleri zaten navbar in-app banner ile gösteriliyor → duplicate önle.
+    if (type == 'appointment') return true;
+
+    final deepLink = _extractDeepLink(normalized);
+    final currentRoute = CurrentRouteObserver.currentRouteName;
+    // Kullanıcı bir sohbet ekranındayken gelen sohbet mesajı push'unu bastır.
+    if (deepLink != null &&
+        deepLink.startsWith('chat') &&
+        currentRoute == PageRoutes.conversationScreen) {
+      return true;
+    }
+    return false;
   }
 
   Future initiializeOnesignal() async {
@@ -28,41 +55,31 @@ class NotificationService {
 
       // Foreground notification listener - bildirim geldiğinde yakala
       OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+        final normalizedData =
+            _normalizeAdditionalData(event.notification.additionalData);
         debugPrint(
-          '[ONESIGNAL] 📬 Foreground notification received: ${event.notification.notificationId}',
-        );
-        debugPrint('[ONESIGNAL] Title: ${event.notification.title}');
-        debugPrint('[ONESIGNAL] Body: ${event.notification.body}');
-        debugPrint(
-          '[ONESIGNAL] Additional data: ${event.notification.additionalData}',
+          '[ONESIGNAL] 📬 Foreground: ${event.notification.title} | data=$normalizedData',
         );
 
-        // Additional data'dan type'ı kontrol et
-        final additionalData = event.notification.additionalData;
-        final normalizedData = _normalizeAdditionalData(additionalData);
-        final notificationType = normalizedData['type'] as String?;
-
-        // Appointment bildirimi için burada ikinci kez in-app göstermiyoruz.
-        // In-app gösterim, API'den gelen bildirim listesi üzerinden navbar_shell'de merkezi yönetiliyor.
-        if (notificationType == 'appointment') {
-          debugPrint(
-            '[ONESIGNAL] ℹ️ Appointment foreground push alindi; in-app gosterim navbar akisinda yapilacak',
-          );
+        // Foreground suppression: kullanıcı ilgili ekranda aktifse gösterme.
+        if (_shouldSuppressForeground(normalizedData)) {
+          debugPrint('[ONESIGNAL] 🔕 Foreground suppression uygulandı');
+          event.preventDefault();
+          return;
         }
+        // Aksi halde bildirimi göster.
+        event.notification.display();
       });
 
-      // Notification click listener
+      // Notification click listener → deep-link ile ilgili ekrana yönlendir
       OneSignal.Notifications.addClickListener((event) {
-        debugPrint(
-          '[ONESIGNAL] 📱 Notification clicked: ${event.notification.notificationId}',
-        );
-        debugPrint(
-          '[ONESIGNAL] Notification title: ${event.notification.title}',
-        );
-        debugPrint('[ONESIGNAL] Notification body: ${event.notification.body}');
-        debugPrint(
-          '[ONESIGNAL] Additional data: ${event.notification.additionalData}',
-        );
+        final normalizedData =
+            _normalizeAdditionalData(event.notification.additionalData);
+        final deepLink = _extractDeepLink(normalizedData);
+        debugPrint('[ONESIGNAL] 📱 Clicked → deepLink=$deepLink');
+        if (deepLink != null) {
+          DeepLinkHandler.handle(deepLink);
+        }
       });
 
       debugPrint('[ONESIGNAL] ✅ OneSignal setup completed');

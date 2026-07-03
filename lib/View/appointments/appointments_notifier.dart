@@ -129,8 +129,10 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
       log("📥 getAllAppointments sonucu: ${appointmentsList.length} randevu");
 
       if (appointmentsList.isEmpty) {
-        log("ℹ️ API'den randevu bulunamadı");
-        state = state.copyWith(isLoading: false);
+        log("ℹ️ API'den randevu bulunamadı — liste temizleniyor");
+        state = state.copyWith(appointments: {}, isLoading: false);
+        unawaited(_syncThirtyMinuteReminderNotifications({}));
+        _tickCountdown();
         return;
       }
 
@@ -456,6 +458,83 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
   /// Randevuları yeniden yükle (public method)
   Future<void> refresh() async {
     await _loadAppointmentsFromAPI();
+  }
+
+  static DateTime _dateOnly(DateTime dt) =>
+      DateTime(dt.year, dt.month, dt.day);
+
+  /// UI'da anında kaldırmak için yerel state güncellemesi.
+  void _removeAppointmentLocally(int appointmentId) {
+    final newMap = <DateTime, List<AppointmentInfo>>{};
+    for (final entry in state.appointments.entries) {
+      final filtered = entry.value
+          .where((a) => a.appointmentId != appointmentId)
+          .toList();
+      if (filtered.isNotEmpty) {
+        newMap[entry.key] = filtered;
+      }
+    }
+    state = state.copyWith(appointments: newMap);
+    _tickCountdown();
+    unawaited(_syncThirtyMinuteReminderNotifications(newMap));
+  }
+
+  /// UI'da anında yeni tarihe taşımak için yerel state güncellemesi.
+  void _rescheduleAppointmentLocally(int appointmentId, DateTime newDateTime) {
+    AppointmentInfo? moved;
+    final newMap = <DateTime, List<AppointmentInfo>>{};
+
+    for (final entry in state.appointments.entries) {
+      final remaining = <AppointmentInfo>[];
+      for (final info in entry.value) {
+        if (info.appointmentId == appointmentId) {
+          moved = info.copyWith(
+            appointmentDateTime: newDateTime,
+            status: info.status?.toLowerCase() == 'cancelled'
+                ? 'pending'
+                : info.status,
+          );
+        } else {
+          remaining.add(info);
+        }
+      }
+      if (remaining.isNotEmpty) {
+        newMap[entry.key] = remaining;
+      }
+    }
+
+    if (moved != null) {
+      final key = _dateOnly(newDateTime);
+      newMap.putIfAbsent(key, () => []).add(moved);
+    }
+
+    state = state.copyWith(appointments: newMap);
+    _tickCountdown();
+    unawaited(_syncThirtyMinuteReminderNotifications(newMap));
+  }
+
+  /// Randevuyu kalıcı olarak sil; önce UI'dan kaldır, sonra API + senkron.
+  Future<bool> deleteAppointment(int appointmentId) async {
+    _removeAppointmentLocally(appointmentId);
+
+    final ok = await appointmentRepo.deleteAppointment(appointmentId);
+    await _loadAppointmentsFromAPI();
+    return ok;
+  }
+
+  /// Randevuyu yeni tarihe ertele; önce UI'ı güncelle, sonra API + senkron.
+  Future<bool> rescheduleAppointment(
+    int appointmentId,
+    DateTime newDateTime,
+  ) async {
+    _rescheduleAppointmentLocally(appointmentId, newDateTime);
+
+    final ok = await appointmentRepo.rescheduleAppointment(
+      appointmentId,
+      newDateTime,
+    );
+    await _loadAppointmentsFromAPI();
+    return ok;
   }
 
   int _reminderNotificationId(AppointmentInfo info, DateTime appointmentDateTime) {

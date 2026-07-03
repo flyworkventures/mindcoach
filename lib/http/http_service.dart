@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -13,6 +14,10 @@ import 'package:mindcoach/core/utils/local_db_keys.dart';
 class HttpService {
   final String baseUrl;
   final Ref? ref;
+
+  /// Yanlış IP / kapalı backend durumunda login'in sonsuza kadar
+  /// beklemesini önler.
+  static const Duration defaultTimeout = Duration(seconds: 20);
 
   HttpService({this.baseUrl = AppConstants.baseURL, this.ref});
 
@@ -49,25 +54,43 @@ class HttpService {
       functionName: "post",
     );
     final h = headers ?? await _getHeaders();
-    http.Response response = await http.post(
-      Uri.parse("$baseUrl$path"),
-      body: body == null ? null : jsonEncode(body),
-      headers: h,
-    );
-    if (response.statusCode == 200) {
-      Logger.info(
-        text: "RESPONSE $path: ${response.body}",
-        className: "HttpService",
-        functionName: "post",
-      );
-    } else {
+    try {
+      http.Response response = await http
+          .post(
+            Uri.parse("$baseUrl$path"),
+            body: body == null ? null : jsonEncode(body),
+            headers: h,
+          )
+          .timeout(defaultTimeout);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Logger.info(
+          text: "RESPONSE $path: ${response.body}",
+          className: "HttpService",
+          functionName: "post",
+        );
+      } else {
+        Logger.errorLog(
+          text: "RESPONSE $path (${response.statusCode}): ${response.body}",
+          className: "HttpService",
+          functionName: "post",
+        );
+      }
+      return response;
+    } on SocketException catch (e) {
       Logger.errorLog(
-        text: "RESPONSE $path: ${response.body}",
+        text: "POST $path bağlantı hatası ($baseUrl): $e",
         className: "HttpService",
         functionName: "post",
       );
+      rethrow;
+    } on TimeoutException catch (e) {
+      Logger.errorLog(
+        text: "POST $path zaman aşımı ($baseUrl): $e",
+        className: "HttpService",
+        functionName: "post",
+      );
+      rethrow;
     }
-    return response;
   }
 
   Future<http.Response> get({

@@ -9,6 +9,28 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get reschedule => '일정 변경';
+
+  @override
+  String get appointmentDeleted => '예약이 삭제되었습니다';
+
+  @override
+  String get appointmentRescheduled => '예약 일정이 변경되었습니다';
+
+  @override
+  String get analyseBadge => 'AI 기반';
+
+  @override
+  String get analyseTitle => '마음을 이해하는 가장 쉬운 방법.';
+
+  @override
+  String get analyseSubtitle =>
+      '몇 가지 질문에 솔직하게 답하면 Mindcoach가 감정 상태, 강점, 성장 영역을 정리해 드립니다.';
+
+  @override
+  String get analyseCta => '분석 시작';
+
+  @override
   String get relaxingSound => '편안한 소리';
 
   @override
@@ -1772,6 +1794,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get mostPopular => '가장 인기 있는';
+
+  @override
+  String get soundCategoryAll => '전체';
 
   @override
   String get soundCategoryFocus => '집중';

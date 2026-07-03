@@ -14,7 +14,7 @@ class RelaxingSoundScreen extends StatefulWidget {
 }
 
 class _RelaxingSoundScreenState extends State<RelaxingSoundScreen> {
-  int _selectedCategory = 0;
+  int _selectedCategory = -1; // -1 = Tümü (All)
   String _searchQuery = '';
   late TextEditingController _searchController;
   late SoundItem _featuredSound;
@@ -69,10 +69,10 @@ class _RelaxingSoundScreenState extends State<RelaxingSoundScreen> {
     final l = context.l10n;
     final cache = SoundDurationCache.instance;
 
-    // Kategori filtresi
-    List<SoundItem> currentSounds = allSounds
-        .where((s) => s.categoryIndex == _selectedCategory)
-        .toList();
+    // Kategori filtresi: -1 = Tümü
+    List<SoundItem> currentSounds = _selectedCategory == -1
+        ? List<SoundItem>.from(allSounds)
+        : allSounds.where((s) => s.categoryIndex == _selectedCategory).toList();
 
     // Arama filtresi
     if (_searchQuery.isNotEmpty) {
@@ -304,19 +304,23 @@ class _RelaxingSoundScreenState extends State<RelaxingSoundScreen> {
                       child: ListView.separated(
                         physics: ClampingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
+                        // +1 for the "Tümü" chip at index 0
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: soundCategories.length,
+                        itemCount: soundCategories.length + 1,
                         separatorBuilder: (_, _) => const SizedBox(width: 10),
                         itemBuilder: (context, index) {
-                          final cat = soundCategories[index];
+                          // index 0 = Tümü, index 1..n = soundCategories[index-1]
+                          final isAllChip = index == 0;
+                          final cat = isAllChip ? null : soundCategories[index - 1];
+                          final chipCategory = isAllChip ? -1 : index - 1;
                           final isSelected =
-                              _selectedCategory == index &&
+                              _selectedCategory == chipCategory &&
                               _searchQuery.isEmpty;
 
                           return GestureDetector(
                             onTap: () {
                               setState(() {
-                                _selectedCategory = index;
+                                _selectedCategory = chipCategory;
                                 _searchQuery = '';
                                 _searchController.clear();
                               });
@@ -345,13 +349,16 @@ class _RelaxingSoundScreenState extends State<RelaxingSoundScreen> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
+                                  if (!isAllChip)
                                   Text(
-                                    cat.emoji,
+                                    cat!.emoji,
                                     style: const TextStyle(fontSize: 14),
                                   ),
-                                  const SizedBox(width: 4),
+                                  if (!isAllChip) const SizedBox(width: 4),
                                   Text(
-                                    getCategoryLabel(l, cat.key),
+                                    isAllChip
+                                        ? l.soundCategoryAll
+                                        : getCategoryLabel(l, cat!.key),
                                     style: TextStyle(
                                       fontFamily: 'Geist',
                                       fontSize: 14,
