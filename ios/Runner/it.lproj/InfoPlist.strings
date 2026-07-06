@@ -3,5 +3,3 @@
 "NSMicrophoneUsageDescription" = "Il tuo microfono viene usato per registrare e inviare messaggi vocali nell'app.";
 "NSPhotoLibraryAddUsageDescription" = "La tua libreria foto viene usata per permetterti di scegliere foto da caricare e condividere nell'app.";
 "NSPhotoLibraryUsageDescription" = "La tua libreria foto viene usata per permetterti di scegliere foto da caricare e condividere nell'app.";
-
-"NSUserTrackingUsageDescription" = "Raccogliamo dati di utilizzo anonimi per migliorare la tua esperienza. Puoi disattivarlo in qualsiasi momento dalle Impostazioni.";

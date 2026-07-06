@@ -3,5 +3,3 @@
 "NSMicrophoneUsageDescription" = "アプリ内で音声メッセージを録音して送信するため、マイクを使用します。";
 "NSPhotoLibraryAddUsageDescription" = "アプリでアップロード・共有する写真を選択するため、写真ライブラリを使用します。";
 "NSPhotoLibraryUsageDescription" = "アプリでアップロード・共有する写真を選択するため、写真ライブラリを使用します。";
-
-"NSUserTrackingUsageDescription" = "より良い体験を提供するため、匿名の利用データを収集します。設定からいつでもオフにできます。";

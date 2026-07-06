@@ -80,8 +80,6 @@
 	</array>
 	<key>com.posthog.posthog.AUTO_INIT</key>
 	<false/>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>We collect anonymous usage data to improve your experience. You can turn this off anytime in Settings.</string>
 	<key>WKWebViewJavaScriptCanOpenWindowsAutomatically</key>
 	<true/>
 	<key>WKWebViewJavascriptEnabled</key>

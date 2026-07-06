@@ -3,5 +3,3 @@
 "NSMicrophoneUsageDescription" = "Votre microphone est utilise pour enregistrer et envoyer des messages vocaux dans l'app.";
 "NSPhotoLibraryAddUsageDescription" = "Votre phototheque est utilisee pour vous permettre de choisir des photos a televerser et partager dans l'app.";
 "NSPhotoLibraryUsageDescription" = "Votre phototheque est utilisee pour vous permettre de choisir des photos a televerser et partager dans l'app.";
-
-"NSUserTrackingUsageDescription" = "Nous collectons des donnees d utilisation anonymes pour ameliorer votre experience. Vous pouvez le desactiver a tout moment dans les Reglages.";
