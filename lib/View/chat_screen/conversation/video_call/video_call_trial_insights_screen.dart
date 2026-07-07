@@ -92,7 +92,7 @@ class _VideoCallTrialInsightsScreenState
     return '${originalUrl.substring(0, dotIndex)}_detail${originalUrl.substring(dotIndex)}';
   }
 
-  Future<void> _openTrialActivatedPage({
+  Future<void> _goToLoginAfterInsights({
     required bool openPaywallAfterLogin,
   }) async {
     await LocalDbService().setBool(
@@ -100,12 +100,9 @@ class _VideoCallTrialInsightsScreenState
       value: openPaywallAfterLogin,
     );
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => TrialActivatedScreen(
-          trackTrialActivated: !openPaywallAfterLogin,
-        ),
-      ),
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      PageRoutes.login,
+      (route) => false,
     );
   }
 
@@ -225,7 +222,7 @@ class _VideoCallTrialInsightsScreenState
                               AnalyticsEvents.premiumPurchaseTapped,
                             ),
                           );
-                          _openTrialActivatedPage(openPaywallAfterLogin: true);
+                          _goToLoginAfterInsights(openPaywallAfterLogin: true);
                         },
                         child: Text(
                           _t(
@@ -257,7 +254,7 @@ class _VideoCallTrialInsightsScreenState
                             AnalyticsEvents.continueFreeTapped,
                           ),
                         );
-                        _openTrialActivatedPage(openPaywallAfterLogin: false);
+                        _goToLoginAfterInsights(openPaywallAfterLogin: false);
                       },
                       child: Text(
                         _t(
@@ -624,195 +621,6 @@ class _HighlightCard extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class TrialActivatedScreen extends StatefulWidget {
-  final bool trackTrialActivated;
-
-  const TrialActivatedScreen({super.key, this.trackTrialActivated = true});
-
-  @override
-  State<TrialActivatedScreen> createState() => _TrialActivatedScreenState();
-}
-
-class _TrialActivatedScreenState extends State<TrialActivatedScreen> {
-  bool _switchOn = false;
-  bool _didComplete = false;
-  String get _langCode =>
-      Localizations.localeOf(context).languageCode.toLowerCase();
-
-  String _t({
-    required String tr,
-    required String en,
-    required String de,
-    required String es,
-    required String fr,
-    required String hi,
-    required String it,
-    required String ja,
-    required String ko,
-    required String pt,
-    required String ru,
-    required String zh,
-  }) {
-    if (_langCode.startsWith('tr')) return tr;
-    if (_langCode.startsWith('de')) return de;
-    if (_langCode.startsWith('es')) return es;
-    if (_langCode.startsWith('fr')) return fr;
-    if (_langCode.startsWith('hi')) return hi;
-    if (_langCode.startsWith('it')) return it;
-    if (_langCode.startsWith('ja')) return ja;
-    if (_langCode.startsWith('ko')) return ko;
-    if (_langCode.startsWith('pt')) return pt;
-    if (_langCode.startsWith('ru')) return ru;
-    if (_langCode.startsWith('zh')) return zh;
-    return en;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Future<void>.delayed(const Duration(milliseconds: 280), () {
-      if (!mounted) return;
-      setState(() => _switchOn = true);
-      if (widget.trackTrialActivated) {
-        unawaited(_trackTrialActivated());
-      }
-      _continueFlow();
-    });
-  }
-
-  Future<void> _trackTrialActivated() async {
-    await AnalyticsService.instance.capture(
-      AnalyticsEvents.premiumTrialActivated,
-      properties: {'trial_days': 3},
-    );
-    await AnalyticsService.instance.setPersonProperties({
-      'trial_status': 'active',
-      'trial_start_date': DateTime.now().toUtc().toIso8601String(),
-    });
-  }
-
-  Future<void> _continueFlow() async {
-    if (_didComplete) return;
-    _didComplete = true;
-
-    await Future<void>.delayed(const Duration(milliseconds: 900));
-    if (!mounted) return;
-
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(PageRoutes.login, (route) => false);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _TrialToggleVisual(isOn: _switchOn),
-            const SizedBox(height: 16),
-            Text(
-              _t(
-                tr: '3 günlük ücretsiz deneme',
-                en: '3-day free trial',
-                de: '3 Tage kostenlos testen',
-                es: 'prueba gratis de 3 dias',
-                fr: 'essai gratuit de 3 jours',
-                hi: '3 दिन का मुफ्त ट्रायल',
-                it: 'prova gratuita di 3 giorni',
-                ja: '3日間無料トライアル',
-                ko: '3일 무료 체험',
-                pt: 'teste gratis de 3 dias',
-                ru: '3-дневный бесплатный пробный период',
-                zh: '3天免费试用',
-              ),
-              style: const TextStyle(
-                fontFamily: 'Geist',
-                fontSize: 42 / 2,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-                letterSpacing: -0.2,
-              ),
-            ),
-            Text(
-              _t(
-                tr: 'aktif',
-                en: 'activated',
-                de: 'aktiviert',
-                es: 'activado',
-                fr: 'active',
-                hi: 'सक्रिय',
-                it: 'attivato',
-                ja: '有効化',
-                ko: '활성화됨',
-                pt: 'ativado',
-                ru: 'активировано',
-                zh: '已激活',
-              ),
-              style: const TextStyle(
-                fontFamily: 'Geist',
-                fontSize: 58 / 2,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF21BC87),
-                letterSpacing: -0.29,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _TrialToggleVisual extends StatelessWidget {
-  final bool isOn;
-
-  const _TrialToggleVisual({required this.isOn});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedScale(
-      scale: isOn ? 1.14 : 1.0,
-      duration: const Duration(milliseconds: 420),
-      curve: Curves.easeOutBack,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 360),
-        curve: Curves.easeInOutCubic,
-        width: 98,
-        height: 56,
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(
-            color: isOn ? const Color(0xFF21BC87) : const Color(0xFF7B7483),
-            width: 2,
-          ),
-          color: isOn
-              ? const Color(0xFF21BC87).withValues(alpha: 0.14)
-              : Colors.transparent,
-        ),
-        child: AnimatedAlign(
-          duration: const Duration(milliseconds: 420),
-          curve: Curves.easeInOutCubic,
-          alignment: isOn ? Alignment.centerRight : Alignment.centerLeft,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 420),
-            curve: Curves.easeInOutCubic,
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: isOn ? const Color(0xFF21BC87) : const Color(0xFF7B7483),
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
