@@ -26,7 +26,7 @@ class AppConstants {
   //   iOS Simulator     → localhost
   //   Android Emulator  → 10.0.2.2
   //   Fiziksel cihaz    → Mac LAN IP (aynı Wi-Fi; `ipconfig getifaddr en0`)
-  static const bool useLocalBackend = true;
+  static const bool useLocalBackend = false;
   static const String localBackendHost = '192.168.1.104';
   static const int localBackendPort = 3010;
 
