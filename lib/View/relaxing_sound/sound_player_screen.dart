@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -41,13 +42,18 @@ class SoundPlayerScreen extends StatefulWidget {
 }
 
 class _SoundPlayerScreenState extends State<SoundPlayerScreen> {
+  /// Kısa klipler aynı ses üzerinde 10 dk boyunca döner.
+  static const Duration _sessionDuration = Duration(minutes: 10);
+
   late AudioPlayer _player;
   late int _currentIndex;
 
-  Duration _position = Duration.zero;
-  Duration _duration = Duration.zero;
+  Duration _clipPosition = Duration.zero;
   bool _isPlaying = false;
   final Set<int> _trackedPlays = <int>{};
+
+  final Stopwatch _sessionStopwatch = Stopwatch();
+  Timer? _sessionTicker;
 
   @override
   void initState() {
@@ -61,28 +67,69 @@ class _SoundPlayerScreenState extends State<SoundPlayerScreen> {
 
   void _setupListeners() {
     _player.positionStream.listen((pos) {
-      if (mounted) setState(() => _position = pos);
-    });
-    _player.durationStream.listen((dur) {
-      if (mounted && dur != null) setState(() => _duration = dur);
+      if (mounted) setState(() => _clipPosition = pos);
     });
     _player.playerStateStream.listen((state) {
       if (!mounted) return;
       setState(() => _isPlaying = state.playing);
 
-      // --- DEĞİŞTİRİLEN KISIM BURASI ---
-      // Ses bittiğinde sıradaki şarkıya geçmek yerine başa sarıp durdurur.
+      if (state.playing) {
+        _resumeSession();
+      } else {
+        _pauseSession();
+      }
+
+      // LoopMode.one ile normalde completed gelmez; güvenlik için başa sar.
       if (state.processingState == ProcessingState.completed) {
         _player.seek(Duration.zero);
-        _player.pause();
+        _player.play();
       }
     });
   }
 
+  void _resumeSession() {
+    if (!_sessionStopwatch.isRunning) {
+      _sessionStopwatch.start();
+    }
+    _sessionTicker ??= Timer.periodic(const Duration(milliseconds: 250), (_) {
+      if (!mounted) return;
+      if (_sessionStopwatch.elapsed >= _sessionDuration) {
+        unawaited(_onSessionComplete());
+        return;
+      }
+      setState(() {});
+    });
+  }
+
+  void _pauseSession() {
+    if (_sessionStopwatch.isRunning) {
+      _sessionStopwatch.stop();
+    }
+  }
+
+  void _resetSession() {
+    _sessionStopwatch
+      ..stop()
+      ..reset();
+    _sessionTicker?.cancel();
+    _sessionTicker = null;
+  }
+
+  Future<void> _onSessionComplete() async {
+    _resetSession();
+    try {
+      await _player.pause();
+      await _player.seek(Duration.zero);
+    } catch (_) {}
+    if (mounted) setState(() {});
+  }
+
   Future<void> _loadAudio(int index, {bool autoPlay = true}) async {
     final item = widget.playlist[index];
+    _resetSession();
     try {
       await _player.setAsset(item.audioPath);
+      await _player.setLoopMode(LoopMode.one);
       // Sadece autoPlay true ise çalmaya başla
       if (autoPlay) {
         await _player.play();
@@ -123,7 +170,7 @@ class _SoundPlayerScreenState extends State<SoundPlayerScreen> {
 
   void _previous() {
     // 3 saniyeden fazla çaldıysa başa sar, değilse önceki şarkıya geç
-    if (_position.inSeconds > 3) {
+    if (_clipPosition.inSeconds > 3) {
       _player.seek(Duration.zero);
       return;
     }
@@ -137,13 +184,15 @@ class _SoundPlayerScreenState extends State<SoundPlayerScreen> {
   }
 
   String _formatTime(Duration d) {
-    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    final clamped = d.isNegative ? Duration.zero : d;
+    final m = clamped.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final s = clamped.inSeconds.remainder(60).toString().padLeft(2, '0');
     return '$m:$s';
   }
 
   @override
   void dispose() {
+    _sessionTicker?.cancel();
     _player.dispose();
     super.dispose();
   }
@@ -151,8 +200,13 @@ class _SoundPlayerScreenState extends State<SoundPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     final item = widget.playlist[_currentIndex];
-    final totalMs = _duration.inMilliseconds;
-    final progress = totalMs > 0 ? _position.inMilliseconds / totalMs : 0.0;
+    final elapsed = _sessionStopwatch.elapsed;
+    final remaining = _sessionDuration - elapsed;
+    final progress =
+        (elapsed.inMilliseconds / _sessionDuration.inMilliseconds).clamp(
+          0.0,
+          1.0,
+        );
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -220,9 +274,9 @@ class _SoundPlayerScreenState extends State<SoundPlayerScreen> {
                 ),
                 const SizedBox(height: 32),
 
-                // ── Timer ──
+                // ── Timer (10 dk oturum geri sayımı) ──
                 Text(
-                  _formatTime(_duration - _position),
+                  _formatTime(remaining),
                   style: const TextStyle(
                     fontFamily: 'Geist',
                     fontSize: 40,

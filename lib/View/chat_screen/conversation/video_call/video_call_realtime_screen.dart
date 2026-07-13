@@ -1824,99 +1824,51 @@ class _VideoCallRealtimeScreenState
 
   Future<void> _showRateConversationSheet() async {
     final l10n = context.l10n;
-    int selectedStars = 0;
-    await showModalBottomSheet<void>(
+    final rating = await showModalBottomSheet<int>(
       context: context,
       backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
       builder: (sheetContext) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Container(
-              margin: EdgeInsets.zero,
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 2),
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 5,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.videoCallRateTitle,
-                        style: const TextStyle(
-                          fontFamily: 'Geist',
-                          fontSize: 32 / 2,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.of(sheetContext).pop(),
-                        child: SvgPicture.asset("assets/icons/ic_close.svg"),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    l10n.videoCallRateSubtitle,
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 24 / 2,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  Row(
-                    children: List.generate(5, (index) {
-                      final isActive = index < selectedStars;
-                      return GestureDetector(
-                        onTap: () {
-                          final stars = index + 1;
-                          // setModalState kaldırıldı: rebuild → pop sırası
-                          // gereksiz bir kare gecikme yaratıyordu.
-                          if (!sheetContext.mounted) return;
-                          Navigator.of(sheetContext).pop();
-                          unawaited(_submitVideoCallRating(stars));
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(right: index == 4 ? 0 : 10),
-                          child: SvgPicture.asset(
-                            "assets/icons/star.svg",
-                            color: isActive
-                                ? const Color(0xFFFF9D2D)
-                                : const Color(0xFFB8B8B8),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                ],
-              ),
-            );
-          },
+        return _VideoCallRatingSheet(
+          title: l10n.videoCallRateTitle,
+          subtitle: l10n.videoCallRateSubtitle,
+          thanksTitle: _ratingThanksTitle(
+            Localizations.localeOf(sheetContext).languageCode,
+          ),
+          thanksSubtitleBuilder: (stars) => _ratingThanksSubtitle(
+            Localizations.localeOf(sheetContext).languageCode,
+            stars,
+          ),
         );
       },
     );
+
+    if (rating != null && rating > 0) {
+      await _submitVideoCallRating(rating);
+    }
+  }
+
+  String _ratingThanksTitle(String lang) {
+    if (lang.startsWith('tr')) return 'Teşekkürler!';
+    if (lang.startsWith('de')) return 'Danke!';
+    if (lang.startsWith('es')) return '¡Gracias!';
+    if (lang.startsWith('fr')) return 'Merci !';
+    if (lang.startsWith('it')) return 'Grazie!';
+    if (lang.startsWith('pt')) return 'Obrigado!';
+    if (lang.startsWith('ru')) return 'Спасибо!';
+    return 'Thank you!';
+  }
+
+  String _ratingThanksSubtitle(String lang, int stars) {
+    if (lang.startsWith('tr')) return 'Değerlendirmen: $stars/5';
+    if (lang.startsWith('de')) return 'Deine Bewertung: $stars/5';
+    if (lang.startsWith('es')) return 'Tu valoración: $stars/5';
+    if (lang.startsWith('fr')) return 'Votre note : $stars/5';
+    if (lang.startsWith('it')) return 'La tua valutazione: $stars/5';
+    if (lang.startsWith('pt')) return 'Sua avaliação: $stars/5';
+    if (lang.startsWith('ru')) return 'Ваша оценка: $stars/5';
+    return 'Your rating: $stars/5';
   }
 
   Future<void> _submitVideoCallRating(int rating) async {
@@ -2580,5 +2532,147 @@ class _VideoCallRealtimeScreenState
     final m = (remainingSec ~/ 60).toString().padLeft(2, '0');
     final s = (remainingSec % 60).toString().padLeft(2, '0');
     return '$m:$s';
+  }
+}
+
+/// Görüntülü görüşme puanlama sheet'i.
+/// SVG yıldız `color` ile boyanamıyordu (mask + hardcode fill) — Icon kullanıyoruz.
+class _VideoCallRatingSheet extends StatefulWidget {
+  final String title;
+  final String subtitle;
+  final String thanksTitle;
+  final String Function(int stars) thanksSubtitleBuilder;
+
+  const _VideoCallRatingSheet({
+    required this.title,
+    required this.subtitle,
+    required this.thanksTitle,
+    required this.thanksSubtitleBuilder,
+  });
+
+  @override
+  State<_VideoCallRatingSheet> createState() => _VideoCallRatingSheetState();
+}
+
+class _VideoCallRatingSheetState extends State<_VideoCallRatingSheet> {
+  int _selectedStars = 0;
+  bool _closing = false;
+
+  Future<void> _onStarTap(int stars) async {
+    if (_closing || _selectedStars > 0) return;
+    HapticFeedback.selectionClick();
+    setState(() => _selectedStars = stars);
+
+    // Seçimin boyanması için bir frame bekle, sonra kısa göster
+    await WidgetsBinding.instance.endOfFrame;
+    await Future<void>.delayed(const Duration(milliseconds: 1400));
+    if (!mounted || _closing) return;
+    _closing = true;
+    Navigator.of(context).pop(stars);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasRated = _selectedStars > 0;
+    return SafeArea(
+      top: false,
+      child: Container(
+        margin: EdgeInsets.zero,
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 2),
+            Center(
+              child: Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD9D9D9),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    hasRated ? widget.thanksTitle : widget.title,
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                if (!hasRated)
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: SvgPicture.asset('assets/icons/ic_close.svg'),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              hasRated
+                  ? widget.thanksSubtitleBuilder(_selectedStars)
+                  : widget.subtitle,
+              style: const TextStyle(
+                fontFamily: 'Geist',
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: List.generate(5, (index) {
+                final star = index + 1;
+                final isActive = star <= _selectedStars;
+                return Padding(
+                  padding: EdgeInsets.only(right: index == 4 ? 0 : 8),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: hasRated ? null : () => _onStarTap(star),
+                      borderRadius: BorderRadius.circular(24),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: AnimatedScale(
+                          scale: hasRated && isActive ? 1.15 : 1.0,
+                          duration: const Duration(milliseconds: 160),
+                          child: Icon(
+                            Icons.star_rounded,
+                            size: 36,
+                            color: isActive
+                                ? const Color(0xFFFF9D2D)
+                                : const Color(0xFFB8B8B8),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

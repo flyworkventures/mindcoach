@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mindcoach/Http/http_service.dart';
+import 'package:mindcoach/Services/NotificationsService/periodic_notification_scheduler.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
+import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 
 class LanguageSelectionScreen extends ConsumerStatefulWidget {
@@ -39,8 +44,20 @@ class _LanguageSelectionScreenState
     _selectedCode = ref.read(localeProvider.notifier).getLanguageCode();
   }
 
-  void _save() {
-    ref.read(localeProvider.notifier).setLocale(Locale(_selectedCode));
+  Future<void> _save() async {
+    await ref.read(localeProvider.notifier).setLocale(Locale(_selectedCode));
+    // Backend push bildirimleri için nativeLang senkronu
+    try {
+      final http = HttpService();
+      await http.put(
+        path: AppConstants.completeProfileURL,
+        body: {'nativeLang': _selectedCode},
+      );
+    } catch (e) {
+      debugPrint('[LANG] nativeLang sync failed: $e');
+    }
+    unawaited(PeriodicNotificationScheduler().updateSchedule());
+    if (!mounted) return;
     Navigator.of(context).pop();
   }
 

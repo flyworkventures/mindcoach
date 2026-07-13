@@ -19,7 +19,8 @@ class HttpService {
   /// beklemesini önler.
   static const Duration defaultTimeout = Duration(seconds: 20);
 
-  HttpService({this.baseUrl = AppConstants.baseURL, this.ref});
+  HttpService({String? baseUrl, this.ref})
+      : baseUrl = baseUrl ?? AppConstants.baseURL;
 
   /// Token'i once Riverpod state'inden, bulamazsa local storage'dan alir.
   Future<Map<String, String>> _getHeaders() async {

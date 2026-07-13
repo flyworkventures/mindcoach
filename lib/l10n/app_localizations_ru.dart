@@ -984,7 +984,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appointments => 'Встречи';
 
   @override
-  String get faq => 'FAQ';
+  String get faq => 'F.A.Q';
 
   @override
   String get phoneNumber => 'Номер телефона';

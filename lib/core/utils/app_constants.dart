@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mindcoach/l10n/app_localizations.dart';
 
@@ -15,16 +18,39 @@ class AppConstants {
 
   static const String defaultPpUrl =
       "https://mindcoach.b-cdn.net/1024x1024.jpg";
-  // ---- Production (canlı sunucu) ----
-  static const String baseURL = 'https://mindcoach.fly-work.com';
-  static const String wsBaseURL = 'wss://mindcoach.fly-work.com/realtime';
 
-  // ---- Local backend (geri almak için, mindcoach_apis-main PORT 3010) ----
-  // Gerçek cihaz (fiziksel telefon): Mac ile telefon AYNI Wi-Fi ağında olmalı.
-  //   Mac LAN IP: 192.168.1.104  (değişirse `ipconfig getifaddr en0` ile güncelleyin)
-  // iOS Simulator için: http://localhost:3010 | Android Emulator: http://10.0.2.2:3010
-  // static const String baseURL = 'http://192.168.1.104:3010';
-  // static const String wsBaseURL = 'ws://192.168.1.104:3010/realtime';
+  // ---- API base URL ---------------------------------------------------------
+  // Release build → production. Debug build → local backend (port 3010).
+  //
+  // Local host seçenekleri (test cihazına göre `localBackendHost` değiştirin):
+  //   iOS Simulator     → localhost
+  //   Android Emulator  → 10.0.2.2
+  //   Fiziksel cihaz    → Mac LAN IP (aynı Wi-Fi; `ipconfig getifaddr en0`)
+  static const bool useLocalBackend = true;
+  static const String localBackendHost = '192.168.1.104';
+  static const int localBackendPort = 3010;
+
+  static const String _productionBaseUrl = 'https://mindcoach.fly-work.com';
+  static const String _productionWsBaseUrl =
+      'wss://mindcoach.fly-work.com/realtime';
+
+  static String get baseURL {
+    if (!kDebugMode || !useLocalBackend) return _productionBaseUrl;
+    return 'http://$localBackendHost:$localBackendPort';
+  }
+
+  static String get wsBaseURL {
+    if (!kDebugMode || !useLocalBackend) return _productionWsBaseUrl;
+    return 'ws://$localBackendHost:$localBackendPort/realtime';
+  }
+
+  /// Platforma göre önerilen local host (bilgi amaçlı).
+  static String get suggestedLocalBackendHost {
+    if (kIsWeb) return 'localhost';
+    if (Platform.isAndroid) return '10.0.2.2';
+    if (Platform.isIOS) return 'localhost';
+    return localBackendHost;
+  }
   static const String onesignalId = "b3ba2ab4-03a9-45dc-a303-f0a92d7d1410";
   static const String googleAuth = "/auth/google";
   static const String facebookAuth = "/auth/facebook";

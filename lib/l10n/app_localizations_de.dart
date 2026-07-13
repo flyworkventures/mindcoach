@@ -979,10 +979,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notifications => 'Benachrichtigungen';
 
   @override
-  String get appointments => 'Meetings';
+  String get appointments => 'Termine';
 
   @override
-  String get faq => 'FAQ';
+  String get faq => 'F.A.Q';
 
   @override
   String get phoneNumber => 'Telefonnummer';

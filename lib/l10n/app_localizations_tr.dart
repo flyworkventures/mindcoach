@@ -962,7 +962,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notifications => 'Bildirimler';
 
   @override
-  String get appointments => 'Görüşmeler';
+  String get appointments => 'Randevular';
 
   @override
   String get faq => 'SSS';

@@ -1891,13 +1891,13 @@ abstract class AppLocalizations {
   /// No description provided for @appointments.
   ///
   /// In en, this message translates to:
-  /// **'Meetings'**
+  /// **'Appointments'**
   String get appointments;
 
   /// No description provided for @faq.
   ///
   /// In en, this message translates to:
-  /// **'FAQ'**
+  /// **'F.A.Q'**
   String get faq;
 
   /// No description provided for @phoneNumber.

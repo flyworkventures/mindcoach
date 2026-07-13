@@ -987,7 +987,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appointments => 'Réunions';
 
   @override
-  String get faq => 'FAQ';
+  String get faq => 'F.A.Q';
 
   @override
   String get phoneNumber => 'Numéro de téléphone';

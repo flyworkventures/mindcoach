@@ -314,7 +314,6 @@ class ChatNotifier extends Notifier<ChatState> {
 
 
   Future<void> deleteChat(SpecialistId id) async {
-
     final chatItem = state.chats.firstWhere(
       (c) => c.specialistId == id,
       orElse: () => ChatItem(
@@ -326,29 +325,30 @@ class ChatNotifier extends Notifier<ChatState> {
         isFromMe: false,
       ),
     );
-    
+
     final consultantId = chatItem.consultantId;
-    
-    try {
+    final previousChats = List<ChatItem>.from(state.chats);
 
-      final chatRepo = ChatRepo(ref);
-      await chatRepo.deleteChat(consultantId);
-      debugPrint(' Chat backend\'de silindi: consultantId=$consultantId');
-    } catch (e) {
-      debugPrint(' Chat silme API hatası: $e');
-
-    }
-
-    final filtered = state.chats.where((c) => c.specialistId != id).toList();
-    state = state.copyWith(chats: filtered);
-    
+    // Anlık UI güncellemesi — API bitmeden listeden kaldır
+    state = state.copyWith(
+      chats: state.chats.where((c) => c.specialistId != id).toList(),
+    );
 
     try {
       final conversationsNotifier = ref.read(conversationsProvider.notifier);
       conversationsNotifier.clearMessages(consultantId);
-      debugPrint(' Chat silindi ve mesajlar temizlendi: consultantId=$consultantId');
     } catch (e) {
       debugPrint('Chat silme sırasında mesaj temizleme hatası: $e');
+    }
+
+    try {
+      final chatRepo = ChatRepo(ref);
+      await chatRepo.deleteChat(consultantId);
+      debugPrint('Chat backend\'de silindi: consultantId=$consultantId');
+    } catch (e) {
+      debugPrint('Chat silme API hatası, liste geri alınıyor: $e');
+      state = state.copyWith(chats: previousChats);
+      rethrow;
     }
   }
 

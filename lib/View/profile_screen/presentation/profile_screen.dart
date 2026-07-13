@@ -550,10 +550,11 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
         title,
         style: const TextStyle(
           fontFamily: 'Geist',
-          fontSize: 14,
-          fontWeight: FontWeight.w500, // Medium
-          color: textSecondary, // #96989C
-          letterSpacing: 0.5,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          height: 16 / 13,
+          letterSpacing: 0,
+          color: textSecondary,
         ),
       ),
     );

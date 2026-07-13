@@ -31,9 +31,9 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen>
       animationDuration: const Duration(milliseconds: 160),
     );
 
-    // Ekran açıldığında randevuları API'den taze çek.
+    // Ekran açıldığında randevuları API'den taze çek (mevcut listeyi silmeden).
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(appointmentsProvider.notifier).refresh();
+      ref.read(appointmentsProvider.notifier).refresh(silent: true);
     });
   }
 
@@ -172,9 +172,15 @@ class UpcomingAppointmentsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(upcomingAppointmentsProvider);
+    final isLoading = ref.watch(
+      appointmentsProvider.select((s) => s.isLoading),
+    );
 
-    // ❌ KÖTÜ: appointmentsState.watch kaldırıldı - gereksiz rebuild trigger ediyor
-    // ✅ İYİ: Sadece items'ı watch et
+    if (isLoading && items.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(color: Color(0xFF21BC87)),
+      );
+    }
 
     if (items.isEmpty) {
       return Center(
@@ -190,14 +196,21 @@ class UpcomingAppointmentsTab extends ConsumerWidget {
       );
     }
 
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      physics: const ClampingScrollPhysics(),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final item = items[index];
-        return AppointmentCardUi(item: item);
-      },
+    return RefreshIndicator(
+      color: const Color(0xFF21BC87),
+      onRefresh: () =>
+          ref.read(appointmentsProvider.notifier).refresh(silent: false),
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: ClampingScrollPhysics(),
+        ),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return AppointmentCardUi(item: item);
+        },
+      ),
     );
   }
 }
@@ -210,6 +223,15 @@ class CompletedAppointmentsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // completed provider zaten status/zaman kurallarını uyguluyor.
     final items = ref.watch(completedAppointmentsProvider);
+    final isLoading = ref.watch(
+      appointmentsProvider.select((s) => s.isLoading),
+    );
+
+    if (isLoading && items.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(color: Color(0xFF21BC87)),
+      );
+    }
 
     if (items.isEmpty) {
       return Center(
@@ -225,14 +247,21 @@ class CompletedAppointmentsTab extends ConsumerWidget {
       );
     }
 
-    return ListView.builder(
-      physics: const ClampingScrollPhysics(),
-      padding: EdgeInsets.zero,
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final item = items[index];
-        return CompletedAppointmentCardUi(item: item);
-      },
+    return RefreshIndicator(
+      color: const Color(0xFF21BC87),
+      onRefresh: () =>
+          ref.read(appointmentsProvider.notifier).refresh(silent: false),
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: ClampingScrollPhysics(),
+        ),
+        padding: EdgeInsets.zero,
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return CompletedAppointmentCardUi(item: item);
+        },
+      ),
     );
   }
 }

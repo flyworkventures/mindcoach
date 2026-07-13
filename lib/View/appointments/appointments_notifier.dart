@@ -57,6 +57,8 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
   AppointmentRepo? _appointmentRepo;
   ConsultantRepo? _consultantRepo;
   int? _activeUserId;
+  /// build() her seferinde boş map dönmesin diye son bilinen liste.
+  Map<DateTime, List<AppointmentInfo>>? _cachedAppointments;
 
   AppointmentRepo get appointmentRepo {
     _appointmentRepo ??= AppointmentRepo(ref);
@@ -77,14 +79,13 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
       _timer = null;
     });
 
-    if (_activeUserId != userId) {
+    final userChanged = _activeUserId != userId;
+    if (userChanged) {
       _activeUserId = userId;
       _timer?.cancel();
       _timer = null;
+      _cachedAppointments = null;
     }
-
-    // İlk state - boş map ile başla, loading true
-    final initialState = AppointmentsState(appointments: {}, isLoading: true);
 
     // ✅ ÖNEMLİ: provider build sırasında state değiştirmiyoruz
     // API'den randevuları çek ve countdown'u widget build bittikten sonra başlatıyoruz.
@@ -99,30 +100,42 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
         return;
       }
       log("✅ Ref mounted, randevular yükleniyor...");
-      _loadAppointmentsFromAPI();
+      _loadAppointmentsFromAPI(silent: _cachedAppointments != null);
       _startCountdown();
     });
 
-    return initialState;
+    // Rebuild'de boş map dönme — önceki cache varsa anında göster
+    if (_cachedAppointments != null && !userChanged) {
+      return AppointmentsState(
+        appointments: _cachedAppointments!,
+        isLoading: false,
+      );
+    }
+
+    return AppointmentsState(appointments: {}, isLoading: true);
   }
 
   /// API'den tüm randevuları yükle
-  Future<void> _loadAppointmentsFromAPI() async {
-    log("🚀 _loadAppointmentsFromAPI başlatıldı");
+  /// [silent] true ise mevcut listeyi silmeden arka planda yeniler (anlık UI için).
+  Future<void> _loadAppointmentsFromAPI({bool silent = false}) async {
+    log("🚀 _loadAppointmentsFromAPI başlatıldı (silent=$silent)");
 
     final userId = ref.read(AllProviders.userProvider)?.id;
     log("👤 User ID: $userId");
 
     if (userId == null) {
       log("❌ User ID null, randevular yüklenemiyor");
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false, appointments: {});
       return;
     }
 
     try {
-      // Loading başladı
-      log("⏳ Randevular yükleniyor...");
-      state = state.copyWith(isLoading: true);
+      final hasExisting = state.appointments.isNotEmpty;
+      // Soft refresh: elde veri varken boş ekran göstermemek için loading gösterme
+      if (!silent && !hasExisting) {
+        log("⏳ Randevular yükleniyor...");
+        state = state.copyWith(isLoading: true);
+      }
 
       log("📞 appointmentRepo.getAllAppointments çağrılıyor...");
       final appointmentsList = await appointmentRepo.getAllAppointments(userId);
@@ -130,6 +143,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
 
       if (appointmentsList.isEmpty) {
         log("ℹ️ API'den randevu bulunamadı — liste temizleniyor");
+        _cachedAppointments = {};
         state = state.copyWith(appointments: {}, isLoading: false);
         unawaited(_syncThirtyMinuteReminderNotifications({}));
         _tickCountdown();
@@ -243,6 +257,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
       }
 
       // State'i güncelle (loading'i false yap)
+      _cachedAppointments = appointmentsMap;
       state = state.copyWith(appointments: appointmentsMap, isLoading: false);
       unawaited(_syncThirtyMinuteReminderNotifications(appointmentsMap));
 
@@ -441,7 +456,8 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
       list.add(info);
       newMap[dateOnly] = list;
 
-      state = state.copyWith(appointments: newMap);
+      _cachedAppointments = newMap;
+      state = state.copyWith(appointments: newMap, isLoading: false);
       log(
         "✅ Randevu eklendi: dateOnly=$dateOnly, appointmentDateTime=$appointmentDateTime, consultantId=${info.consultantId}",
       );
@@ -455,9 +471,10 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     unawaited(_syncThirtyMinuteReminderNotifications(newMap));
   }
 
-  /// Randevuları yeniden yükle (public method)
-  Future<void> refresh() async {
-    await _loadAppointmentsFromAPI();
+  /// Randevuları yeniden yükle (public method).
+  /// [silent] true: mevcut listeyi koruyarak arka planda yenile.
+  Future<void> refresh({bool silent = true}) async {
+    await _loadAppointmentsFromAPI(silent: silent);
   }
 
   static DateTime _dateOnly(DateTime dt) =>
@@ -475,6 +492,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
       }
     }
     state = state.copyWith(appointments: newMap);
+    _cachedAppointments = newMap;
     _tickCountdown();
     unawaited(_syncThirtyMinuteReminderNotifications(newMap));
   }
@@ -509,6 +527,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     }
 
     state = state.copyWith(appointments: newMap);
+    _cachedAppointments = newMap;
     _tickCountdown();
     unawaited(_syncThirtyMinuteReminderNotifications(newMap));
   }
@@ -518,7 +537,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     _removeAppointmentLocally(appointmentId);
 
     final ok = await appointmentRepo.deleteAppointment(appointmentId);
-    await _loadAppointmentsFromAPI();
+    await _loadAppointmentsFromAPI(silent: true);
     return ok;
   }
 
@@ -533,7 +552,7 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
       appointmentId,
       newDateTime,
     );
-    await _loadAppointmentsFromAPI();
+    await _loadAppointmentsFromAPI(silent: true);
     return ok;
   }
 

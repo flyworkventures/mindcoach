@@ -9,6 +9,7 @@ import '../../../../core/routes/page_routes.dart';
 import '../../../../core/utils/context_l10n_extensions.dart';
 import '../../../../core/utils/job_convert.dart';
 import '../../../../core/utils/time_format_utils.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../models/consultant_model.dart';
 import '../../../specialists_screen/specialists_notifier.dart';
 import '../../chat_notifier.dart';
@@ -43,6 +44,42 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     setState(() {
       _quickMessageCoaches = shuffled.take(2).toList();
     });
+  }
+
+  Future<bool> _confirmDeleteChat(BuildContext context, String name) async {
+    final l = context.l10n;
+    var confirmed = false;
+    await showConfirmDialog(
+      context: context,
+      title: l.areYouSure,
+      message: name,
+      confirmText: l.delete,
+      confirmColor: const Color(0xFFE53935),
+      onConfirm: () => confirmed = true,
+    );
+    return confirmed;
+  }
+
+  Future<void> _deleteHistoryChat(
+    BuildContext context,
+    WidgetRef ref,
+    _ChatItem chat,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final toast = ChatStrings.deleteToast(context, chat.name);
+    try {
+      await ref.read(chatProvider.notifier).deleteChat(chat.id);
+      if (!context.mounted) return;
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(toast),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (_) {
+      // Liste optimistic update'te geri alındı; ekstra hata mesajı gerekmez.
+    }
   }
 
   @override
@@ -157,18 +194,43 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
                   return Column(
                     children: [
-                      _HistoryChatTile(item: chat),
-                      // Son elemanın altına çizgi koymamak için kontrol
+                      Dismissible(
+                        key: ValueKey('history_chat_${chat.consultantId}'),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE53935),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.delete_outline_rounded,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                        confirmDismiss: (_) =>
+                            _confirmDeleteChat(context, chat.name),
+                        onDismissed: (_) =>
+                            _deleteHistoryChat(context, ref, chat),
+                        child: _HistoryChatTile(
+                          item: chat,
+                          onDelete: () async {
+                            final ok =
+                                await _confirmDeleteChat(context, chat.name);
+                            if (!ok || !context.mounted) return;
+                            await _deleteHistoryChat(context, ref, chat);
+                          },
+                        ),
+                      ),
                       if (index != uiChats.length - 1)
-                        Padding(
-                          // Figma'daki Padding (Top 8, Bottom 8, Left 1, Right 1)
-                          padding: const EdgeInsets.fromLTRB(1, 4, 1, 4),
-                          child: const Divider(
-                            height: 0, // Figma: 0px height
-                            thickness: 1, // Figma: 0.5px border
-                            color: Color(
-                              0x1A000000,
-                            ), // Figma: %10 Siyah (#000000)
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(1, 4, 1, 4),
+                          child: Divider(
+                            height: 0,
+                            thickness: 1,
+                            color: Color(0x1A000000),
                           ),
                         ),
                     ],
@@ -357,8 +419,9 @@ class _QuickMessageCard extends ConsumerWidget {
 
 class _HistoryChatTile extends ConsumerWidget {
   final _ChatItem item;
+  final VoidCallback onDelete;
 
-  const _HistoryChatTile({required this.item});
+  const _HistoryChatTile({required this.item, required this.onDelete});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -425,17 +488,35 @@ class _HistoryChatTile extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 4),
 
-            // Time
-            Text(
-              TimeFormatUtils.formatTime(context, item.time),
-              style: const TextStyle(
-                fontFamily: 'Geist',
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF96989C),
-              ),
+            // Time + delete
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  TimeFormatUtils.formatTime(context, item.time),
+                  style: const TextStyle(
+                    fontFamily: 'Geist',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF96989C),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                GestureDetector(
+                  onTap: onDelete,
+                  behavior: HitTestBehavior.opaque,
+                  child: const Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.delete_outline_rounded,
+                      size: 20,
+                      color: Color(0xFF96989C),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

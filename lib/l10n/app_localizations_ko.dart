@@ -923,7 +923,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appointments => '미팅';
 
   @override
-  String get faq => '자주 묻는 질문(FAQ)';
+  String get faq => '자주 묻는 질문(F.A.Q)';
 
   @override
   String get phoneNumber => '전화번호';

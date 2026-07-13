@@ -12,6 +12,7 @@ import 'package:mindcoach/Services/Analytics/analytics_service.dart';
 import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/View/appointments/appointments_notifier.dart';
 import 'package:mindcoach/View/chat_screen/conversation/conversation_page.dart';
+import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
 import 'package:mindcoach/core/repo/consultant_repo.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
@@ -30,10 +31,12 @@ class _AppointmentResult {
   final int statusCode;
   final String? message;
   final String? error;
+  final int? appointmentId;
   const _AppointmentResult({
     required this.statusCode,
     this.message,
     this.error,
+    this.appointmentId,
   });
 }
 
@@ -191,15 +194,50 @@ class _SpecialistDetailScreenState
             } catch (_) {}
 
             final ok = response.statusCode == 201 || response.statusCode == 200;
-            // Dialog kapanmadan önce appointments listesini yenile — kapandığında
-            // slotlar zaten güncellenmiş görünür.
+            int? appointmentId;
+            final rawAppt = data['appointment'];
+            if (rawAppt is Map) {
+              final idVal = rawAppt['id'];
+              if (idVal is int) {
+                appointmentId = idVal;
+              } else if (idVal is num) {
+                appointmentId = idVal.toInt();
+              }
+            }
+
             if (ok && mounted) {
-              await ref.read(appointmentsProvider.notifier).refresh();
+              // Takvimde anında görünsün — API refresh beklemeden local ekle
+              final langCode =
+                  Localizations.localeOf(context).languageCode;
+              final name =
+                  _specialist.names[langCode] as String? ??
+                  _specialist.names['en'] as String? ??
+                  _specialist.names.values.first.toString();
+              ref.read(appointmentsProvider.notifier).upsertAppointment(
+                appointmentDateTime,
+                AppointmentInfo(
+                  specialistName: name.toLowerCase(),
+                  topicKey: 'feelingGood',
+                  appointmentDateTime: appointmentDateTime,
+                  status: 'pending',
+                  consultantId: _specialist.id,
+                  job: _specialist.job,
+                  appointmentId: appointmentId,
+                ),
+              );
+              ref
+                  .read(selectedCalendarDateProvider.notifier)
+                  .setDate(appointmentDateTime);
+              // Sunucu ile senkron (sessiz)
+              await ref
+                  .read(appointmentsProvider.notifier)
+                  .refresh(silent: true);
             }
             return _AppointmentResult(
               statusCode: response.statusCode,
               message: data['message'] as String?,
               error: data['error'] as String?,
+              appointmentId: appointmentId,
             );
           } catch (_) {
             return const _AppointmentResult(statusCode: -1);
@@ -832,47 +870,45 @@ class _SpecialistDetailScreenState
   }
 
   Widget _buildExplanationText(String explanation, String jobTitle) {
-    final escapedJob = RegExp.escape(jobTitle);
-    final regex = RegExp(escapedJob, caseSensitive: false);
-    final match = regex.firstMatch(explanation);
+    const baseStyle = TextStyle(
+      fontFamily: 'Geist',
+      fontSize: 12,
+      fontWeight: FontWeight.w300,
+      color: Color(0xFF96989C),
+      height: 18 / 12,
+      letterSpacing: -0.12,
+    );
 
-    if (match != null) {
-      final before = explanation.substring(0, match.start);
-      final matched = explanation.substring(match.start, match.end);
-      final after = explanation.substring(match.end);
+    // Tüm rehberlerde aynı widget yolu — eskiden job başlığı metinde
+    // yoksa Text, varsa RichText kullanılıyordu; Aria Flux / Nova Care /
+    // Selene Moon gibi rehberlerde font farklı görünüyordu.
+    final trimmedJob = jobTitle.trim();
+    final match = trimmedJob.isEmpty
+        ? null
+        : RegExp(
+            RegExp.escape(trimmedJob),
+            caseSensitive: false,
+          ).firstMatch(explanation);
 
-      return RichText(
-        text: TextSpan(
+    final List<InlineSpan> children;
+    if (match == null) {
+      children = [TextSpan(text: explanation)];
+    } else {
+      children = [
+        TextSpan(text: explanation.substring(0, match.start)),
+        TextSpan(
+          text: explanation.substring(match.start, match.end),
           style: const TextStyle(
             fontFamily: 'Geist',
-            fontSize: 12,
-            fontWeight: FontWeight.w300,
-            color: Color(0xFF96989C),
-            height: 18 / 12,
-            letterSpacing: -0.12,
+            fontWeight: FontWeight.w600,
           ),
-          children: [
-            TextSpan(text: before),
-            TextSpan(
-              text: matched,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            TextSpan(text: after),
-          ],
         ),
-      );
+        TextSpan(text: explanation.substring(match.end)),
+      ];
     }
 
-    return Text(
-      explanation,
-      style: const TextStyle(
-        fontFamily: 'Geist',
-        fontSize: 12,
-        fontWeight: FontWeight.w300,
-        color: Color(0xFF96989C),
-        height: 18 / 12,
-        letterSpacing: -0.12,
-      ),
+    return RichText(
+      text: TextSpan(style: baseStyle, children: children),
     );
   }
 

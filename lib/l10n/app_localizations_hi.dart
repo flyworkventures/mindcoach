@@ -970,7 +970,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get appointments => 'मीटिंग्स';
 
   @override
-  String get faq => 'सामान्य प्रश्न (FAQ)';
+  String get faq => 'सामान्य प्रश्न (F.A.Q)';
 
   @override
   String get phoneNumber => 'फ़ोन नंबर';

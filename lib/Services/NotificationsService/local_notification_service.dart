@@ -149,16 +149,14 @@ class LocalNotificationService {
     }
   }
 
+  // NOT: flutter_local_notifications yalnızca everyMinute/hourly/daily/weekly
+  // destekler; "2/4/8 saatte bir" gerçek anlamda desteklenmez. Değişken
+  // içerikli periyodik hatırlatmalar bu yüzden PeriodicNotificationScheduler
+  // içinde ayrı ayrı zonedSchedule occurrence'ları olarak planlanır.
   RepeatInterval _getRepeatInterval(int hours) {
     switch (hours) {
-      case 2:
-        return RepeatInterval.hourly; // Her saat 
-      case 4:
-        return RepeatInterval.hourly; // Her saat
-      case 8:
-        return RepeatInterval.hourly; // Her saat 
       case 24:
-        return RepeatInterval.daily; // Her gün
+        return RepeatInterval.daily;
       default:
         return RepeatInterval.hourly;
     }
@@ -219,6 +217,67 @@ class LocalNotificationService {
       debugPrint('[LOCAL_NOTIF] ✅ Scheduled notification: ID=$id, Time=$tzFirstTime, Interval=${intervalHours}h');
     } catch (e) {
       debugPrint('[LOCAL_NOTIF] ❌ Error scheduling notification: $e');
+      rethrow;
+    }
+  }
+
+  /// Schedule a single periodic-reminder notification at an exact local
+  /// date-time. Farklı içerikli (rotasyonlu) periyodik hatırlatmalar için
+  /// kullanılır: her occurrence ayrı bir tek-seferlik bildirim olarak
+  /// planlanır, böylece her seferinde farklı metin gösterilebilir.
+  Future<void> schedulePeriodicReminderAt({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledTime,
+    String? payload,
+  }) async {
+    if (!_isInitialized) {
+      await initialize();
+    }
+
+    try {
+      const androidDetails = AndroidNotificationDetails(
+        'periodic_notifications',
+        'Periyodik Bildirimler',
+        channelDescription: 'Düzenli aralıklarla gönderilen bildirimler',
+        importance: Importance.high,
+        priority: Priority.high,
+        showWhen: true,
+        enableVibration: true,
+        playSound: true,
+      );
+
+      const iosDetails = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
+
+      const notificationDetails = NotificationDetails(
+        android: androidDetails,
+        iOS: iosDetails,
+      );
+
+      final tzScheduled = tz.TZDateTime.from(scheduledTime, tz.local);
+
+      await _notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tzScheduled,
+        notificationDetails,
+        payload: payload,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        // matchDateTimeComponents YOK → tek seferlik, sabit içerikle tekrar
+        // etmez; rotasyon scheduler tarafından yönetilir.
+      );
+
+      debugPrint(
+        '[LOCAL_NOTIF] ✅ Scheduled periodic reminder: ID=$id, Time=$tzScheduled',
+      );
+    } catch (e) {
+      debugPrint('[LOCAL_NOTIF] ❌ Error scheduling periodic reminder: $e');
       rethrow;
     }
   }

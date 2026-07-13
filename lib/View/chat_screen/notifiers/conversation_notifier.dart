@@ -37,6 +37,7 @@ class ConversationsState {
   final bool isLoadingMessages;
   final XFile? selectedImage;
   final bool isRecording;
+  final bool isRecordingPaused;
   final String? recordingPath;
   final Duration recordingDuration;
   final ConsultantModel? consultantModel;
@@ -48,6 +49,7 @@ class ConversationsState {
     this.isLoadingMessages = false,
     this.selectedImage,
     this.isRecording = false,
+    this.isRecordingPaused = false,
     this.recordingPath,
     this.recordingDuration = Duration.zero,
     this.consultantModel,
@@ -61,6 +63,7 @@ class ConversationsState {
     XFile? selectedImage,
     bool clearSelectedImage = false,
     bool? isRecording,
+    bool? isRecordingPaused,
     String? recordingPath,
     Duration? recordingDuration,
     ConsultantModel? consultantModel,
@@ -73,6 +76,7 @@ class ConversationsState {
       isLoadingMessages: isLoadingMessages ?? this.isLoadingMessages,
       selectedImage: clearSelectedImage ? null : (selectedImage ?? this.selectedImage),
       isRecording: isRecording ?? this.isRecording,
+      isRecordingPaused: isRecordingPaused ?? this.isRecordingPaused,
       recordingPath: recordingPath ?? this.recordingPath,
       recordingDuration: recordingDuration ?? this.recordingDuration,
       consultantModel: consultantModel ?? this.consultantModel,
@@ -88,6 +92,7 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
   AudioRecorder? _audioRecorder;
   String? _currentRecordingPath;
   DateTime? _recordingStartTime;
+  Duration _elapsedBeforePause = Duration.zero;
   
   ConversationsNotifier(this.ref) : super(ConversationsState(messages: []));
 
@@ -482,10 +487,12 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
 
     try {
       _currentRecordingPath = path;
+      _elapsedBeforePause = Duration.zero;
       _recordingStartTime = DateTime.now();
 
       state = state.copyWith(
         isRecording: true,
+        isRecordingPaused: false,
         recordingPath: _currentRecordingPath,
         recordingDuration: Duration.zero,
       );
@@ -512,7 +519,7 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
 
     try {
       final path = state.recordingPath;
-      
+
       if (cancel) {
         // Kayıt iptal edildi, dosyayı sil
         if (path != null) {
@@ -524,17 +531,20 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
         }
         state = state.copyWith(
           isRecording: false,
+          isRecordingPaused: false,
           recordingPath: null,
           recordingDuration: Duration.zero,
         );
         _currentRecordingPath = null;
         _recordingStartTime = null;
+        _elapsedBeforePause = Duration.zero;
         return null;
       }
 
       // Kayıt başarılı - state'i güncelle
       state = state.copyWith(
         isRecording: false,
+        isRecordingPaused: false,
         recordingDuration: Duration.zero,
       );
 
@@ -544,6 +554,7 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
           log("✅ Ses kaydı tamamlandı: $path");
           _currentRecordingPath = null;
           _recordingStartTime = null;
+          _elapsedBeforePause = Duration.zero;
           return path;
         } else {
           log("❌ Ses kaydı dosyası bulunamadı: $path");
@@ -552,26 +563,55 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
 
       _currentRecordingPath = null;
       _recordingStartTime = null;
+      _elapsedBeforePause = Duration.zero;
       return null;
     } catch (e) {
       log("❌ Ses kaydı durdurulamadı: $e");
       state = state.copyWith(
         isRecording: false,
+        isRecordingPaused: false,
         recordingPath: null,
         recordingDuration: Duration.zero,
       );
       _currentRecordingPath = null;
       _recordingStartTime = null;
+      _elapsedBeforePause = Duration.zero;
       return null;
     }
   }
 
+  /// Kaydı duraklat (RecorderController.pause UI tarafında çağrılır)
+  void pauseRecording() {
+    if (!state.isRecording || state.isRecordingPaused) return;
+    if (_recordingStartTime != null) {
+      _elapsedBeforePause += DateTime.now().difference(_recordingStartTime!);
+    }
+    _recordingStartTime = null;
+    state = state.copyWith(
+      isRecordingPaused: true,
+      recordingDuration: _elapsedBeforePause,
+    );
+    log("⏸️ Ses kaydı duraklatıldı: $_elapsedBeforePause");
+  }
+
+  /// Duraklatılmış kaydı devam ettir (RecorderController.record UI tarafında çağrılır)
+  void resumeRecording() {
+    if (!state.isRecording || !state.isRecordingPaused) return;
+    _recordingStartTime = DateTime.now();
+    state = state.copyWith(isRecordingPaused: false);
+    log("▶️ Ses kaydı devam ediyor");
+  }
+
   /// Kayıt süresini güncelle
   void updateRecordingDuration() {
-    if (state.isRecording && _recordingStartTime != null) {
-      final duration = DateTime.now().difference(_recordingStartTime!);
-      state = state.copyWith(recordingDuration: duration);
+    if (!state.isRecording ||
+        state.isRecordingPaused ||
+        _recordingStartTime == null) {
+      return;
     }
+    final duration =
+        _elapsedBeforePause + DateTime.now().difference(_recordingStartTime!);
+    state = state.copyWith(recordingDuration: duration);
   }
 
   /// Kayıt path'ini güncelle (RecorderController.stop() sonrası)

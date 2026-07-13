@@ -57,8 +57,18 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         ref.read(selectedCalendarDateProvider.notifier).clear();
       });
     } else {
-      _selectedDay = _focusedDay;
+      _selectedDay = DateTime(
+        _focusedDay.year,
+        _focusedDay.month,
+        _focusedDay.day,
+      );
     }
+
+    // Takvim sekmesi her açılışta randevuları sessizce yenile
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(appointmentsProvider.notifier).refresh(silent: true);
+    });
   }
 
   @override
@@ -90,8 +100,16 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final d = DateTime(day.year, day.month, day.day);
     if (d.isBefore(today)) return const <AppointmentInfo>[];
 
-    final key = DateTime(day.year, day.month, day.day);
-    final appointments = appointmentsMap[key] ?? const <AppointmentInfo>[];
+    // DateTime key eşitliği (local vs utc) yüzünden kaçmasın diye
+    // yıl/ay/gün bileşenleriyle eşleştir.
+    List<AppointmentInfo> appointments = const <AppointmentInfo>[];
+    for (final entry in appointmentsMap.entries) {
+      final k = entry.key;
+      if (k.year == d.year && k.month == d.month && k.day == d.day) {
+        appointments = entry.value;
+        break;
+      }
+    }
 
     // İptal edilen randevuları filtrele
     return appointments.where((appointment) {
@@ -865,7 +883,26 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         PopupMenuItem<String>(
           value: 'delete',
           height: 40,
-          child: _appointmentMenuRow(Icons.delete_outline, context.l10n.delete),
+          child: Row(
+            children: [
+              Image.asset(
+                'assets/trashIcon.png',
+                width: 24,
+                height: 24,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                context.l10n.delete,
+                style: const TextStyle(
+                  fontFamily: 'Geist',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF3A3434),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

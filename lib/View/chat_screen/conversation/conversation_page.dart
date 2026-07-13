@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +16,7 @@ import 'package:mindcoach/core/analytics/analytics_events.dart';
 import 'package:mindcoach/Services/TrialQuotaService/trial_quota_service.dart';
 import 'package:mindcoach/Services/rive_preload_service.dart';
 import 'package:mindcoach/View/chat_screen/chat_notifier.dart';
+import 'package:mindcoach/View/appointments/appointments_notifier.dart';
 import 'package:mindcoach/View/specialists_screen/specialist_detail_screen.dart';
 import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/routes/page_routes.dart';
@@ -58,15 +61,52 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   Timer? _replyPollTimer;
   RecorderController? _recorderController;
 
+  /// WhatsApp tarzı ses kaydı: basılı tut / yukarı kilitle / sola iptal
+  bool _isRecordingLocked = false;
+  bool _isHoldRecording = false;
+  double _recordSlideDx = 0;
+  double _recordSlideDy = 0;
+  static const double _lockThreshold = -56;
+  static const double _cancelThreshold = -72;
+
+  static const WaveStyle _recordingWaveStyle = WaveStyle(
+    waveColor: Color(0xFFE53935),
+    extendWaveform: true,
+    showMiddleLine: false,
+    showTop: true,
+    showBottom: true,
+    spacing: 5,
+    waveThickness: 3,
+    scaleFactor: 90,
+    waveCap: StrokeCap.round,
+  );
+
+  static const WaveStyle _lockedRecordingWaveStyle = WaveStyle(
+    waveColor: Color(0xFF21BC87),
+    extendWaveform: true,
+    showMiddleLine: false,
+    showTop: true,
+    showBottom: true,
+    spacing: 5,
+    waveThickness: 3,
+    scaleFactor: 90,
+    waveCap: StrokeCap.round,
+  );
+
+  RecorderController _createRecorderController() {
+    return RecorderController()
+      ..androidEncoder = AndroidEncoder.aac
+      ..androidOutputFormat = AndroidOutputFormat.mpeg4
+      ..sampleRate = 44100
+      ..bitRate = 128000
+      ..updateFrequency = const Duration(milliseconds: 50);
+  }
+
   @override
   void initState() {
     super.initState();
 
-    _recorderController = RecorderController()
-      ..androidEncoder = AndroidEncoder.aac
-      ..androidOutputFormat = AndroidOutputFormat.mpeg4
-      ..sampleRate = 44100
-      ..bitRate = 128000;
+    _recorderController = _createRecorderController();
 
     // Görüntülü arama için Rive dosyasını arka planda ön yükle (normalize edilmiş URL ile cache anahtarı tek).
     RivePreloadService.instance.preload(widget.specialistId.url3d);
@@ -435,12 +475,18 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     final recordingDuration = ref.watch(
       conversationsProvider.select((state) => state.recordingDuration),
     );
+    final isRecordingPaused = ref.watch(
+      conversationsProvider.select((state) => state.isRecordingPaused),
+    );
     final canSend = hasText || hasImage;
 
-    // Figma'daki tatlı yeşil tonu
     const primaryGreen = Color(0xFF21BC87);
-    // Figma'daki %5 opacity border rengi
     final borderColor = Colors.black.withOpacity(0.05);
+    final showLockedBar = isRecording && _isRecordingLocked;
+    // Hold UI hemen görünsün — kayıt async başlasa bile
+    final showHoldHint = _isHoldRecording && !_isRecordingLocked;
+    final willCancel = _recordSlideDx <= _cancelThreshold;
+    final willLock = _recordSlideDy <= _lockThreshold;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -448,87 +494,220 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Recording indicator (Mevcut kodun, aynen korundu)
-          if (isRecording)
+          // ── Kilitli kayıt çubuğu (WhatsApp lock mode) ──
+          if (showLockedBar)
             Container(
               margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF4F4),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFFFD7D7)),
+                color: const Color(0xFFF7F7F8),
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: borderColor),
               ),
               child: Row(
                 children: [
-                  Container(
-                    width: 9,
-                    height: 9,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      _formatDuration(recordingDuration),
-                      style: const TextStyle(
-                        fontFamily: 'Geist',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF101828),
+                  // Sil
+                  GestureDetector(
+                    onTap: () => _cancelVoiceRecording(),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFEBEB),
+                        shape: BoxShape.circle,
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  if (_recorderController != null)
-                    Expanded(
-                      child: SizedBox(
-                        height: 26,
-                        child: AudioWaveforms(
-                          size: const Size(double.infinity, 26),
-                          recorderController: _recorderController!,
-                          waveStyle: const WaveStyle(
-                            waveColor: Color(0xFFEF4444),
-                            extendWaveform: true,
-                            showMiddleLine: false,
-                            waveThickness: 2.2,
+                      child: Center(
+                        child: Image.asset(
+                          'assets/trashIcon.png',
+                          width: 22,
+                          height: 22,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, _, _) => const Icon(
+                            Icons.delete_outline,
+                            color: Color(0xFFE53935),
+                            size: 22,
                           ),
                         ),
                       ),
                     ),
-                  const SizedBox(width: 4),
-                  IconButton(
-                    constraints: const BoxConstraints(
-                      minWidth: 28,
-                      minHeight: 28,
+                  ),
+                  const SizedBox(width: 8),
+                  // Kırmızı nokta + süre
+                  _PulsingRecordDot(
+                    active: !isRecordingPaused,
+                    paused: isRecordingPaused,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _formatDuration(recordingDuration),
+                    style: const TextStyle(
+                      fontFamily: 'Geist',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF101828),
                     ),
-                    padding: EdgeInsets.zero,
-                    onPressed: () async {
-                      if (mounted) {
-                        await ref
-                            .read(conversationsProvider.notifier)
-                            .cancelRecording();
-                        if (_recorderController != null) {
-                          await _recorderController!.stop();
-                        }
-                      }
-                    },
-                    icon: const Icon(Icons.close, color: Colors.red, size: 20),
+                  ),
+                  const SizedBox(width: 8),
+                  if (_recorderController != null)
+                    Expanded(
+                      child: SizedBox(
+                        height: 36,
+                        child: Opacity(
+                          opacity: isRecordingPaused ? 0.35 : 1,
+                          child: AudioWaveforms(
+                            size: const Size(double.infinity, 36),
+                            recorderController: _recorderController!,
+                            waveStyle: _lockedRecordingWaveStyle,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    const Spacer(),
+                  const SizedBox(width: 4),
+                  // Duraklat / Devam
+                  GestureDetector(
+                    onTap: () => _toggleRecordingPause(),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE8F8F1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isRecordingPaused
+                            ? Icons.play_arrow_rounded
+                            : Icons.pause_rounded,
+                        color: primaryGreen,
+                        size: 26,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Gönder
+                  GestureDetector(
+                    onTap: () => _sendVoiceMessageFromRecording(),
+                    child: Container(
+                      width: 42,
+                      height: 42,
+                      decoration: const BoxDecoration(
+                        color: primaryGreen,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/icons/ic_send.svg',
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
 
-          // Image preview (Mevcut kodun, aynen korundu)
+          // ── Basılı tutarken kayıt çubuğu (anında görünür) ──
+          if (showHoldHint)
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: willCancel
+                    ? const Color(0xFFFFEBEB)
+                    : const Color(0xFFFFF4F4),
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(
+                  color: willCancel
+                      ? const Color(0xFFFFCDD2)
+                      : const Color(0xFFFFD7D7),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      _PulsingRecordDot(active: isRecording && !willCancel),
+                      const SizedBox(width: 10),
+                      Text(
+                        isRecording
+                            ? _formatDuration(recordingDuration)
+                            : '00:00',
+                        style: TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: willCancel
+                              ? const Color(0xFFE53935)
+                              : const Color(0xFF101828),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          willCancel
+                              ? 'Bırak, silinsin'
+                              : willLock
+                                  ? 'Bırak, kilitlensin'
+                                  : (isRecording
+                                      ? 'Kayıt yapılıyor'
+                                      : 'Başlatılıyor…'),
+                          style: TextStyle(
+                            fontFamily: 'Geist',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: willCancel
+                                ? const Color(0xFFE53935)
+                                : const Color(0xFF101828),
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        willLock
+                            ? Icons.lock_outline
+                            : Icons.lock_open_outlined,
+                        size: 18,
+                        color: willLock
+                            ? primaryGreen
+                            : const Color(0xFF96989C),
+                      ),
+                    ],
+                  ),
+                  if (_recorderController != null && !willCancel) ...[
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 40,
+                      width: double.infinity,
+                      child: Opacity(
+                        opacity: isRecording ? 1 : 0.35,
+                        child: AudioWaveforms(
+                          size: const Size(double.infinity, 40),
+                          recorderController: _recorderController!,
+                          waveStyle: _recordingWaveStyle,
+                        ),
+                      ),
+                    ),
+                  ],
+                  if (!willCancel && !willLock) ...[
+                    const SizedBox(height: 6),
+                    const Text(
+                      '← Sil   ·   ↑ Kilitle   ·   Bırak = Gönder',
+                      style: TextStyle(
+                        fontFamily: 'Geist',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF667085),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+
+          // Image preview
           if (hasImage && !isRecording)
             Container(
               margin: const EdgeInsets.only(bottom: 8),
@@ -581,137 +760,261 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               ),
             ),
 
-          // --- YENİ FİGMA TASARIMI: Main input row ---
-          Row(
-            children: [
-              // 1. Sol "+" Butonu (Figma: 48x48, Beyaz arka plan, %5 siyah border, Yeşil İkon)
-              GestureDetector(
-                onTap: _toggleMenu,
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: borderColor, width: 1),
-                  ),
-                  child: const Icon(Icons.add, color: primaryGreen, size: 28),
-                ),
-              ),
-
-              const SizedBox(width: 8),
-
-              // 2. Birleştirilmiş Text Field ve Gönder/Mikrofon Butonu
-              Expanded(
-                child: Container(
-                  height: 48, // Figma'daki yükseklik
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(
-                      24,
-                    ), // 9999px radius karşılığı
-                    border: Border.all(color: borderColor, width: 1),
-                  ),
-                  // Figma padding: Left 16, Top 3, Bottom 3, Right 3 (sağ buton için)
-                  padding: const EdgeInsets.only(left: 16, top: 3, bottom: 3),
-                  child: Row(
-                    children: [
-                      // Text field
-                      Expanded(
-                        child: TextField(
-                          cursorColor: primaryGreen,
-                          controller: _messageController,
-                          style: const TextStyle(
-                            fontFamily: 'Geist',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: l.typeAMessage,
-                            hintStyle: const TextStyle(
-                              fontFamily: 'Geist',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                          ),
-                          onChanged: (_) => setState(() {}),
-                          onSubmitted: (_) {
-                            if (canSend) _sendMessage();
-                          },
-                        ),
+          // Main input row — kilitli kayıtta gizli (üstte bar var)
+          if (!showLockedBar)
+            Row(
+              children: [
+                if (!showHoldHint)
+                  GestureDetector(
+                    onTap: _toggleMenu,
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: borderColor, width: 1),
                       ),
-                      const SizedBox(width: 8),
-
-                      // Sağ Buton (Send veya Microphone)
-                      GestureDetector(
-                        onTap: () async {
-                          if (_isSendingImage) return;
-
-                          if (canSend) {
-                            _sendMessage();
-                          } else if (isRecording) {
-                            _sendVoiceMessageFromRecording();
-                          } else {
-                            await _startRecording();
-                          }
-                        },
-                        onLongPressStart: (canSend || isRecording)
-                            ? null
-                            : (_) async {
-                                await _startRecording();
-                              },
-                        onLongPressEnd: canSend
-                            ? null
-                            : (_) async {
-                                if (isRecording &&
-                                    _recorderController != null) {
-                                  await _stopAndSendRecording();
-                                }
-                              },
-                        child: Container(
-                          width: 42,
-                          height:
-                              42, // Dıştaki 48px, padding 3px alt-üst olunca burası tam 42px kalıyor
-                          decoration: BoxDecoration(
-                            color: primaryGreen,
-                            shape: BoxShape.circle,
-                          ),
-                          child: _isSendingImage
-                              ? const Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                  ),
-                                )
-                              : (canSend || isRecording)
-                              ? SvgPicture.asset(
-                                  'assets/icons/ic_send.svg',
-                                  width: 20,
-                                  height: 20,
-                                  fit: BoxFit.scaleDown,
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/ic_mic.svg',
-                                  ),
+                      child: const Icon(
+                        Icons.add,
+                        color: primaryGreen,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                if (!showHoldHint) const SizedBox(width: 8),
+                Expanded(
+                  child: Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: borderColor, width: 1),
+                    ),
+                    padding: const EdgeInsets.only(left: 16, top: 3, bottom: 3),
+                    child: Row(
+                      children: [
+                        if (!showHoldHint)
+                          Expanded(
+                            child: TextField(
+                              cursorColor: primaryGreen,
+                              controller: _messageController,
+                              style: const TextStyle(
+                                fontFamily: 'Geist',
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: l.typeAMessage,
+                                hintStyle: const TextStyle(
+                                  fontFamily: 'Geist',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black,
                                 ),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.zero,
+                                isDense: true,
+                              ),
+                              onChanged: (_) => setState(() {}),
+                              onSubmitted: (_) {
+                                if (canSend) _sendMessage();
+                              },
+                            ),
+                          )
+                        else
+                          const Expanded(child: SizedBox.shrink()),
+                        const SizedBox(width: 8),
+                        // Mic / Send — kısa basılı tut (~200ms) + kaydır
+                        RawGestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          gestures: <Type, GestureRecognizerFactory>{
+                            TapGestureRecognizer:
+                                GestureRecognizerFactoryWithHandlers<
+                                    TapGestureRecognizer>(
+                              () => TapGestureRecognizer(),
+                              (TapGestureRecognizer instance) {
+                                instance.onTap = () async {
+                                  if (_isSendingImage) return;
+                                  if (canSend) {
+                                    _sendMessage();
+                                    return;
+                                  }
+                                  HapticFeedback.selectionClick();
+                                  if (!mounted) return;
+                                  ScaffoldMessenger.of(context)
+                                      .clearSnackBars();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Sesli mesaj için mikrofonu basılı tut',
+                                      ),
+                                      duration: Duration(seconds: 2),
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                };
+                              },
+                            ),
+                            LongPressGestureRecognizer:
+                                GestureRecognizerFactoryWithHandlers<
+                                    LongPressGestureRecognizer>(
+                              () => LongPressGestureRecognizer(
+                                duration: const Duration(milliseconds: 180),
+                              ),
+                              (LongPressGestureRecognizer instance) {
+                                instance.onLongPressStart =
+                                    (canSend || isRecording)
+                                        ? null
+                                        : (details) async {
+                                            HapticFeedback.mediumImpact();
+                                            setState(() {
+                                              _isHoldRecording = true;
+                                              _isRecordingLocked = false;
+                                              _recordSlideDx = 0;
+                                              _recordSlideDy = 0;
+                                            });
+                                            await _startRecording();
+                                            if (mounted &&
+                                                ref
+                                                    .read(
+                                                      conversationsProvider,
+                                                    )
+                                                    .isRecording) {
+                                              HapticFeedback.lightImpact();
+                                            }
+                                          };
+                                instance.onLongPressMoveUpdate = canSend
+                                    ? null
+                                    : (details) {
+                                        if (!_isHoldRecording ||
+                                            _isRecordingLocked) {
+                                          return;
+                                        }
+                                        setState(() {
+                                          var dx =
+                                              details.offsetFromOrigin.dx;
+                                          var dy =
+                                              details.offsetFromOrigin.dy;
+                                          if (dx < -20 &&
+                                              dx.abs() > dy.abs()) {
+                                            dy = 0;
+                                          } else if (dy < -20 &&
+                                              dy.abs() > dx.abs()) {
+                                            dx = dx.clamp(-20, 0);
+                                          }
+                                          _recordSlideDx = dx;
+                                          _recordSlideDy = dy;
+                                        });
+                                      };
+                                instance.onLongPressEnd = canSend
+                                    ? null
+                                    : (details) async {
+                                        final recording = ref
+                                            .read(conversationsProvider)
+                                            .isRecording;
+                                        if (!recording &&
+                                            !_isHoldRecording) {
+                                          return;
+                                        }
+
+                                        final cancel = _recordSlideDx <=
+                                            _cancelThreshold;
+                                        final lock = _recordSlideDy <=
+                                            _lockThreshold;
+
+                                        if (cancel) {
+                                          await _cancelVoiceRecording();
+                                          return;
+                                        }
+                                        if (lock) {
+                                          HapticFeedback.mediumImpact();
+                                          setState(() {
+                                            _isRecordingLocked = true;
+                                            _isHoldRecording = false;
+                                            _recordSlideDx = 0;
+                                            _recordSlideDy = 0;
+                                          });
+                                          return;
+                                        }
+                                        setState(() {
+                                          _isHoldRecording = false;
+                                          _recordSlideDx = 0;
+                                          _recordSlideDy = 0;
+                                        });
+                                        await _stopAndSendRecording();
+                                      };
+                              },
+                            ),
+                          },
+                          child: Transform.translate(
+                            offset: showHoldHint
+                                ? Offset(
+                                    _recordSlideDx.clamp(-90, 0),
+                                    _recordSlideDy.clamp(-80, 0),
+                                  )
+                                : Offset.zero,
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 120),
+                              width: showHoldHint ? 56 : 42,
+                              height: showHoldHint ? 56 : 42,
+                              decoration: BoxDecoration(
+                                color: willCancel
+                                    ? const Color(0xFFE53935)
+                                    : (showHoldHint && isRecording
+                                        ? const Color(0xFFE53935)
+                                        : primaryGreen),
+                                shape: BoxShape.circle,
+                                boxShadow: showHoldHint
+                                    ? [
+                                        BoxShadow(
+                                          color: (willCancel || isRecording
+                                                  ? const Color(0xFFE53935)
+                                                  : primaryGreen)
+                                              .withValues(alpha: 0.4),
+                                          blurRadius: 14,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ]
+                                    : null,
+                              ),
+                              child: _isSendingImage
+                                  ? const Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  : canSend
+                                      ? SvgPicture.asset(
+                                          'assets/icons/ic_send.svg',
+                                          width: 20,
+                                          height: 20,
+                                          fit: BoxFit.scaleDown,
+                                        )
+                                      : Icon(
+                                          willCancel
+                                              ? Icons.delete_outline
+                                              : willLock
+                                                  ? Icons.lock
+                                                  : Icons.mic,
+                                          color: Colors.white,
+                                          size: showHoldHint ? 28 : 22,
+                                        ),
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                    ],
+                        const SizedBox(width: 8),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ),
     );
@@ -835,6 +1138,12 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
       if (_hasAssistantReplyAfter(previousTopMessageId) || ticks >= maxTicks) {
         timer.cancel();
+        // AI create_appointment tool'u ile randevu oluşmuş olabilir — listeyi yenile
+        if (_hasAssistantReplyAfter(previousTopMessageId)) {
+          unawaited(
+            ref.read(appointmentsProvider.notifier).refresh(silent: true),
+          );
+        }
       }
     });
   }
@@ -1000,12 +1309,24 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     }
   }
 
+  Future<void> _cancelVoiceRecording() async {
+    try {
+      if (_recorderController != null) {
+        await _recorderController!.stop();
+      }
+    } catch (_) {}
+    await ref.read(conversationsProvider.notifier).cancelRecording();
+    if (!mounted) return;
+    setState(() {
+      _isRecordingLocked = false;
+      _isHoldRecording = false;
+      _recordSlideDx = 0;
+      _recordSlideDy = 0;
+    });
+  }
+
   Future<void> _startRecording() async {
-    _recorderController ??= RecorderController()
-      ..androidEncoder = AndroidEncoder.aac
-      ..androidOutputFormat = AndroidOutputFormat.mpeg4
-      ..sampleRate = 44100
-      ..bitRate = 128000;
+    _recorderController ??= _createRecorderController();
 
     final isRecording = ref.read(conversationsProvider).isRecording;
     if (!isRecording && _recorderController != null) {
@@ -1019,6 +1340,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       } catch (e) {
         await ref.read(conversationsProvider.notifier).cancelRecording();
         if (mounted) {
+          setState(() {
+            _isRecordingLocked = false;
+            _isHoldRecording = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(context.l10n.errorRecordingStart),
@@ -1030,11 +1355,48 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     }
   }
 
+  Future<void> _toggleRecordingPause() async {
+    if (_recorderController == null) return;
+    final notifier = ref.read(conversationsProvider.notifier);
+    final paused = ref.read(conversationsProvider).isRecordingPaused;
+
+    try {
+      if (paused) {
+        await _recorderController!.record();
+        notifier.resumeRecording();
+      } else {
+        await _recorderController!.pause();
+        notifier.pauseRecording();
+      }
+    } catch (e) {
+      debugPrint('Recording pause/resume error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              paused
+                  ? context.l10n.errorRecordingStart
+                  : 'Kayıt duraklatılamadı',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _stopAndSendRecording() async {
     final isRecording = ref.read(conversationsProvider).isRecording;
     if (isRecording && _recorderController != null) {
       try {
         final path = await _recorderController!.stop();
+        if (!mounted) return;
+        setState(() {
+          _isRecordingLocked = false;
+          _isHoldRecording = false;
+          _recordSlideDx = 0;
+          _recordSlideDy = 0;
+        });
         if (path != null && path.isNotEmpty) {
           ref.read(conversationsProvider.notifier).updateRecordingPath(path);
           await ref.read(conversationsProvider.notifier).stopRecording();
@@ -1049,6 +1411,12 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         }
       } catch (e) {
         await ref.read(conversationsProvider.notifier).cancelRecording();
+        if (mounted) {
+          setState(() {
+            _isRecordingLocked = false;
+            _isHoldRecording = false;
+          });
+        }
       }
     }
   }
@@ -1161,6 +1529,129 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 }
 
 // ── Typing Indicator ──
+
+class _PulsingRecordDot extends StatefulWidget {
+  final bool active;
+  final bool paused;
+  const _PulsingRecordDot({
+    required this.active,
+    this.paused = false,
+  });
+
+  @override
+  State<_PulsingRecordDot> createState() => _PulsingRecordDotState();
+}
+
+class _PulsingRecordDotState extends State<_PulsingRecordDot>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 520),
+    );
+    if (widget.active && !widget.paused) {
+      _controller.repeat();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _PulsingRecordDot oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final shouldPulse = widget.active && !widget.paused;
+    if (shouldPulse && !_controller.isAnimating) {
+      _controller.repeat();
+    } else if (!shouldPulse && _controller.isAnimating) {
+      _controller.stop();
+      _controller.value = 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final color = widget.paused
+        ? const Color(0xFF96989C)
+        : const Color(0xFFE53935);
+
+    if (!widget.active || widget.paused) {
+      return Container(
+        width: 18,
+        height: 18,
+        alignment: Alignment.center,
+        child: Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+      );
+    }
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        // 0 → 1 arası: halka büyür/solar, nokta nabız atar
+        final t = Curves.easeOut.transform(_controller.value);
+        final ringScale = 1.0 + (t * 1.35);
+        final ringOpacity = (1.0 - t).clamp(0.0, 1.0);
+        final dotScale = 0.82 + (0.18 * (1 - (2 * t - 1).abs()));
+
+        return SizedBox(
+          width: 22,
+          height: 22,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Transform.scale(
+                scale: ringScale,
+                child: Opacity(
+                  opacity: ringOpacity * 0.55,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: color, width: 2),
+                    ),
+                  ),
+                ),
+              ),
+              Transform.scale(
+                scale: dotScale,
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: color.withValues(alpha: 0.45),
+                        blurRadius: 6,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
 
 class _ConversationShimmer extends StatelessWidget {
   const _ConversationShimmer();

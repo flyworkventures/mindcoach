@@ -966,10 +966,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifications => 'Notifications';
 
   @override
-  String get appointments => 'Meetings';
+  String get appointments => 'Appointments';
 
   @override
-  String get faq => 'FAQ';
+  String get faq => 'F.A.Q';
 
   @override
   String get phoneNumber => 'Phone Number';
