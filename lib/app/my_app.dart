@@ -243,12 +243,13 @@ class _MyAppState extends ConsumerState<MyApp> {
       }
 
       // 1) Local premium'u aktive et (anında UI güncellensin).
-      // premiumProvider state değişimi → ref.listen → trackPremiumTransition
-      // → premium_purchased event'ini tek noktadan ateşler. Burada manuel
-      // capture etmiyoruz (duplicate olurdu).
-      await notifier.activatePurchasedPremium(expiryDate: expiryDate);
+      // Store introductory trial → isPurchased=false (upsell kartı kalsın).
+      await notifier.activateStorePremium(
+        expiryDate: expiryDate,
+        isPurchased: !isTrial,
+      );
       debugPrint(
-        '✅ Local premium aktive edildi (purchased, expiry=$expiryDate, product=$productId).',
+        '✅ Local premium aktive edildi (purchased=${!isTrial}, trial=$isTrial, expiry=$expiryDate, product=$productId).',
       );
 
       // 2) Backend'i bilgilendir (best-effort, başarısız olsa app çalışmaya devam).
@@ -310,29 +311,31 @@ class _MyAppState extends ConsumerState<MyApp> {
     }
   }
 
-  /// Backend response'unu local Riverpod state'e uygular.
+  /// Backend response'unu local Riverpod + SharedPreferences'a uygular.
   /// Hem `/initialize` hem `/device-status` aynı payload formatını döner.
   void _applyBackendStatusToLocal(
     Map<String, dynamic> data,
     String deviceId,
     WidgetRef ref,
   ) {
+    final notifier = ref.read(premiumProvider.notifier);
     if (data['isPremium'] == true && data['expiryDate'] != null) {
-      final expiryDate = DateTime.parse(data['expiryDate']);
-      ref.read(premiumProvider.notifier).setPremiumState(
-            PremiumState(
-              isPremium: true,
-              expiryDate: expiryDate,
-              deviceId: deviceId,
-              isPurchased: data['planId'] != 'trial',
-              daysRemaining: data['daysRemaining'] ?? 0,
-            ),
-          );
-      debugPrint('   → Updated local premium state from backend');
+      final expiryDate = DateTime.parse(data['expiryDate'] as String);
+      final isTrial =
+          data['isTrial'] == true || data['planId'] == 'trial';
+      unawaited(
+        notifier.applyBackendStatus(
+          isPremium: true,
+          expiryDate: expiryDate,
+          isPurchased: !isTrial,
+          daysRemaining: (data['daysRemaining'] as num?)?.toInt() ?? 0,
+        ),
+      );
+      debugPrint('   → Updated local premium state from backend (trial=$isTrial)');
     } else if (data['isPremium'] == false) {
       final currentState = ref.read(premiumProvider);
       if (currentState.isPremium) {
-        ref.read(premiumProvider.notifier).deactivatePremium();
+        unawaited(notifier.deactivatePremium());
         debugPrint('   → Backend says no premium, local temizlendi.');
       }
     }

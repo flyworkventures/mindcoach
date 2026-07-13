@@ -37,22 +37,55 @@ class PremiumNotifier extends StateNotifier<PremiumState> {
     );
   }
 
-  /// Purchased premium'ı aktivat.
-  /// [expiryDate] verilirse onu kullanır (RevenueCat'ten gelen gerçek expiry),
-  /// aksi halde 1 yıllık default.
-  Future<void> activatePurchasedPremium({DateTime? expiryDate}) async {
+  /// Store entitlement'ı aktive et (satın alma veya App Store introductory trial).
+  /// [isPurchased] false ise store denemesi / intro — upsell kartı görünür kalır.
+  Future<void> activateStorePremium({
+    DateTime? expiryDate,
+    bool isPurchased = true,
+  }) async {
     final effectiveExpiry =
         expiryDate ?? DateTime.now().add(const Duration(days: 365));
     final daysRemaining = effectiveExpiry.difference(DateTime.now()).inDays;
 
     await _localDb.setPremiumStartDate(DateTime.now());
     await _localDb.setPremiumExpiryDate(effectiveExpiry);
-    await _localDb.setIsPremiumPurchased(true);
+    await _localDb.setIsPremiumPurchased(isPurchased);
 
     state = state.copyWith(
       isPremium: true,
       expiryDate: effectiveExpiry,
-      isPurchased: true,
+      isPurchased: isPurchased,
+      daysRemaining: daysRemaining < 0 ? 0 : daysRemaining,
+    );
+  }
+
+  /// Purchased premium'ı aktivat.
+  /// [expiryDate] verilirse onu kullanır (RevenueCat'ten gelen gerçek expiry),
+  /// aksi halde 1 yıllık default.
+  Future<void> activatePurchasedPremium({DateTime? expiryDate}) async {
+    await activateStorePremium(expiryDate: expiryDate, isPurchased: true);
+  }
+
+  /// Backend / resume sync sonucunu hem Riverpod hem local DB'ye yazar.
+  Future<void> applyBackendStatus({
+    required bool isPremium,
+    DateTime? expiryDate,
+    required bool isPurchased,
+    required int daysRemaining,
+  }) async {
+    if (!isPremium || expiryDate == null) {
+      await deactivatePremium();
+      return;
+    }
+    await _localDb.setPremiumExpiryDate(expiryDate);
+    await _localDb.setIsPremiumPurchased(isPurchased);
+    if (!isPurchased) {
+      await _localDb.setHasUsedTrial(true);
+    }
+    state = state.copyWith(
+      isPremium: true,
+      expiryDate: expiryDate,
+      isPurchased: isPurchased,
       daysRemaining: daysRemaining < 0 ? 0 : daysRemaining,
     );
   }

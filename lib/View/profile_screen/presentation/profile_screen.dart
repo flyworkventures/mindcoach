@@ -11,7 +11,7 @@ import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/View/ProfileView/notifiers/notification_notifier.dart';
 import 'package:mindcoach/app/my_app.dart';
 import 'package:mindcoach/app/navbar_provider.dart';
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:mindcoach/core/utils/revenuecat_paywalls.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -456,7 +456,13 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                           ? primaryGreen
                           : textSecondary,
                       onTap: () async {
-                        await RevenueCatUI.presentPaywall();
+                        final isGuest =
+                            (userState?.credential.toLowerCase() ?? '') ==
+                            'guest';
+                        await presentPaywallForUser(
+                          context,
+                          isGuest: isGuest,
+                        );
                       },
                       isFirst: true,
                     ),
