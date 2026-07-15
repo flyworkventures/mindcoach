@@ -229,7 +229,7 @@ abstract class AppLocalizations {
   /// No description provided for @premiumAnnualDiscount.
   ///
   /// In en, this message translates to:
-  /// **'40% off on annual plan'**
+  /// **'58% off on annual plan'**
   String get premiumAnnualDiscount;
 
   /// No description provided for @premiumCta.
@@ -241,7 +241,7 @@ abstract class AppLocalizations {
   /// No description provided for @premiumPrice.
   ///
   /// In en, this message translates to:
-  /// **'\$3.99'**
+  /// **'\$1.99'**
   String get premiumPrice;
 
   /// No description provided for @premiumPricePeriod.
@@ -3777,6 +3777,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rate Us'**
   String get menuItemRateUs;
+
+  /// No description provided for @menuItemNotificationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Settings'**
+  String get menuItemNotificationSettings;
+
+  /// No description provided for @notifSettingsCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get notifSettingsCategories;
+
+  /// No description provided for @notifCatRealtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Realtime'**
+  String get notifCatRealtime;
+
+  /// No description provided for @notifCatRealtimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Therapist messages and session reminders'**
+  String get notifCatRealtimeDesc;
+
+  /// No description provided for @notifCatTherapy.
+  ///
+  /// In en, this message translates to:
+  /// **'Therapy suggestions'**
+  String get notifCatTherapy;
+
+  /// No description provided for @notifCatTherapyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Therapist selection and continue prompts'**
+  String get notifCatTherapyDesc;
+
+  /// No description provided for @notifCatAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Psychological analysis'**
+  String get notifCatAnalysis;
+
+  /// No description provided for @notifCatAnalysisDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis test reminders'**
+  String get notifCatAnalysisDesc;
+
+  /// No description provided for @notifCatReengage.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get notifCatReengage;
+
+  /// No description provided for @notifCatReengageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle nudges when you have been away'**
+  String get notifCatReengageDesc;
+
+  /// No description provided for @notifCatSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription & plan'**
+  String get notifCatSubscription;
+
+  /// No description provided for @notifCatSubscriptionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Trial, renewal and payment info'**
+  String get notifCatSubscriptionDesc;
+
+  /// No description provided for @notifCatSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System & account'**
+  String get notifCatSystem;
+
+  /// No description provided for @notifCatSystemDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Security and account notifications'**
+  String get notifCatSystemDesc;
+
+  /// No description provided for @notifQuietHoursSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet Hours'**
+  String get notifQuietHoursSection;
+
+  /// No description provided for @notifQuietHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet hours'**
+  String get notifQuietHours;
+
+  /// No description provided for @notifQuietHoursDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Only urgent notifications during these hours'**
+  String get notifQuietHoursDesc;
+
+  /// No description provided for @notifQuietHoursStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get notifQuietHoursStart;
+
+  /// No description provided for @notifQuietHoursEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get notifQuietHoursEnd;
+
+  /// No description provided for @notifSettingsSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Save failed'**
+  String get notifSettingsSaveFailed;
+
+  /// No description provided for @notifSettingsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get notifSettingsLoadError;
 
   /// No description provided for @premiumBadge.
   ///

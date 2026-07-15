@@ -63,13 +63,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get premiumFeature3 => '为您量身定制的高级AI';
 
   @override
-  String get premiumAnnualDiscount => '年度计划优惠40%';
+  String get premiumAnnualDiscount => '年度计划优惠58%';
 
   @override
   String get premiumCta => '开始使用';
 
   @override
-  String get premiumPrice => '¥28';
+  String get premiumPrice => '\$1.99';
 
   @override
   String get premiumPricePeriod => '/月';
@@ -1912,16 +1912,79 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sectionGeneral => '常规';
 
   @override
-  String get menuItemPremium => 'Premium';
+  String get menuItemPremium => '高级会员';
 
   @override
   String get menuItemRateUs => '评价我们';
 
   @override
-  String get premiumBadge => 'PREMIUM';
+  String get menuItemNotificationSettings => '通知设置';
 
   @override
-  String get premiumStatusActive => '活跃';
+  String get notifSettingsCategories => '类别';
+
+  @override
+  String get notifCatRealtime => '实时通知';
+
+  @override
+  String get notifCatRealtimeDesc => '治疗师消息和会话提醒';
+
+  @override
+  String get notifCatTherapy => '治疗建议';
+
+  @override
+  String get notifCatTherapyDesc => '治疗师选择和继续提示';
+
+  @override
+  String get notifCatAnalysis => '心理分析';
+
+  @override
+  String get notifCatAnalysisDesc => '分析测试提醒';
+
+  @override
+  String get notifCatReengage => '提醒';
+
+  @override
+  String get notifCatReengageDesc => '一段时间未使用时的温和提醒';
+
+  @override
+  String get notifCatSubscription => '订阅与套餐';
+
+  @override
+  String get notifCatSubscriptionDesc => '试用、续订和支付信息';
+
+  @override
+  String get notifCatSystem => '系统与账户';
+
+  @override
+  String get notifCatSystemDesc => '安全和账户通知';
+
+  @override
+  String get notifQuietHoursSection => '免打扰时段';
+
+  @override
+  String get notifQuietHours => '免打扰时段';
+
+  @override
+  String get notifQuietHoursDesc => '该时段仅接收紧急通知';
+
+  @override
+  String get notifQuietHoursStart => '开始';
+
+  @override
+  String get notifQuietHoursEnd => '结束';
+
+  @override
+  String get notifSettingsSaveFailed => '保存失败';
+
+  @override
+  String get notifSettingsLoadError => '出错了';
+
+  @override
+  String get premiumBadge => '高级版';
+
+  @override
+  String get premiumStatusActive => '已激活';
 
   @override
   String get linkCopied => '链接已复制！';
@@ -2040,11 +2103,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trialEndedAction => '登录以继续';
 
   @override
-  String get guestPremiumRequiredTitle => '登录以使用 Premium';
+  String get guestPremiumRequiredTitle => '登录以使用高级会员';
 
   @override
-  String get guestPremiumRequiredMessage =>
-      '要使用 Premium，您需要通过 Google 或 Apple 登录。';
+  String get guestPremiumRequiredMessage => '要使用高级会员，您需要通过 Google 或 Apple 登录。';
 
   @override
   String get guestPremiumSignInAction => '登录';

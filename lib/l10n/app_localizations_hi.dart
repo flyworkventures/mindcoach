@@ -65,13 +65,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get premiumFeature3 => 'आपके लिए तैयार किया गया उन्नत AI';
 
   @override
-  String get premiumAnnualDiscount => 'वार्षिक योजना पर 40% की छूट';
+  String get premiumAnnualDiscount => 'वार्षिक योजना पर 58% की छूट';
 
   @override
   String get premiumCta => 'शुरू करें';
 
   @override
-  String get premiumPrice => '₹329';
+  String get premiumPrice => '\$1.99';
 
   @override
   String get premiumPricePeriod => '/माह';
@@ -2053,6 +2053,70 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get menuItemRateUs => 'हमें रेट करें';
+
+  @override
+  String get menuItemNotificationSettings => 'सूचना सेटिंग्स';
+
+  @override
+  String get notifSettingsCategories => 'श्रेणियाँ';
+
+  @override
+  String get notifCatRealtime => 'रियल-टाइम';
+
+  @override
+  String get notifCatRealtimeDesc => 'थेरेपिस्ट संदेश और सेशन अनुस्मारक';
+
+  @override
+  String get notifCatTherapy => 'थेरेपी सुझाव';
+
+  @override
+  String get notifCatTherapyDesc => 'थेरेपिस्ट चयन और जारी रखने के संकेत';
+
+  @override
+  String get notifCatAnalysis => 'मनोवैज्ञानिक विश्लेषण';
+
+  @override
+  String get notifCatAnalysisDesc => 'विश्लेषण टेस्ट अनुस्मारक';
+
+  @override
+  String get notifCatReengage => 'अनुस्मारक';
+
+  @override
+  String get notifCatReengageDesc =>
+      'बहुत दिनों से दूर होने पर कोमल याद दिलाना';
+
+  @override
+  String get notifCatSubscription => 'सदस्यता और प्लान';
+
+  @override
+  String get notifCatSubscriptionDesc => 'ट्रायल, नवीनीकरण और भुगतान जानकारी';
+
+  @override
+  String get notifCatSystem => 'सिस्टम और खाता';
+
+  @override
+  String get notifCatSystemDesc => 'सुरक्षा और खाता सूचनाएँ';
+
+  @override
+  String get notifQuietHoursSection => 'शांत घंटे';
+
+  @override
+  String get notifQuietHours => 'शांत घंटे';
+
+  @override
+  String get notifQuietHoursDesc => 'इन घंटों में केवल जरूरी सूचनाएँ';
+
+  @override
+  String get notifQuietHoursStart => 'शुरू';
+
+  @override
+  String get notifQuietHoursEnd => 'समाप्त';
+
+  @override
+  String get notifSettingsSaveFailed => 'सेव नहीं हो सका';
+
+  @override
+  String get notifSettingsLoadError => 'कुछ गलत हुआ';
 
   @override
   String get premiumBadge => 'प्रीमियम';

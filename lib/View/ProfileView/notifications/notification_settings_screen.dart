@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/core/repo/notification_preferences_repo.dart';
+import 'package:mindcoach/core/utils/context_l10n_extensions.dart';
 
 /// Kategori bazlı bildirim opt-out + sessiz saat ayarları ekranı.
 /// Değişiklikler anında backend'e (PUT /notifications/preferences) yazılır.
@@ -21,8 +22,6 @@ class _NotificationSettingsScreenState
   bool _loading = true;
   bool _saving = false;
   String? _error;
-
-  bool _isTr(BuildContext c) => Localizations.localeOf(c).languageCode == 'tr';
 
   @override
   void initState() {
@@ -49,7 +48,6 @@ class _NotificationSettingsScreenState
   }
 
   Future<void> _update(Map<String, dynamic> patch) async {
-    // İyimser güncelleme
     setState(() {
       _prefs = {..._prefs, ...patch};
       _saving = true;
@@ -66,7 +64,7 @@ class _NotificationSettingsScreenState
       if (!mounted) return;
       setState(() => _saving = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_isTr(context) ? 'Kaydedilemedi' : 'Save failed')),
+        SnackBar(content: Text(context.l10n.notifSettingsSaveFailed)),
       );
     }
   }
@@ -75,14 +73,14 @@ class _NotificationSettingsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final tr = _isTr(context);
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         foregroundColor: Colors.black,
-        title: Text(tr ? 'Bildirim Ayarları' : 'Notification Settings'),
+        title: Text(l10n.menuItemNotificationSettings),
         actions: [
           if (_saving)
             const Padding(
@@ -100,77 +98,63 @@ class _NotificationSettingsScreenState
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Text(tr ? 'Bir hata oluştu' : 'Something went wrong'))
+              ? Center(child: Text(l10n.notifSettingsLoadError))
               : ListView(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   children: [
-                    _sectionTitle(tr ? 'Kategoriler' : 'Categories'),
+                    _sectionTitle(l10n.notifSettingsCategories),
                     _switchTile(
-                      title: tr ? 'Anlık bildirimler' : 'Realtime',
-                      subtitle: tr
-                          ? 'Terapist mesajları ve seans hatırlatmaları'
-                          : 'Therapist messages and session reminders',
+                      title: l10n.notifCatRealtime,
+                      subtitle: l10n.notifCatRealtimeDesc,
                       value: _boolOf('realtime_enabled'),
                       onChanged: (v) => _update({'realtime_enabled': v}),
                     ),
                     _switchTile(
-                      title: tr ? 'Terapi önerileri' : 'Therapy suggestions',
-                      subtitle: tr
-                          ? 'Terapist seçimi ve devam önerileri'
-                          : 'Therapist selection and continue prompts',
+                      title: l10n.notifCatTherapy,
+                      subtitle: l10n.notifCatTherapyDesc,
                       value: _boolOf('therapy_enabled'),
                       onChanged: (v) => _update({'therapy_enabled': v}),
                     ),
                     _switchTile(
-                      title: tr ? 'Psikolojik analiz' : 'Psychological analysis',
-                      subtitle: tr
-                          ? 'Analiz testi hatırlatmaları'
-                          : 'Analysis test reminders',
+                      title: l10n.notifCatAnalysis,
+                      subtitle: l10n.notifCatAnalysisDesc,
                       value: _boolOf('analysis_enabled'),
                       onChanged: (v) => _update({'analysis_enabled': v}),
                     ),
                     _switchTile(
-                      title: tr ? 'Hatırlatmalar' : 'Reminders',
-                      subtitle: tr
-                          ? 'Bir süredir gelmediğinde nazik hatırlatmalar'
-                          : 'Gentle nudges when you have been away',
+                      title: l10n.notifCatReengage,
+                      subtitle: l10n.notifCatReengageDesc,
                       value: _boolOf('reengagement_enabled'),
                       onChanged: (v) => _update({'reengagement_enabled': v}),
                     ),
                     _switchTile(
-                      title: tr ? 'Abonelik ve plan' : 'Subscription & plan',
-                      subtitle: tr
-                          ? 'Deneme, yenileme ve ödeme bilgileri'
-                          : 'Trial, renewal and payment info',
+                      title: l10n.notifCatSubscription,
+                      subtitle: l10n.notifCatSubscriptionDesc,
                       value: _boolOf('subscription_enabled'),
                       onChanged: (v) => _update({'subscription_enabled': v}),
                     ),
                     _switchTile(
-                      title: tr ? 'Sistem ve hesap' : 'System & account',
-                      subtitle: tr
-                          ? 'Güvenlik ve hesap bildirimleri'
-                          : 'Security and account notifications',
+                      title: l10n.notifCatSystem,
+                      subtitle: l10n.notifCatSystemDesc,
                       value: _boolOf('system_enabled'),
                       onChanged: (v) => _update({'system_enabled': v}),
                     ),
                     const SizedBox(height: 12),
-                    _sectionTitle(tr ? 'Sessiz Saatler' : 'Quiet Hours'),
+                    _sectionTitle(l10n.notifQuietHoursSection),
                     _switchTile(
-                      title: tr ? 'Sessiz saatler' : 'Quiet hours',
-                      subtitle: tr
-                          ? 'Belirtilen saatlerde sadece acil bildirimler'
-                          : 'Only urgent notifications during these hours',
+                      title: l10n.notifQuietHours,
+                      subtitle: l10n.notifQuietHoursDesc,
                       value: _boolOf('quiet_hours_enabled'),
                       onChanged: (v) => _update({'quiet_hours_enabled': v}),
                     ),
                     if (_boolOf('quiet_hours_enabled')) ...[
                       _hourPickerTile(
-                        label: tr ? 'Başlangıç' : 'Start',
+                        label: l10n.notifQuietHoursStart,
                         value: (_prefs['quiet_hours_start'] as int?) ?? 22,
                         onChanged: (h) => _update({'quiet_hours_start': h}),
                       ),
                       _hourPickerTile(
-                        label: tr ? 'Bitiş' : 'End',
+                        label: l10n.notifQuietHoursEnd,
                         value: (_prefs['quiet_hours_end'] as int?) ?? 8,
                         onChanged: (h) => _update({'quiet_hours_end': h}),
                       ),
@@ -207,13 +191,21 @@ class _NotificationSettingsScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text(subtitle,
-                    style: const TextStyle(
-                        fontSize: 12.5, color: Color(0xFF898989))),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 12.5,
+                    color: Color(0xFF898989),
+                  ),
+                ),
               ],
             ),
           ),
@@ -242,8 +234,8 @@ class _NotificationSettingsScreenState
             value: value,
             underline: const SizedBox.shrink(),
             items: List.generate(24, (h) {
-              final label = '${h.toString().padLeft(2, '0')}:00';
-              return DropdownMenuItem(value: h, child: Text(label));
+              final hourLabel = '${h.toString().padLeft(2, '0')}:00';
+              return DropdownMenuItem(value: h, child: Text(hourLabel));
             }),
             onChanged: (h) {
               if (h != null) onChanged(h);

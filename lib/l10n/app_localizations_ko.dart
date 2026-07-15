@@ -65,13 +65,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get premiumFeature3 => '당신을 위한 맞춤형 고급 AI';
 
   @override
-  String get premiumAnnualDiscount => '연간 플랜 40% 할인';
+  String get premiumAnnualDiscount => '연간 플랜 58% 할인';
 
   @override
   String get premiumCta => '시작하기';
 
   @override
-  String get premiumPrice => '₩5,500';
+  String get premiumPrice => '\$1.99';
 
   @override
   String get premiumPricePeriod => '/월';
@@ -1995,6 +1995,69 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get menuItemRateUs => '앱 평가하기';
+
+  @override
+  String get menuItemNotificationSettings => '알림 설정';
+
+  @override
+  String get notifSettingsCategories => '카테고리';
+
+  @override
+  String get notifCatRealtime => '실시간';
+
+  @override
+  String get notifCatRealtimeDesc => '테라피스트 메시지 및 세션 알림';
+
+  @override
+  String get notifCatTherapy => '테라피 제안';
+
+  @override
+  String get notifCatTherapyDesc => '테라피스트 선택 및 이어하기 안내';
+
+  @override
+  String get notifCatAnalysis => '심리 분석';
+
+  @override
+  String get notifCatAnalysisDesc => '분석 테스트 알림';
+
+  @override
+  String get notifCatReengage => '알림';
+
+  @override
+  String get notifCatReengageDesc => 'しばらく 접속하지 않았을 때의 부드러운 안내';
+
+  @override
+  String get notifCatSubscription => '구독 및 플랜';
+
+  @override
+  String get notifCatSubscriptionDesc => '체험, 갱신 및 결제 정보';
+
+  @override
+  String get notifCatSystem => '시스템 및 계정';
+
+  @override
+  String get notifCatSystemDesc => '보안 및 계정 알림';
+
+  @override
+  String get notifQuietHoursSection => '방해 금지 시간';
+
+  @override
+  String get notifQuietHours => '방해 금지 시간';
+
+  @override
+  String get notifQuietHoursDesc => '이 시간에는 긴급 알림만 표시';
+
+  @override
+  String get notifQuietHoursStart => '시작';
+
+  @override
+  String get notifQuietHoursEnd => '종료';
+
+  @override
+  String get notifSettingsSaveFailed => '저장에 실패했습니다';
+
+  @override
+  String get notifSettingsLoadError => '문제가 발생했습니다';
 
   @override
   String get premiumBadge => '프리미엄';

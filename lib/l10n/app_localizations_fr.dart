@@ -66,13 +66,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get premiumFeature3 => 'IA avancée sur mesure pour vous';
 
   @override
-  String get premiumAnnualDiscount => '-40 % sur le forfait annuel';
+  String get premiumAnnualDiscount => '-58 % sur le forfait annuel';
 
   @override
   String get premiumCta => 'Commencer';
 
   @override
-  String get premiumPrice => '2,99 €';
+  String get premiumPrice => '\$1.99';
 
   @override
   String get premiumPricePeriod => '/mois';
@@ -2077,6 +2077,74 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get menuItemRateUs => 'Nous évaluer';
+
+  @override
+  String get menuItemNotificationSettings => 'Paramètres de notification';
+
+  @override
+  String get notifSettingsCategories => 'Catégories';
+
+  @override
+  String get notifCatRealtime => 'Temps réel';
+
+  @override
+  String get notifCatRealtimeDesc =>
+      'Messages du thérapeute et rappels de séance';
+
+  @override
+  String get notifCatTherapy => 'Suggestions de thérapie';
+
+  @override
+  String get notifCatTherapyDesc =>
+      'Sélection du thérapeute et invitations à continuer';
+
+  @override
+  String get notifCatAnalysis => 'Analyse psychologique';
+
+  @override
+  String get notifCatAnalysisDesc => 'Rappels de tests d\'analyse';
+
+  @override
+  String get notifCatReengage => 'Rappels';
+
+  @override
+  String get notifCatReengageDesc =>
+      'Douces relances quand tu es absent depuis un moment';
+
+  @override
+  String get notifCatSubscription => 'Abonnement et forfait';
+
+  @override
+  String get notifCatSubscriptionDesc =>
+      'Essai, renouvellement et infos de paiement';
+
+  @override
+  String get notifCatSystem => 'Système et compte';
+
+  @override
+  String get notifCatSystemDesc => 'Notifications de sécurité et de compte';
+
+  @override
+  String get notifQuietHoursSection => 'Heures silencieuses';
+
+  @override
+  String get notifQuietHours => 'Heures silencieuses';
+
+  @override
+  String get notifQuietHoursDesc =>
+      'Uniquement les notifications urgentes pendant ces heures';
+
+  @override
+  String get notifQuietHoursStart => 'Début';
+
+  @override
+  String get notifQuietHoursEnd => 'Fin';
+
+  @override
+  String get notifSettingsSaveFailed => 'Échec de l\'enregistrement';
+
+  @override
+  String get notifSettingsLoadError => 'Une erreur s\'est produite';
 
   @override
   String get premiumBadge => 'PREMIUM';

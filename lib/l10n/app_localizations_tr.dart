@@ -65,13 +65,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get premiumFeature3 => 'Sana özel gelişmiş yapay zeka';
 
   @override
-  String get premiumAnnualDiscount => 'Yıllık planda %40 indirim';
+  String get premiumAnnualDiscount => 'Yıllık planda %58 indirim';
 
   @override
   String get premiumCta => 'Başla';
 
   @override
-  String get premiumPrice => '₺149,99';
+  String get premiumPrice => '₺99,99';
 
   @override
   String get premiumPricePeriod => '/ay';
@@ -886,7 +886,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get switchTo1MonthPlan => '1 Aylık Plana Geç';
 
   @override
-  String get monthlyPlanPrice => '\$1.99/ay, istediğin zaman iptal et';
+  String get monthlyPlanPrice => '₺99,99/ay, istediğin zaman iptal et';
 
   @override
   String get noLongTermCommitment =>
@@ -2047,6 +2047,72 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get menuItemRateUs => 'Bizi Değerlendir';
+
+  @override
+  String get menuItemNotificationSettings => 'Bildirim Ayarları';
+
+  @override
+  String get notifSettingsCategories => 'Kategoriler';
+
+  @override
+  String get notifCatRealtime => 'Anlık bildirimler';
+
+  @override
+  String get notifCatRealtimeDesc =>
+      'Terapist mesajları ve seans hatırlatmaları';
+
+  @override
+  String get notifCatTherapy => 'Terapi önerileri';
+
+  @override
+  String get notifCatTherapyDesc => 'Terapist seçimi ve devam önerileri';
+
+  @override
+  String get notifCatAnalysis => 'Psikolojik analiz';
+
+  @override
+  String get notifCatAnalysisDesc => 'Analiz testi hatırlatmaları';
+
+  @override
+  String get notifCatReengage => 'Hatırlatmalar';
+
+  @override
+  String get notifCatReengageDesc =>
+      'Bir süredir gelmediğinde nazik hatırlatmalar';
+
+  @override
+  String get notifCatSubscription => 'Abonelik ve plan';
+
+  @override
+  String get notifCatSubscriptionDesc => 'Deneme, yenileme ve ödeme bilgileri';
+
+  @override
+  String get notifCatSystem => 'Sistem ve hesap';
+
+  @override
+  String get notifCatSystemDesc => 'Güvenlik ve hesap bildirimleri';
+
+  @override
+  String get notifQuietHoursSection => 'Sessiz Saatler';
+
+  @override
+  String get notifQuietHours => 'Sessiz saatler';
+
+  @override
+  String get notifQuietHoursDesc =>
+      'Belirtilen saatlerde sadece acil bildirimler';
+
+  @override
+  String get notifQuietHoursStart => 'Başlangıç';
+
+  @override
+  String get notifQuietHoursEnd => 'Bitiş';
+
+  @override
+  String get notifSettingsSaveFailed => 'Kaydedilemedi';
+
+  @override
+  String get notifSettingsLoadError => 'Bir hata oluştu';
 
   @override
   String get premiumBadge => 'PREMIUM';

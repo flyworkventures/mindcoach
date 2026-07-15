@@ -410,10 +410,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                     ),
                     _buildListItem(
                       iconAsset: 'assets/icons/ic_bell.svg',
-                      title:
-                          Localizations.localeOf(context).languageCode == 'tr'
-                              ? 'Bildirim Ayarları'
-                              : 'Notification Settings',
+                      title: l10n.menuItemNotificationSettings,
                       onTap: () => Navigator.pushNamed(
                         context,
                         PageRoutes.notificationSettings,

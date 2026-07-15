@@ -65,13 +65,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get premiumFeature3 => 'Продвинутый ИИ, созданный для вас';
 
   @override
-  String get premiumAnnualDiscount => 'Скидка 40% на годовой план';
+  String get premiumAnnualDiscount => 'Скидка 58% на годовой план';
 
   @override
   String get premiumCta => 'Начать';
 
   @override
-  String get premiumPrice => '₽399';
+  String get premiumPrice => '\$1.99';
 
   @override
   String get premiumPricePeriod => '/мес';
@@ -2070,6 +2070,71 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get menuItemRateUs => 'Оцените нас';
+
+  @override
+  String get menuItemNotificationSettings => 'Настройки уведомлений';
+
+  @override
+  String get notifSettingsCategories => 'Категории';
+
+  @override
+  String get notifCatRealtime => 'В реальном времени';
+
+  @override
+  String get notifCatRealtimeDesc =>
+      'Сообщения терапевта и напоминания о сеансах';
+
+  @override
+  String get notifCatTherapy => 'Предложения терапии';
+
+  @override
+  String get notifCatTherapyDesc => 'Выбор терапевта и приглашения продолжить';
+
+  @override
+  String get notifCatAnalysis => 'Психологический анализ';
+
+  @override
+  String get notifCatAnalysisDesc => 'Напоминания о тестах анализа';
+
+  @override
+  String get notifCatReengage => 'Напоминания';
+
+  @override
+  String get notifCatReengageDesc =>
+      'Мягкие напоминания, когда вас давно не было';
+
+  @override
+  String get notifCatSubscription => 'Подписка и план';
+
+  @override
+  String get notifCatSubscriptionDesc => 'Пробный период, продление и оплата';
+
+  @override
+  String get notifCatSystem => 'Система и аккаунт';
+
+  @override
+  String get notifCatSystemDesc => 'Уведомления безопасности и аккаунта';
+
+  @override
+  String get notifQuietHoursSection => 'Тихие часы';
+
+  @override
+  String get notifQuietHours => 'Тихие часы';
+
+  @override
+  String get notifQuietHoursDesc => 'В эти часы только срочные уведомления';
+
+  @override
+  String get notifQuietHoursStart => 'Начало';
+
+  @override
+  String get notifQuietHoursEnd => 'Конец';
+
+  @override
+  String get notifSettingsSaveFailed => 'Не удалось сохранить';
+
+  @override
+  String get notifSettingsLoadError => 'Что-то пошло не так';
 
   @override
   String get premiumBadge => 'ПРЕМИУМ';

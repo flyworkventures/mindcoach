@@ -49,6 +49,17 @@ class NotificationNotifier extends Notifier<NotificationState> {
     return NotificationState(notifications: []);
   }
 
+  static List<NotificationModel> _inboxOnly(List<NotificationModel> list) {
+    return list.where((n) {
+      if (n.type == 'chat_message') return false;
+      final trigger = n.metadata['trigger']?.toString();
+      if (trigger == 'therapist_message') return false;
+      final metaType = n.metadata['type']?.toString();
+      if (metaType == 'chat_message') return false;
+      return true;
+    }).toList();
+  }
+
   /// Load notifications from API
   Future<void> loadNotifications({int limit = 50, int offset = 0}) async {
     state = state.copyWith(isLoading: true, error: null);
@@ -58,7 +69,7 @@ class NotificationNotifier extends Notifier<NotificationState> {
         offset: offset,
       );
       state = state.copyWith(
-        notifications: notifications,
+        notifications: _inboxOnly(notifications),
         isLoading: false,
       );
     } catch (e) {
@@ -83,16 +94,18 @@ class NotificationNotifier extends Notifier<NotificationState> {
     _isRefreshing = true;
     state = state.copyWith(isLoading: true, error: null);
     try {
-      final newNotifications = await notificationRepo.getUserNotifications(
+      final fetched = await notificationRepo.getUserNotifications(
         limit: 50,
         offset: 0,
       );
-      
+      final newNotifications = _inboxOnly(fetched);
+
       // Only update state if notifications actually changed
       final currentIds = state.notifications.map((n) => n.id).toSet();
       final newIds = newNotifications.map((n) => n.id).toSet();
-      
-      if (currentIds != newIds || state.notifications.length != newNotifications.length) {
+
+      if (currentIds != newIds ||
+          state.notifications.length != newNotifications.length) {
         state = state.copyWith(
           notifications: newNotifications,
           isLoading: false,

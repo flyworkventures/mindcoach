@@ -23,11 +23,14 @@ class NotificationPreferences {
     await _localDbService.setBool(key: LocalDbKeys.notificationsEnabled, value: enabled);
   }
 
-  /// Check if specific interval notification is enabled
+  /// Check if specific interval notification is enabled.
+  /// Varsayılan: yalnız 4 saat açık — tüm aralıkların aynı anda açık
+  /// kalması çakışan bildirimlere yol açıyordu.
   Future<bool> isIntervalEnabled(int hours) async {
     final key = _getIntervalKey(hours);
     final enabled = await _localDbService.getBool(key: key);
-    return enabled ?? true; // Default: enabled
+    if (enabled != null) return enabled;
+    return hours == 4;
   }
 
   /// Set specific interval notification enabled/disabled

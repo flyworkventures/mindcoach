@@ -6,26 +6,24 @@ import 'package:mindcoach/Services/NotificationsService/models/notification_pref
 
 /// Periyodik (yerel) hatırlatma bildirimlerini yönetir.
 ///
-/// Neden bu tasarım: Eski sürümde her aralık tek sabit metinle
-/// `periodicallyShow` / `matchDateTimeComponents` ile planlanıyordu; bu da
-/// "aynı bildirimin sürekli tekrar etmesine" yol açıyordu (içerik planlama
-/// anında sabitlenir, occurrence başına değişemez).
-///
-/// Yeni tasarım: Her aralık için önümüzdeki birkaç occurrence AYRI birer
-/// tek-seferlik bildirim olarak planlanır ve her occurrence havuzdan FARKLI
-/// bir mesaj alır. Uygulama her açıldığında bu pencere yeniden doldurulur.
+/// ÖNEMLİ: Eski sürüm 2/4/8/24 saat aralıklarını AYNI ANDA planlıyordu.
+/// Ortak katlarda (örn. her 4. saatte hem 2h hem 4h) aynı anda 2+ bildirim
+/// geliyordu. Artık yalnızca tek bir aktif cadence planlanır.
 class PeriodicNotificationScheduler {
   final LocalNotificationService _localNotificationService =
       LocalNotificationService();
   final NotificationPreferences _preferences = NotificationPreferences();
 
-  static const List<int> _intervals = [2, 4, 8, 24];
+  /// Eski slotları temizlemek için bilinen aralıklar.
+  static const List<int> _legacyIntervals = [2, 4, 8, 24];
+
+  /// Ürün cadence'i: tek aralık → çakışma yok.
+  static const int _activeCadenceHours = 4;
 
   /// Her aralık için ileriye dönük kaç occurrence planlanacağı.
   static const int _occurrencesToSchedule = 6;
 
-  /// Her aralık için ayrılan ID bloğu genişliği (occurrence slotları).
-  /// Örn. 2h → 100100..100105, 4h → 100200..100205 ...
+  /// Occurrence slot bloğu (eski ID düzeniyle uyumlu iptal için).
   static const int _slotBlock = 100;
 
   Future<void> initializeAndSchedule() async {
@@ -43,6 +41,9 @@ class PeriodicNotificationScheduler {
         return;
       }
 
+      // Önce TÜM eski (2/4/8/24) planları sil — kalıntı çift bildirim önlemi.
+      await cancelAllNotifications();
+
       var startTime = await _preferences.getStartTime();
       if (startTime == null) {
         startTime = DateTime.now();
@@ -50,13 +51,14 @@ class PeriodicNotificationScheduler {
       }
 
       final languageCode = await NotificationLanguageResolver.resolve();
-      debugPrint('[PERIODIC_NOTIF] Language: $languageCode');
+      debugPrint(
+        '[PERIODIC_NOTIF] Language: $languageCode, '
+        'cadence: ${_activeCadenceHours}h',
+      );
 
-      for (final hours in _intervals) {
-        await _scheduleInterval(hours, startTime, languageCode);
-      }
+      await _scheduleInterval(_activeCadenceHours, startTime, languageCode);
 
-      debugPrint('[PERIODIC_NOTIF] All periodic notifications scheduled');
+      debugPrint('[PERIODIC_NOTIF] Periodic notifications scheduled (single cadence)');
     } catch (e) {
       debugPrint('[PERIODIC_NOTIF] Error initializing: $e');
       rethrow;
@@ -64,7 +66,7 @@ class PeriodicNotificationScheduler {
   }
 
   /// Belirli bir aralık için önümüzdeki occurrence'ları farklı metinlerle
-  /// planlar. Önce eski slotları temizler (yeniden planlama / tekrar önleme).
+  /// planlar.
   Future<void> _scheduleInterval(
     int hours,
     DateTime startTime,
@@ -73,15 +75,8 @@ class PeriodicNotificationScheduler {
     try {
       await _cancelInterval(hours);
 
-      final isEnabled = await _preferences.isIntervalEnabled(hours);
-      if (!isEnabled) {
-        debugPrint('[PERIODIC_NOTIF] ${hours}h interval is disabled');
-        return;
-      }
-
       final now = DateTime.now();
 
-      // startTime'a göre geçen tam aralık sayısı → bir sonraki occurrence no'su.
       final hoursPassed = now.difference(startTime).inHours;
       final intervalsPassed = hoursPassed < 0 ? 0 : (hoursPassed ~/ hours);
       var nextOccurrence = intervalsPassed + 1;
@@ -93,7 +88,6 @@ class PeriodicNotificationScheduler {
             startTime.add(Duration(hours: nextOccurrence * hours));
 
         if (occurrenceTime.isAfter(now)) {
-          // Rotasyon: mutlak occurrence numarasına göre farklı metin.
           final content = NotificationContent.forInterval(
             hours,
             occurrence: nextOccurrence,
@@ -125,8 +119,6 @@ class PeriodicNotificationScheduler {
     }
   }
 
-  /// Aralığın occurrence slot ID'si. Randevu (700000000+) ve diğer ID'lerle
-  /// çakışmaz.
   int _slotId(int hours, int slot) {
     return NotificationPreferences.getIdForInterval(hours) * _slotBlock + slot;
   }
@@ -137,7 +129,6 @@ class PeriodicNotificationScheduler {
         await _localNotificationService
             .cancelNotification(_slotId(hours, slot));
       }
-      // Eski sürümden kalmış olabilecek tek-ID planlamayı da temizle.
       await _localNotificationService
           .cancelNotification(NotificationPreferences.getIdForInterval(hours));
     } catch (e) {
@@ -145,15 +136,14 @@ class PeriodicNotificationScheduler {
     }
   }
 
-  /// Tüm periyodik bildirimleri iptal eder.
+  /// Tüm periyodik bildirimleri iptal eder (legacy aralıklar dahil).
   Future<void> cancelAllNotifications() async {
-    for (final hours in _intervals) {
+    for (final hours in _legacyIntervals) {
       await _cancelInterval(hours);
     }
     debugPrint('[PERIODIC_NOTIF] ✅ Cancelled all periodic notifications');
   }
 
-  /// Tercih değiştiğinde çağrılır.
   Future<void> updateSchedule() async {
     await initializeAndSchedule();
   }
@@ -172,4 +162,3 @@ class PeriodicNotificationScheduler {
     }
   }
 }
-

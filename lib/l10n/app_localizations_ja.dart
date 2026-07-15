@@ -64,13 +64,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get premiumFeature3 => 'あなたに合わせた高度なAI';
 
   @override
-  String get premiumAnnualDiscount => '年間プランで40%オフ';
+  String get premiumAnnualDiscount => '年間プランで58%オフ';
 
   @override
   String get premiumCta => 'はじめる';
 
   @override
-  String get premiumPrice => '¥600';
+  String get premiumPrice => '\$1.99';
 
   @override
   String get premiumPricePeriod => '/月';
@@ -1970,6 +1970,69 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get menuItemRateUs => 'アプリを評価';
+
+  @override
+  String get menuItemNotificationSettings => '通知設定';
+
+  @override
+  String get notifSettingsCategories => 'カテゴリ';
+
+  @override
+  String get notifCatRealtime => 'リアルタイム';
+
+  @override
+  String get notifCatRealtimeDesc => 'セラピストのメッセージとセッションのリマインダー';
+
+  @override
+  String get notifCatTherapy => 'セラピーの提案';
+
+  @override
+  String get notifCatTherapyDesc => 'セラピスト選択と継続の案内';
+
+  @override
+  String get notifCatAnalysis => '心理分析';
+
+  @override
+  String get notifCatAnalysisDesc => '分析テストのリマインダー';
+
+  @override
+  String get notifCatReengage => 'リマインダー';
+
+  @override
+  String get notifCatReengageDesc => 'しばらく離れているときのやさしいお知らせ';
+
+  @override
+  String get notifCatSubscription => 'サブスクリプションとプラン';
+
+  @override
+  String get notifCatSubscriptionDesc => 'トライアル、更新、支払い情報';
+
+  @override
+  String get notifCatSystem => 'システムとアカウント';
+
+  @override
+  String get notifCatSystemDesc => 'セキュリティとアカウント通知';
+
+  @override
+  String get notifQuietHoursSection => 'サイレント時間';
+
+  @override
+  String get notifQuietHours => 'サイレント時間';
+
+  @override
+  String get notifQuietHoursDesc => 'この時間帯は緊急通知のみ';
+
+  @override
+  String get notifQuietHoursStart => '開始';
+
+  @override
+  String get notifQuietHoursEnd => '終了';
+
+  @override
+  String get notifSettingsSaveFailed => '保存に失敗しました';
+
+  @override
+  String get notifSettingsLoadError => '問題が発生しました';
 
   @override
   String get premiumBadge => 'プレミアム';

@@ -13,12 +13,19 @@ class PremiumCard extends ConsumerWidget {
   static const _primaryGreen = Color(0xFF21BC87);
   static const _glowGreen = Color(0xFF13CF76);
 
+  /// Hardcoded aylık fiyatlar — hesaplama / RevenueCat yok.
+  static const _priceTr = '₺99,99';
+  static const _priceUsd = '\$1.99';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final premiumState = ref.watch(AllProviders.premiumProvider);
     final l = context.l10n;
 
     if (premiumState.isPurchased) return const SizedBox.shrink();
+
+    final isTr = Localizations.localeOf(context).languageCode == 'tr';
+    final priceText = isTr ? _priceTr : _priceUsd;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
@@ -64,9 +71,9 @@ class PremiumCard extends ConsumerWidget {
                   children: [
                     SvgPicture.asset('assets/icons/ic_king.svg'),
                     const SizedBox(width: 6),
-                    const Text(
-                      'PREMIUM',
-                      style: TextStyle(
+                    Text(
+                      l.premiumBadge,
+                      style: const TextStyle(
                         fontFamily: 'Geist',
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -125,7 +132,7 @@ class PremiumCard extends ConsumerWidget {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: l.premiumPrice,
+                                text: priceText,
                                 style: const TextStyle(
                                   fontFamily: 'Geist',
                                   fontSize: 24,

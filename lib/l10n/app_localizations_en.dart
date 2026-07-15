@@ -65,13 +65,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumFeature3 => 'Advanced AI tailored for you';
 
   @override
-  String get premiumAnnualDiscount => '40% off on annual plan';
+  String get premiumAnnualDiscount => '58% off on annual plan';
 
   @override
   String get premiumCta => 'Get Started';
 
   @override
-  String get premiumPrice => '\$3.99';
+  String get premiumPrice => '\$1.99';
 
   @override
   String get premiumPricePeriod => '/mo';
@@ -2052,6 +2052,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuItemRateUs => 'Rate Us';
+
+  @override
+  String get menuItemNotificationSettings => 'Notification Settings';
+
+  @override
+  String get notifSettingsCategories => 'Categories';
+
+  @override
+  String get notifCatRealtime => 'Realtime';
+
+  @override
+  String get notifCatRealtimeDesc => 'Therapist messages and session reminders';
+
+  @override
+  String get notifCatTherapy => 'Therapy suggestions';
+
+  @override
+  String get notifCatTherapyDesc => 'Therapist selection and continue prompts';
+
+  @override
+  String get notifCatAnalysis => 'Psychological analysis';
+
+  @override
+  String get notifCatAnalysisDesc => 'Analysis test reminders';
+
+  @override
+  String get notifCatReengage => 'Reminders';
+
+  @override
+  String get notifCatReengageDesc => 'Gentle nudges when you have been away';
+
+  @override
+  String get notifCatSubscription => 'Subscription & plan';
+
+  @override
+  String get notifCatSubscriptionDesc => 'Trial, renewal and payment info';
+
+  @override
+  String get notifCatSystem => 'System & account';
+
+  @override
+  String get notifCatSystemDesc => 'Security and account notifications';
+
+  @override
+  String get notifQuietHoursSection => 'Quiet Hours';
+
+  @override
+  String get notifQuietHours => 'Quiet hours';
+
+  @override
+  String get notifQuietHoursDesc =>
+      'Only urgent notifications during these hours';
+
+  @override
+  String get notifQuietHoursStart => 'Start';
+
+  @override
+  String get notifQuietHoursEnd => 'End';
+
+  @override
+  String get notifSettingsSaveFailed => 'Save failed';
+
+  @override
+  String get notifSettingsLoadError => 'Something went wrong';
 
   @override
   String get premiumBadge => 'PREMIUM';
