@@ -799,6 +799,7 @@
   "premiumStatusInactive": "निष्क्रिय",
   "appointmentConflictSameTime": "इस समय आपकी पहले से किसी अन्य कोच के साथ अपॉइंटमेंट है।",
   "appointmentConflictSameCoach": "इस कोच के साथ आपकी पहले से एक अपॉइंटमेंट है।",
+  "appointmentCreatedSuccess": "आपकी अपॉइंटमेंट बना दी गई है।",
   "appointmentReminderTitle": "अपॉइंटमेंट रिमाइंडर",
   "appointmentReminderBody": "{specialistName} के साथ आपकी अपॉइंटमेंट 30 मिनट में शुरू होगी।",
   "appointmentReminderFallbackName": "आपका विशेषज्ञ",

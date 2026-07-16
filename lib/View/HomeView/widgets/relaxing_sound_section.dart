@@ -18,10 +18,6 @@ class _RelaxingSoundSectionState extends State<RelaxingSoundSection> {
   @override
   void initState() {
     super.initState();
-    // Süreleri arka planda yükle
-    SoundDurationCache.instance.loadAll().then((_) {
-      if (mounted) setState(() {});
-    });
   }
 
   /// Playlist oluştur ve player'ı aç.
@@ -54,7 +50,6 @@ class _RelaxingSoundSectionState extends State<RelaxingSoundSection> {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final cache = SoundDurationCache.instance;
 
     final currentSounds = allSounds
         .where((s) => s.categoryIndex == _selectedCategory)
@@ -89,14 +84,25 @@ class _RelaxingSoundSectionState extends State<RelaxingSoundSection> {
                       PageRoutes.relaxingSoundScreen,
                     );
                   },
-                  child: Text(
-                    l.seeAll,
-                    style: const TextStyle(
-                      fontFamily: 'Geist',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF21BC87),
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l.seeAll,
+                        style: const TextStyle(
+                          fontFamily: 'Geist',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF21BC87),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      SvgPicture.asset(
+                        'assets/icons/ic_see_all_arrow.svg',
+                        width: 14,
+                        height: 14,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -166,8 +172,9 @@ class _RelaxingSoundSectionState extends State<RelaxingSoundSection> {
               mainAxisSize: MainAxisSize.min,
               children: List.generate(currentSounds.length, (i) {
                 final sound = currentSounds[i];
-                final dur = cache.get(sound.audioPath);
-                final durText = dur != null ? formatDuration(dur) : '--:--';
+                final durText = formatDuration(
+                  Duration(seconds: sound.displayDurationSeconds),
+                );
 
                 return GestureDetector(
                   onTap: () => _openPlayer(currentSounds, i),

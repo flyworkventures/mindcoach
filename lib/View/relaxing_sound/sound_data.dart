@@ -16,12 +16,19 @@ class SoundItem {
   final String imagePath;
   final String audioPath;
 
+  /// Listede gösterilecek sabit süre (saniye cinsinden).
+  /// Asset ses dosyaları kısa/aynı uzunlukta olduğundan, kullanıcıya
+  /// gerçekçi bir süre yelpazesi göstermek için burada tanımlanır.
+  /// Aralık: 30 sn (0:30) — 10 dk (10:00).
+  final int displayDurationSeconds;
+
   const SoundItem({
     required this.categoryIndex,
     required this.titleKey,
     this.subtitleKey = '',
     required this.imagePath,
     required this.audioPath,
+    required this.displayDurationSeconds,
   });
 }
 
@@ -40,6 +47,7 @@ const allSounds = [
     subtitleKey: 'soundDeepWorkFlowSub',
     imagePath: 'assets/images/image_1.png',
     audioPath: 'assets/musics/sound_1.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
   SoundItem(
     categoryIndex: 0,
@@ -47,6 +55,7 @@ const allSounds = [
     subtitleKey: 'soundBinauralBeatsSub',
     imagePath: 'assets/images/image_2.png',
     audioPath: 'assets/musics/sound_2.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
   SoundItem(
     categoryIndex: 0,
@@ -54,6 +63,7 @@ const allSounds = [
     subtitleKey: 'soundLibraryAmbienceSub',
     imagePath: 'assets/images/image_3.png',
     audioPath: 'assets/musics/sound_3.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
 
   // --- SLEEP (1) ---
@@ -63,6 +73,7 @@ const allSounds = [
     subtitleKey: 'soundRainOnWindowSub',
     imagePath: 'assets/images/image_4.png',
     audioPath: 'assets/musics/sound_4.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
   SoundItem(
     categoryIndex: 1,
@@ -70,6 +81,7 @@ const allSounds = [
     subtitleKey: 'soundOceanWavesSub',
     imagePath: 'assets/images/image_5.png',
     audioPath: 'assets/musics/sound_5.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
   SoundItem(
     categoryIndex: 1,
@@ -77,6 +89,7 @@ const allSounds = [
     subtitleKey: 'soundDeepSpaceDroneSub',
     imagePath: 'assets/images/image_6.png',
     audioPath: 'assets/musics/sound_6.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
 
   // --- MEDITATION (2) ---
@@ -86,6 +99,7 @@ const allSounds = [
     subtitleKey: 'soundTibetanBowlsSub',
     imagePath: 'assets/images/image_7.png',
     audioPath: 'assets/musics/sound_7.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
   SoundItem(
     categoryIndex: 2,
@@ -93,6 +107,7 @@ const allSounds = [
     subtitleKey: 'soundForestBirdsSub',
     imagePath: 'assets/images/image_8.png',
     audioPath: 'assets/musics/sound_8.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
   SoundItem(
     categoryIndex: 2,
@@ -100,6 +115,7 @@ const allSounds = [
     subtitleKey: 'soundMorningZenSub',
     imagePath: 'assets/images/image_9.png',
     audioPath: 'assets/musics/sound_9.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
 
   // --- RELAX (3) ---
@@ -109,6 +125,7 @@ const allSounds = [
     subtitleKey: 'soundFireplaceCrackleSub',
     imagePath: 'assets/images/image_10.png',
     audioPath: 'assets/musics/sound_10.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
   SoundItem(
     categoryIndex: 3,
@@ -116,6 +133,7 @@ const allSounds = [
     subtitleKey: 'soundGentleStreamSub',
     imagePath: 'assets/images/image_11.png',
     audioPath: 'assets/musics/sound_11.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
   SoundItem(
     categoryIndex: 3,
@@ -123,6 +141,7 @@ const allSounds = [
     subtitleKey: 'soundSoftPianoSub',
     imagePath: 'assets/images/image_12.png',
     audioPath: 'assets/musics/sound_12.mp3',
+    displayDurationSeconds: 600, // 10:00
   ),
 ];
 

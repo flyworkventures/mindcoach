@@ -2172,6 +2172,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appointmentConflictSameCoach => '您已与此教练有预约。';
 
   @override
+  String get appointmentCreatedSuccess => '您的预约已创建。';
+
+  @override
   String get appointmentReminderTitle => '预约提醒';
 
   @override

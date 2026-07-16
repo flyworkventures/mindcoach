@@ -2338,6 +2338,9 @@ class AppLocalizationsRu extends AppLocalizations {
       'У вас уже есть запись к этому коучу.';
 
   @override
+  String get appointmentCreatedSuccess => 'Ваша запись создана.';
+
+  @override
   String get appointmentReminderTitle => 'Напоминание о встрече';
 
   @override

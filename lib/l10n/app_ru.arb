@@ -799,6 +799,7 @@
   "premiumStatusInactive": "неактивен",
   "appointmentConflictSameTime": "У вас уже есть запись на это время с другим коучем.",
   "appointmentConflictSameCoach": "У вас уже есть запись к этому коучу.",
+  "appointmentCreatedSuccess": "Ваша запись создана.",
   "appointmentReminderTitle": "Напоминание о встрече",
   "appointmentReminderBody": "Ваша встреча с {specialistName} начнётся через 30 минут.",
   "appointmentReminderFallbackName": "вашим специалистом",

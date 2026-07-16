@@ -2315,6 +2315,9 @@ class AppLocalizationsHi extends AppLocalizations {
       'इस कोच के साथ आपकी पहले से एक अपॉइंटमेंट है।';
 
   @override
+  String get appointmentCreatedSuccess => 'आपकी अपॉइंटमेंट बना दी गई है।';
+
+  @override
   String get appointmentReminderTitle => 'अपॉइंटमेंट रिमाइंडर';
 
   @override

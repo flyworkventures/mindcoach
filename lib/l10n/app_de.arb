@@ -799,6 +799,7 @@
   "premiumStatusInactive": "inaktiv",
   "appointmentConflictSameTime": "Sie haben bereits einen Termin zu dieser Zeit mit einem anderen Coach.",
   "appointmentConflictSameCoach": "Sie haben bereits einen Termin mit diesem Coach.",
+  "appointmentCreatedSuccess": "Ihr Termin wurde erstellt.",
   "appointmentReminderTitle": "Termin-Erinnerung",
   "appointmentReminderBody": "Ihr Termin mit {specialistName} beginnt in 30 Minuten.",
   "appointmentReminderFallbackName": "Ihrem Spezialisten",

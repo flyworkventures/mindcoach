@@ -2227,6 +2227,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appointmentConflictSameCoach => 'このコーチとの予約がすでにあります。';
 
   @override
+  String get appointmentCreatedSuccess => '予約が作成されました。';
+
+  @override
   String get appointmentReminderTitle => '予約リマインダー';
 
   @override

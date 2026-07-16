@@ -84,12 +84,18 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
 
   /// AI cümleleri arasında doğal 1s civarı boşluklar olabiliyor; çok kısa
   /// idle eşik konuşma ortasında speaking→listening geçişine sebep olur.
-  static const int _aiPlaybackIdleMs = 1600;
+  /// 1600 ms yavaş ağlarda son heceyi kesebiliyordu — analiz akışında son
+  /// cümlenin tam duyulması için biraz daha rahat bir eşik kullanıyoruz.
+  static const int _aiPlaybackIdleMs = 2500;
 
   /// Son PCM’den bu kadar ms geçtiyse ve kuyruk hâlâ doluysa oynatıcı takılmıştır — zorla boşalt.
-  static const int _aiPlaybackStuckQueueFlushMs = 3000;
+  /// Server tarafında EOS + trigger flush ekledik, 3s bazen erken kesiyordu.
+  static const int _aiPlaybackStuckQueueFlushMs = 5000;
   bool _isMuted = false;
-  bool _isSpeakerOn = false;
+  // Native tarafında `configureForVoiceCall` artık default olarak hoparlörü
+  // açıyor (iOS + Android). UI durumu native ile senkron kalsın diye burada
+  // da varsayılan olarak açık başlıyoruz — kullanıcı butonla kapatabilir.
+  bool _isSpeakerOn = true;
 
   // ── Animations ─────────────────────────────────────────────────────────────
   late AnimationController _pulseCtrl;

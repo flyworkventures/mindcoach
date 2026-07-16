@@ -2345,6 +2345,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sie haben bereits einen Termin mit diesem Coach.';
 
   @override
+  String get appointmentCreatedSuccess => 'Ihr Termin wurde erstellt.';
+
+  @override
   String get appointmentReminderTitle => 'Termin-Erinnerung';
 
   @override

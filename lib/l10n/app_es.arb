@@ -799,6 +799,7 @@
   "premiumStatusInactive": "inactivo",
   "appointmentConflictSameTime": "Ya tienes una cita a esta hora con otro coach.",
   "appointmentConflictSameCoach": "Ya tienes una cita con este coach.",
+  "appointmentCreatedSuccess": "Tu cita ha sido creada.",
   "appointmentReminderTitle": "Recordatorio de cita",
   "appointmentReminderBody": "Tu cita con {specialistName} comienza en 30 minutos.",
   "appointmentReminderFallbackName": "tu especialista",

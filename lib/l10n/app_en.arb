@@ -799,6 +799,7 @@
   "premiumStatusInactive": "inactive",
   "appointmentConflictSameTime": "You already have an appointment at this time with another coach.",
   "appointmentConflictSameCoach": "You already have an appointment with this coach.",
+  "appointmentCreatedSuccess": "Your appointment has been created.",
   "appointmentReminderTitle": "Appointment reminder",
   "appointmentReminderBody": "Your appointment with {specialistName} starts in 30 minutes.",
   "@appointmentReminderBody": {

@@ -508,7 +508,7 @@ class _SpecialistCard extends ConsumerWidget {
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
+                    horizontal: 6,
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
@@ -525,16 +525,26 @@ class _SpecialistCard extends ConsumerWidget {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgPicture.asset("assets/icons/ic_ic.svg"),
-                      const SizedBox(width: 4),
-                      Text(
-                        context.l10n.coachDetailCreateAppointment,
-                        style: const TextStyle(
-                          fontFamily: 'Geist',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                      SvgPicture.asset(
+                        "assets/icons/ic_ic.svg",
+                        width: 12,
+                        height: 12,
+                      ),
+                      const SizedBox(width: 3),
+                      Flexible(
+                        child: Text(
+                          context.l10n.coachDetailCreateAppointment,
+                          style: const TextStyle(
+                            fontFamily: 'Geist',
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],

@@ -4270,6 +4270,12 @@ abstract class AppLocalizations {
   /// **'You already have an appointment with this coach.'**
   String get appointmentConflictSameCoach;
 
+  /// No description provided for @appointmentCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your appointment has been created.'**
+  String get appointmentCreatedSuccess;
+
   /// No description provided for @appointmentReminderTitle.
   ///
   /// In en, this message translates to:

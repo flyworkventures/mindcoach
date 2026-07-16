@@ -799,6 +799,7 @@
   "premiumStatusInactive": "inativo",
   "appointmentConflictSameTime": "Você já tem um agendamento neste horário com outro coach.",
   "appointmentConflictSameCoach": "Você já tem um agendamento com este coach.",
+  "appointmentCreatedSuccess": "Seu agendamento foi criado.",
   "appointmentReminderTitle": "Lembrete de consulta",
   "appointmentReminderBody": "Sua consulta com {specialistName} começa em 30 minutos.",
   "appointmentReminderFallbackName": "seu especialista",

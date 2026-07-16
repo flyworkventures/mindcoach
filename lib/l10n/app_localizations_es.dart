@@ -2336,6 +2336,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'Ya tienes una cita con este coach.';
 
   @override
+  String get appointmentCreatedSuccess => 'Tu cita ha sido creada.';
+
+  @override
   String get appointmentReminderTitle => 'Recordatorio de cita';
 
   @override

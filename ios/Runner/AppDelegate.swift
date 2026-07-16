@@ -39,25 +39,26 @@ import UserNotifications
             // category / mode on us. Re-apply BOTH explicitly so we end up
             // in voiceChat mode (required for iOS hardware AEC).
             //
-            // NOTE: We deliberately DO NOT pass `.defaultToSpeaker`. This
-            // makes the call behave like a real phone call — audio is
-            // routed to the earpiece (receiver) by default, and the user
-            // must explicitly tap the speaker button to switch to
-            // loudspeaker. Matches the iOS Phone app UX.
+            // We ROUTE TO THE LOUDSPEAKER BY DEFAULT (`.defaultToSpeaker` +
+            // explicit `overrideOutputAudioPort(.speaker)`). Testers reported
+            // that with an earpiece-first route users didn't realise audio
+            // was even playing, because most people don't hold the phone up
+            // to their ear during an AI coaching session. The `setSpeakerOn`
+            // handler below still lets the UI toggle back to earpiece.
             try session.setCategory(
               .playAndRecord,
               mode: .voiceChat, // enables hardware AEC + auto-ducking
-              options: [.allowBluetooth, .allowBluetoothA2DP])
+              options: [.allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker])
             // setCategory occasionally silently reverts the mode to
             // `default` on iOS 17+; force it again if that happened.
             if session.mode != .voiceChat {
               try? session.setMode(.voiceChat)
             }
             try session.setActive(true, options: [])
-            // Ensure we start on the earpiece every time the voice-call
-            // screen is (re-)configured. If a previous audio route left us
-            // on the speaker, clear that override.
-            try? session.overrideOutputAudioPort(.none)
+            // Force speaker on the way in — `.defaultToSpeaker` only sets
+            // the fallback; an override left over from a previous session
+            // could still put us on the earpiece.
+            try? session.overrideOutputAudioPort(.speaker)
             result(session.mode.rawValue) // return the actual mode for debugging
 
           case "setSpeakerOn":

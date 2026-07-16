@@ -2252,6 +2252,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appointmentConflictSameCoach => '이 코치와 이미 예약이 있습니다.';
 
   @override
+  String get appointmentCreatedSuccess => '예약이 생성되었습니다.';
+
+  @override
   String get appointmentReminderTitle => '예약 알림';
 
   @override

@@ -24,11 +24,6 @@ class _RelaxingSoundScreenState extends State<RelaxingSoundScreen> {
     super.initState();
     _searchController = TextEditingController();
     _featuredSound = allSounds[Random().nextInt(allSounds.length)];
-
-    // Süreleri yükle
-    SoundDurationCache.instance.loadAll().then((_) {
-      if (mounted) setState(() {});
-    });
   }
 
   @override
@@ -67,7 +62,6 @@ class _RelaxingSoundScreenState extends State<RelaxingSoundScreen> {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final cache = SoundDurationCache.instance;
 
     // Kategori filtresi: -1 = Tümü
     List<SoundItem> currentSounds = _selectedCategory == -1
@@ -385,10 +379,9 @@ class _RelaxingSoundScreenState extends State<RelaxingSoundScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: List.generate(currentSounds.length, (i) {
                           final sound = currentSounds[i];
-                          final dur = cache.get(sound.audioPath);
-                          final durText = dur != null
-                              ? formatDuration(dur)
-                              : '--:--';
+                          final durText = formatDuration(
+                            Duration(seconds: sound.displayDurationSeconds),
+                          );
 
                           return GestureDetector(
                             onTap: () => _openPlayer(currentSounds, i),

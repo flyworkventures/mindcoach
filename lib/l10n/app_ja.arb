@@ -799,6 +799,7 @@
   "premiumStatusInactive": "無効",
   "appointmentConflictSameTime": "この時間帯には別のコーチとの予約があります。",
   "appointmentConflictSameCoach": "このコーチとの予約がすでにあります。",
+  "appointmentCreatedSuccess": "予約が作成されました。",
   "appointmentReminderTitle": "予約リマインダー",
   "appointmentReminderBody": "{specialistName}との予約は30分後に始まります。",
   "appointmentReminderFallbackName": "担当の専門家",

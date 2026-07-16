@@ -257,7 +257,8 @@ class _SpecialistDetailScreenState
             'slot_time': slotTime,
           },
         );
-        _showSnack(result.message ?? l10n.coachDetailCreateAppointment);
+        // Backend Türkçe mesaj dönebiliyor; her zaman cihaz diline göre göster.
+        _showSnack(l10n.appointmentCreatedSuccess);
       } else if (result.statusCode == 409) {
         await AnalyticsService.instance.capture(
           AnalyticsEvents.appointmentCreateFailed,
@@ -332,8 +333,11 @@ class _SpecialistDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ======== TOP HERO SECTION ========
-                    SizedBox(
-                      height: 350,
+                    // Content column (non-positioned) hero yüksekliğini
+                    // belirliyor; feature etiketleri fazla olduğunda alan
+                    // büyüyerek bottom overflow'u engelliyor.
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 350),
                       child: Stack(
                         children: [
                           // Coach photo
@@ -388,17 +392,17 @@ class _SpecialistDetailScreenState
                             ),
                           ),
 
-                          // Left content overlay
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                          // Left content overlay — Positioned yerine
+                          // normal Stack child'ı; içerik Stack yüksekliğini
+                          // belirliyor (feature etiketleri fazlaysa büyür).
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 16,
+                              bottom: 16,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                   // < Back
                                   GestureDetector(
                                     onTap: () => Navigator.pop(context),
@@ -550,8 +554,7 @@ class _SpecialistDetailScreenState
                                           .toList(),
                                     ),
                                   ),
-                                ],
-                              ),
+                              ],
                             ),
                           ),
                         ],

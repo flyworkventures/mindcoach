@@ -2349,6 +2349,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vous avez déjà un rendez-vous avec ce coach.';
 
   @override
+  String get appointmentCreatedSuccess => 'Votre rendez-vous a été créé.';
+
+  @override
   String get appointmentReminderTitle => 'Rappel de rendez-vous';
 
   @override

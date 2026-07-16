@@ -27,12 +27,12 @@ class AppConstants {
   //   Android Emulator  → 10.0.2.2
   //   Fiziksel cihaz    → Mac LAN IP (aynı Wi-Fi; `ipconfig getifaddr en0`)
   static const bool useLocalBackend = false;
-  static const String localBackendHost = '192.168.1.104';
+  static const String localBackendHost = '192.168.1.186';
   static const int localBackendPort = 3010;
 
   static const String _productionBaseUrl = 'https://mindcoach.fly-work.com';
   static const String _productionWsBaseUrl =
-      'wss://mindcoach.fly-work.com/realtime';
+      'ws://mindcoach.fly-work.com/realtime';
 
   static String get baseURL {
     if (!kDebugMode || !useLocalBackend) return _productionBaseUrl;

@@ -2312,6 +2312,9 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu rehberle zaten bir randevunuz var.';
 
   @override
+  String get appointmentCreatedSuccess => 'Randevunuz oluşturuldu.';
+
+  @override
   String get appointmentReminderTitle => 'Randevu hatırlatması';
 
   @override

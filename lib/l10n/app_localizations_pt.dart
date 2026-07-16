@@ -2334,6 +2334,9 @@ class AppLocalizationsPt extends AppLocalizations {
       'Você já tem um agendamento com este coach.';
 
   @override
+  String get appointmentCreatedSuccess => 'Seu agendamento foi criado.';
+
+  @override
   String get appointmentReminderTitle => 'Lembrete de consulta';
 
   @override

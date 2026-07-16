@@ -23,7 +23,16 @@ class MainActivity : FlutterFragmentActivity() {
             try {
                 when (call.method) {
                     "configureForVoiceCall" -> {
+                        // Voice-chat routing: MODE_IN_COMMUNICATION enables
+                        // hardware AEC / auto-ducking. We ALSO force the
+                        // loudspeaker on by default here — testers reported
+                        // audio going to the earpiece silently made the
+                        // session feel broken, since most users hold the
+                        // phone away from their ear during an AI coaching
+                        // session. The Flutter UI's speaker toggle still
+                        // works and can flip us back to the earpiece.
                         am.mode = AudioManager.MODE_IN_COMMUNICATION
+                        routeToSpeaker(am, true)
                         result.success("in_communication")
                     }
                     "setSpeakerOn" -> {
