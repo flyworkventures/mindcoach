@@ -804,5 +804,18 @@
   "appointmentReminderBody": "Tu cita con {specialistName} comienza en 30 minutos.",
   "appointmentReminderFallbackName": "tu especialista",
   "analyticsTrackingTitle": "Seguimiento analítico",
-  "analyticsTrackingDescription": "Ayúdanos a mejorar la aplicación compartiendo datos de uso anónimos. Puedes desactivarlo en cualquier momento."
+  "analyticsTrackingDescription": "Ayúdanos a mejorar la aplicación compartiendo datos de uso anónimos. Puedes desactivarlo en cualquier momento.",
+  "notifAppointmentCreatedTitle": "Nueva Cita",
+  "notifAppointmentCreatedSubtitle": "{name} creó una cita para ti",
+  "notifAppointmentCancelledTitle": "Cita cancelada",
+  "notifAppointmentCancelledSubtitle": "Tu cita ha sido cancelada",
+  "notifAppointmentReactivatedTitle": "Cita reactivada",
+  "notifAppointmentReactivatedSubtitle": "Tu cita ha sido reactivada",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

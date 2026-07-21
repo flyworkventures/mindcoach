@@ -804,5 +804,18 @@
   "appointmentReminderBody": "Votre rendez-vous avec {specialistName} commence dans 30 minutes.",
   "appointmentReminderFallbackName": "votre spécialiste",
   "analyticsTrackingTitle": "Suivi analytique",
-  "analyticsTrackingDescription": "Aidez-nous à améliorer l'application en partageant des données d'utilisation anonymes. Vous pouvez le désactiver à tout moment."
+  "analyticsTrackingDescription": "Aidez-nous à améliorer l'application en partageant des données d'utilisation anonymes. Vous pouvez le désactiver à tout moment.",
+  "notifAppointmentCreatedTitle": "Nouveau Rendez-vous",
+  "notifAppointmentCreatedSubtitle": "{name} a créé un rendez-vous pour vous",
+  "notifAppointmentCancelledTitle": "Rendez-vous annulé",
+  "notifAppointmentCancelledSubtitle": "Votre rendez-vous a été annulé",
+  "notifAppointmentReactivatedTitle": "Rendez-vous réactivé",
+  "notifAppointmentReactivatedSubtitle": "Votre rendez-vous a été réactivé",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

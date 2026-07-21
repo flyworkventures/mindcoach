@@ -2357,4 +2357,24 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       'Помогите нам улучшить приложение, делясь анонимными данными об использовании. Вы можете отключить это в любой момент.';
+
+  @override
+  String get notifAppointmentCreatedTitle => 'Новая запись';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name создал(а) для вас запись';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => 'Запись отменена';
+
+  @override
+  String get notifAppointmentCancelledSubtitle => 'Ваша запись отменена';
+
+  @override
+  String get notifAppointmentReactivatedTitle => 'Запись возобновлена';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle => 'Ваша запись возобновлена';
 }

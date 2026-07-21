@@ -63,11 +63,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
-		<!-- audio: keeps the AI voice-chat / analysis call audible if the
-		     user briefly locks the screen or switches to another app. Without
-		     it iOS silences the AVAudioSession the moment we lose foreground
-		     and testers reported the analysis call "cutting off" mid-sentence. -->
-		<string>audio</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

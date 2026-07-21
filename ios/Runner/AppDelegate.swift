@@ -80,9 +80,10 @@ import UserNotifications
               mode: .default,
               options: [.defaultToSpeaker, .allowBluetooth, .mixWithOthers])
             try session.setActive(true)
-            // Always release the proximity sensor when leaving the call.
+            // Always release the proximity sensor / idle-timer when leaving.
             DispatchQueue.main.async {
               UIDevice.current.isProximityMonitoringEnabled = false
+              UIApplication.shared.isIdleTimerDisabled = false
             }
             result(nil)
 
@@ -95,6 +96,16 @@ import UserNotifications
             let on = (call.arguments as? [String: Any])?["on"] as? Bool ?? false
             DispatchQueue.main.async {
               UIDevice.current.isProximityMonitoringEnabled = on
+            }
+            result(on)
+
+          case "setKeepScreenOn":
+            // Prevent auto-lock during AI voice/video calls. Does not block
+            // the user locking the device or leaving the app; proximity
+            // monitoring can still blank the screen when held to the ear.
+            let on = (call.arguments as? [String: Any])?["on"] as? Bool ?? false
+            DispatchQueue.main.async {
+              UIApplication.shared.isIdleTimerDisabled = on
             }
             result(on)
 

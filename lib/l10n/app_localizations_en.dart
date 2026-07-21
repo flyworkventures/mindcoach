@@ -2334,4 +2334,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       'Help us improve by sharing anonymous usage data. You can turn this off at any time.';
+
+  @override
+  String get notifAppointmentCreatedTitle => 'New Appointment';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name created an appointment for you';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => 'Appointment Cancelled';
+
+  @override
+  String get notifAppointmentCancelledSubtitle =>
+      'Your appointment has been cancelled';
+
+  @override
+  String get notifAppointmentReactivatedTitle => 'Appointment Reactivated';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle =>
+      'Your appointment has been reactivated';
 }

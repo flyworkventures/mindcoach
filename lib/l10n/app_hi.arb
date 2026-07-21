@@ -804,5 +804,18 @@
   "appointmentReminderBody": "{specialistName} के साथ आपकी अपॉइंटमेंट 30 मिनट में शुरू होगी।",
   "appointmentReminderFallbackName": "आपका विशेषज्ञ",
   "analyticsTrackingTitle": "एनालिटिक्स ट्रैकिंग",
-  "analyticsTrackingDescription": "गुमनाम उपयोग डेटा साझा करके ऐप को बेहतर बनाने में हमारी मदद करें। आप इसे कभी भी बंद कर सकते हैं।"
+  "analyticsTrackingDescription": "गुमनाम उपयोग डेटा साझा करके ऐप को बेहतर बनाने में हमारी मदद करें। आप इसे कभी भी बंद कर सकते हैं।",
+  "notifAppointmentCreatedTitle": "नई अपॉइंटमेंट",
+  "notifAppointmentCreatedSubtitle": "{name} ने आपके लिए अपॉइंटमेंट बनाई",
+  "notifAppointmentCancelledTitle": "अपॉइंटमेंट रद्द",
+  "notifAppointmentCancelledSubtitle": "आपकी अपॉइंटमेंट रद्द कर दी गई है",
+  "notifAppointmentReactivatedTitle": "अपॉइंटमेंट फिर से सक्रिय",
+  "notifAppointmentReactivatedSubtitle": "आपकी अपॉइंटमेंट फिर से सक्रिय कर दी गई है",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

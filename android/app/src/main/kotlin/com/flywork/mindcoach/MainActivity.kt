@@ -5,6 +5,7 @@ import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.os.Build
 import android.os.PowerManager
+import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -48,14 +49,31 @@ class MainActivity : FlutterFragmentActivity() {
                             am.isSpeakerphoneOn = false
                         }
                         am.mode = AudioManager.MODE_NORMAL
-                        // Always release proximity wake lock when leaving the call
-                        // so the screen never gets stuck off.
+                        // Always release proximity / keep-screen-on when leaving
+                        // the call so the screen never gets stuck awake/off.
                         releaseProximityWakeLock()
+                        runOnUiThread {
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        }
                         result.success(null)
                     }
                     "setProximityMonitoring" -> {
                         val on = call.argument<Boolean>("on") ?: false
                         if (on) acquireProximityWakeLock() else releaseProximityWakeLock()
+                        result.success(on)
+                    }
+                    "setKeepScreenOn" -> {
+                        // Prevent auto-lock during AI voice/video calls.
+                        // Proximity wake lock can still blank the screen when
+                        // the device is held to the ear.
+                        val on = call.argument<Boolean>("on") ?: false
+                        runOnUiThread {
+                            if (on) {
+                                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                            } else {
+                                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                            }
+                        }
                         result.success(on)
                     }
                     else -> result.notImplemented()
@@ -98,6 +116,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     override fun onDestroy() {
         releaseProximityWakeLock()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onDestroy()
     }
 

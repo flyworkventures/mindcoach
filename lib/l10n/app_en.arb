@@ -804,10 +804,25 @@
   "appointmentReminderBody": "Your appointment with {specialistName} starts in 30 minutes.",
   "@appointmentReminderBody": {
     "placeholders": {
-      "specialistName": { "type": "String" }
+      "specialistName": {
+        "type": "String"
+      }
     }
   },
   "appointmentReminderFallbackName": "your specialist",
   "analyticsTrackingTitle": "Analytics tracking",
-  "analyticsTrackingDescription": "Help us improve by sharing anonymous usage data. You can turn this off at any time."
+  "analyticsTrackingDescription": "Help us improve by sharing anonymous usage data. You can turn this off at any time.",
+  "notifAppointmentCreatedTitle": "New Appointment",
+  "notifAppointmentCreatedSubtitle": "{name} created an appointment for you",
+  "notifAppointmentCancelledTitle": "Appointment Cancelled",
+  "notifAppointmentCancelledSubtitle": "Your appointment has been cancelled",
+  "notifAppointmentReactivatedTitle": "Appointment Reactivated",
+  "notifAppointmentReactivatedSubtitle": "Your appointment has been reactivated",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

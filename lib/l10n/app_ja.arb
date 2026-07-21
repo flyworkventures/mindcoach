@@ -804,5 +804,18 @@
   "appointmentReminderBody": "{specialistName}との予約は30分後に始まります。",
   "appointmentReminderFallbackName": "担当の専門家",
   "analyticsTrackingTitle": "アナリティクス追跡",
-  "analyticsTrackingDescription": "匿名の利用データを共有してアプリの改善にご協力ください。いつでもオフにできます。"
+  "analyticsTrackingDescription": "匿名の利用データを共有してアプリの改善にご協力ください。いつでもオフにできます。",
+  "notifAppointmentCreatedTitle": "新しい予約",
+  "notifAppointmentCreatedSubtitle": "{name}があなたのために予約を作成しました",
+  "notifAppointmentCancelledTitle": "予約がキャンセルされました",
+  "notifAppointmentCancelledSubtitle": "予約がキャンセルされました",
+  "notifAppointmentReactivatedTitle": "予約が再度有効になりました",
+  "notifAppointmentReactivatedSubtitle": "予約が再度有効になりました",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

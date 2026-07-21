@@ -2271,4 +2271,24 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       '익명의 사용 데이터를 공유하여 앱 개선에 도움을 주세요. 언제든지 끌 수 있습니다.';
+
+  @override
+  String get notifAppointmentCreatedTitle => '새 예약';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name님이 회원님을 위해 예약을 만들었습니다';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => '예약이 취소되었습니다';
+
+  @override
+  String get notifAppointmentCancelledSubtitle => '예약이 취소되었습니다';
+
+  @override
+  String get notifAppointmentReactivatedTitle => '예약이 다시 활성화되었습니다';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle => '예약이 다시 활성화되었습니다';
 }

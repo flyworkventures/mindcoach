@@ -146,6 +146,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       if (mounted) Navigator.of(context).pop();
       return;
     }
+    await _setKeepScreenOn(true);
     await _configureAudioSession();
     await _initPcmPlayer();
     await _connect();
@@ -211,6 +212,18 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       });
     } catch (e) {
       debugPrint('⚠️ [AUDIO] proximity toggle failed: $e');
+    }
+  }
+
+  /// Prevents idle auto-lock while the AI call is on screen. User can still
+  /// lock the device or leave the app; proximity can still blank the display.
+  Future<void> _setKeepScreenOn(bool on) async {
+    if (kIsWeb) return;
+    if (!Platform.isIOS && !Platform.isAndroid) return;
+    try {
+      await _audioSessionChannel.invokeMethod('setKeepScreenOn', {'on': on});
+    } catch (e) {
+      debugPrint('⚠️ [AUDIO] keep-screen-on toggle failed: $e');
     }
   }
 
@@ -881,6 +894,7 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
       pcm.FlutterPcmSound.release();
     } catch (_) {}
     await _setProximityMonitoring(false);
+    await _setKeepScreenOn(false);
     await _resetAudioSession();
     if (mounted) Navigator.of(context).pop();
   }
@@ -941,9 +955,10 @@ class _VoiceCallScreenState extends ConsumerState<VoiceCallScreen>
     try {
       pcm.FlutterPcmSound.release();
     } catch (_) {}
-    // Make sure proximity sensor is released even if user closes the screen
-    // via system back / swipe-down without going through _endCall.
+    // Make sure proximity / idle-timer are released even if user closes the
+    // screen via system back / swipe-down without going through _endCall.
     _setProximityMonitoring(false);
+    _setKeepScreenOn(false);
     _resetAudioSession();
     super.dispose();
   }

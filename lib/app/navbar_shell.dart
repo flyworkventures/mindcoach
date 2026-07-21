@@ -8,6 +8,7 @@ import '../Services/Analytics/analytics_service.dart';
 import '../Services/NotificationsService/in_app_notification_service.dart';
 import '../core/analytics/analytics_events.dart';
 import '../View/HomeView/home_screen.dart';
+import 'package:mindcoach/core/l10n/appointment_notification_l10n.dart';
 import '../View/appointments/appointments_notifier.dart';
 import '../View/calendar_screen/calendar_screen.dart';
 import '../View/chat_screen/chat_notifier.dart';
@@ -228,11 +229,15 @@ class _NavbarShellState extends ConsumerState<BottomNavBar>
               notification.title.toLowerCase().contains('katılmadın') ||
               notification.title.toLowerCase().contains('katılmadınız');
 
+          final localized = AppointmentNotificationL10n.resolve(context, notification);
+
           // Show the notification
           InAppNotificationService.showAppointmentNotification(
             context,
-            title: _withCalendarEmoji(notification.title),
-            subtitle: _localizedAppointmentDetailsCta(context),
+            title: _withCalendarEmoji(localized.title),
+            subtitle: localized.subtitle.isNotEmpty
+                ? localized.subtitle
+                : _localizedAppointmentDetailsCta(context),
             duration: const Duration(seconds: 5),
             onTap: _handleAppointmentNotificationTap,
             photoUrl: photoUrl,

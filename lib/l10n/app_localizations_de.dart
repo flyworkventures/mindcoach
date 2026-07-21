@@ -2364,4 +2364,25 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       'Helfen Sie uns, die App zu verbessern, indem Sie anonyme Nutzungsdaten teilen. Sie können dies jederzeit deaktivieren.';
+
+  @override
+  String get notifAppointmentCreatedTitle => 'Neuer Termin';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name hat einen Termin für dich erstellt';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => 'Termin storniert';
+
+  @override
+  String get notifAppointmentCancelledSubtitle => 'Dein Termin wurde storniert';
+
+  @override
+  String get notifAppointmentReactivatedTitle => 'Termin reaktiviert';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle =>
+      'Dein Termin wurde reaktiviert';
 }

@@ -804,5 +804,18 @@
   "appointmentReminderBody": "Sua consulta com {specialistName} começa em 30 minutos.",
   "appointmentReminderFallbackName": "seu especialista",
   "analyticsTrackingTitle": "Rastreamento analítico",
-  "analyticsTrackingDescription": "Ajude-nos a melhorar o aplicativo compartilhando dados de uso anônimos. Você pode desativar a qualquer momento."
+  "analyticsTrackingDescription": "Ajude-nos a melhorar o aplicativo compartilhando dados de uso anônimos. Você pode desativar a qualquer momento.",
+  "notifAppointmentCreatedTitle": "Novo Agendamento",
+  "notifAppointmentCreatedSubtitle": "{name} criou um agendamento para você",
+  "notifAppointmentCancelledTitle": "Agendamento cancelado",
+  "notifAppointmentCancelledSubtitle": "Seu agendamento foi cancelado",
+  "notifAppointmentReactivatedTitle": "Agendamento reativado",
+  "notifAppointmentReactivatedSubtitle": "Seu agendamento foi reativado",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

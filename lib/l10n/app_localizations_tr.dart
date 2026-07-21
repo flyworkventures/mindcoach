@@ -2331,4 +2331,25 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       'Anonim kullanım verilerini paylaşarak uygulamayı geliştirmemize yardımcı olun. İstediğiniz zaman kapatabilirsiniz.';
+
+  @override
+  String get notifAppointmentCreatedTitle => 'Yeni Randevu';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name, sizin için randevu oluşturdu';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => 'Randevu İptal Edildi';
+
+  @override
+  String get notifAppointmentCancelledSubtitle => 'Randevunuz iptal edildi';
+
+  @override
+  String get notifAppointmentReactivatedTitle => 'Randevu Yeniden Aktif';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle =>
+      'Randevunuz tekrar aktif hale getirildi';
 }

@@ -2357,4 +2357,26 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       'Aiutaci a migliorare l\'app condividendo dati di utilizzo anonimi. Puoi disattivarlo in qualsiasi momento.';
+
+  @override
+  String get notifAppointmentCreatedTitle => 'Nuovo Appuntamento';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name ha creato un appuntamento per te';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => 'Appuntamento annullato';
+
+  @override
+  String get notifAppointmentCancelledSubtitle =>
+      'Il tuo appuntamento è stato annullato';
+
+  @override
+  String get notifAppointmentReactivatedTitle => 'Appuntamento riattivato';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle =>
+      'Il tuo appuntamento è stato riattivato';
 }

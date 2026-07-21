@@ -804,5 +804,18 @@
   "appointmentReminderBody": "您与{specialistName}的预约将在30分钟后开始。",
   "appointmentReminderFallbackName": "您的专家",
   "analyticsTrackingTitle": "分析追踪",
-  "analyticsTrackingDescription": "通过分享匿名使用数据帮助我们改进应用。您可以随时关闭此功能。"
+  "analyticsTrackingDescription": "通过分享匿名使用数据帮助我们改进应用。您可以随时关闭此功能。",
+  "notifAppointmentCreatedTitle": "新预约",
+  "notifAppointmentCreatedSubtitle": "{name} 为您创建了预约",
+  "notifAppointmentCancelledTitle": "预约已取消",
+  "notifAppointmentCancelledSubtitle": "您的预约已取消",
+  "notifAppointmentReactivatedTitle": "预约已重新激活",
+  "notifAppointmentReactivatedSubtitle": "您的预约已重新激活",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

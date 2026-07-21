@@ -4305,6 +4305,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help us improve by sharing anonymous usage data. You can turn this off at any time.'**
   String get analyticsTrackingDescription;
+
+  /// No description provided for @notifAppointmentCreatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Appointment'**
+  String get notifAppointmentCreatedTitle;
+
+  /// No description provided for @notifAppointmentCreatedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} created an appointment for you'**
+  String notifAppointmentCreatedSubtitle(String name);
+
+  /// No description provided for @notifAppointmentCancelledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment Cancelled'**
+  String get notifAppointmentCancelledTitle;
+
+  /// No description provided for @notifAppointmentCancelledSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your appointment has been cancelled'**
+  String get notifAppointmentCancelledSubtitle;
+
+  /// No description provided for @notifAppointmentReactivatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment Reactivated'**
+  String get notifAppointmentReactivatedTitle;
+
+  /// No description provided for @notifAppointmentReactivatedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your appointment has been reactivated'**
+  String get notifAppointmentReactivatedSubtitle;
 }
 
 class _AppLocalizationsDelegate

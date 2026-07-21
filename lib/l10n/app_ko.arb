@@ -804,5 +804,18 @@
   "appointmentReminderBody": "{specialistName} 님과의 예약이 30분 후에 시작됩니다.",
   "appointmentReminderFallbackName": "담당 전문가",
   "analyticsTrackingTitle": "분석 추적",
-  "analyticsTrackingDescription": "익명의 사용 데이터를 공유하여 앱 개선에 도움을 주세요. 언제든지 끌 수 있습니다."
+  "analyticsTrackingDescription": "익명의 사용 데이터를 공유하여 앱 개선에 도움을 주세요. 언제든지 끌 수 있습니다.",
+  "notifAppointmentCreatedTitle": "새 예약",
+  "notifAppointmentCreatedSubtitle": "{name}님이 회원님을 위해 예약을 만들었습니다",
+  "notifAppointmentCancelledTitle": "예약이 취소되었습니다",
+  "notifAppointmentCancelledSubtitle": "예약이 취소되었습니다",
+  "notifAppointmentReactivatedTitle": "예약이 다시 활성화되었습니다",
+  "notifAppointmentReactivatedSubtitle": "예약이 다시 활성화되었습니다",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

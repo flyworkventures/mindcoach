@@ -2246,4 +2246,24 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       '匿名の利用データを共有してアプリの改善にご協力ください。いつでもオフにできます。';
+
+  @override
+  String get notifAppointmentCreatedTitle => '新しい予約';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$nameがあなたのために予約を作成しました';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => '予約がキャンセルされました';
+
+  @override
+  String get notifAppointmentCancelledSubtitle => '予約がキャンセルされました';
+
+  @override
+  String get notifAppointmentReactivatedTitle => '予約が再度有効になりました';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle => '予約が再度有効になりました';
 }

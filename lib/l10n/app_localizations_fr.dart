@@ -2368,4 +2368,26 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       'Aidez-nous à améliorer l\'application en partageant des données d\'utilisation anonymes. Vous pouvez le désactiver à tout moment.';
+
+  @override
+  String get notifAppointmentCreatedTitle => 'Nouveau Rendez-vous';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name a créé un rendez-vous pour vous';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => 'Rendez-vous annulé';
+
+  @override
+  String get notifAppointmentCancelledSubtitle =>
+      'Votre rendez-vous a été annulé';
+
+  @override
+  String get notifAppointmentReactivatedTitle => 'Rendez-vous réactivé';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle =>
+      'Votre rendez-vous a été réactivé';
 }

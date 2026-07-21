@@ -804,5 +804,18 @@
   "appointmentReminderBody": "{specialistName} ile görüşmenize 30 dakika kaldı.",
   "appointmentReminderFallbackName": "uzmanınız",
   "analyticsTrackingTitle": "Analitik takibi",
-  "analyticsTrackingDescription": "Anonim kullanım verilerini paylaşarak uygulamayı geliştirmemize yardımcı olun. İstediğiniz zaman kapatabilirsiniz."
+  "analyticsTrackingDescription": "Anonim kullanım verilerini paylaşarak uygulamayı geliştirmemize yardımcı olun. İstediğiniz zaman kapatabilirsiniz.",
+  "notifAppointmentCreatedTitle": "Yeni Randevu",
+  "notifAppointmentCreatedSubtitle": "{name}, sizin için randevu oluşturdu",
+  "notifAppointmentCancelledTitle": "Randevu İptal Edildi",
+  "notifAppointmentCancelledSubtitle": "Randevunuz iptal edildi",
+  "notifAppointmentReactivatedTitle": "Randevu Yeniden Aktif",
+  "notifAppointmentReactivatedSubtitle": "Randevunuz tekrar aktif hale getirildi",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

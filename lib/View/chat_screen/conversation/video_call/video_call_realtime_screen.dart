@@ -124,6 +124,14 @@ class _VideoCallRealtimeScreenState
   /// 900 ms ile erken drain → ses ortada kesiliyordu.
   static const int _aiPlaybackIdleMs = 2800;
 
+  /// Analysis final turunda tool-call / TTS boşlukları daha uzun sürer;
+  /// kısa idle eşiği analizi ortadan kesiyordu.
+  static const int _aiPlaybackIdleAnalysisMs = 15000;
+
+  /// Normal konuşmada drain üst sınırı; analysis'te çok daha uzun tutulur.
+  static const int _pcmDrainDeadlineSeconds = 20;
+  static const int _pcmDrainDeadlineAnalysisSeconds = 180;
+
   /// Aynı anda yalnızca bir drain/listen akışı (idle watchdog + ai_response_complete yarışı).
   bool _pcmDrainInFlight = false;
 
@@ -298,6 +306,7 @@ class _VideoCallRealtimeScreenState
     // Ring tone YOK — bağlantı süresince placeholder + spinner gösterilir.
     // Kamera ringing/connect fazlarında AÇILMIYOR; CameraController.initialize
     // iOS'ta ~600-900ms platform-thread blocking → açılış kasması bunun yüzünden.
+    await _setKeepScreenOn(true);
     await _initPcmPlayer();
     await _connect();
     _scheduleRemoteRiveUpgrade();
@@ -673,6 +682,16 @@ class _VideoCallRealtimeScreenState
     if (!Platform.isIOS && !Platform.isAndroid) return;
     try {
       await _audioSessionChannel.invokeMethod('resetAudioSession');
+    } catch (_) {}
+  }
+
+  /// Prevents idle auto-lock while the AI call is on screen. User can still
+  /// lock the device or leave the app.
+  Future<void> _setKeepScreenOn(bool on) async {
+    if (kIsWeb) return;
+    if (!Platform.isIOS && !Platform.isAndroid) return;
+    try {
+      await _audioSessionChannel.invokeMethod('setKeepScreenOn', {'on': on});
     } catch (_) {}
   }
 
@@ -1444,11 +1463,14 @@ class _VideoCallRealtimeScreenState
       return;
     }
 
-    if (stallMs < _aiPlaybackIdleMs) return;
+    final idleMs =
+        widget.isAnalysis ? _aiPlaybackIdleAnalysisMs : _aiPlaybackIdleMs;
+    if (stallMs < idleMs) return;
 
     debugPrint(
       '🔊 [VIDEO] playback idle fallback → drain/listen '
-      '(ai_response_complete eksik olabilir, stall=${stallMs}ms)',
+      '(ai_response_complete eksik olabilir, stall=${stallMs}ms, '
+      'threshold=${idleMs}ms, analysis=${widget.isAnalysis})',
     );
     _cancelAiPlaybackIdleMonitor();
     _cancelAiSpeakingWatchdog();
@@ -1467,6 +1489,10 @@ class _VideoCallRealtimeScreenState
 
   void _armAiSpeakingWatchdog() {
     _cancelAiSpeakingWatchdog();
+    // Analysis: sabit süre limiti YOK. Final analiz + coach önerisi birkaç
+    // dakika sürebilir; watchdog ortada kesiyordu. Bitiş yalnızca
+    // ai_response_complete / gerçek PCM idle ile olur.
+    if (widget.isAnalysis) return;
     _aiSpeakingWatchdog = Timer(
       const Duration(seconds: 75),
       _onAiSpeakingWatchdogFired,
@@ -1477,6 +1503,8 @@ class _VideoCallRealtimeScreenState
     _aiSpeakingWatchdog = null;
     if (!mounted) return;
     if (_callState != _CallState.speaking) return;
+    // Analysis'te hiç arm edilmez; yine de güvenlik için yok say.
+    if (widget.isAnalysis) return;
     _cancelAiPlaybackIdleMonitor();
     debugPrint('⚠️ [VIDEO] speaking watchdog → drain/listen + playback_done');
     unawaited(_waitForPcmDrainAndListen());
@@ -1583,6 +1611,11 @@ class _VideoCallRealtimeScreenState
 
     if (text == null || text.isEmpty) return;
     _transcriptTurns.add({'role': role, 'text': text});
+    // Normal çağrıda assistant parçası geldikçe watchdog yenilenir.
+    // Analysis'te watchdog zaten kapalı (_armAiSpeakingWatchdog no-op).
+    if (role == 'assistant' && _callState == _CallState.speaking) {
+      _armAiSpeakingWatchdog();
+    }
   }
 
   void _enqueuePcmBytes(Uint8List bytes) {
@@ -1683,12 +1716,18 @@ class _VideoCallRealtimeScreenState
     if (_pcmDrainInFlight) return;
     _pcmDrainInFlight = true;
     try {
-      final drainDeadline = DateTime.now().add(const Duration(seconds: 20));
+      final drainSeconds = widget.isAnalysis
+          ? _pcmDrainDeadlineAnalysisSeconds
+          : _pcmDrainDeadlineSeconds;
+      final drainDeadline =
+          DateTime.now().add(Duration(seconds: drainSeconds));
       while (_pcmTotalSamples > 0 && DateTime.now().isBefore(drainDeadline)) {
         await Future.delayed(const Duration(milliseconds: 50));
         if (!mounted) return;
       }
-      if (_pcmTotalSamples > 0) {
+      // Analysis'te kuyruk hâlâ doluysa flush etme — sesi ortada keser.
+      // Normal çağrıda stuck queue için zorunlu flush kalır.
+      if (_pcmTotalSamples > 0 && !widget.isAnalysis) {
         _flushPcm();
       }
       // setFeedThreshold ~480ms + son feed; yazılım kuyruğu 0 iken native
@@ -1922,6 +1961,7 @@ class _VideoCallRealtimeScreenState
     try {
       pcm.FlutterPcmSound.release();
     } catch (_) {}
+    await _setKeepScreenOn(false);
     await _resetAudioSession();
     if (!mounted) return;
     if (navigateToLogin) {
@@ -2045,6 +2085,7 @@ class _VideoCallRealtimeScreenState
     try {
       pcm.FlutterPcmSound.release();
     } catch (_) {}
+    _setKeepScreenOn(false);
     _resetAudioSession();
     super.dispose();
   }

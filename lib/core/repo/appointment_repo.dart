@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
+import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/core/utils/app_constants.dart';
 import 'package:mindcoach/http/http_service.dart';
 
@@ -146,7 +147,9 @@ class AppointmentRepo {
   Future<bool> cancelAppointment(int appointmentId) async {
     try {
       HttpService httpService = HttpService(ref: ref);
-      final path = AppConstants.cancelAppointmentURL(appointmentId);
+      final lang = ref?.read(localeProvider.notifier).getLanguageCode() ?? 'en';
+      final path =
+          '${AppConstants.cancelAppointmentURL(appointmentId)}?lang=$lang';
       log("🚫 Randevu iptal ediliyor: appointmentId=$appointmentId, path=$path");
       
       final response = await httpService.delete(path: path);
@@ -247,7 +250,9 @@ class AppointmentRepo {
   Future<bool> reactivateAppointment(int appointmentId) async {
     try {
       HttpService httpService = HttpService(ref: ref);
-      final path = AppConstants.reactivateAppointmentURL(appointmentId);
+      final lang = ref?.read(localeProvider.notifier).getLanguageCode() ?? 'en';
+      final path =
+          '${AppConstants.reactivateAppointmentURL(appointmentId)}?lang=$lang';
       log("✅ Randevu geri alınıyor: appointmentId=$appointmentId, path=$path");
       
       final response = await httpService.put(path: path, body: null);

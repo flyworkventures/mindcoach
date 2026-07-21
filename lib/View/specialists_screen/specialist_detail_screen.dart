@@ -185,6 +185,7 @@ class _SpecialistDetailScreenState
                 'appointmentDate': appointmentDateTime
                     .toUtc()
                     .toIso8601String(),
+                'lang': Localizations.localeOf(context).languageCode,
               },
             );
 

@@ -2190,4 +2190,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get analyticsTrackingDescription => '通过分享匿名使用数据帮助我们改进应用。您可以随时关闭此功能。';
+
+  @override
+  String get notifAppointmentCreatedTitle => '新预约';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name 为您创建了预约';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => '预约已取消';
+
+  @override
+  String get notifAppointmentCancelledSubtitle => '您的预约已取消';
+
+  @override
+  String get notifAppointmentReactivatedTitle => '预约已重新激活';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle => '您的预约已重新激活';
 }

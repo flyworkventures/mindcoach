@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindcoach/Services/Analytics/analytics_service.dart';
+import 'package:mindcoach/core/locale/native_lang_sync.dart';
 import 'package:mindcoach/Services/LocalServices/local_db_service.dart';
 import 'package:mindcoach/core/analytics/analytics_events.dart';
 import '../utils/local_db_keys.dart';
@@ -34,6 +35,7 @@ class LocaleNotifier extends Notifier<Locale?> {
       } else {
         state = null;
       }
+      unawaited(NativeLangSync.syncToBackend(getLanguageCode()));
     } catch (e) {
       debugPrint('Error loading saved locale: $e');
 
@@ -68,6 +70,7 @@ class LocaleNotifier extends Notifier<Locale?> {
           value: '',
         );
       }
+      unawaited(NativeLangSync.syncToBackend(newCode));
     } catch (e) {
       debugPrint('Error saving locale: $e');
     }

@@ -11,6 +11,7 @@ import 'package:mindcoach/Riverpod/Providers/all_providers.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
 import 'package:mindcoach/core/repo/appointment_repo.dart';
 import 'package:mindcoach/core/repo/consultant_repo.dart';
+import 'package:mindcoach/core/locale/locale_provider.dart';
 import 'package:mindcoach/l10n/app_localizations.dart';
 import 'package:mindcoach/models/consultant_model.dart';
 
@@ -607,13 +608,9 @@ class AppointmentsNotifier extends Notifier<AppointmentsState> {
     }
   }
 
-  /// User'ın nativeLang'ına göre AppLocalizations instance'ı döndürür.
-  /// Desteklenmeyen dil gelirse `en`'e düşer.
+  /// Uygulama diline göre AppLocalizations instance'ı döndürür.
   AppLocalizations _reminderLocalizations() {
-    final raw = (ref.read(AllProviders.userProvider)?.nativeLang ?? 'en')
-        .toLowerCase()
-        .trim();
-    final code = raw.contains('-') ? raw.split('-').first : raw;
+    final code = ref.read(localeProvider.notifier).getLanguageCode();
     final supported = AppLocalizations.supportedLocales
         .any((l) => l.languageCode == code);
     return lookupAppLocalizations(Locale(supported ? code : 'en'));

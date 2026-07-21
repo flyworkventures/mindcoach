@@ -804,5 +804,18 @@
   "appointmentReminderBody": "Ihr Termin mit {specialistName} beginnt in 30 Minuten.",
   "appointmentReminderFallbackName": "Ihrem Spezialisten",
   "analyticsTrackingTitle": "Analyse-Tracking",
-  "analyticsTrackingDescription": "Helfen Sie uns, die App zu verbessern, indem Sie anonyme Nutzungsdaten teilen. Sie können dies jederzeit deaktivieren."
+  "analyticsTrackingDescription": "Helfen Sie uns, die App zu verbessern, indem Sie anonyme Nutzungsdaten teilen. Sie können dies jederzeit deaktivieren.",
+  "notifAppointmentCreatedTitle": "Neuer Termin",
+  "notifAppointmentCreatedSubtitle": "{name} hat einen Termin für dich erstellt",
+  "notifAppointmentCancelledTitle": "Termin storniert",
+  "notifAppointmentCancelledSubtitle": "Dein Termin wurde storniert",
+  "notifAppointmentReactivatedTitle": "Termin reaktiviert",
+  "notifAppointmentReactivatedSubtitle": "Dein Termin wurde reaktiviert",
+  "@notifAppointmentCreatedSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

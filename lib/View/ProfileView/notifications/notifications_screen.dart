@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mindcoach/core/l10n/appointment_notification_l10n.dart';
 import 'package:mindcoach/View/appointments/appointments_notifier.dart';
 import 'package:mindcoach/app/navbar_provider.dart';
 import 'package:mindcoach/core/models/appointment_info.dart';
@@ -575,6 +576,7 @@ class _NotificationCard extends ConsumerWidget {
     // ----------------------------------------------------
     if (isAppointment) {
       final photoUrl = _extractPhotoUrl(notification.metadata);
+      final localized = AppointmentNotificationL10n.resolve(context, notification);
       final appointmentIdRaw = notification.metadata['appointmentId'];
       final appointmentId = appointmentIdRaw is int
           ? appointmentIdRaw
@@ -637,7 +639,7 @@ class _NotificationCard extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            notification.title,
+                            localized.title,
                             style: const TextStyle(
                               fontFamily: 'Geist',
                               fontSize: 14,
@@ -660,10 +662,10 @@ class _NotificationCard extends ConsumerWidget {
                           ),
                       ],
                     ),
-                    if (notification.subtitle.isNotEmpty) ...[
+                    if (localized.subtitle.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        notification.subtitle,
+                        localized.subtitle,
                         style: const TextStyle(
                           fontFamily: 'Geist',
                           fontSize: 12,

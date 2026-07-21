@@ -2353,4 +2353,26 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       'Ajude-nos a melhorar o aplicativo compartilhando dados de uso anônimos. Você pode desativar a qualquer momento.';
+
+  @override
+  String get notifAppointmentCreatedTitle => 'Novo Agendamento';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name criou um agendamento para você';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => 'Agendamento cancelado';
+
+  @override
+  String get notifAppointmentCancelledSubtitle =>
+      'Seu agendamento foi cancelado';
+
+  @override
+  String get notifAppointmentReactivatedTitle => 'Agendamento reativado';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle =>
+      'Seu agendamento foi reativado';
 }

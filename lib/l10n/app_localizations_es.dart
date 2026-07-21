@@ -2355,4 +2355,25 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get analyticsTrackingDescription =>
       'Ayúdanos a mejorar la aplicación compartiendo datos de uso anónimos. Puedes desactivarlo en cualquier momento.';
+
+  @override
+  String get notifAppointmentCreatedTitle => 'Nueva Cita';
+
+  @override
+  String notifAppointmentCreatedSubtitle(String name) {
+    return '$name creó una cita para ti';
+  }
+
+  @override
+  String get notifAppointmentCancelledTitle => 'Cita cancelada';
+
+  @override
+  String get notifAppointmentCancelledSubtitle => 'Tu cita ha sido cancelada';
+
+  @override
+  String get notifAppointmentReactivatedTitle => 'Cita reactivada';
+
+  @override
+  String get notifAppointmentReactivatedSubtitle =>
+      'Tu cita ha sido reactivada';
 }
